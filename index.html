@@ -8,254 +8,300 @@
 
 <style>
 :root {
-    --azul:#1F5C99;
-    --azul-dark:#163f6b;
-    --azul-bg:#EBF2FA;
-    --negro:#111;
-    --gris-1:#444;
-    --gris-2:#888;
-    --gris-3:#CCC;
-    --gris-4:#F4F4F4;
-    --blanco:#FFF;
-    --borde:#E2E2E2;
-    --max:660px;
-    --mono:ui-monospace, Menlo, Consolas, monospace;
-    --sans:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif;
-}
+    --azul:      #1F5C99;
+    --azul-dark: #163f6b;
+    --azul-bg:   #EBF2FA;
+    --negro:     #111111;
+    --gris-1:    #444444;
+    --gris-2:    #888888;
+    --gris-3:    #CCCCCC;
+    --gris-4:    #F4F4F4;
+    --blanco:    #FFFFFF;
+    --borde:     #E2E2E2;
+    --max:       660px;
+    --mono:      ui-monospace, Menlo, Consolas, monospace;
+    --sans:      -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica Neue, Arial, sans-serif;
+  }
 
-*{box-sizing:border-box;margin:0;padding:0}
-body{
-  font-family:var(--sans);
-  font-size:15px;
-  line-height:1.65;
-  color:var(--negro);
-  background:#fff;
-}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* NAV */
-nav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--borde);z-index:10}
-.nav-inner{max-width:var(--max);margin:auto;height:52px;display:flex;justify-content:space-between;align-items:center;padding:0 1.5rem}
-.nav-logo{font-family:var(--mono);color:var(--azul);text-decoration:none;font-size:14px}
-.nav-links{display:flex;gap:1.5rem;list-style:none}
-.nav-links a{color:var(--gris-1);text-decoration:none;font-size:13px}
-.nav-links a.active,.nav-links a:hover{color:var(--azul)}
+  html { scroll-behavior: smooth; }
 
-/* SECTIONS */
-section{display:none}
-section.visible{display:block}
-.container{max-width:var(--max);margin:auto;padding:3.5rem 1.5rem}
+  body {
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--negro);
+    background: var(--blanco);
+    -webkit-font-smoothing: antialiased;
+  }
 
-/* HOME */
-.home-h1{font-size:26px;font-weight:600;margin-bottom:1rem}
-.home-lead{color:var(--gris-1);margin-bottom:2rem}
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--blanco);
+    border-bottom: 1px solid var(--borde);
+  }
+  .nav-inner {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--azul);
+    text-decoration: none;
+    letter-spacing: -0.3px;
+  }
+  .nav-links {
+    display: flex;
+    gap: 1.75rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 13px;
+    color: var(--gris-1);
+    text-decoration: none;
+  }
+  .nav-links a:hover,
+  .nav-links a.active { color: var(--azul); }
 
-/* PRODUCT */
-.prod-h1{font-size:22px;font-weight:600;margin-bottom:.5rem}
+  section { display: none; }
+  section.visible { display: block; }
 
-/* ===================== */
-/* DEMO STRIPE STYLE     */
-/* ===================== */
-.demo-shell{
-  border:1px solid var(--borde);
-  border-radius:10px;
-  background:#fff;
-  overflow:hidden;
-  margin:2rem 0;
-  box-shadow:0 10px 30px rgba(0,0,0,.04);
-}
+  .container {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 3.5rem 1.5rem;
+  }
 
-.demo-header{
-  background:var(--gris-4);
-  padding:10px 14px;
-  font-family:var(--mono);
-  font-size:11px;
-  display:flex;
-  justify-content:space-between;
-  color:var(--gris-2);
-}
+  .home-h1 {
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
 
-.demo-body{
-  padding:14px;
-}
+  .home-lead {
+    color: var(--gris-1);
+    margin-bottom: 2rem;
+  }
 
-.demo-row{
-  display:flex;
-  justify-content:space-between;
-  font-size:13px;
-  padding:8px 0;
-  border-bottom:1px solid var(--gris-4);
-  opacity:.6;
-  transition:.4s;
-}
+  .prod-h1 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: .5rem;
+  }
 
-.demo-row.active{
-  opacity:1;
-  background:var(--azul-bg);
-  padding:8px;
-  border-radius:6px;
-}
+  .buy-btn {
+    display: inline-block;
+    background: var(--azul);
+    color: #fff;
+    padding: 11px 24px;
+    border-radius: 6px;
+    text-decoration: none;
+    margin-top: 1rem;
+  }
 
-.badge{
-  font-family:var(--mono);
-  font-size:10px;
-  padding:2px 6px;
-  border-radius:4px;
-}
+  /* ===================== DEMO ===================== */
 
-.badge.ok{background:#d7f7e3;color:#1a7f4b}
-.badge.sync{background:#e7efff;color:#1f5c99}
-.badge.wait{background:#eee;color:#666}
+  .demo-shell{
+    border:1px solid var(--borde);
+    border-radius:10px;
+    margin:2rem 0;
+    overflow:hidden;
+    background:#fff;
+  }
 
-/* animation pulse line */
-.pulse-line{
-  height:2px;
-  background:linear-gradient(90deg,transparent,var(--azul),transparent);
-  animation:move 1.2s infinite linear;
-}
+  .demo-header{
+    display:flex;
+    justify-content:space-between;
+    padding:10px 14px;
+    font-family:var(--mono);
+    font-size:11px;
+    background:var(--gris-4);
+    color:var(--gris-2);
+  }
 
-@keyframes move{
-  from{transform:translateX(-100%)}
-  to{transform:translateX(100%)}
-}
+  .demo-body{
+    padding:14px;
+  }
 
-.buy-btn{
-  display:inline-block;
-  background:var(--azul);
-  color:#fff;
-  padding:11px 24px;
-  border-radius:6px;
-  text-decoration:none;
-}
+  .demo-row{
+    display:flex;
+    justify-content:space-between;
+    padding:8px 0;
+    font-size:13px;
+    border-bottom:1px solid var(--gris-4);
+    opacity:.5;
+    transition:.3s;
+  }
 
-/* NAV */
-section{display:none}
-section.visible{display:block}
+  .demo-row.active{
+    opacity:1;
+    background:var(--azul-bg);
+    border-radius:6px;
+    padding:8px;
+  }
+
+  .badge{
+    font-family:var(--mono);
+    font-size:10px;
+    padding:2px 6px;
+    border-radius:4px;
+  }
+
+  .badge.ok{background:#d7f7e3;color:#1a7f4b}
+  .badge.sync{background:#e7efff;color:#1f5c99}
+  .badge.wait{background:#eee;color:#666}
+
+  .pulse-line{
+    height:2px;
+    background:linear-gradient(90deg,transparent,var(--azul),transparent);
+    animation:move 1.2s infinite linear;
+  }
+
+  @keyframes move{
+    from{transform:translateX(-100%)}
+    to{transform:translateX(100%)}
+  }
+
 </style>
 </head>
 
 <body>
 
 <nav>
-<div class="nav-inner">
-  <a class="nav-logo" href="#" onclick="show('home')">Ambilor.Lab</a>
-  <ul class="nav-links">
-    <li><a href="#" onclick="show('home')" id="nav-home">Inicio</a></li>
-    <li><a href="#" onclick="show('about')" id="nav-about">Sobre mí</a></li>
-    <li><a href="#" onclick="show('product')" id="nav-product">Herramientas</a></li>
-    <li><a href="#" onclick="show('contact')" id="nav-contact">Contacto</a></li>
-  </ul>
-</div>
+  <div class="nav-inner">
+    <a class="nav-logo" href="#" onclick="show('home')">Ambilor.Lab</a>
+    <ul class="nav-links">
+      <li><a href="#" onclick="show('home')" id="nav-home">Inicio</a></li>
+      <li><a href="#" onclick="show('about')" id="nav-about">Sobre mí</a></li>
+      <li><a href="#" onclick="show('product')" id="nav-product">Herramientas</a></li>
+      <li><a href="#" onclick="show('contact')" id="nav-contact">Contacto</a></li>
+    </ul>
+  </div>
 </nav>
 
 <!-- HOME -->
 <section id="home" class="visible">
-<div class="container">
-<h1 class="home-h1">Procesos financieros que funcionan solos.</h1>
-<p class="home-lead">
-Automatización para contadores y equipos financieros con Google Sheets + Apps Script.
-</p>
-<button class="buy-btn" onclick="show('product')">Ver herramienta</button>
-</div>
+  <div class="container">
+    <h1 class="home-h1">Procesos financieros que funcionan solos.</h1>
+    <p class="home-lead">
+      Automatización para contadores y equipos financieros con Google Sheets + Apps Script.
+    </p>
+  </div>
 </section>
 
 <!-- PRODUCT -->
 <section id="product">
-<div class="container">
+  <div class="container">
 
-<h1 class="prod-h1">Conciliador Automático V1</h1>
+    <div class="prod-eyebrow">Herramienta disponible</div>
+    <h1 class="prod-h1">Conciliador Automático V1</h1>
 
-<p class="home-lead">
-Cruza movimientos bancarios y contables en segundos.
-</p>
+    <p class="home-lead">
+      Cruza movimientos bancarios, facturas o registros contables en segundos.
+    </p>
 
-<!-- 🔥 DEMO ANIMADA (NUEVO) -->
-<div class="demo-shell">
-  <div class="demo-header">
-    <span>RUNNING: reconciliation_engine_v1</span>
-    <span id="status">idle</span>
+    <!-- 🔥 DEMO INTEGRADA (SIN ROMPER TU DISEÑO) -->
+    <div class="demo-shell">
+
+      <div class="demo-header">
+        <span>reconciliation_engine_v1</span>
+        <span id="demo-status">idle</span>
+      </div>
+
+      <div class="pulse-line"></div>
+
+      <div class="demo-body">
+
+        <div class="demo-row" id="d1">
+          Factura A — Juan
+          <span class="badge wait">pending</span>
+        </div>
+
+        <div class="demo-row" id="d2">
+          Pago Factura A — Juan
+          <span class="badge sync">matching</span>
+        </div>
+
+        <div class="demo-row" id="d3">
+          Factura B — Pedro
+          <span class="badge wait">pending</span>
+        </div>
+
+        <div class="demo-row" id="d4">
+          Pago Factura B — Pedro
+          <span class="badge ok">matched</span>
+        </div>
+
+      </div>
+    </div>
+
+    <a class="buy-btn" href="https://jordana78.gumroad.com/l/gbtemx" target="_blank">
+      Comprar $9.990 CLP
+    </a>
+
   </div>
-
-  <div class="pulse-line"></div>
-
-  <div class="demo-body">
-    <div class="demo-row" id="r1">
-      Factura A - Juan <span class="badge wait">pending</span>
-    </div>
-    <div class="demo-row" id="r2">
-      Pago Factura A - Juan <span class="badge sync">matching</span>
-    </div>
-    <div class="demo-row" id="r3">
-      Factura B - Pedro <span class="badge wait">pending</span>
-    </div>
-    <div class="demo-row" id="r4">
-      Pago Factura B - Pedro <span class="badge ok">matched</span>
-    </div>
-  </div>
-</div>
-
-<a class="buy-btn" href="https://jordana78.gumroad.com/l/gbtemx" target="_blank">
-Comprar $9.990 CLP
-</a>
-
-</div>
 </section>
 
 <!-- ABOUT -->
 <section id="about">
-<div class="container">
-<h2>Sobre mí</h2>
-<p>Contador + analista de datos enfocado en automatización.</p>
-</div>
+  <div class="container">
+    <h2>Sobre mí</h2>
+  </div>
 </section>
 
 <!-- CONTACT -->
 <section id="contact">
-<div class="container">
-<h2>Contacto</h2>
-<p>Disponible para proyectos de automatización financiera.</p>
-</div>
+  <div class="container">
+    <h2>Contacto</h2>
+  </div>
 </section>
-
-<footer style="text-align:center;padding:2rem;color:#888;font-size:12px">
-© 2026 Ambilor.Lab
-</footer>
 
 <script>
 function show(id){
   document.querySelectorAll('section').forEach(s=>s.classList.remove('visible'));
-  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
   document.getElementById(id).classList.add('visible');
-  document.getElementById('nav-'+id).classList.add('active');
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-/* ===================== */
-/* DEMO LOOP ANIMATION    */
-/* ===================== */
-const steps = ["r1","r2","r3","r4"];
-const statuses = document.getElementById("status");
+/* ===================== DEMO LOOP ===================== */
 
+const demo = ["d1","d2","d3","d4"];
 let i = 0;
 
-function loop(){
-  steps.forEach(id=>{
-    document.getElementById(id).classList.remove("active");
+function runDemo(){
+  demo.forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.classList.remove("active");
   });
 
-  const current = document.getElementById(steps[i]);
-  current.classList.add("active");
+  const current = document.getElementById(demo[i]);
+  if(current) current.classList.add("active");
 
-  statuses.textContent =
-    i === 0 ? "scanning" :
-    i === 1 ? "matching" :
-    i === 2 ? "processing" :
-    "complete";
+  const status = document.getElementById("demo-status");
 
-  i = (i + 1) % steps.length;
+  if(status){
+    status.textContent =
+      i === 0 ? "scanning" :
+      i === 1 ? "matching" :
+      i === 2 ? "processing" :
+      "complete";
+  }
+
+  i = (i + 1) % demo.length;
 }
 
-setInterval(loop, 1200);
-loop();
+setInterval(runDemo, 1200);
+runDemo();
 
 show('home');
 </script>
