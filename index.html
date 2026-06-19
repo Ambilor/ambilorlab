@@ -508,6 +508,7 @@
           <tr><td>Conciliación bancaria</td><td><span class="tag">Google Sheets + Apps Script</span></td></tr>
           <tr><td>Business Intelligence</td><td><span class="tag">Looker Studio · Power BI</span></td></tr>
           <tr><td>Automatización de procesos</td><td><span class="tag">Python · SQL · n8n</span></td></tr>
+          <tr><td>Formación</td><td><span class="tag">Analista de Datos — AIEP</span></td></tr>
         </tbody>
       </table>
     </div>
@@ -608,6 +609,536 @@
     <p class="prod-tagline">
       Cruza movimientos bancarios, facturas o registros contables en segundos. Sin código, sin fórmulas complejas — directo desde el menú de tu planilla.
     </p>
+
+    
+<div class="section-label">Demo interactiva</div>
+<div style="margin-bottom:2rem;border:1px solid #E2E2E2;border-radius:8px;overflow:hidden">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+.w{background:#ffffff;border-radius:12px;overflow:hidden;height:520px;position:relative;font-family:'Inter',sans-serif;border:1px solid #e8e8e8}
+
+.scene{position:absolute;inset:0 0 48px 0;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:40px 48px;opacity:0;pointer-events:none;transition:opacity .15s}
+.scene.active{opacity:1;pointer-events:auto}
+
+/* animated children */
+.scene.active .anim{animation:up .55s cubic-bezier(.16,1,.3,1) both}
+.scene.active .anim:nth-child(1){animation-delay:.05s}
+.scene.active .anim:nth-child(2){animation-delay:.12s}
+.scene.active .anim:nth-child(3){animation-delay:.19s}
+.scene.active .anim:nth-child(4){animation-delay:.26s}
+.scene.active .anim:nth-child(5){animation-delay:.33s}
+.scene.active .anim:nth-child(6){animation-delay:.40s}
+@keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+.step-pill{display:inline-flex;align-items:center;gap:6px;background:#f0f4ff;border-radius:100px;padding:4px 12px 4px 4px;margin-bottom:18px}
+.step-dot{width:20px;height:20px;border-radius:50%;background:#1F5C99;color:#fff;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.step-txt{font-size:12px;font-weight:500;color:#1F5C99;letter-spacing:.01em}
+
+.sh{font-size:30px;font-weight:600;color:#0a0a0a;line-height:1.2;letter-spacing:-.03em;margin-bottom:10px}
+.sh em{font-style:normal;color:#1F5C99}
+.ss{font-size:14px;color:#666;line-height:1.65;max-width:440px;margin-bottom:24px;font-weight:400}
+
+/* stats */
+.stats{display:flex;gap:0}
+.stat{padding:16px 24px;border:1px solid #ebebeb;position:relative}
+.stat+.stat{border-left:none}
+.stat:first-child{border-radius:8px 0 0 8px}
+.stat:last-child{border-radius:0 8px 8px 0}
+.stat-n{font-size:32px;font-weight:600;color:#0a0a0a;letter-spacing:-.04em;line-height:1;display:block;margin-bottom:4px}
+.stat-l{font-size:11px;color:#999;font-weight:400;letter-spacing:.02em}
+
+/* table */
+.tbl-wrap{width:100%;max-width:500px;border:1px solid #ebebeb;border-radius:8px;overflow:hidden}
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{background:#fafafa;color:#999;padding:8px 12px;text-align:left;font-weight:500;letter-spacing:.04em;font-size:11px;border-bottom:1px solid #ebebeb}
+.tbl td{padding:8px 12px;border-bottom:1px solid #f3f3f3;color:#444;font-variant-numeric:tabular-nums}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr.a td{background:#f0f8ff;color:#0a0a0a;font-weight:500}
+.tbl tr.b td{background:#f0fff7;color:#0a0a0a;font-weight:500}
+
+/* steps grid */
+.steps{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:500px;width:100%}
+.sitem{border:1px solid #ebebeb;border-radius:8px;padding:14px 16px;position:relative;overflow:hidden}
+.sitem::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:#1F5C99}
+.sn{font-size:11px;font-weight:600;color:#1F5C99;letter-spacing:.06em;margin-bottom:4px;display:block}
+.st{font-size:12px;color:#555;line-height:1.5}
+
+/* result */
+.res-wrap{width:100%;max-width:500px;border:1px solid #ebebeb;border-radius:8px;overflow:hidden}
+.res{width:100%;border-collapse:collapse;font-size:12px}
+.res th{background:#fafafa;color:#999;padding:7px 11px;text-align:left;font-weight:500;letter-spacing:.04em;font-size:11px;border-bottom:1px solid #ebebeb}
+.res td{padding:7px 11px;border-bottom:1px solid #f3f3f3;color:#444;font-variant-numeric:tabular-nums}
+.res tr:last-child td{border-bottom:none}
+.res tr.rc td{background:#f0fff7}
+.res tr.rp td{background:#fffbf0}
+.ok{display:inline-flex;align-items:center;gap:4px;color:#16a34a;font-weight:500;font-size:11px}
+.ok::before{content:'';width:6px;height:6px;border-radius:50%;background:#16a34a;flex-shrink:0}
+.pend{display:inline-flex;align-items:center;gap:4px;color:#d97706;font-weight:500;font-size:11px}
+.pend::before{content:'';width:6px;height:6px;border-radius:50%;background:#d97706;flex-shrink:0}
+
+/* menu */
+.menu{border:1px solid #ebebeb;border-radius:8px;overflow:hidden;width:260px}
+.mi{padding:10px 16px;font-size:13px;color:#888;border-bottom:1px solid #f3f3f3;display:flex;align-items:center;gap:10px}
+.mi:last-child{border-bottom:none}
+.mi.on{color:#1F5C99;background:#f0f4ff;font-weight:500}
+.mi-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;opacity:.5}
+.mi.on .mi-dot{opacity:1}
+
+/* right side decoration */
+.deco{position:absolute;right:0;top:0;bottom:48px;width:200px;pointer-events:none;overflow:hidden}
+.deco-line{position:absolute;right:40px;top:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent 0%,#ebebeb 20%,#ebebeb 80%,transparent 100%)}
+.deco-num{position:absolute;right:52px;font-size:120px;font-weight:700;color:#f5f5f5;letter-spacing:-.05em;line-height:1;bottom:24px}
+
+/* progress */
+.prog{position:absolute;bottom:48px;left:0;height:2px;background:#1F5C99;width:0;z-index:10;border-radius:0 2px 2px 0}
+
+/* controls */
+.ctrl{position:absolute;bottom:0;left:0;right:0;height:48px;border-top:1px solid #ebebeb;display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:#fff}
+.ctrl-left{display:flex;align-items:center;gap:8px}
+.cbtn{background:none;border:1px solid #e0e0e0;color:#999;width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.cbtn:hover{border-color:#1F5C99;color:#1F5C99}
+.cdots{display:flex;gap:5px;align-items:center}
+.cdot{width:5px;height:5px;border-radius:50%;background:#e0e0e0;cursor:pointer;transition:all .25s}
+.cdot.on{background:#1F5C99;width:18px;border-radius:3px}
+.ctr{font-size:11px;color:#bbb;font-weight:400;letter-spacing:.03em}
+.ctrl-right{font-size:11px;color:#bbb}
+</style>
+
+<h2 style="position:absolute;width:1px;height:1px;overflow:hidden">Demo Conciliador V1 — estilo premium</h2>
+
+<div class="w">
+  <div class="deco">
+    <div class="deco-line"></div>
+    <div class="deco-num" id="deco-num">01</div>
+  </div>
+
+  <div class="scene active" id="s0">
+    <div class="step-pill anim"><div class="step-dot">!</div><span class="step-txt">El problema que resuelve</span></div>
+    <div class="sh anim">Cruzas movimientos<br>a mano. <em>Cada mes.</em></div>
+    <div class="ss anim">Facturas contra pagos. Cartola contra contabilidad. Fila por fila, todos los meses. Horas de trabajo manual con riesgo de error.</div>
+    <div class="stats anim">
+      <div class="stat"><span class="stat-n">200</span><div class="stat-l">movimientos típicos</div></div>
+      <div class="stat"><span class="stat-n">3h</span><div class="stat-l">tiempo manual promedio</div></div>
+      <div class="stat"><span class="stat-n">&#8734;</span><div class="stat-l">riesgo de error</div></div>
+    </div>
+  </div>
+
+  <div class="scene" id="s1">
+    <div class="step-pill anim"><div class="step-dot">1</div><span class="step-txt">Paso 1 — carga tus datos</span></div>
+    <div class="sh anim">Pegas tus movimientos<br>en la hoja <em>MOVIMIENTOS</em></div>
+    <div class="ss anim">Cualquier estructura. Los nombres de columnas se configuran sin tocar código — desde la propia planilla.</div>
+    <div class="tbl-wrap anim">
+      <table class="tbl">
+        <thead><tr><th>ID</th><th>Concepto</th><th>Responsable</th><th>Monto</th></tr></thead>
+        <tbody>
+          <tr class="a"><td>F-001</td><td>Factura A</td><td>Proveedor X</td><td>+500.000</td></tr>
+          <tr><td>F-002</td><td>Honorario B</td><td>Proveedor Y</td><td>+120.000</td></tr>
+          <tr class="b"><td>P-001</td><td>Pago fact A</td><td>Proveedor X</td><td>-500.000</td></tr>
+          <tr><td>P-002</td><td>Abono hon B</td><td>Proveedor Y</td><td>-120.000</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="scene" id="s2">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+.w{background:#fff;border-radius:10px;padding:20px 24px;font-family:'Inter',sans-serif}
+.pill{display:inline-flex;align-items:center;gap:6px;background:#f0f4ff;border-radius:100px;padding:4px 12px 4px 4px;margin-bottom:12px}
+.pd{width:20px;height:20px;border-radius:50%;background:#1F5C99;color:#fff;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.pt{font-size:12px;font-weight:500;color:#1F5C99}
+.sh{font-size:21px;font-weight:600;color:#0a0a0a;line-height:1.25;letter-spacing:-.03em;margin-bottom:4px}
+.sh em{font-style:normal;color:#1F5C99}
+.ss{font-size:13px;color:#666;line-height:1.6;margin-bottom:14px}
+
+.frame{border:1px solid #dadce0;border-radius:8px;overflow:hidden;position:relative;background:#fff}
+
+.tbar{display:flex;align-items:center;gap:8px;padding:5px 10px;background:#fff;border-bottom:1px solid #f0f0f0}
+.gico svg{width:20px;height:20px}
+.fname{font-size:13px;font-weight:500;color:#202124}
+.ficons{display:flex;gap:6px;font-size:12px;color:#5f6368}
+
+.mbar{display:flex;align-items:center;padding:0;height:26px;border-bottom:1px solid #f0f0f0;background:#fff}
+.mi{font-size:12px;color:#3c4043;padding:0 8px;height:100%;display:flex;align-items:center;cursor:default;white-space:nowrap;flex-shrink:0}
+.mi:hover{background:#f1f3f4}
+.mi.active{color:#d93025}
+.mi.conc{color:#1a73e8;font-weight:500;background:#e8f0fe;padding:0 10px;margin-left:auto;height:100%;flex-shrink:0;display:flex;align-items:center;gap:4px}
+
+.dd{position:absolute;background:#fff;border-radius:0 0 4px 4px;box-shadow:0 4px 8px rgba(0,0,0,.2);width:220px;z-index:999;padding:4px 0;display:none}
+.dd.on{display:block}
+.ddi{display:flex;align-items:center;gap:10px;padding:7px 16px;font-size:13px;color:#3c4043;cursor:default;white-space:nowrap}
+.ddi:hover,.ddi.hv{background:#f1f3f4}
+.ddi.hv2{background:#e8f0fe}
+.dico{width:18px;height:18px;border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.dg{background:#0f9d58}.db{background:#1a73e8}.dgr{background:#9e9e9e}
+
+.toolbar{display:flex;align-items:center;gap:1px;padding:2px 6px;height:32px;border-bottom:1px solid #f0f0f0;background:#fff;overflow:hidden}
+.tb{width:24px;height:24px;border-radius:3px;display:flex;align-items:center;justify-content:center;color:#3c4043;font-size:11px;flex-shrink:0}
+.ts{width:1px;height:16px;background:#e0e0e0;margin:0 3px;flex-shrink:0}
+.tpct{font-size:12px;color:#3c4043;border:1px solid #dadce0;border-radius:3px;padding:1px 6px;height:22px;display:flex;align-items:center;gap:3px;flex-shrink:0}
+.tfont{font-size:12px;color:#3c4043;border:1px solid #dadce0;border-radius:3px;padding:1px 6px;height:22px;display:flex;align-items:center;gap:3px;flex-shrink:0}
+.tsize{font-size:12px;color:#3c4043;border:1px solid #dadce0;border-radius:3px;width:28px;height:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+.fbar{display:flex;align-items:center;height:24px;border-bottom:1px solid #f0f0f0;padding:0 8px;background:#fff;font-size:12px}
+.fcref{color:#3c4043;border-right:1px solid #e0e0e0;padding-right:8px;min-width:32px}
+.fcfx{color:#5f6368;font-style:italic;padding:0 8px}
+.fcval{color:#3c4043;flex:1}
+
+.cells{background:#fff}
+.row{display:grid;grid-template-columns:28px repeat(7,1fr)}
+.c{padding:2px 5px;border-right:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8;font-size:12px;color:#3c4043;min-height:20px;display:flex;align-items:center;white-space:nowrap;overflow:hidden}
+.c.ch{background:#f8f9fa;color:#5f6368;justify-content:center;font-size:11px;border-bottom:2px solid #dadce0}
+.c.cn{background:#f8f9fa;color:#5f6368;justify-content:center;font-size:11px}
+.c.cb{font-weight:600}
+.c.cp{color:#0f9d58}.c.cr{color:#d93025}
+.c.csh{background:#e3eeff;color:#1a73e8;font-weight:500}
+.c.csc{background:#f0f5ff}
+
+/* Sheet tabs — scrollable row */
+.tabs{display:flex;align-items:flex-end;background:#f8f9fa;border-top:1px solid #e0e0e0;padding:0 4px;height:28px;overflow-x:auto;overflow-y:hidden;gap:1px}
+.tabs::-webkit-scrollbar{height:3px}
+.tabs::-webkit-scrollbar-thumb{background:#dadce0;border-radius:2px}
+.tab{display:flex;align-items:center;gap:4px;font-size:11px;padding:0 10px;height:22px;border-radius:4px 4px 0 0;margin-top:6px;cursor:default;white-space:nowrap;flex-shrink:0;border:1px solid transparent}
+.tab.active{background:#fff;border-color:#dadce0;border-bottom-color:#fff;color:#1a6b3a;font-weight:500}
+.tab.inactive{color:#5f6368}
+.tab.inactive:hover{background:#f1f3f4}
+.tab-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.tab-add{width:24px;height:22px;display:flex;align-items:center;justify-content:center;color:#5f6368;margin-top:6px;border-radius:50%;cursor:default;flex-shrink:0}
+
+.cur{position:absolute;z-index:1000;pointer-events:none;transition:top .5s cubic-bezier(.4,0,.2,1),left .5s cubic-bezier(.4,0,.2,1)}
+.cur svg{width:15px;height:15px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.4))}
+.rip{position:absolute;width:18px;height:18px;border-radius:50%;border:2px solid rgba(26,115,232,.8);z-index:998;pointer-events:none;opacity:0;transform:scale(0)}
+.rip.go{animation:rp .3s ease-out forwards}
+@keyframes rp{0%{opacity:.9;transform:scale(0)}100%{opacity:0;transform:scale(2.2)}}
+
+.status{margin-top:8px;display:flex;align-items:center;gap:6px;font-size:12px;color:#666;min-height:18px}
+.sd{width:6px;height:6px;border-radius:50%;background:#e0e0e0;flex-shrink:0;transition:background .3s}
+.sd.run{background:#1F5C99;animation:bl 1s step-end infinite}
+.sd.ok{background:#0f9d58}
+@keyframes bl{50%{opacity:0}}
+</style>
+
+<div class="w">
+  <div class="pill"><div class="pd">2</div><span class="pt">Paso 2 — ejecutar</span></div>
+  <div class="sh">Un clic desde el menú<br>de tu <em>Google Sheets</em></div>
+  <div class="ss">El sistema valida los datos antes de procesar. Si hay errores los reporta antes de ejecutar.</div>
+
+  <div class="frame" id="frame">
+
+    <div class="tbar">
+      <div class="gico"><svg viewBox="0 0 24 24" fill="none"><path d="M4 3h9l5 5v13a1 1 0 01-1 1H4a1 1 0 01-1-1V4a1 1 0 011-1z" fill="#23a566"/><path d="M13 3l5 5h-5V3z" fill="#1a7a4a"/><rect x="6" y="11" width="12" height="1.4" rx=".7" fill="#fff"/><rect x="6" y="14" width="12" height="1.4" rx=".7" fill="#fff"/><rect x="6" y="17" width="8" height="1.4" rx=".7" fill="#fff"/></svg></div>
+      <span class="fname">ConciliacionV1</span>
+      <div class="ficons"><span>&#9733;</span><span>&#128190;</span><span>&#9729;</span></div>
+    </div>
+
+    <div class="mbar" id="mbar">
+      <span class="mi">Archivo</span>
+      <span class="mi active">Editar</span>
+      <span class="mi">Ver</span>
+      <span class="mi">Insertar</span>
+      <span class="mi">Formato</span>
+      <span class="mi">Datos</span>
+      <span class="mi">Herramientas</span>
+      <span class="mi">Extensiones</span>
+      <span class="mi">Ayuda</span>
+      <span class="mi conc" id="cbtn">&#128260; Conciliaci&#243;n</span>
+    </div>
+
+    <div class="dd" id="dd">
+      <div class="ddi" id="dval">
+        <div class="dico dg"><svg width="10" height="10" viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5l3 3 5-5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span>Validar datos</span>
+      </div>
+      <div class="ddi" id="dexec">
+        <div class="dico db"><svg width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M2 1.5l7 3.5-7 3.5V1.5z" fill="#fff"/></svg></div>
+        <span>Ejecutar conciliaci&#243;n</span>
+      </div>
+      <div class="ddi" id="dclr">
+        <div class="dico dgr"><svg width="10" height="10" viewBox="0 0 11 11" fill="none"><path d="M2 2l7 7M9 2L2 9" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+        <span>Limpiar resultados</span>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="tb">&#8617;</div><div class="tb">&#8618;</div>
+      <div class="tb" style="font-size:13px">&#128438;</div>
+      <div class="tb" style="font-size:13px">&#128247;</div>
+      <div class="ts"></div>
+      <div class="tpct">100% <span style="font-size:9px">&#9660;</span></div>
+      <div class="ts"></div>
+      <div class="tb">$</div><div class="tb">%</div>
+      <div class="tb" style="font-size:9px">.0</div>
+      <div class="tb" style="font-size:9px">.00</div>
+      <div class="tb" style="font-size:9px">123</div>
+      <div class="ts"></div>
+      <div class="tfont">Roboto <span style="font-size:9px">&#9660;</span></div>
+      <div class="ts"></div>
+      <div class="tb">&#8722;</div>
+      <div class="tsize">10</div>
+      <div class="tb">+</div>
+      <div class="ts"></div>
+      <div class="tb" style="font-weight:700">B</div>
+      <div class="tb" style="font-style:italic">I</div>
+      <div class="tb" style="text-decoration:line-through">S</div>
+    </div>
+
+    <div class="fbar">
+      <span class="fcref">A1</span>
+      <span class="fcfx">fx</span>
+      <span class="fcval">ID</span>
+    </div>
+
+    <div class="cells">
+      <div class="row">
+        <div class="c ch"></div>
+        <div class="c ch">A</div><div class="c ch">B</div><div class="c ch">C</div>
+        <div class="c ch csh">D</div>
+        <div class="c ch">E</div><div class="c ch">F</div><div class="c ch">G</div>
+      </div>
+      <div class="row">
+        <div class="c cn">1</div>
+        <div class="c cb">ID</div><div class="c cb">Fecha</div><div class="c cb">Concepto</div>
+        <div class="c cb csc">Responsable</div>
+        <div class="c cb">Monto</div><div class="c"></div><div class="c"></div>
+      </div>
+      <div class="row">
+        <div class="c cn">2</div>
+        <div class="c">F-001</div><div class="c">03/06/2026</div><div class="c">Factura A</div>
+        <div class="c csc">Proveedor X</div>
+        <div class="c cp">+500.000</div><div class="c"></div><div class="c"></div>
+      </div>
+      <div class="row">
+        <div class="c cn">3</div>
+        <div class="c">P-001</div><div class="c">04/06/2026</div><div class="c">Pago fact A</div>
+        <div class="c csc">Proveedor X</div>
+        <div class="c cr">-500.000</div><div class="c"></div><div class="c"></div>
+      </div>
+      <div class="row">
+        <div class="c cn">4</div>
+        <div class="c">F-002</div><div class="c">05/06/2026</div><div class="c">Honorario B</div>
+        <div class="c csc">Proveedor Y</div>
+        <div class="c cp">+120.000</div><div class="c"></div><div class="c"></div>
+      </div>
+    </div>
+
+    <!-- Sheet tabs con los nombres reales -->
+    <div class="tabs">
+      <div class="tab-add">+</div>
+      <div class="tab active">
+        <div class="tab-dot" style="background:#1a6b3a"></div>
+        MOVIMIENTOS
+      </div>
+      <div class="tab inactive">CONFIG_COLUMNAS</div>
+      <div class="tab inactive">REGLAS</div>
+      <div class="tab inactive">CONCEPTOS</div>
+      <div class="tab inactive">RESULTADO</div>
+      <div class="tab inactive">LOG</div>
+    </div>
+
+    <div class="cur" id="cur" style="top:150px;left:30px">
+      <svg viewBox="0 0 18 18" fill="none"><path d="M2 2l6 14 3-5.5 5.5-3L2 2z" fill="#1a1a1a" stroke="#fff" stroke-width=".9" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="rip" id="rip"></div>
+  </div>
+
+  <div class="status"><div class="sd" id="sd"></div><span id="st">Listo para ejecutar</span></div>
+</div>
+
+<script>
+var cur=document.getElementById('cur');
+var rip=document.getElementById('rip');
+var dd=document.getElementById('dd');
+var cbtn=document.getElementById('cbtn');
+var dexec=document.getElementById('dexec');
+var sd=document.getElementById('sd');
+var st=document.getElementById('st');
+var frame=document.getElementById('frame');
+var mbar=document.getElementById('mbar');
+
+function posDD(){
+  var fr=frame.getBoundingClientRect();
+  var br=cbtn.getBoundingClientRect();
+  var mh=mbar.offsetHeight;
+  var th=frame.querySelector('.tbar').offsetHeight;
+  var ddW=220;
+  var rightInFrame=br.right-fr.left;
+  var leftPos=rightInFrame-ddW;
+  if(leftPos<2)leftPos=2;
+  if(leftPos+ddW>fr.width-2)leftPos=fr.width-ddW-2;
+  dd.style.top=(th+mh)+'px';
+  dd.style.left=leftPos+'px';
+  dd.style.right='auto';
+}
+
+function p(el){
+  var er=el.getBoundingClientRect();
+  var fr=frame.getBoundingClientRect();
+  return{x:er.left-fr.left+er.width/2,y:er.top-fr.top+er.height/2};
+}
+function mv(x,y,delay,cb){
+  setTimeout(function(){
+    cur.style.left=(x-7)+'px';cur.style.top=(y-7)+'px';
+    setTimeout(cb||function(){},560);
+  },delay||0);
+}
+function ck(x,y,delay,cb){
+  setTimeout(function(){
+    rip.style.left=(x-9)+'px';rip.style.top=(y-9)+'px';
+    rip.className='rip';void rip.offsetWidth;rip.className='rip go';
+    setTimeout(cb||function(){},320);
+  },delay||0);
+}
+
+function run(){
+  posDD();
+  dd.classList.remove('on');
+  dexec.classList.remove('hv2');
+  sd.className='sd';st.textContent='Listo para ejecutar';
+  cur.style.transition='none';
+  cur.style.left='30px';cur.style.top='150px';
+  setTimeout(function(){cur.style.transition='';},50);
+
+  var bp=p(cbtn);
+  mv(bp.x,bp.y,700,function(){
+    ck(bp.x,bp.y,0,function(){posDD();dd.classList.add('on');});
+    setTimeout(function(){
+      var ep=p(dexec);
+      mv(ep.x,ep.y,500,function(){
+        dexec.classList.add('hv2');
+        ck(ep.x,ep.y,350,function(){
+          dd.classList.remove('on');
+          dexec.classList.remove('hv2');
+          sd.className='sd run';
+          st.textContent='Ejecutando conciliaci\u00f3n...';
+          setTimeout(function(){
+            sd.className='sd ok';
+            st.textContent='Completado \u2014 200 movimientos procesados en 28 segundos';
+            cur.style.left='30px';cur.style.top='150px';
+          },2000);
+        });
+      });
+    },900);
+  });
+  setTimeout(run,7500);
+}
+setTimeout(run,700);
+</script>
+
+  </div>
+
+  <div class="scene" id="s3">
+    <div class="step-pill anim"><div class="step-dot">~</div><span class="step-txt">Algoritmo de matching</span></div>
+    <div class="sh anim">Cruza <em>cada movimiento</em><br>contra todos los demás</div>
+    <div class="ss anim">200 registros procesados en menos de 30 segundos. Configuración completa sin tocar una línea de código.</div>
+    <div class="steps anim">
+      <div class="sitem"><span class="sn">01</span><div class="st">Compara montos con tolerancia configurable</div></div>
+      <div class="sitem"><span class="sn">02</span><div class="st">Verifica responsable y columnas extra</div></div>
+      <div class="sitem"><span class="sn">03</span><div class="st">Calcula similitud de concepto — score 0 a 100</div></div>
+      <div class="sitem"><span class="sn">04</span><div class="st">Elige el mejor par y lo marca como usado</div></div>
+    </div>
+  </div>
+
+  <div class="scene" id="s4">
+    <div class="step-pill anim"><div class="step-dot">3</div><span class="step-txt">Paso 3 — resultado</span></div>
+    <div class="sh anim">La hoja <em>RESULTADO</em><br>lista lo conciliado y pendiente</div>
+    <div class="ss anim">Pares agrupados por color. Pendientes destacados al final. Todo en la misma planilla.</div>
+    <div class="res-wrap anim">
+      <table class="res">
+        <thead><tr><th>Grupo</th><th>Estado</th><th>ID</th><th>Monto</th></tr></thead>
+        <tbody>
+          <tr class="rc"><td>G00001</td><td><span class="ok">Conciliado</span></td><td>F-001</td><td>+500.000</td></tr>
+          <tr class="rc"><td>G00001</td><td><span class="ok">Conciliado</span></td><td>P-001</td><td>-500.000</td></tr>
+          <tr class="rc"><td>G00002</td><td><span class="ok">Conciliado</span></td><td>F-002</td><td>+120.000</td></tr>
+          <tr class="rc"><td>G00002</td><td><span class="ok">Conciliado</span></td><td>P-002</td><td>-120.000</td></tr>
+          <tr class="rp"><td>—</td><td><span class="pend">Pendiente</span></td><td>F-003</td><td>+80.000</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="scene" id="s5">
+    <div class="step-pill anim"><div class="step-dot">✓</div><span class="step-txt">Resultado final</span></div>
+    <div class="sh anim"><em>200 movimientos</em> cruzados<br>en menos de 30 segundos</div>
+    <div class="ss anim">Sin software adicional. Sin Excel. Solo Google Sheets y una cuenta Google. Instalación en 5 minutos. Disponible todos los meses sin costo adicional.</div>
+    <div class="stats anim">
+      <div class="stat"><span class="stat-n">30s</span><div class="stat-l">vs 3 horas manual</div></div>
+      <div class="stat"><span class="stat-n">0</span><div class="stat-l">errores humanos</div></div>
+      <div class="stat"><span class="stat-n">5min</span><div class="stat-l">instalación</div></div>
+    </div>
+  </div>
+
+  <div class="prog" id="prog"></div>
+
+  <div class="ctrl">
+    <div class="ctrl-left">
+      <button class="cbtn" onclick="nav(-1)" aria-label="Anterior">&#8592;</button>
+      <div class="cdots" id="dots"></div>
+      <button class="cbtn" id="ppbtn" onclick="togglePlay()" aria-label="Pausar">&#9646;&#9646;</button>
+      <button class="cbtn" onclick="nav(1)" aria-label="Siguiente">&#8594;</button>
+    </div>
+    <span class="ctr" id="ctr">1 de 6</span>
+  </div>
+</div>
+
+<script>
+var N=6,cur=0,playing=true,raf=null,pbStart=null,DUR=4800;
+var NUMS=['01','02','03','04','05','06'];
+
+function goTo(i){
+  document.getElementById('s'+cur).classList.remove('active');
+  cur=i;
+  var sc=document.getElementById('s'+cur);
+  sc.classList.add('active');
+  sc.querySelectorAll('.anim').forEach(function(el){
+    el.style.animation='none';
+    el.offsetHeight;
+    el.style.animation='';
+  });
+  document.getElementById('deco-num').textContent=NUMS[i];
+  document.getElementById('ctr').textContent=(i+1)+' de 6';
+  buildDots();
+  if(playing)startBar();
+}
+function nav(d){stopBar();goTo((cur+d+N)%N);}
+function buildDots(){
+  var c=document.getElementById('dots');c.innerHTML='';
+  for(var i=0;i<N;i++){
+    var d=document.createElement('div');
+    d.className='cdot'+(i===cur?' on':'');
+    (function(idx){d.onclick=function(){stopBar();goTo(idx);};})(i);
+    c.appendChild(d);
+  }
+}
+function startBar(){
+  stopBar();pbStart=Date.now();
+  var b=document.getElementById('prog');b.style.width='0%';
+  function tick(){
+    var pct=Math.min(100,(Date.now()-pbStart)/DUR*100);
+    b.style.width=pct+'%';
+    if(pct>=100){raf=null;goTo((cur+1)%N);}
+    else raf=requestAnimationFrame(tick);
+  }
+  raf=requestAnimationFrame(tick);
+}
+function stopBar(){
+  if(raf){cancelAnimationFrame(raf);raf=null;}
+  document.getElementById('prog').style.width='0%';
+}
+function togglePlay(){
+  playing=!playing;
+  var b=document.getElementById('ppbtn');
+  if(playing){b.innerHTML='&#9646;&#9646;';startBar();}
+  else{b.innerHTML='&#9654;';stopBar();}
+}
+buildDots();startBar();
+</script>
+
+</div>
+
 
     <div class="price-row">
       <span class="price-num">$9.990</span>
