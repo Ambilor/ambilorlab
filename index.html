@@ -1,67 +1,69 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8"/>
+<meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Ambilor.Lab — Conciliación Automática</title>
+<title>Ambilor.Lab — Automatización contable y financiera</title>
+
+<meta name="description" content="Automatización contable para equipos financieros. Google Sheets, Apps Script, Python y BI aplicados a procesos reales." />
 
 <style>
 :root{
-  --bg:#ffffff;
-  --text:#0a0a0a;
-  --muted:#6b6b6b;
-  --line:#e9e9e9;
-  --blue:#1F5C99;
-  --soft:#f5f7fb;
-  --radius:18px;
-  --max:760px;
-  --mono: ui-monospace, Menlo, monospace;
-  --sans: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
+  --bg:#0b0f17;
+  --card:#111827;
+  --muted:#9ca3af;
+  --text:#e5e7eb;
+  --accent:#3b82f6;
+  --accent2:#22c55e;
+  --border:rgba(255,255,255,.08);
+  --max:1100px;
+  --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --sans: -apple-system, BlinkMacSystemFont, Segoe UI, Inter, Arial;
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
 body{
   font-family:var(--sans);
-  background:
-    radial-gradient(circle at 20% 20%, #eef4ff 0%, transparent 35%),
-    radial-gradient(circle at 80% 10%, #f3f7ff 0%, transparent 40%),
-    #fff;
+  background:radial-gradient(1200px 600px at 20% -10%, rgba(59,130,246,.25), transparent),
+             radial-gradient(900px 500px at 90% 10%, rgba(34,197,94,.15), transparent),
+             var(--bg);
   color:var(--text);
+  overflow-x:hidden;
 }
 
-/* NAV GLASS */
+/* NAV */
 nav{
-  position:sticky;
-  top:0;
-  z-index:100;
-  backdrop-filter: blur(14px);
-  background:rgba(255,255,255,.75);
-  border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:10;
+  backdrop-filter: blur(10px);
+  background:rgba(11,15,23,.7);
+  border-bottom:1px solid var(--border);
 }
-.nav{
+.nav-inner{
   max-width:var(--max);
   margin:auto;
   display:flex;
   justify-content:space-between;
-  align-items:center;
   padding:14px 20px;
+  align-items:center;
 }
 .logo{
   font-family:var(--mono);
-  font-size:13px;
-  color:var(--blue);
+  color:var(--accent);
+  font-weight:700;
+  font-size:14px;
 }
-.links a{
+.nav a{
+  color:var(--muted);
+  text-decoration:none;
   margin-left:18px;
   font-size:13px;
-  text-decoration:none;
-  color:var(--muted);
 }
-.links a:hover{color:var(--blue)}
+.nav a:hover{color:var(--text)}
 
-/* LAYOUT */
+/* SECTIONS */
 section{display:none}
 section.active{display:block}
+
 .container{
   max-width:var(--max);
   margin:auto;
@@ -69,145 +71,109 @@ section.active{display:block}
 }
 
 /* HERO */
-.kicker{
+.hero{
+  text-align:left;
+  padding-top:40px;
+}
+.badge{
   font-family:var(--mono);
   font-size:11px;
+  color:var(--accent);
   letter-spacing:.12em;
-  color:var(--blue);
   text-transform:uppercase;
 }
 h1{
-  font-size:38px;
-  line-height:1.15;
-  margin-top:12px;
-  letter-spacing:-0.02em;
+  font-size:48px;
+  line-height:1.05;
+  margin-top:14px;
 }
 .sub{
-  margin-top:14px;
-  font-size:16px;
   color:var(--muted);
-  max-width:580px;
-  line-height:1.65;
+  max-width:650px;
+  margin-top:16px;
+  font-size:16px;
+  line-height:1.6;
 }
 
 /* CTA */
-.cta{
-  display:flex;
-  gap:12px;
-  margin-top:22px;
-}
 .btn{
-  background:var(--blue);
-  color:#fff;
+  margin-top:28px;
+  display:inline-block;
+  background:var(--accent);
+  color:white;
   padding:12px 18px;
-  border-radius:12px;
+  border-radius:10px;
   text-decoration:none;
-  font-size:14px;
+  font-weight:500;
+  transition:.2s;
 }
-.btn.secondary{
-  background:transparent;
-  border:1px solid var(--line);
-  color:var(--text);
-}
+.btn:hover{transform:translateY(-2px)}
 
-/* DEMO PRO */
-.demo{
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
   margin-top:50px;
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  background:#fff;
+}
+.card{
+  background:rgba(17,24,39,.7);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:18px;
+}
+.card h3{font-size:14px;margin-bottom:6px}
+.card p{font-size:13px;color:var(--muted)}
+
+/* DEMO */
+.demo{
+  margin-top:60px;
+  border:1px solid var(--border);
+  border-radius:14px;
   overflow:hidden;
-  height:460px;
-  position:relative;
-  box-shadow:0 20px 60px rgba(0,0,0,.06);
 }
-
-/* SCENES */
-.scene{
-  position:absolute;
-  inset:0;
-  padding:42px;
-  opacity:0;
-  transform:translateY(12px);
-  transition:all .7s cubic-bezier(.2,.8,.2,1);
-}
-.scene.active{
-  opacity:1;
-  transform:translateY(0);
-}
-
-.badge{
-  display:inline-flex;
-  padding:6px 10px;
-  border-radius:999px;
-  font-size:11px;
+.demo-header{
+  padding:10px 14px;
   font-family:var(--mono);
-  background:var(--soft);
-  color:var(--blue);
-  margin-bottom:16px;
-}
-
-.big{
-  font-size:26px;
-  font-weight:600;
-  letter-spacing:-0.02em;
-  margin-bottom:10px;
-}
-.big em{font-style:normal;color:var(--blue)}
-
-.small{
+  font-size:12px;
   color:var(--muted);
-  line-height:1.6;
-  font-size:14px;
-  max-width:460px;
+  border-bottom:1px solid var(--border);
+}
+.demo-body{
+  padding:16px;
+  font-family:var(--mono);
+  font-size:12px;
+  color:#a5b4fc;
+  min-height:160px;
 }
 
 /* METRICS */
-.grid{
-  display:flex;
-  margin-top:26px;
-  gap:10px;
+.metrics{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  margin-top:40px;
 }
-.card{
-  flex:1;
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:14px;
+.metric{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:16px;
 }
-.card strong{
-  font-size:26px;
-  display:block;
-}
+.metric h2{font-size:22px}
+.metric span{color:var(--muted);font-size:12px}
 
-/* CURSOR ANIMATION */
-.cursor{
-  position:absolute;
-  width:14px;
-  height:14px;
-  border-radius:50%;
-  background:var(--blue);
-  box-shadow:0 0 0 6px rgba(31,92,153,.12);
-  transition:all .9s cubic-bezier(.2,.8,.2,1);
-  z-index:5;
+/* PRODUCT */
+.price{
+  font-size:36px;
+  font-weight:700;
+  margin-top:10px;
 }
+.small{color:var(--muted);font-size:13px}
 
-/* BAR */
-.bar{
-  position:absolute;
-  bottom:0;
-  left:0;
-  height:3px;
-  width:0%;
-  background:linear-gradient(90deg,var(--blue),#4d8dff);
-}
-
-/* FOOTER */
-footer{
-  border-top:1px solid var(--line);
-  text-align:center;
-  padding:22px;
-  font-size:11px;
-  color:#999;
+/* RESPONSIVE */
+@media(max-width:900px){
+  h1{font-size:34px}
+  .grid,.metrics{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -215,141 +181,161 @@ footer{
 <body>
 
 <nav>
-  <div class="nav">
+  <div class="nav-inner">
     <div class="logo">Ambilor.Lab</div>
-    <div class="links">
+    <div class="nav">
       <a href="#" onclick="go('home')">Inicio</a>
       <a href="#" onclick="go('product')">Producto</a>
-      <a href="#" onclick="go('contact')">Contacto</a>
+      <a href="#" onclick="go('about')">Sobre mí</a>
     </div>
   </div>
 </nav>
 
 <!-- HERO -->
 <section id="home" class="active">
-  <div class="container">
-    <div class="kicker">Automatización contable</div>
+  <div class="container hero">
 
-    <h1>
-      Conciliación bancaria<br/>
-      sin trabajo manual.
-    </h1>
+    <div class="badge">Automatización financiera · Chile</div>
+
+    <h1>Procesos contables<br/>que se ejecutan solos.</h1>
 
     <p class="sub">
-      Cruza movimientos, facturas y registros contables en segundos dentro de Google Sheets.
-      Sin código. Sin errores. Sin procesos manuales.
+      Construyo sistemas de automatización para contadores y equipos financieros usando Google Sheets, Apps Script, Python y BI.
+      Reduciendo trabajo manual repetitivo en conciliaciones, reportes y control de datos.
     </p>
 
-    <div class="cta">
-      <a class="btn" href="#" onclick="go('product')">Ver producto</a>
-      <a class="btn secondary" href="#demo">Ver demo</a>
+    <a class="btn" href="#" onclick="go('product')">Ver herramienta →</a>
+
+    <div class="metrics">
+      <div class="metric">
+        <h2>+70%</h2>
+        <span>menos tiempo en conciliación</span>
+      </div>
+      <div class="metric">
+        <h2>1 click</h2>
+        <span>ejecución del proceso</span>
+      </div>
+      <div class="metric">
+        <h2>0 código</h2>
+        <span>para el usuario final</span>
+      </div>
     </div>
 
-    <!-- DEMO -->
+    <div class="grid">
+      <div class="card">
+        <h3>Contabilidad automatizada</h3>
+        <p>Eliminación de tareas repetitivas en conciliaciones y cruces de datos.</p>
+      </div>
+      <div class="card">
+        <h3>BI operativo</h3>
+        <p>Dashboards en tiempo real con datos financieros consistentes.</p>
+      </div>
+      <div class="card">
+        <h3>Procesos internos</h3>
+        <p>Automatización de flujos de aprobación y control.</p>
+      </div>
+    </div>
+
+    <!-- DEMO ANIMADO -->
     <div class="demo">
-
-      <div class="cursor" id="cursor"></div>
-
-      <div class="scene active" id="s0">
-        <div class="badge">Problema</div>
-        <div class="big">Cruzas datos <em>a mano</em></div>
-        <div class="small">Comparación manual de movimientos bancarios vs contabilidad.</div>
-
-        <div class="grid">
-          <div class="card"><strong>3h</strong>manual</div>
-          <div class="card"><strong>200</strong>movimientos</div>
-        </div>
-      </div>
-
-      <div class="scene" id="s1">
-        <div class="badge">Paso 1</div>
-        <div class="big">Pegas tus datos</div>
-        <div class="small">En una hoja de cálculo estándar.</div>
-      </div>
-
-      <div class="scene" id="s2">
-        <div class="badge">Paso 2</div>
-        <div class="big">Ejecutas conciliación</div>
-        <div class="small">Un solo clic desde el menú.</div>
-      </div>
-
-      <div class="scene" id="s3">
-        <div class="badge">Resultado</div>
-        <div class="big">Todo conciliado</div>
-
-        <div class="grid">
-          <div class="card"><strong>30s</strong>tiempo</div>
-          <div class="card"><strong>0</strong>errores</div>
-        </div>
-      </div>
-
-      <div class="bar" id="bar"></div>
+      <div class="demo-header">console / conciliador-v1.gs</div>
+      <div class="demo-body" id="demo"></div>
     </div>
+
   </div>
 </section>
 
 <!-- PRODUCT -->
 <section id="product">
   <div class="container">
-    <div class="kicker">Producto</div>
+
+    <div class="badge">Producto activo</div>
+
     <h1>Conciliador Automático V1</h1>
-    <p class="sub">Sistema listo para Google Sheets.</p>
+
+    <div class="price">$9.990 CLP</div>
+    <div class="small">Pago único · Google Sheets + Apps Script</div>
+
+    <a class="btn" href="https://jordana78.gumroad.com/l/gbtemx" target="_blank">
+      Comprar ahora
+    </a>
+
+    <div class="grid" style="margin-top:40px">
+      <div class="card">
+        <h3>Qué hace</h3>
+        <p>Cruza movimientos bancarios automáticamente sin fórmulas complejas.</p>
+      </div>
+      <div class="card">
+        <h3>Cómo funciona</h3>
+        <p>Detecta coincidencias por monto, fecha y reglas configurables.</p>
+      </div>
+      <div class="card">
+        <h3>Resultado</h3>
+        <p>Conciliación lista en segundos con registros pendientes separados.</p>
+      </div>
+    </div>
+
   </div>
 </section>
 
-<!-- CONTACT -->
-<section id="contact">
+<!-- ABOUT -->
+<section id="about">
   <div class="container">
-    <div class="kicker">Contacto</div>
-    <p class="sub">Escríbeme para automatizar procesos financieros.</p>
+
+    <div class="badge">Perfil</div>
+
+    <h1>Construyo automatización<br/>para finanzas reales.</h1>
+
+    <p class="sub">
+      Contador público y auditor en formación de analista de datos. Me enfoco en eliminar trabajo manual en procesos financieros reales.
+    </p>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Stack</h3>
+        <p>SQL · Python · Apps Script · Power BI · n8n</p>
+      </div>
+      <div class="card">
+        <h3>Experiencia</h3>
+        <p>Control financiero + automatización de procesos contables</p>
+      </div>
+      <div class="card">
+        <h3>Enfoque</h3>
+        <p>Sistemas simples, auditables y sin dependencia externa</p>
+      </div>
+    </div>
+
   </div>
 </section>
-
-<footer>© 2026 Ambilor.Lab</footer>
 
 <script>
 function go(id){
-  document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo({top:0,behavior:"smooth"});
 }
 
-/* 🔥 DEMO ULTRA FLUIDO + CURSOR */
-const scenes = ["s0","s1","s2","s3"];
-let i = 0;
-let progress = 0;
-
-const cursor = document.getElementById("cursor");
-
-const positions = [
-  {x:80,y:120},
-  {x:200,y:180},
-  {x:300,y:220},
-  {x:420,y:160}
+/* DEMO ANIMADO */
+const lines = [
+"→ Cargando movimientos bancarios...",
+"→ Normalizando dataset...",
+"→ Aplicando reglas de conciliación...",
+"→ Match encontrado: 98%",
+"→ Generando output final...",
+"✔ Conciliación completada en 1.4s"
 ];
 
-function showScene(n){
-  scenes.forEach(s=>document.getElementById(s).classList.remove("active"));
-  document.getElementById(scenes[n]).classList.add("active");
-
-  cursor.style.left = positions[n].x + "px";
-  cursor.style.top  = positions[n].y + "px";
-}
-
-function loop(){
-  progress += 1.1;
-  document.getElementById("bar").style.width = progress + "%";
-
-  if(progress >= 100){
-    progress = 0;
-    i = (i+1)%scenes.length;
-    showScene(i);
+let i = 0;
+function runDemo(){
+  const el = document.getElementById("demo");
+  if(!el) return;
+  el.innerHTML += lines[i] + "<br/>";
+  i++;
+  if(i < lines.length){
+    setTimeout(runDemo, 900);
   }
-
-  requestAnimationFrame(loop);
 }
-
-showScene(0);
-loop();
+runDemo();
 </script>
 
 </body>
