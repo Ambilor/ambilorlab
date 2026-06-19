@@ -3,572 +3,295 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Ambilor.Lab — Automatización contable y financiera</title>
-<meta name="description" content="Herramientas de automatización para contadores, equipos financieros y PyMEs. Google Sheets, Apps Script y BI aplicados a procesos reales." />
+<title>Ambilor.Lab — Automatizacion contable y financiera</title>
+<meta name="description" content="Herramientas de automatizacion para contadores, equipos financieros y PyMEs." />
 <style>
 :root {
-    --azul:      #1F5C99;
-    --azul-dark: #163f6b;
-    --azul-bg:   #EBF2FA;
-    --negro:     #111111;
-    --gris-1:    #444444;
-    --gris-2:    #888888;
-    --gris-3:    #CCCCCC;
-    --gris-4:    #F4F4F4;
-    --blanco:    #FFFFFF;
-    --borde:     #E2E2E2;
-    --max:       660px;
-    --mono:      ui-monospace, Menlo, Consolas, monospace;
-    --sans:      -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica Neue, Arial, sans-serif;
-  }
+  --azul:#1F5C99;--azul-dark:#163f6b;--azul-bg:#EBF2FA;--negro:#111111;
+  --gris-1:#444444;--gris-2:#888888;--gris-4:#F4F4F4;--blanco:#FFFFFF;
+  --borde:#E2E2E2;--max:660px;
+  --mono:ui-monospace,Menlo,Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);font-size:15px;line-height:1.65;color:var(--negro);background:var(--blanco);-webkit-font-smoothing:antialiased}
+nav{position:sticky;top:0;z-index:100;background:var(--blanco);border-bottom:1px solid var(--borde)}
+.nav-inner{max-width:var(--max);margin:0 auto;padding:0 1.5rem;height:52px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-family:var(--mono);font-size:14px;font-weight:500;color:var(--azul);text-decoration:none;letter-spacing:-0.3px}
+.nav-links{display:flex;gap:1.75rem;list-style:none}
+.nav-links a{font-size:13px;color:var(--gris-1);text-decoration:none;transition:color .15s}
+.nav-links a:hover,.nav-links a.active{color:var(--azul)}
+section{display:none}
+section.visible{display:block}
+.container{max-width:var(--max);margin:0 auto;padding:3.5rem 1.5rem}
+.home-eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--azul);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.75rem}
+.home-h1{font-size:26px;font-weight:600;line-height:1.25;color:var(--negro);margin-bottom:1rem;letter-spacing:-.4px}
+.home-lead{font-size:15px;color:var(--gris-1);max-width:520px;margin-bottom:2.5rem;line-height:1.7}
+.specs-block{border:1px solid var(--borde);border-radius:6px;overflow:hidden;margin-bottom:2.5rem}
+.specs-block table{width:100%;border-collapse:collapse;font-size:13px}
+.specs-block th{text-align:left;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--gris-2);background:var(--gris-4);padding:8px 14px;border-bottom:1px solid var(--borde)}
+.specs-block td{padding:9px 14px;border-bottom:1px solid var(--borde);vertical-align:top}
+.specs-block tr:last-child td{border-bottom:none}
+.specs-block td:first-child{color:var(--gris-1);width:44%}
+.specs-block td:last-child{color:var(--negro);font-weight:500}
+.tag{display:inline-block;font-family:var(--mono);font-size:11px;background:var(--azul-bg);color:var(--azul);padding:2px 8px;border-radius:3px;font-weight:500}
+.home-areas{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:2.5rem}
+.area-card{border:1px solid var(--borde);border-radius:6px;padding:1rem 1.1rem}
+.area-card-label{font-family:var(--mono);font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--azul);margin-bottom:.3rem}
+.area-card p{font-size:13px;color:var(--gris-1);line-height:1.5}
+.cta-home{display:inline-block;background:var(--azul);color:var(--blanco);font-size:13px;font-weight:500;padding:10px 22px;border-radius:5px;text-decoration:none;transition:background .15s;cursor:pointer;border:none}
+.cta-home:hover{background:var(--azul-dark)}
+.about-name{font-size:22px;font-weight:600;letter-spacing:-.3px;margin-bottom:.35rem}
+.about-role{font-family:var(--mono);font-size:12px;color:var(--azul);font-weight:500;margin-bottom:1.5rem}
+.about-bio{font-size:14px;color:var(--gris-1);line-height:1.75;margin-bottom:2rem;max-width:540px}
+.stack-title{font-family:var(--mono);font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--gris-2);margin-bottom:.75rem}
+.stack-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:2rem}
+.stack-pill{font-family:var(--mono);font-size:11px;font-weight:500;padding:4px 10px;border:1px solid var(--borde);border-radius:4px;color:var(--gris-1);background:var(--gris-4)}
+.divider{border:none;border-top:1px solid var(--borde);margin:2rem 0}
+.exp-item{margin-bottom:1.25rem}
+.exp-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.2rem}
+.exp-title{font-size:14px;font-weight:500;color:var(--negro)}
+.exp-date{font-family:var(--mono);font-size:11px;color:var(--gris-2)}
+.exp-org{font-size:13px;color:var(--azul);margin-bottom:.2rem}
+.exp-desc{font-size:13px;color:var(--gris-1);line-height:1.6}
+.prod-eyebrow{font-family:var(--mono);font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--azul);margin-bottom:.6rem}
+.prod-h1{font-size:22px;font-weight:600;letter-spacing:-.3px;margin-bottom:.5rem;line-height:1.3}
+.prod-tagline{font-size:14px;color:var(--gris-1);margin-bottom:2rem;line-height:1.65;max-width:500px}
+.price-row{display:flex;align-items:baseline;gap:.5rem;margin-bottom:1.25rem}
+.price-num{font-size:30px;font-weight:600;font-family:var(--mono);color:var(--negro);letter-spacing:-1px}
+.price-label{font-size:13px;color:var(--gris-2)}
+.buy-btn{display:inline-block;background:var(--azul);color:var(--blanco);font-size:14px;font-weight:500;padding:11px 28px;border-radius:5px;text-decoration:none;transition:background .15s;margin-bottom:.6rem}
+.buy-btn:hover{background:var(--azul-dark)}
+.guarantee-note{font-size:12px;color:var(--gris-2);display:block;margin-bottom:2.5rem}
+.section-label{font-family:var(--mono);font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--gris-2);margin-bottom:.75rem;margin-top:2rem}
+.includes-list{list-style:none;border:1px solid var(--borde);border-radius:6px;overflow:hidden;margin-bottom:2rem;font-size:13px}
+.includes-list li{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;border-bottom:1px solid var(--borde);color:var(--negro)}
+.includes-list li:last-child{border-bottom:none}
+.includes-list li span{color:var(--gris-2);font-size:12px;font-family:var(--mono)}
+.faq-list{margin-bottom:2rem}
+.faq-item{padding:1rem 0;border-bottom:1px solid var(--borde)}
+.faq-item:last-child{border-bottom:none}
+.faq-q{font-size:13px;font-weight:500;color:var(--negro);margin-bottom:.3rem}
+.faq-a{font-size:13px;color:var(--gris-1);line-height:1.6}
+.alert-box{border-left:3px solid var(--azul);background:var(--azul-bg);padding:.85rem 1rem;border-radius:0 5px 5px 0;font-size:13px;color:var(--azul-dark);margin-bottom:2rem;line-height:1.6}
+.contact-intro{font-size:14px;color:var(--gris-1);margin-bottom:2rem;line-height:1.7;max-width:460px}
+.contact-block{border:1px solid var(--borde);border-radius:6px;overflow:hidden;font-size:13px;margin-bottom:2rem}
+.contact-row{display:flex;align-items:center;padding:11px 14px;border-bottom:1px solid var(--borde);gap:12px}
+.contact-row:last-child{border-bottom:none}
+.contact-label{font-family:var(--mono);font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--gris-2);width:80px;flex-shrink:0}
+.contact-val{color:var(--negro)}
+.contact-val a{color:var(--azul);text-decoration:none}
+.contact-val a:hover{text-decoration:underline}
+footer{border-top:1px solid var(--borde);padding:1.5rem;text-align:center;font-family:var(--mono);font-size:11px;color:var(--gris-2)}
+@media(max-width:520px){.home-areas{grid-template-columns:1fr}.home-h1{font-size:22px}.prod-h1{font-size:20px}.steps-row{flex-wrap:wrap}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.demo-section{margin-bottom:2.5rem}
+.demo-label{font-family:var(--mono);font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--gris-2);margin-bottom:.75rem}
+.demo-wrap{background:#fff;border-radius:12px;overflow:hidden;height:560px;position:relative;border:1px solid #e8e8e8}
+.dscene{position:absolute;inset:0 0 48px 0;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:28px 28px;opacity:0;pointer-events:none;transition:opacity .15s;overflow:auto}
+.dscene.active{opacity:1;pointer-events:auto}
+.dscene.active .anim{animation:dup .55s cubic-bezier(.16,1,.3,1) both}
+.dscene.active .anim:nth-child(1){animation-delay:.05s}
+.dscene.active .anim:nth-child(2){animation-delay:.12s}
+.dscene.active .anim:nth-child(3){animation-delay:.19s}
+.dscene.active .anim:nth-child(4){animation-delay:.26s}
+@keyframes dup{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.d-pill{display:inline-flex;align-items:center;gap:6px;background:#f0f4ff;border-radius:100px;padding:4px 12px 4px 4px;margin-bottom:12px}
+.d-dot{width:18px;height:18px;border-radius:50%;background:var(--azul);color:#fff;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.d-pilltxt{font-size:11px;font-weight:500;color:var(--azul)}
+.d-h{font-size:22px;font-weight:600;color:#0a0a0a;line-height:1.22;letter-spacing:-.03em;margin-bottom:7px}
+.d-h em{font-style:normal;color:var(--azul)}
+.d-sub{font-size:13px;color:#666;line-height:1.6;max-width:460px;margin-bottom:16px}
+.d-stats{display:flex;gap:0}
+.d-stat{padding:13px 18px;border:1px solid #ebebeb}
+.d-stat+.d-stat{border-left:none}
+.d-stat:first-child{border-radius:8px 0 0 8px}
+.d-stat:last-child{border-radius:0 8px 8px 0}
+.d-statn{font-size:26px;font-weight:600;color:#0a0a0a;letter-spacing:-.04em;line-height:1;display:block;margin-bottom:3px;font-family:var(--mono)}
+.d-statl{font-size:10px;color:#999}
+.d-tblw{width:100%;max-width:460px;border:1px solid #ebebeb;border-radius:8px;overflow:hidden}
+.d-tbl{width:100%;border-collapse:collapse;font-size:11px}
+.d-tbl th{background:#fafafa;color:#999;padding:7px 11px;text-align:left;font-weight:500;font-size:10px;border-bottom:1px solid #ebebeb}
+.d-tbl td{padding:7px 11px;border-bottom:1px solid #f3f3f3;color:#444}
+.d-tbl tr:last-child td{border-bottom:none}
+.d-tbl tr.da td{background:#f0f8ff;color:#0a0a0a;font-weight:500}
+.d-tbl tr.db td{background:#f0fff7;color:#0a0a0a;font-weight:500}
+.d-steps{display:grid;grid-template-columns:1fr 1fr;gap:9px;max-width:460px;width:100%}
+.d-sitem{border:1px solid #ebebeb;border-radius:8px;padding:11px 13px;position:relative}
+.d-sitem::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--azul)}
+.d-sn{font-size:10px;font-weight:600;color:var(--azul);display:block;margin-bottom:3px}
+.d-st{font-size:11px;color:#555;line-height:1.4}
+.d-resw{width:100%;border:1px solid #ebebeb;border-radius:8px;overflow:hidden}
+.d-res{width:100%;border-collapse:collapse;font-size:10.5px}
+.d-res th{background:#fafafa;color:#999;padding:6px 9px;text-align:left;font-weight:500;font-size:9px;border-bottom:1px solid #ebebeb;text-transform:uppercase;letter-spacing:.02em;white-space:nowrap}
+.d-res td{padding:6px 9px;border-bottom:1px solid #f3f3f3;color:#444;white-space:nowrap}
+.d-res tr:last-child td{border-bottom:none}
+.d-res tr{opacity:0;transform:translateY(-6px);transition:opacity .35s ease,background .3s,transform .35s ease}
+.d-res tr.show{opacity:1;transform:translateY(0)}
+.d-res tr.rc td{background:#f0fff7}
+.d-res tr.rp td{background:#fffbf0}
+.d-res tr.flash td{background:#dcfce7}
+.d-res .amt{font-variant-numeric:tabular-nums;text-align:right}
+.d-res .amt.pos{color:#0f9d58;font-weight:500}
+.d-res .amt.neg{color:#d93025;font-weight:500}
+.d-res .grp{font-weight:600;color:#0a0a0a;font-size:9.5px}
+.d-ok{display:inline-flex;align-items:center;gap:4px;color:#16a34a;font-weight:500;font-size:9.5px}
+.d-ok::before{content:'';width:5px;height:5px;border-radius:50%;background:#16a34a}
+.d-pend{display:inline-flex;align-items:center;gap:4px;color:#d97706;font-weight:500;font-size:9.5px}
+.d-pend::before{content:'';width:5px;height:5px;border-radius:50%;background:#d97706}
+.d-summary{display:flex;gap:16px;margin-top:12px;opacity:0;transition:opacity .4s}
+.d-summary.show{opacity:1}
+.d-sitm{display:flex;align-items:center;gap:6px;font-size:12px;color:#666}
+.d-sitm .dot{width:7px;height:7px;border-radius:50%}
+.d-sitm .dot.g{background:#16a34a}
+.d-sitm .dot.y{background:#d97706}
+.d-wtag{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--azul);margin-bottom:9px;height:16px;opacity:0;transition:opacity .3s}
+.d-wtag.show{opacity:1}
+.d-wtag .blink{width:6px;height:6px;border-radius:50%;background:var(--azul);animation:dbl 1s step-end infinite}
+@keyframes dbl{50%{opacity:.2}}
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* Mini Google Sheets mockup (escena 2) */
+.ms{border:1px solid #dadce0;border-radius:6px;overflow:hidden;max-width:460px;width:100%;font-size:10px;position:relative}
+.ms-tbar{display:flex;align-items:center;gap:6px;padding:4px 8px;border-bottom:1px solid #f0f0f0}
+.ms-icon svg{width:14px;height:14px}
+.ms-name{font-size:11px;font-weight:500;color:#202124}
+.ms-mbar{display:flex;align-items:center;height:20px;border-bottom:1px solid #f0f0f0;padding:0 2px}
+.ms-mi{font-size:9px;color:#3c4043;padding:0 5px;height:100%;display:flex;align-items:center;flex-shrink:0}
+.ms-conc{font-size:9px;font-weight:500;color:#1a73e8;background:#e8f0fe;padding:0 6px;margin-left:auto;height:100%;flex-shrink:0;display:flex;align-items:center;gap:3px}
+.ms-dd{position:absolute;background:#fff;border-radius:0 0 4px 4px;box-shadow:0 3px 8px rgba(0,0,0,.2);width:160px;z-index:50;padding:3px 0;display:none}
+.ms-dd.on{display:block}
+.ms-ddi{display:flex;align-items:center;gap:6px;padding:5px 10px;font-size:10px;color:#3c4043}
+.ms-ddi.hv{background:#e8f0fe}
+.ms-dico{width:13px;height:13px;border-radius:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ms-dg{background:#0f9d58}.ms-db{background:#1a73e8}.ms-dgr{background:#9e9e9e}
+.ms-cells{padding:0}
+.ms-row{display:grid;grid-template-columns:20px repeat(5,1fr)}
+.ms-c{padding:2px 4px;border-right:1px solid #eee;border-bottom:1px solid #eee;font-size:9px;color:#3c4043;white-space:nowrap;overflow:hidden}
+.ms-c.h{background:#f8f9fa;color:#888;text-align:center}
+.ms-c.b{font-weight:600}
+.ms-c.p{color:#0f9d58}.ms-c.r{color:#d93025}
+.ms-tabs{display:flex;align-items:flex-end;background:#f8f9fa;padding:0 4px;height:18px;gap:2px;overflow:hidden;border-top:1px solid #e0e0e0}
+.ms-tab{font-size:8px;padding:0 6px;height:14px;border-radius:2px 2px 0 0;display:flex;align-items:center;margin-top:4px;flex-shrink:0}
+.ms-tab.act{background:#fff;border:1px solid #dadce0;border-bottom-color:#fff;color:#1a6b3a;font-weight:500}
+.ms-tab.inact{color:#999}
+.ms-cur{position:absolute;z-index:200;pointer-events:none;transition:top .45s ease,left .45s ease}
+.ms-cur svg{width:11px;height:11px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.4))}
+.ms-rip{position:absolute;width:13px;height:13px;border-radius:50%;border:1.5px solid rgba(26,115,232,.8);z-index:199;opacity:0;transform:scale(0)}
+.ms-rip.go{animation:msrp .28s ease-out forwards}
+@keyframes msrp{0%{opacity:.9;transform:scale(0)}100%{opacity:0;transform:scale(2.2)}}
+.ms-status{margin-top:8px;font-size:11px;color:#666;display:flex;align-items:center;gap:5px}
+.ms-sd{width:5px;height:5px;border-radius:50%;background:#e0e0e0}
+.ms-sd.run{background:var(--azul);animation:msbl 1s step-end infinite}
+.ms-sd.ok{background:#0f9d58}
+@keyframes msbl{50%{opacity:0}}
 
-  html { scroll-behavior: smooth; }
+/* Matching list (escena 4 - algoritmo) */
+.ml-wrap{border:1px solid #ebebeb;border-radius:10px;overflow:hidden;background:#fafafa;width:100%;max-width:460px;position:relative}
+.ml-head{display:grid;grid-template-columns:62px 1fr 1fr 84px 64px;padding:6px 12px;font-size:9px;font-weight:500;color:#999;background:#fff;border-bottom:1px solid #ebebeb;text-transform:uppercase;letter-spacing:.03em}
+.ml-body{position:relative;height:190px;overflow:hidden}
+.ml-row{position:absolute;left:0;right:0;display:grid;grid-template-columns:62px 1fr 1fr 84px 64px;padding:4px 12px;font-size:11px;align-items:center;background:#fff;border-bottom:1px solid #f2f2f2;transition:background .18s,box-shadow .18s,opacity .25s;opacity:1}
+.ml-row .id{color:#888;font-weight:500;font-size:10px}
+.ml-row .concept{color:#0a0a0a;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ml-row .resp{color:#666;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ml-row .amt{font-variant-numeric:tabular-nums;font-weight:500;text-align:right;font-size:11px}
+.ml-row .amt.pos{color:#0f9d58}
+.ml-row .amt.neg{color:#d93025}
+.ml-row.scanning{background:#f0f4ff;box-shadow:inset 3px 0 0 var(--azul)}
+.ml-row.matched-row{background:#f0fff7;box-shadow:inset 3px 0 0 #16a34a}
+.ml-row.pending-row{opacity:.35}
+.ml-tag{font-size:8px;font-weight:600;padding:1.5px 6px;border-radius:100px;white-space:nowrap}
+.ml-tag.ok{background:#dcfce7;color:#16a34a}
+.ml-tag.scan{background:#e0e9fb;color:var(--azul)}
+.ml-tag.wait{background:#f3f3f3;color:#bbb}
+.ml-badge{justify-self:end}
+.ml-speed{position:absolute;top:0;right:0;font-size:9px;color:var(--azul);background:#f0f4ff;padding:2px 8px;border-radius:0 0 0 8px;font-weight:500}
+.ml-counters{display:flex;justify-content:center;gap:28px;margin-top:12px}
+.ml-cstat{text-align:center}
+.ml-cn{font-size:18px;font-weight:600;color:#0a0a0a;font-variant-numeric:tabular-nums;font-family:var(--mono)}
+.ml-cl{font-size:10px;color:#999;margin-top:2px}
+.ml-ptrack{height:3px;background:#ebebeb;border-radius:2px;margin-top:10px;overflow:hidden;width:100%;max-width:460px}
+.ml-pfill{height:100%;background:var(--azul);width:0%;border-radius:2px}
 
-  body {
-    font-family: var(--sans);
-    font-size: 15px;
-    line-height: 1.65;
-    color: var(--negro);
-    background: var(--blanco);
-    -webkit-font-smoothing: antialiased;
-  }
+.deco{position:absolute;right:0;top:0;bottom:48px;width:140px;pointer-events:none;overflow:hidden}
+.deco-line{position:absolute;right:26px;top:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent 0%,#ebebeb 20%,#ebebeb 80%,transparent 100%)}
+.deco-num{position:absolute;right:34px;font-size:90px;font-weight:700;color:#f5f5f5;letter-spacing:-.05em;line-height:1;bottom:24px}
 
-  /* ── NAV ── */
-  nav {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: var(--blanco);
-    border-bottom: 1px solid var(--borde);
-  }
-  .nav-inner {
-    max-width: var(--max);
-    margin: 0 auto;
-    padding: 0 1.5rem;
-    height: 52px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .nav-logo {
-    font-family: var(--mono);
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--azul);
-    text-decoration: none;
-    letter-spacing: -0.3px;
-  }
-  .nav-links {
-    display: flex;
-    gap: 1.75rem;
-    list-style: none;
-  }
-  .nav-links a {
-    font-size: 13px;
-    color: var(--gris-1);
-    text-decoration: none;
-    transition: color .15s;
-  }
-  .nav-links a:hover,
-  .nav-links a.active { color: var(--azul); }
+.dprog{position:absolute;bottom:48px;left:0;height:2px;background:var(--azul);width:0;z-index:10}
+.dctrl{position:absolute;bottom:0;left:0;right:0;height:48px;border-top:1px solid #ebebeb;display:flex;align-items:center;justify-content:space-between;padding:0 22px;background:#fff;z-index:20}
+.dctrl-left{display:flex;align-items:center;gap:8px}
+.dcbtn{background:none;border:1px solid #e0e0e0;color:#999;width:26px;height:26px;border-radius:6px;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center}
+.dcbtn:hover{border-color:var(--azul);color:var(--azul)}
+.dcdots{display:flex;gap:5px;align-items:center}
+.dcdot{width:5px;height:5px;border-radius:50%;background:#e0e0e0;cursor:pointer}
+.dcdot.on{background:var(--azul);width:16px;border-radius:3px}
+.dctr{font-size:10px;color:#bbb}
 
-  /* ── SECTIONS ── */
-  section { display: none; }
-  section.visible { display: block; }
-
-  .container {
-    max-width: var(--max);
-    margin: 0 auto;
-    padding: 3.5rem 1.5rem;
-  }
-
-  /* ── HOME ── */
-  .home-eyebrow {
-    font-family: var(--mono);
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--azul);
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    margin-bottom: .75rem;
-  }
-  .home-h1 {
-    font-size: 26px;
-    font-weight: 600;
-    line-height: 1.25;
-    color: var(--negro);
-    margin-bottom: 1rem;
-    letter-spacing: -.4px;
-  }
-  .home-lead {
-    font-size: 15px;
-    color: var(--gris-1);
-    max-width: 520px;
-    margin-bottom: 2.5rem;
-    line-height: 1.7;
-  }
-
-  .specs-block {
-    border: 1px solid var(--borde);
-    border-radius: 6px;
-    overflow: hidden;
-    margin-bottom: 2.5rem;
-  }
-  .specs-block table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-  }
-  .specs-block th {
-    text-align: left;
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    color: var(--gris-2);
-    background: var(--gris-4);
-    padding: 8px 14px;
-    border-bottom: 1px solid var(--borde);
-  }
-  .specs-block td {
-    padding: 9px 14px;
-    border-bottom: 1px solid var(--borde);
-    vertical-align: top;
-  }
-  .specs-block tr:last-child td { border-bottom: none; }
-  .specs-block td:first-child {
-    color: var(--gris-1);
-    width: 44%;
-  }
-  .specs-block td:last-child {
-    color: var(--negro);
-    font-weight: 500;
-  }
-  .tag {
-    display: inline-block;
-    font-family: var(--mono);
-    font-size: 11px;
-    background: var(--azul-bg);
-    color: var(--azul);
-    padding: 2px 8px;
-    border-radius: 3px;
-    font-weight: 500;
-  }
-
-  .home-areas {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 2.5rem;
-  }
-  .area-card {
-    border: 1px solid var(--borde);
-    border-radius: 6px;
-    padding: 1rem 1.1rem;
-  }
-  .area-card-label {
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    color: var(--azul);
-    margin-bottom: .3rem;
-  }
-  .area-card p {
-    font-size: 13px;
-    color: var(--gris-1);
-    line-height: 1.5;
-  }
-
-  .cta-home {
-    display: inline-block;
-    background: var(--azul);
-    color: var(--blanco);
-    font-size: 13px;
-    font-weight: 500;
-    padding: 10px 22px;
-    border-radius: 5px;
-    text-decoration: none;
-    transition: background .15s;
-    cursor: pointer;
-    border: none;
-  }
-  .cta-home:hover { background: var(--azul-dark); }
-
-  /* ── SOBRE MÍ ── */
-  .about-name {
-    font-size: 22px;
-    font-weight: 600;
-    letter-spacing: -.3px;
-    margin-bottom: .35rem;
-  }
-  .about-role {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--azul);
-    font-weight: 500;
-    margin-bottom: 1.5rem;
-  }
-  .about-bio {
-    font-size: 14px;
-    color: var(--gris-1);
-    line-height: 1.75;
-    margin-bottom: 2rem;
-    max-width: 540px;
-  }
-  .stack-title {
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    color: var(--gris-2);
-    margin-bottom: .75rem;
-  }
-  .stack-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 2rem;
-  }
-  .stack-pill {
-    font-family: var(--mono);
-    font-size: 11px;
-    font-weight: 500;
-    padding: 4px 10px;
-    border: 1px solid var(--borde);
-    border-radius: 4px;
-    color: var(--gris-1);
-    background: var(--gris-4);
-  }
-  .divider {
-    border: none;
-    border-top: 1px solid var(--borde);
-    margin: 2rem 0;
-  }
-  .exp-item { margin-bottom: 1.25rem; }
-  .exp-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: .2rem;
-  }
-  .exp-title {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--negro);
-  }
-  .exp-date {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--gris-2);
-  }
-  .exp-org {
-    font-size: 13px;
-    color: var(--azul);
-    margin-bottom: .2rem;
-  }
-  .exp-desc {
-    font-size: 13px;
-    color: var(--gris-1);
-    line-height: 1.6;
-  }
-
-  /* ── PRODUCTO ── */
-  .prod-eyebrow {
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    color: var(--azul);
-    margin-bottom: .6rem;
-  }
-  .prod-h1 {
-    font-size: 22px;
-    font-weight: 600;
-    letter-spacing: -.3px;
-    margin-bottom: .5rem;
-    line-height: 1.3;
-  }
-  .prod-tagline {
-    font-size: 14px;
-    color: var(--gris-1);
-    margin-bottom: 2rem;
-    line-height: 1.65;
-    max-width: 500px;
-  }
-
-  .price-row {
-    display: flex;
-    align-items: baseline;
-    gap: .5rem;
-    margin-bottom: 1.25rem;
-  }
-  .price-num {
-    font-size: 30px;
-    font-weight: 600;
-    font-family: var(--mono);
-    color: var(--negro);
-    letter-spacing: -1px;
-  }
-  .price-label {
-    font-size: 13px;
-    color: var(--gris-2);
-  }
-
-  .buy-btn {
-    display: inline-block;
-    background: var(--azul);
-    color: var(--blanco);
-    font-size: 14px;
-    font-weight: 500;
-    padding: 11px 28px;
-    border-radius: 5px;
-    text-decoration: none;
-    transition: background .15s;
-    margin-bottom: .6rem;
-  }
-  .buy-btn:hover { background: var(--azul-dark); }
-  .guarantee-note {
-    font-size: 12px;
-    color: var(--gris-2);
-    display: block;
-    margin-bottom: 2.5rem;
-  }
-
-  .section-label {
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    color: var(--gris-2);
-    margin-bottom: .75rem;
-    margin-top: 2rem;
-  }
-  .section-label:first-of-type { margin-top: 0; }
-
-  .includes-list {
-    list-style: none;
-    border: 1px solid var(--borde);
-    border-radius: 6px;
-    overflow: hidden;
-    margin-bottom: 2rem;
-    font-size: 13px;
-  }
-  .includes-list li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 9px 14px;
-    border-bottom: 1px solid var(--borde);
-    color: var(--negro);
-  }
-  .includes-list li:last-child { border-bottom: none; }
-  .includes-list li span { color: var(--gris-2); font-size: 12px; font-family: var(--mono); }
-
-  .flow-steps {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    margin-bottom: 2rem;
-  }
-  .flow-step {
-    border: 1px solid var(--borde);
-    border-radius: 6px;
-    padding: .85rem .75rem;
-    text-align: center;
-  }
-  .flow-step-num {
-    font-family: var(--mono);
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--azul);
-    display: block;
-    margin-bottom: .3rem;
-  }
-  .flow-step p { font-size: 12px; color: var(--gris-1); line-height: 1.45; }
-
-  .faq-list { margin-bottom: 2rem; }
-  .faq-item { padding: 1rem 0; border-bottom: 1px solid var(--borde); }
-  .faq-item:last-child { border-bottom: none; }
-  .faq-q { font-size: 13px; font-weight: 500; color: var(--negro); margin-bottom: .3rem; }
-  .faq-a { font-size: 13px; color: var(--gris-1); line-height: 1.6; }
-
-  .alert-box {
-    border-left: 3px solid var(--azul);
-    background: var(--azul-bg);
-    padding: .85rem 1rem;
-    border-radius: 0 5px 5px 0;
-    font-size: 13px;
-    color: var(--azul-dark);
-    margin-bottom: 2rem;
-    line-height: 1.6;
-  }
-
-  /* ── CONTACTO ── */
-  .contact-intro {
-    font-size: 14px;
-    color: var(--gris-1);
-    margin-bottom: 2rem;
-    line-height: 1.7;
-    max-width: 460px;
-  }
-  .contact-block {
-    border: 1px solid var(--borde);
-    border-radius: 6px;
-    overflow: hidden;
-    font-size: 13px;
-    margin-bottom: 2rem;
-  }
-  .contact-row {
-    display: flex;
-    align-items: center;
-    padding: 11px 14px;
-    border-bottom: 1px solid var(--borde);
-    gap: 12px;
-  }
-  .contact-row:last-child { border-bottom: none; }
-  .contact-label {
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: .06em;
-    color: var(--gris-2);
-    width: 80px;
-    flex-shrink: 0;
-  }
-  .contact-val {
-    color: var(--negro);
-  }
-  .contact-val a {
-    color: var(--azul);
-    text-decoration: none;
-  }
-  .contact-val a:hover { text-decoration: underline; }
-
-  /* ── FOOTER ── */
-  footer {
-    border-top: 1px solid var(--borde);
-    padding: 1.5rem;
-    text-align: center;
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--gris-2);
-  }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 520px) {
-    .home-areas { grid-template-columns: 1fr; }
-    .flow-steps  { grid-template-columns: 1fr 1fr; }
-    .home-h1     { font-size: 22px; }
-    .prod-h1     { font-size: 20px; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-  }
+@media(max-width:520px){
+  .demo-wrap{height:640px}
+  .d-stats,.dctrl{flex-wrap:wrap}
+  .deco{display:none}
+}
 </style>
 </head>
 <body>
+
 
 <nav>
   <div class="nav-inner">
     <a class="nav-logo" href="#" onclick="show('home')">Ambilor.Lab</a>
     <ul class="nav-links">
-      <li><a href="#" onclick="show('home')"    id="nav-home">Inicio</a></li>
-      <li><a href="#" onclick="show('about')"   id="nav-about">Sobre mí</a></li>
+      <li><a href="#" onclick="show('home')" id="nav-home">Inicio</a></li>
+      <li><a href="#" onclick="show('about')" id="nav-about">Sobre mi</a></li>
       <li><a href="#" onclick="show('product')" id="nav-product">Herramientas</a></li>
       <li><a href="#" onclick="show('contact')" id="nav-contact">Contacto</a></li>
     </ul>
   </div>
 </nav>
 
-<!-- ══ HOME ══════════════════════════════════════════════════════════════ -->
 <section id="home" class="visible">
   <div class="container">
-    <div class="home-eyebrow">Automatización contable · Santiago, Chile</div>
-    <h1 class="home-h1">Procesos financieros que<br/>funcionan solos.</h1>
-    <p class="home-lead">
-      Construyo herramientas de automatización para contadores, equipos financieros y administradores de PyMEs — usando las plataformas que ya tienes: Google Sheets, Apps Script y Power BI.
-    </p>
-
+    <div class="home-eyebrow">Automatizacion contable - Santiago, Chile</div>
+    <h1 class="home-h1">Procesos financieros que funcionan solos.</h1>
+    <p class="home-lead">Construyo herramientas de automatizacion para contadores, equipos financieros y administradores de PyMEs usando las plataformas que ya tienes: Google Sheets, Apps Script y Power BI.</p>
     <div class="specs-block">
       <table>
-        <thead>
-          <tr><th>Área</th><th>Tecnología</th></tr>
-        </thead>
+        <thead><tr><th>Area</th><th>Tecnologia</th></tr></thead>
         <tbody>
-          <tr><td>Conciliación bancaria</td><td><span class="tag">Google Sheets + Apps Script</span></td></tr>
-          <tr><td>Business Intelligence</td><td><span class="tag">Looker Studio · Power BI</span></td></tr>
-          <tr><td>Automatización de procesos</td><td><span class="tag">Python · SQL · n8n</span></td></tr>
+          <tr><td>Conciliacion bancaria</td><td><span class="tag">Google Sheets + Apps Script</span></td></tr>
+          <tr><td>Business Intelligence</td><td><span class="tag">Looker Studio - Power BI</span></td></tr>
+          <tr><td>Automatizacion de procesos</td><td><span class="tag">Python - SQL - n8n</span></td></tr>
         </tbody>
       </table>
     </div>
-
     <div class="home-areas">
-      <div class="area-card">
-        <div class="area-card-label">Para contadores</div>
-        <p>Herramientas que reducen el trabajo manual sin depender de software externo.</p>
-      </div>
-      <div class="area-card">
-        <div class="area-card-label">Para PyMEs</div>
-        <p>Automatizaciones sobre plataformas que ya usas — sin suscripciones adicionales.</p>
-      </div>
-      <div class="area-card">
-        <div class="area-card-label">Para equipos financieros</div>
-        <p>Dashboards, conciliaciones y reglas de negocio implementadas directamente en tus datos.</p>
-      </div>
-      <div class="area-card">
-        <div class="area-card-label">Productos digitales</div>
-        <p>Scripts y plantillas listas para instalar, documentadas y con soporte directo del autor.</p>
-      </div>
+      <div class="area-card"><div class="area-card-label">Para contadores</div><p>Herramientas que reducen el trabajo manual sin depender de software externo.</p></div>
+      <div class="area-card"><div class="area-card-label">Para PyMEs</div><p>Automatizaciones sobre plataformas que ya usas sin suscripciones adicionales.</p></div>
+      <div class="area-card"><div class="area-card-label">Para equipos financieros</div><p>Dashboards, conciliaciones y reglas de negocio implementadas directamente en tus datos.</p></div>
+      <div class="area-card"><div class="area-card-label">Productos digitales</div><p>Scripts y plantillas listas para instalar, documentadas y con soporte directo del autor.</p></div>
     </div>
-
-    <button class="cta-home" onclick="show('product')">Ver herramientas disponibles →</button>
+    <button class="cta-home" onclick="show('product')">Ver herramientas disponibles</button>
   </div>
 </section>
 
-<!-- ══ SOBRE MÍ ══════════════════════════════════════════════════════════ -->
 <section id="about">
   <div class="container">
     <div class="about-name">Jordan.R.</div>
-    <div class="about-role">Contador Público y Auditor · Analista de Datos</div>
-    <p class="about-bio">
-      Me especializo en construir automatizaciones que eliminan trabajo manual repetitivo en procesos financieros — usando herramientas accesibles para cualquier equipo contable.
-    </p>
-    <p class="about-bio" style="margin-top:-1rem">
-      Cada herramienta que publico la construí primero para resolver un problema real. El Conciliador Automático V1 nació de meses cruzando movimientos manualmente y decidir que no tenía sentido seguir haciéndolo así.
-    </p>
-
-    <div class="stack-title">Stack técnico</div>
+    <div class="about-role">Contador Publico y Auditor - Analista de Datos</div>
+    <p class="about-bio">Me especializo en construir automatizaciones que eliminan trabajo manual repetitivo en procesos financieros usando herramientas accesibles para cualquier equipo contable.</p>
+    <p class="about-bio" style="margin-top:-1rem">Cada herramienta que publico la construi primero para resolver un problema real. El Conciliador Automatico V1 nacio de meses cruzando movimientos manualmente y decidir que no tenia sentido seguir haciendolo asi.</p>
+    <div class="stack-title">Stack tecnico</div>
     <div class="stack-grid">
-      <span class="stack-pill">SQL</span>
-      <span class="stack-pill">Python</span>
-      <span class="stack-pill">Google Apps Script</span>
-      <span class="stack-pill">Looker Studio</span>
-      <span class="stack-pill">Power BI</span>
-      <span class="stack-pill">Microsoft Dynamics</span>
-      <span class="stack-pill">Bantotal</span>
-      <span class="stack-pill">n8n</span>
+      <span class="stack-pill">SQL</span><span class="stack-pill">Python</span>
+      <span class="stack-pill">Google Apps Script</span><span class="stack-pill">Looker Studio</span>
+      <span class="stack-pill">Power BI</span><span class="stack-pill">Microsoft Dynamics</span>
+      <span class="stack-pill">Bantotal</span><span class="stack-pill">n8n</span>
     </div>
-
-    <hr class="divider"/>
-
+    <hr class="divider" />
     <div class="stack-title">Experiencia</div>
-
     <div class="exp-item">
-      <div class="exp-head">
-        <div class="exp-title">Analista de Control Contable y Datos</div>
-        <div class="exp-date">2023 — presente</div>
-      </div>
-      <div class="exp-org">Forum Servicios Financieros · Santiago, Chile</div>
+      <div class="exp-head"><div class="exp-title">Analista de Control Contable y Datos</div><div class="exp-date">2023 - presente</div></div>
+      <div class="exp-org">Forum Servicios Financieros - Santiago, Chile</div>
       <div class="exp-desc">Analista y Control Contable:
           *Análisis y validación de grandes volúmenes de datos financieros.
           * Desarrollo de dashboards para monitoreo y control operativo.
@@ -577,192 +300,571 @@
          * Validación de consistencia de datos entre sistemas financieros (Bantotal y Dynamics).
          * Optimización de flujos de requerimientos de pago en ERP.
          * Implementación de formularios automatizados y notificaciones para seguimiento de procesos.
-         * Participación en proyectos de mejora continua, control operativo y transformación de procesos..</div>
+         * Participación en proyectos de mejora continua, control operativo y transformación de procesos.</div>
     </div>
-
-    <hr class="divider"/>
-
-    <div class="stack-title">Formación</div>
+    <hr class="divider" />
+    <div class="stack-title">Formacion</div>
     <div class="exp-item">
-      <div class="exp-head">
-        <div class="exp-title">Analista de Datos</div>
-        <div class="exp-date">En curso</div>
-      </div>
+      <div class="exp-head"><div class="exp-title">Analista de Datos</div><div class="exp-date">En curso</div></div>
       <div class="exp-org">AIEP</div>
     </div>
     <div class="exp-item">
-      <div class="exp-head">
-        <div class="exp-title">Contador Público y Auditor</div>
-        <div class="exp-date"></div>
-      </div>
+      <div class="exp-head"><div class="exp-title">Contador Publico y Auditor</div><div class="exp-date"></div></div>
       <div class="exp-org">Usach</div>
     </div>
   </div>
 </section>
 
-<!-- ══ HERRAMIENTAS / PRODUCTO ══════════════════════════════════════════ -->
 <section id="product">
   <div class="container">
     <div class="prod-eyebrow">Herramienta disponible</div>
-    <h1 class="prod-h1">Conciliador Automático V1<br/>para Google Sheets</h1>
-    <p class="prod-tagline">
-      Cruza movimientos bancarios, facturas o registros contables en segundos. Sin código, sin fórmulas complejas — directo desde el menú de tu planilla.
-    </p>
+    <h1 class="prod-h1">Conciliador Automatico V1 para Google Sheets</h1>
+    <p class="prod-tagline">Cruza movimientos bancarios, facturas o registros contables en segundos. Sin codigo, sin formulas complejas, directo desde el menu de tu planilla.</p>
+
+    <div class="demo-section">
+      <div class="demo-label">Ver en accion</div>
+      <div class="demo-wrap" id="demo">
+        <div class="deco"><div class="deco-line"></div><div class="deco-num" id="dn">01</div></div>
+
+        <div class="dscene active" id="ds0">
+          <div class="d-pill anim"><div class="d-dot">!</div><span class="d-pilltxt">El problema que resuelve</span></div>
+          <div class="d-h anim">Cruzas movimientos a mano.<br><em>Cada mes.</em></div>
+          <div class="d-sub anim">Facturas contra pagos. Cartola contra contabilidad. Fila por fila, todos los meses. Horas de trabajo manual con riesgo de error.</div>
+          <div class="d-stats anim">
+            <div class="d-stat"><span class="d-statn">200</span><div class="d-statl">movimientos tipicos</div></div>
+            <div class="d-stat"><span class="d-statn">3h</span><div class="d-statl">tiempo manual</div></div>
+            <div class="d-stat"><span class="d-statn">&#8734;</span><div class="d-statl">riesgo de error</div></div>
+          </div>
+        </div>
+
+        <div class="dscene" id="ds1">
+          <div class="d-pill anim"><div class="d-dot">1</div><span class="d-pilltxt">Paso 1 - carga tus datos</span></div>
+          <div class="d-h anim">Pegas tus movimientos<br>en la hoja <em>MOVIMIENTOS</em></div>
+          <div class="d-sub anim">Cualquier estructura. Columnas configurables sin tocar codigo.</div>
+          <div class="d-tblw anim">
+            <table class="d-tbl">
+              <thead><tr><th>ID</th><th>Concepto</th><th>Responsable</th><th>Monto</th></tr></thead>
+              <tbody>
+                <tr class="da"><td>F-001</td><td>Factura A</td><td>Proveedor X</td><td>+500.000</td></tr>
+                <tr><td>F-002</td><td>Honorario B</td><td>Proveedor Y</td><td>+120.000</td></tr>
+                <tr class="db"><td>P-001</td><td>Pago fact A</td><td>Proveedor X</td><td>-500.000</td></tr>
+                <tr><td>P-002</td><td>Abono hon B</td><td>Proveedor Y</td><td>-120.000</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="dscene" id="ds2">
+          <div class="d-pill anim"><div class="d-dot">2</div><span class="d-pilltxt">Paso 2 - ejecutar</span></div>
+          <div class="d-h anim">Un clic desde el menu<br>de tu <em>Google Sheets</em></div>
+          <div class="d-sub anim">El sistema valida los datos antes de procesar.</div>
+
+          <div class="ms anim" id="msframe">
+            <div class="ms-tbar">
+              <div class="ms-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 3h9l5 5v13a1 1 0 01-1 1H4a1 1 0 01-1-1V4a1 1 0 011-1z" fill="#23a566"/><path d="M13 3l5 5h-5V3z" fill="#1a7a4a"/></svg></div>
+              <span class="ms-name">ConciliacionV1</span>
+            </div>
+            <div class="ms-mbar" id="msmbar">
+              <span class="ms-mi">Archivo</span><span class="ms-mi">Editar</span><span class="ms-mi">Ver</span>
+              <span class="ms-mi">Insertar</span><span class="ms-mi">Formato</span><span class="ms-mi">Datos</span>
+              <span class="ms-conc" id="msbtn">&#128260; Conciliacion</span>
+            </div>
+            <div class="ms-dd" id="msdd">
+              <div class="ms-ddi" id="msval"><div class="ms-dico ms-dg"><svg width="7" height="7" viewBox="0 0 11 11"><path d="M1.5 5.5l3 3 5-5" stroke="#fff" stroke-width="2" fill="none"/></svg></div>Validar datos</div>
+              <div class="ms-ddi" id="msexec"><div class="ms-dico ms-db"><svg width="6" height="6" viewBox="0 0 10 10"><path d="M2 1.5l7 3.5-7 3.5V1.5z" fill="#fff"/></svg></div>Ejecutar conciliacion</div>
+              <div class="ms-ddi" id="msclr"><div class="ms-dico ms-dgr"><svg width="7" height="7" viewBox="0 0 11 11"><path d="M2 2l7 7M9 2L2 9" stroke="#fff" stroke-width="2"/></svg></div>Limpiar resultados</div>
+            </div>
+            <div class="ms-cells">
+              <div class="ms-row"><div class="ms-c h"></div><div class="ms-c h">A</div><div class="ms-c h">B</div><div class="ms-c h">C</div><div class="ms-c h">D</div><div class="ms-c h">E</div></div>
+              <div class="ms-row"><div class="ms-c h">1</div><div class="ms-c b">ID</div><div class="ms-c b">Fecha</div><div class="ms-c b">Concepto</div><div class="ms-c b">Responsable</div><div class="ms-c b">Monto</div></div>
+              <div class="ms-row"><div class="ms-c h">2</div><div class="ms-c">F-001</div><div class="ms-c">03/06</div><div class="ms-c">Factura A</div><div class="ms-c">Prov. X</div><div class="ms-c p">+500.000</div></div>
+              <div class="ms-row"><div class="ms-c h">3</div><div class="ms-c">P-001</div><div class="ms-c">04/06</div><div class="ms-c">Pago fact A</div><div class="ms-c">Prov. X</div><div class="ms-c r">-500.000</div></div>
+            </div>
+            <div class="ms-tabs">
+              <div class="ms-tab act">MOVIMIENTOS</div>
+              <div class="ms-tab inact">CONFIG_COLUMNAS</div>
+              <div class="ms-tab inact">REGLAS</div>
+              <div class="ms-tab inact">CONCEPTOS</div>
+              <div class="ms-tab inact">RESULTADO</div>
+              <div class="ms-tab inact">LOG</div>
+            </div>
+            <div class="ms-cur" id="mscur" style="top:80px;left:20px"><svg viewBox="0 0 18 18" fill="none"><path d="M2 2l6 14 3-5.5 5.5-3L2 2z" fill="#1a1a1a" stroke="#fff" stroke-width="1"/></svg></div>
+            <div class="ms-rip" id="msrip"></div>
+          </div>
+          <div class="ms-status anim"><div class="ms-sd" id="mssd"></div><span id="msst">Listo para ejecutar</span></div>
+        </div>
+
+        <div class="dscene" id="ds3">
+          <div class="d-pill anim"><div class="d-dot">~</div><span class="d-pilltxt">Algoritmo de matching</span></div>
+          <div class="d-h anim">Cruza <em>cada movimiento</em><br>contra todos los demas</div>
+          <div class="d-sub anim">El sistema recorre los 200 registros y empareja automaticamente cada movimiento con su contraparte.</div>
+
+          <div class="ml-wrap anim">
+            <span class="ml-speed" id="speedTag">~850 comparaciones/seg</span>
+            <div class="ml-head"><div>ID</div><div>Concepto</div><div>Responsable</div><div style="text-align:right">Monto</div><div></div></div>
+            <div class="ml-body" id="listBody"></div>
+          </div>
+          <div class="ml-ptrack anim"><div class="ml-pfill" id="pfill"></div></div>
+          <div class="ml-counters anim">
+            <div class="ml-cstat"><div class="ml-cn" id="cProc">0</div><div class="ml-cl">procesados</div></div>
+            <div class="ml-cstat"><div class="ml-cn" id="cMatch">0</div><div class="ml-cl">pares conciliados</div></div>
+            <div class="ml-cstat"><div class="ml-cn">200</div><div class="ml-cl">total registros</div></div>
+          </div>
+        </div>
+
+        <div class="dscene" id="ds4">
+          <div class="d-pill anim"><div class="d-dot">3</div><span class="d-pilltxt">Paso 3 - resultado</span></div>
+          <div class="d-h anim">La hoja <em>RESULTADO</em><br>lista lo conciliado y pendiente</div>
+          <div class="d-sub anim">Pares agrupados por color. Pendientes destacados al final con el motivo claro.</div>
+          <div class="d-wtag" id="wtag"><div class="blink"></div>Escribiendo resultado...</div>
+          <div class="d-resw">
+            <table class="d-res">
+              <thead><tr><th>Grupo</th><th>Estado</th><th>ID</th><th>Fecha</th><th>Concepto</th><th>Responsable</th><th style="text-align:right">Monto</th></tr></thead>
+              <tbody id="tbody"></tbody>
+            </table>
+          </div>
+          <div class="d-summary" id="summary">
+            <div class="d-sitm"><div class="dot g"></div>2 pares conciliados</div>
+            <div class="d-sitm"><div class="dot y"></div>5 movimientos pendientes</div>
+          </div>
+        </div>
+
+        <div class="dscene" id="ds5">
+          <div class="d-pill anim"><div class="d-dot">&#10003;</div><span class="d-pilltxt">Resultado final</span></div>
+          <div class="d-h anim"><em>200 movimientos</em> cruzados<br>en menos de 30 segundos</div>
+          <div class="d-sub anim">Sin software adicional. Sin Excel. Solo Google Sheets y una cuenta Google. Instalacion en 5 minutos.</div>
+          <div class="d-stats anim">
+            <div class="d-stat"><span class="d-statn">30s</span><div class="d-statl">vs 3 horas manual</div></div>
+            <div class="d-stat"><span class="d-statn">0</span><div class="d-statl">errores humanos</div></div>
+            <div class="d-stat"><span class="d-statn">5min</span><div class="d-statl">instalacion</div></div>
+          </div>
+        </div>
+
+        <div class="dprog" id="dprog"></div>
+        <div class="dctrl">
+          <div class="dctrl-left">
+            <button class="dcbtn" onclick="dnav(-1)">&#8592;</button>
+            <div class="dcdots" id="ddots"></div>
+            <button class="dcbtn" id="dppbtn" onclick="dtogglePlay()">&#9646;&#9646;</button>
+            <button class="dcbtn" onclick="dnav(1)">&#8594;</button>
+          </div>
+          <span class="dctr" id="dctr">1 de 6</span>
+        </div>
+      </div>
+    </div>
 
     <div class="price-row">
       <span class="price-num">$9.990</span>
-      <span class="price-label">CLP · pago único · sin suscripción</span>
+      <span class="price-label">CLP - pago unico - sin suscripcion</span>
     </div>
-
-    <a class="buy-btn" href="ambilorlab.gumroad.com/l/gbtemx" target="_blank" rel="noopener noreferrer">
-      Comprar →
-    </a>
-    <span class="guarantee-note">✓ Garantía de devolución de 7 días si no funciona</span>
-
-    <div class="alert-box">
-      Diseñado para contadores, administradores de PyMEs y cualquier persona que cruce movimientos financieros de forma manual todos los meses.
-    </div>
-
-    <div class="section-label">Qué incluye</div>
+    <a class="buy-btn" href="https://jordana78.gumroad.com/l/gbtemx" target="_blank" rel="noopener noreferrer">Comprar en Gumroad</a>
+    <span class="guarantee-note">Garantia de devolucion de 7 dias si no funciona</span>
+    <div class="alert-box">Disenado para contadores, administradores de PyMEs y cualquier persona que cruce movimientos financieros de forma manual todos los meses.</div>
+    <div class="section-label">Que incluye</div>
     <ul class="includes-list">
       <li>Planilla base lista para instalar <span>Google Sheets (.xlsx)</span></li>
       <li>Planilla de ejemplo con datos de prueba <span>Google Sheets (.xlsx)</span></li>
-      <li>Código fuente completo <span>10 archivos .gs documentados</span></li>
-      <li>Manual de usuario <span>PDF · 8 págs.</span></li>
-      <li>Manual técnico <span>PDF · 8 págs.</span></li>
-      <li>Guía de instalación paso a paso <span>PDF · 4 págs.</span></li>
+      <li>Codigo fuente completo <span>10 archivos .gs documentados</span></li>
+      <li>Manual de usuario <span>PDF - 8 pags.</span></li>
+      <li>Manual tecnico <span>PDF - 8 pags.</span></li>
+      <li>Guia de instalacion paso a paso <span>PDF - 4 pags.</span></li>
       <li>Licencia de uso incluida <span>uso personal o una empresa</span></li>
     </ul>
-
-    <div class="section-label">Cómo funciona</div>
-    <div class="flow-steps">
-      <div class="flow-step">
-        <span class="flow-step-num">01</span>
-        <p>Pegas tus movimientos en la hoja MOVIMIENTOS</p>
-      </div>
-      <div class="flow-step">
-        <span class="flow-step-num">02</span>
-        <p>Configuras las reglas una vez desde la planilla</p>
-      </div>
-      <div class="flow-step">
-        <span class="flow-step-num">03</span>
-        <p>Ejecutas desde el menú "🔄 Conciliación"</p>
-      </div>
-      <div class="flow-step">
-        <span class="flow-step-num">04</span>
-        <p>Ves pares conciliados y pendientes al instante</p>
-      </div>
-    </div>
-
-    <div class="section-label">Especificaciones técnicas</div>
+    <div class="section-label">Especificaciones tecnicas</div>
     <div class="specs-block" style="margin-bottom:2rem">
-      <table>
-        <tbody>
-          <tr><td>Plataforma</td><td>Google Sheets + Apps Script (V8)</td></tr>
-          <tr><td>Tipo de conciliación</td><td>1:1 automática</td></tr>
-          <tr><td>Registros óptimos</td><td>Hasta 200 por ejecución</td></tr>
-          <tr><td>Registros máximos</td><td>~700 antes de timeout</td></tr>
-          <tr><td>Configuración de columnas</td><td>Sin tocar código, desde CONFIG_COLUMNAS</td></tr>
-          <tr><td>Filtros disponibles</td><td>Monto · Responsable · Fecha · Concepto · Extras</td></tr>
-          <tr><td>Tiempo de instalación</td><td>~5 minutos siguiendo la guía incluida</td></tr>
-          <tr><td>Requiere software adicional</td><td>No — solo una cuenta Google</td></tr>
-        </tbody>
-      </table>
+      <table><tbody>
+        <tr><td>Plataforma</td><td>Google Sheets + Apps Script (V8)</td></tr>
+        <tr><td>Tipo de conciliacion</td><td>1:1 automatica</td></tr>
+        <tr><td>Registros optimos</td><td>Hasta 200 por ejecucion</td></tr>
+        <tr><td>Registros maximos</td><td>~700 antes de timeout</td></tr>
+        <tr><td>Configuracion de columnas</td><td>Sin tocar codigo, desde CONFIG_COLUMNAS</td></tr>
+        <tr><td>Filtros disponibles</td><td>Monto - Responsable - Fecha - Concepto - Extras</td></tr>
+        <tr><td>Tiempo de instalacion</td><td>~5 minutos siguiendo la guia incluida</td></tr>
+        <tr><td>Requiere software adicional</td><td>No - solo una cuenta Google</td></tr>
+      </tbody></table>
     </div>
-
     <div class="section-label">Preguntas frecuentes</div>
     <div class="faq-list">
-      <div class="faq-item">
-        <div class="faq-q">¿Necesito saber programar para instalarlo?</div>
-        <div class="faq-a">No. La guía de instalación incluida cubre el proceso en 9 pasos desde cero — copiar, pegar y autorizar permisos.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">¿Mis datos bancarios quedan en algún servidor?</div>
-        <div class="faq-a">No. El script corre completamente dentro de tu propia cuenta de Google. No hay ningún servidor externo involucrado — tus datos no salen de tu Drive.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">¿Funciona con cualquier banco o estructura de planilla?</div>
-        <div class="faq-a">Sí. Los nombres de columnas son configurables desde la hoja CONFIG_COLUMNAS sin modificar el código. Sirve para cualquier estructura de movimientos que tengas.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">¿Puedo usarlo en más de una empresa?</div>
-        <div class="faq-a">La licencia incluida cubre uso personal o una sola organización. Para uso en múltiples empresas o clientes, escríbeme directamente para una licencia multiempresa.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">¿Qué pasa si tengo más de 700 registros?</div>
-        <div class="faq-a">Procesa por períodos mensuales. Con menos de 200 registros el resultado es prácticamente inmediato. Con 500, tarda entre 30 segundos y 3 minutos.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">¿Funciona en Excel?</div>
-        <div class="faq-a">No. Está construido sobre Google Apps Script y requiere Google Sheets con una cuenta Google activa.</div>
-      </div>
+      <div class="faq-item"><div class="faq-q">Necesito saber programar para instalarlo?</div><div class="faq-a">No. La guia de instalacion incluida cubre el proceso en 9 pasos desde cero: copiar, pegar y autorizar permisos.</div></div>
+      <div class="faq-item"><div class="faq-q">Mis datos bancarios quedan en algun servidor?</div><div class="faq-a">No. El script corre completamente dentro de tu propia cuenta de Google. Tus datos no salen de tu Drive.</div></div>
+      <div class="faq-item"><div class="faq-q">Funciona con cualquier banco o estructura de planilla?</div><div class="faq-a">Si. Los nombres de columnas son configurables desde la hoja CONFIG_COLUMNAS sin modificar el codigo.</div></div>
+      <div class="faq-item"><div class="faq-q">Puedo usarlo en mas de una empresa?</div><div class="faq-a">La licencia incluida cubre uso personal o una sola organizacion. Para multiples empresas escribeme directamente.</div></div>
+      <div class="faq-item"><div class="faq-q">Que pasa si tengo mas de 700 registros?</div><div class="faq-a">Procesa por periodos mensuales. Con menos de 200 registros el resultado es practicamente inmediato.</div></div>
+      <div class="faq-item"><div class="faq-q">Funciona en Excel?</div><div class="faq-a">No. Esta construido sobre Google Apps Script y requiere Google Sheets con una cuenta Google activa.</div></div>
     </div>
-
-    <a class="buy-btn" href="https://jordana78.gumroad.com/l/gbtemx" target="_blank" rel="noopener noreferrer">
-      Comprar por $9.990 CLP →
-    </a>
-    <span class="guarantee-note">✓ Pago seguro vía Gumroad · Descarga inmediata</span>
+    <a class="buy-btn" href="https://jordana78.gumroad.com/l/gbtemx" target="_blank" rel="noopener noreferrer">Comprar por $9.990 CLP</a>
+    <span class="guarantee-note">Pago seguro via Gumroad - Descarga inmediata</span>
   </div>
 </section>
 
-<!-- ══ CONTACTO ══════════════════════════════════════════════════════════ -->
 <section id="contact">
   <div class="container">
     <div class="home-eyebrow">Contacto</div>
-    <h2 style="font-size:20px;font-weight:600;letter-spacing:-.3px;margin-bottom:.75rem">¿Tienes un proceso que automatizar?</h2>
-    <p class="contact-intro">
-      Si tienes un proceso contable o financiero que te consume tiempo y crees que se puede automatizar, cuéntame. Respondo en menos de 48 horas hábiles.
-    </p>
-    <p class="contact-intro" style="margin-top:-1rem">
-      También puedes escribirme si tienes dudas sobre el Conciliador Automático o quieres una licencia para múltiples empresas.
-    </p>
-
+    <h2 style="font-size:20px;font-weight:600;letter-spacing:-.3px;margin-bottom:.75rem">Tienes un proceso que automatizar?</h2>
+    <p class="contact-intro">Si tienes un proceso contable o financiero que te consume tiempo y crees que se puede automatizar, cuentame. Respondo en menos de 48 horas habiles.</p>
+    <p class="contact-intro" style="margin-top:-1rem">Tambien puedes escribirme si tienes dudas sobre el Conciliador Automatico o quieres una licencia para multiples empresas.</p>
     <div class="contact-block">
-      <div class="contact-row">
-        <span class="contact-label">Gumroad</span>
-        <span class="contact-val"><a href="https://jordana78.gumroad.com" target="_blank" rel="noopener noreferrer">jordana78.gumroad.com</a></span>
-      </div>
-      <div class="contact-row">
-        <span class="contact-label">Ubicación</span>
-        <span class="contact-val">Santiago, Chile</span>
-      </div>
-      <div class="contact-row">
-        <span class="contact-label">Idioma</span>
-        <span class="contact-val">Español</span>
-      </div>
+      <div class="contact-row"><span class="contact-label">Gumroad</span><span class="contact-val"><a href="https://jordana78.gumroad.com" target="_blank" rel="noopener noreferrer">jordana78.gumroad.com</a></span></div>
+      <div class="contact-row"><span class="contact-label">Ubicacion</span><span class="contact-val">Santiago, Chile</span></div>
+      <div class="contact-row"><span class="contact-label">Idioma</span><span class="contact-val">Espanol</span></div>
     </div>
-
     <div class="specs-block">
       <table>
-        <thead><tr><th>Tipo de proyecto</th><th>Descripción</th></tr></thead>
+        <thead><tr><th>Tipo de proyecto</th><th>Descripcion</th></tr></thead>
         <tbody>
-          <tr><td>Conciliaciones</td><td>Automatización de cruce de movimientos financieros</td></tr>
-          <tr><td>Reportería</td><td>Dashboards en Looker Studio o Power BI</td></tr>
-          <tr><td>Automatización</td><td>Flujos en Google Apps Script, Python o n8n</td></tr>
-          <tr><td>Plantillas</td><td>Herramientas personalizadas para tu operación</td></tr>
+          <tr><td>Conciliaciones</td><td>Automatizacion de cruce de movimientos financieros</td></tr>
+          <tr><td>Reporteria</td><td>Dashboards en Looker Studio o Power BI</td></tr>
+          <tr><td>Automatizacion</td><td>Flujos en Google Apps Script, Python o n8n</td></tr>
+          <tr><td>Plantillas</td><td>Herramientas personalizadas para tu operacion</td></tr>
         </tbody>
       </table>
     </div>
   </div>
 </section>
 
-<!-- ══ FOOTER ══════════════════════════════════════════════════════════ -->
-<footer>
-  © 2026 Ambilor.Lab · Santiago, Chile · Todos los derechos reservados
-</footer>
+<footer>2026 Ambilor.Lab - Santiago, Chile - Todos los derechos reservados</footer>
 
 <script>
-  function show(id) {
-    document.querySelectorAll('section').forEach(s => s.classList.remove('visible'));
-    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-    document.getElementById(id).classList.add('visible');
-    document.getElementById('nav-' + id).classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    return false;
-  }
-  show('home');
-</script>
+function show(id){
+  document.querySelectorAll('section').forEach(function(s){s.classList.remove('visible');});
+  document.querySelectorAll('.nav-links a').forEach(function(a){a.classList.remove('active');});
+  document.getElementById(id).classList.add('visible');
+  document.getElementById('nav-'+id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  return false;
+}
 
+// ===== DEMO 6 ESCENAS =====
+var dN=6,dcur=0,dplaying=true,draf=null,dpbStart=null,dDUR=5200;
+var dNUMS=['01','02','03','04','05','06'];
+var msSeqTimers=[];
+var mlTimers=[];
+var resTimers=[];
+
+function clearMsTimers(){msSeqTimers.forEach(clearTimeout);msSeqTimers=[];}
+function clearMlTimers(){mlTimers.forEach(clearTimeout);mlTimers=[];}
+function clearResTimers(){resTimers.forEach(clearTimeout);resTimers=[];}
+
+// ---- Escena 2: mini Google Sheets animado ----
+function runMiniSheets(){
+  clearMsTimers();
+  var msbtn=document.getElementById('msbtn');
+  var msexec=document.getElementById('msexec');
+  var msdd=document.getElementById('msdd');
+  var mscur=document.getElementById('mscur');
+  var msrip=document.getElementById('msrip');
+  var mssd=document.getElementById('mssd');
+  var msst=document.getElementById('msst');
+  var msframe=document.getElementById('msframe');
+  var msmbar=document.getElementById('msmbar');
+  if(!msbtn) return;
+
+  function posDD(){
+    var fr=msframe.getBoundingClientRect();
+    var br=msbtn.getBoundingClientRect();
+    var th=msframe.querySelector('.ms-tbar').offsetHeight;
+    var mh=msmbar.offsetHeight;
+    var w=160;
+    var right=br.right-fr.left;
+    var left=right-w;
+    if(left<2)left=2;
+    msdd.style.top=(th+mh)+'px';
+    msdd.style.left=left+'px';
+  }
+  function pp(el){
+    var er=el.getBoundingClientRect();var fr=msframe.getBoundingClientRect();
+    return{x:er.left-fr.left+er.width/2,y:er.top-fr.top+er.height/2};
+  }
+  function mv(x,y,d,cb){
+    msSeqTimers.push(setTimeout(function(){
+      mscur.style.left=(x-5)+'px';mscur.style.top=(y-5)+'px';
+      msSeqTimers.push(setTimeout(cb||function(){},460));
+    },d||0));
+  }
+  function ck(x,y,d,cb){
+    msSeqTimers.push(setTimeout(function(){
+      msrip.style.left=(x-6)+'px';msrip.style.top=(y-6)+'px';
+      msrip.className='ms-rip';void msrip.offsetWidth;msrip.className='ms-rip go';
+      msSeqTimers.push(setTimeout(cb||function(){},300));
+    },d||0));
+  }
+
+  posDD();
+  msdd.classList.remove('on');
+  msexec.classList.remove('hv');
+  mssd.className='ms-sd';msst.textContent='Listo para ejecutar';
+  mscur.style.left='20px';mscur.style.top='80px';
+
+  var bp=pp(msbtn);
+  mv(bp.x,bp.y,500,function(){
+    ck(bp.x,bp.y,0,function(){posDD();msdd.classList.add('on');});
+    msSeqTimers.push(setTimeout(function(){
+      var ep=pp(msexec);
+      mv(ep.x,ep.y,400,function(){
+        msexec.classList.add('hv');
+        ck(ep.x,ep.y,300,function(){
+          msdd.classList.remove('on');
+          msexec.classList.remove('hv');
+          mssd.className='ms-sd run';
+          msst.textContent='Ejecutando...';
+          msSeqTimers.push(setTimeout(function(){
+            mssd.className='ms-sd ok';
+            msst.textContent='200 movimientos en 28s';
+          },1600));
+        });
+      });
+    },700));
+  });
+}
+
+// ---- Escena 4: algoritmo de matching masivo ----
+var CONCEPTS=['Factura','Honorario','Servicio','Arriendo','Comision','Boleta','Anticipo','Cuota'];
+var PAYWORDS=['Pago','Abono','Cancela','Transferencia','Deposito'];
+var PROVS=['Proveedor X','Proveedor Y','Proveedor Z','Proveedor W','Proveedor V','Servicios ABC','Comercial RT','Distribuidora Sur'];
+var ML_TOTAL_PAIRS=100;
+var ML_DATA=[],ML_PAIRS=[];
+function buildMlData(){
+  ML_DATA=[];ML_PAIRS=[];
+  for(var i=0;i<ML_TOTAL_PAIRS;i++){
+    var concept=CONCEPTS[i%CONCEPTS.length];
+    var letter=String.fromCharCode(65+(i%26));
+    var prov=PROVS[i%PROVS.length];
+    var amt=(Math.floor(Math.random()*900)+50)*1000;
+    var idNum=String(i+1).padStart(3,'0');
+    ML_DATA.push({id:'F-'+idNum,c:concept+' '+letter,r:prov,a:amt,sign:1});
+    ML_DATA.push({id:'P-'+idNum,c:PAYWORDS[i%PAYWORDS.length]+' '+letter,r:prov,a:amt,sign:-1});
+  }
+  for(var i=0;i<ML_TOTAL_PAIRS;i++){ML_PAIRS.push([i*2,i*2+1]);}
+}
+buildMlData();
+
+var ML_VISIBLE=9,ML_ROW_H=22;
+var mlPool=[],mlWindowStart=0,mlProcessed=0,mlMatched=0,mlPairIdx=0;
+var ML_SPEEDS=['~720 comparaciones/seg','~850 comparaciones/seg','~910 comparaciones/seg','~680 comparaciones/seg'];
+
+function mlFmt(n){return n.toLocaleString('es-CL');}
+function mlRowHTML(d,idx){
+  return '<div class="id">'+d.id+'</div>'+
+    '<div class="concept">'+d.c+'</div>'+
+    '<div class="resp">'+d.r+'</div>'+
+    '<div class="amt '+(d.sign>0?'pos':'neg')+'">'+(d.sign>0?'+':'-')+mlFmt(d.a)+'</div>'+
+    '<div class="ml-badge"><span class="ml-tag wait" id="tag'+idx+'">Pendiente</span></div>';
+}
+
+function buildMlPool(){
+  var listBody=document.getElementById('listBody');
+  if(!listBody) return;
+  listBody.innerHTML='';
+  mlPool=[];
+  var poolSize=ML_VISIBLE+2;
+  for(var i=0;i<poolSize;i++){
+    var row=document.createElement('div');
+    row.className='ml-row pending-row';
+    row.style.top=(i*ML_ROW_H)+'px';
+    listBody.appendChild(row);
+    mlPool.push(row);
+  }
+}
+
+function mlRenderWindow(){
+  var poolSize=mlPool.length;
+  for(var slot=0;slot<poolSize;slot++){
+    var pairOffset=Math.floor(slot/2);
+    var pairIndex=mlWindowStart+pairOffset;
+    if(pairIndex>=ML_PAIRS.length){ mlPool[slot].style.opacity='0'; continue; }
+    var pair=ML_PAIRS[pairIndex];
+    var dataIdx=(slot%2===0)?pair[0]:pair[1];
+    var d=ML_DATA[dataIdx];
+    mlPool[slot].innerHTML=mlRowHTML(d,'x'+slot);
+    mlPool[slot].style.top=(slot*ML_ROW_H)+'px';
+    mlPool[slot].style.opacity='1';
+    mlPool[slot].className='ml-row pending-row';
+  }
+}
+
+function mlSetTag(slot,cls,text){
+  var t=document.getElementById('tagx'+slot);
+  if(t){t.className='ml-tag '+cls;t.textContent=text;}
+}
+function mlMarkSlot(slot,cls){
+  if(!mlPool[slot])return;
+  mlPool[slot].classList.remove('pending-row','scanning','matched-row');
+  mlPool[slot].classList.add(cls);
+}
+
+function mlProcessNext(){
+  var cProc=document.getElementById('cProc');
+  var cMatch=document.getElementById('cMatch');
+  var pfill=document.getElementById('pfill');
+  var speedTag=document.getElementById('speedTag');
+  if(!cProc) return;
+
+  if(mlPairIdx>=ML_PAIRS.length){
+    mlTimers.push(setTimeout(function(){
+      mlWindowStart=0;mlPairIdx=0;mlProcessed=0;mlMatched=0;
+      cProc.textContent='0';cMatch.textContent='0';pfill.style.width='0%';
+      mlRenderWindow();
+      mlTimers.push(setTimeout(mlProcessNext,400));
+    },1200));
+    return;
+  }
+
+  var poolSize=mlPool.length;
+  var slotOffset=mlPairIdx-mlWindowStart;
+  if(slotOffset>=Math.floor(poolSize/2)-1){
+    mlWindowStart++;
+    mlRenderWindow();
+    slotOffset=mlPairIdx-mlWindowStart;
+  }
+  var slotA=slotOffset*2,slotB=slotOffset*2+1;
+
+  mlMarkSlot(slotA,'scanning');mlMarkSlot(slotB,'scanning');
+  mlSetTag(slotA,'scan','...');mlSetTag(slotB,'scan','...');
+
+  mlTimers.push(setTimeout(function(){
+    mlMarkSlot(slotA,'matched-row');mlMarkSlot(slotB,'matched-row');
+    mlSetTag(slotA,'ok','OK');mlSetTag(slotB,'ok','OK');
+
+    mlMatched++;mlProcessed+=2;mlPairIdx++;
+    cMatch.textContent=mlMatched;
+    cProc.textContent=Math.min(mlProcessed,200);
+    pfill.style.width=((mlProcessed/200)*100)+'%';
+
+    if(mlMatched%14===0){
+      speedTag.textContent=ML_SPEEDS[Math.floor(Math.random()*ML_SPEEDS.length)];
+    }
+    mlTimers.push(setTimeout(mlProcessNext,95));
+  },130));
+}
+
+function startMlAnimation(){
+  clearMlTimers();
+  buildMlPool();
+  mlWindowStart=0;mlPairIdx=0;mlProcessed=0;mlMatched=0;
+  mlRenderWindow();
+  document.getElementById('cProc').textContent='0';
+  document.getElementById('cMatch').textContent='0';
+  document.getElementById('pfill').style.width='0%';
+  mlTimers.push(setTimeout(mlProcessNext,500));
+}
+
+// ---- Escena 5: resultado animado ----
+var RES_ROWS=[
+  {grp:'G00001',st:'ok',id:1,f:'1/1/2026',c:'Factura A',r:'Juan',a:'100.00',sign:'pos',rc:true},
+  {grp:'G00001',st:'ok',id:2,f:'20/1/2026',c:'Pago fact A',r:'Juan',a:'-100.00',sign:'neg',rc:true},
+  {grp:'G00002',st:'ok',id:8,f:'1/4/2026',c:'Factura Z',r:'Diego',a:'-2,300.00',sign:'neg',rc:true},
+  {grp:'G00002',st:'ok',id:9,f:'7/5/2026',c:'Pago fact z',r:'Diego',a:'2,300.00',sign:'pos',rc:true},
+  {grp:'-',st:'pend',id:3,f:'22/2/2026',c:'Factura B',r:'Pedro',a:'200.00',sign:'pos',rc:false},
+  {grp:'-',st:'pend',id:4,f:'28/2/2026',c:'Pago B',r:'Pedro',a:'-200.00',sign:'neg',rc:false},
+  {grp:'-',st:'pend',id:5,f:'12/3/2026',c:'Factura C',r:'Pedro',a:'300.00',sign:'pos',rc:false},
+  {grp:'-',st:'pend',id:6,f:'13/3/2026',c:'Factur D',r:'Pedro',a:'-800.00',sign:'neg',rc:false},
+  {grp:'-',st:'pend',id:7,f:'2/4/2026',c:'Pago factu d',r:'Pedro',a:'1,300.00',sign:'pos',rc:false}
+];
+
+function resRowHTML(r){
+  return '<td class="grp">'+r.grp+'</td>'+
+    '<td>'+(r.st==='ok'?'<span class="d-ok">Conciliado</span>':'<span class="d-pend">Pendiente</span>')+'</td>'+
+    '<td>'+r.id+'</td><td>'+r.f+'</td><td>'+r.c+'</td><td>'+r.r+'</td>'+
+    '<td class="amt '+r.sign+'">'+r.a+'</td>';
+}
+
+function buildResRows(){
+  var tbody=document.getElementById('tbody');
+  if(!tbody) return;
+  tbody.innerHTML='';
+  RES_ROWS.forEach(function(r,i){
+    var tr=document.createElement('tr');
+    tr.className=r.rc?'rc':'rp';
+    tr.id='tr'+i;
+    tr.innerHTML=resRowHTML(r);
+    tbody.appendChild(tr);
+  });
+}
+
+function playResAnimation(){
+  clearResTimers();
+  var wtag=document.getElementById('wtag');
+  var summary=document.getElementById('summary');
+  if(!wtag) return;
+  buildResRows();
+  wtag.classList.remove('show');
+  summary.classList.remove('show');
+
+  resTimers.push(setTimeout(function(){wtag.classList.add('show');},100));
+
+  RES_ROWS.forEach(function(r,i){
+    resTimers.push(setTimeout(function(){
+      var tr=document.getElementById('tr'+i);
+      if(!tr)return;
+      tr.classList.add('show');
+      if(r.st==='ok'){
+        tr.classList.add('flash');
+        resTimers.push(setTimeout(function(){tr.classList.remove('flash');},350));
+      }
+    },350+i*230));
+  });
+
+  var totalDelay=350+RES_ROWS.length*230+300;
+  resTimers.push(setTimeout(function(){
+    wtag.classList.remove('show');
+    summary.classList.add('show');
+  },totalDelay));
+}
+
+// ---- Navegacion principal de la demo ----
+function dgoTo(i){
+  document.getElementById('ds'+dcur).classList.remove('active');
+  clearMsTimers();clearMlTimers();clearResTimers();
+  dcur=i;
+  var sc=document.getElementById('ds'+dcur);
+  sc.classList.add('active');
+  sc.querySelectorAll('.anim').forEach(function(el){
+    el.style.animation='none';el.offsetHeight;el.style.animation='';
+  });
+  document.getElementById('dn').textContent=dNUMS[i];
+  document.getElementById('dctr').textContent=(i+1)+' de 6';
+  dbuildDots();
+  if(i===2) setTimeout(runMiniSheets,350);
+  if(i===3) setTimeout(startMlAnimation,300);
+  if(i===4) setTimeout(playResAnimation,200);
+  if(dplaying) dstartBar();
+}
+function dnav(d){dstopBar();dgoTo((dcur+d+dN)%dN);}
+function dbuildDots(){
+  var c=document.getElementById('ddots');c.innerHTML='';
+  for(var i=0;i<dN;i++){
+    var dd=document.createElement('div');
+    dd.className='dcdot'+(i===dcur?' on':'');
+    (function(idx){dd.onclick=function(){dstopBar();dgoTo(idx);};})(i);
+    c.appendChild(dd);
+  }
+}
+function dstartBar(){
+  dstopBar();dpbStart=Date.now();
+  var b=document.getElementById('dprog');b.style.width='0%';
+  function tick(){
+    var pct=Math.min(100,(Date.now()-dpbStart)/dDUR*100);
+    b.style.width=pct+'%';
+    if(pct>=100){draf=null;dgoTo((dcur+1)%dN);}
+    else draf=requestAnimationFrame(tick);
+  }
+  draf=requestAnimationFrame(tick);
+}
+function dstopBar(){
+  if(draf){cancelAnimationFrame(draf);draf=null;}
+  var b=document.getElementById('dprog');
+  if(b) b.style.width='0%';
+}
+function dtogglePlay(){
+  dplaying=!dplaying;
+  var b=document.getElementById('dppbtn');
+  if(dplaying){b.innerHTML='&#9646;&#9646;';dstartBar();}
+  else{b.innerHTML='&#9654;';dstopBar();}
+}
+dbuildDots();
+dstartBar();
+show('home');
+</script>
 </body>
 </html>
 
