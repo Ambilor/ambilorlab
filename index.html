@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Ambilor.Lab — Automatización contable y financiera</title>
 <meta name="description" content="Herramientas de automatización para contadores, equipos financieros y PyMEs. Google Sheets, Apps Script y BI aplicados a procesos reales." />
+
 <style>
 :root {
     --azul:      #1F5C99;
@@ -22,746 +23,248 @@
     --sans:      -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica Neue, Arial, sans-serif;
   }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  font-size:15px;
+  line-height:1.65;
+  color:var(--negro);
+  background:#fff;
+}
 
-  html { scroll-behavior: smooth; }
+/* NAV */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:#fff;border-bottom:1px solid var(--borde);
+}
+.nav-inner{
+  max-width:var(--max);
+  margin:0 auto;
+  padding:0 1.5rem;
+  height:52px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.nav-logo{font-family:var(--mono);color:var(--azul);text-decoration:none}
+.nav-links{display:flex;gap:1.5rem;list-style:none}
+.nav-links a{color:var(--gris-1);text-decoration:none;font-size:13px}
+.nav-links a.active,.nav-links a:hover{color:var(--azul)}
 
-  body {
-    font-family: var(--sans);
-    font-size: 15px;
-    line-height: 1.65;
-    color: var(--negro);
-    background: var(--blanco);
-    -webkit-font-smoothing: antialiased;
-  }
+/* SECTIONS */
+section{display:none}
+section.visible{display:block}
+.container{max-width:var(--max);margin:0 auto;padding:3rem 1.5rem}
 
-  /* ── NAV ── */
-  nav {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: var(--blanco);
-    border-bottom: 1px solid var(--borde);
-  }
-  .nav-inner {
-    max-width: var(--max);
-    margin: 0 auto;
-    padding: 0 1.5rem;
-    height: 52px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .nav-logo {
-    font-family: var(--mono);
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--azul);
-    text-decoration: none;
-    letter-spacing: -0.3px;
-  }
-  .nav-links {
-    display: flex;
-    gap: 1.75rem;
-    list-style: none;
-  }
-  .nav-links a {
-    font-size: 13px;
-    color: var(--gris-1);
-    text-decoration: none;
-    transition: color .15s;
-  }
-  .nav-links a:hover,
-  .nav-links a.active { color: var(--azul); }
+/* PRODUCT UI */
+.prod-eyebrow{font-family:var(--mono);font-size:10px;color:var(--azul);margin-bottom:.5rem}
+.prod-h1{font-size:22px;font-weight:600;margin-bottom:.5rem}
+.prod-tagline{color:var(--gris-1);margin-bottom:2rem}
 
-  /* ── SECTIONS ── */
-  section { display: none; }
-  section.visible { display: block; }
+/* PRICE */
+.price-row{display:flex;gap:.5rem;align-items:baseline;margin:1rem 0}
+.price-num{font-size:30px;font-weight:600;font-family:var(--mono)}
+.price-label{font-size:13px;color:var(--gris-2)}
 
-  .container {
-    max-width: var(--max);
-    margin: 0 auto;
-    padding: 3.5rem 1.5rem;
-  }
+.buy-btn{
+  display:inline-block;
+  background:var(--azul);
+  color:#fff;
+  padding:11px 22px;
+  border-radius:6px;
+  text-decoration:none;
+  margin-bottom:.5rem;
+}
+.buy-btn:hover{background:var(--azul-dark)}
+.guarantee-note{font-size:12px;color:var(--gris-2)}
 
-  /* ── HOME ── */
-  .home-eyebrow {
-    font-family: var(--mono);
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--azul);
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    margin-bottom: .75rem;
-  }
-  .home-h1 {
-    font-size: 26px;
-    font-weight: 600;
-    line-height: 1.25;
-    color: var(--negro);
-    margin-bottom: 1rem;
-    letter-spacing: -.4px;
-  }
-  .home-lead {
-    font-size: 15px;
-    color: var(--gris-1);
-    max-width: 520px;
-    margin-bottom: 2.5rem;
-    line-height: 1.7;
-  }
+/* ===================== */
+/* DEMO (AISLADO)        */
+/* ===================== */
+.demo-wrap{
+  margin:2rem 0 3rem 0;
+  border:1px solid #e8e8e8;
+  border-radius:12px;
+  overflow:hidden;
+  font-family:'Inter',sans-serif;
+  height:520px;
+  position:relative;
+  background:#fff;
+}
 
-  .specs-block {
-    border: 1px solid var(--borde);
-    border-radius: 6px;
-    overflow: hidden;
-    margin-bottom: 2.5rem;
-  }
-  .specs-block table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-  }
-  .specs-block th {
-    text-align: left;
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    color: var(--gris-2);
-    background: var(--gris-4);
-    padding: 8px 14px;
-    border-bottom: 1px solid var(--borde);
-  }
-  .specs-block td {
-    padding: 9px 14px;
-    border-bottom: 1px solid var(--borde);
-    vertical-align: top;
-  }
-  .specs-block tr:last-child td { border-bottom: none; }
-  .specs-block td:first-child {
-    color: var(--gris-1);
-    width: 44%;
-  }
-  .specs-block td:last-child {
-    color: var(--negro);
-    font-weight: 500;
-  }
-  .tag {
-    display: inline-block;
-    font-family: var(--mono);
-    font-size: 11px;
-    background: var(--azul-bg);
-    color: var(--azul);
-    padding: 2px 8px;
-    border-radius: 3px;
-    font-weight: 500;
-  }
+.demo-scene{
+  position:absolute;
+  inset:0 0 48px 0;
+  padding:40px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  opacity:1;
+}
 
-  .home-areas {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 2.5rem;
-  }
-  .area-card {
-    border: 1px solid var(--borde);
-    border-radius: 6px;
-    padding: 1rem 1.1rem;
-  }
-  .area-card-label {
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    color: var(--azul);
-    margin-bottom: .3rem;
-  }
-  .area-card p {
-    font-size: 13px;
-    color: var(--gris-1);
-    line-height: 1.5;
-  }
+.demo-title{
+  font-size:26px;
+  font-weight:600;
+  margin-bottom:10px;
+}
+.demo-title em{color:var(--azul);font-style:normal}
 
-  .cta-home {
-    display: inline-block;
-    background: var(--azul);
-    color: var(--blanco);
-    font-size: 13px;
-    font-weight: 500;
-    padding: 10px 22px;
-    border-radius: 5px;
-    text-decoration: none;
-    transition: background .15s;
-    cursor: pointer;
-    border: none;
-  }
-  .cta-home:hover { background: var(--azul-dark); }
+.demo-text{color:#666;margin-bottom:20px}
 
-  /* ── SOBRE MÍ ── */
-  .about-name {
-    font-size: 22px;
-    font-weight: 600;
-    letter-spacing: -.3px;
-    margin-bottom: .35rem;
-  }
-  .about-role {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--azul);
-    font-weight: 500;
-    margin-bottom: 1.5rem;
-  }
-  .about-bio {
-    font-size: 14px;
-    color: var(--gris-1);
-    line-height: 1.75;
-    margin-bottom: 2rem;
-    max-width: 540px;
-  }
-  .stack-title {
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    color: var(--gris-2);
-    margin-bottom: .75rem;
-  }
-  .stack-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 2rem;
-  }
-  .stack-pill {
-    font-family: var(--mono);
-    font-size: 11px;
-    font-weight: 500;
-    padding: 4px 10px;
-    border: 1px solid var(--borde);
-    border-radius: 4px;
-    color: var(--gris-1);
-    background: var(--gris-4);
-  }
-  .divider {
-    border: none;
-    border-top: 1px solid var(--borde);
-    margin: 2rem 0;
-  }
-  .exp-item { margin-bottom: 1.25rem; }
-  .exp-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: .2rem;
-  }
-  .exp-title {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--negro);
-  }
-  .exp-date {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--gris-2);
-  }
-  .exp-org {
-    font-size: 13px;
-    color: var(--azul);
-    margin-bottom: .2rem;
-  }
-  .exp-desc {
-    font-size: 13px;
-    color: var(--gris-1);
-    line-height: 1.6;
-  }
+.demo-stats{display:flex}
+.demo-stat{
+  border:1px solid #eee;
+  padding:14px 20px;
+}
+.demo-stat + .demo-stat{border-left:none}
+.demo-stat strong{font-size:28px;display:block}
 
-  /* ── PRODUCTO ── */
-  .prod-eyebrow {
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    color: var(--azul);
-    margin-bottom: .6rem;
-  }
-  .prod-h1 {
-    font-size: 22px;
-    font-weight: 600;
-    letter-spacing: -.3px;
-    margin-bottom: .5rem;
-    line-height: 1.3;
-  }
-  .prod-tagline {
-    font-size: 14px;
-    color: var(--gris-1);
-    margin-bottom: 2rem;
-    line-height: 1.65;
-    max-width: 500px;
-  }
+.demo-bar{
+  position:absolute;
+  bottom:48px;
+  left:0;
+  height:2px;
+  width:0%;
+  background:var(--azul);
+}
 
-  .price-row {
-    display: flex;
-    align-items: baseline;
-    gap: .5rem;
-    margin-bottom: 1.25rem;
-  }
-  .price-num {
-    font-size: 30px;
-    font-weight: 600;
-    font-family: var(--mono);
-    color: var(--negro);
-    letter-spacing: -1px;
-  }
-  .price-label {
-    font-size: 13px;
-    color: var(--gris-2);
-  }
+.demo-controls{
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  height:48px;
+  border-top:1px solid #eee;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 20px;
+}
 
-  .buy-btn {
-    display: inline-block;
-    background: var(--azul);
-    color: var(--blanco);
-    font-size: 14px;
-    font-weight: 500;
-    padding: 11px 28px;
-    border-radius: 5px;
-    text-decoration: none;
-    transition: background .15s;
-    margin-bottom: .6rem;
-  }
-  .buy-btn:hover { background: var(--azul-dark); }
-  .guarantee-note {
-    font-size: 12px;
-    color: var(--gris-2);
-    display: block;
-    margin-bottom: 2.5rem;
-  }
+.demo-btn{
+  border:1px solid #ddd;
+  background:none;
+  width:30px;
+  height:30px;
+  border-radius:6px;
+  cursor:pointer;
+}
 
-  .section-label {
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    color: var(--gris-2);
-    margin-bottom: .75rem;
-    margin-top: 2rem;
-  }
-  .section-label:first-of-type { margin-top: 0; }
-
-  .includes-list {
-    list-style: none;
-    border: 1px solid var(--borde);
-    border-radius: 6px;
-    overflow: hidden;
-    margin-bottom: 2rem;
-    font-size: 13px;
-  }
-  .includes-list li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 9px 14px;
-    border-bottom: 1px solid var(--borde);
-    color: var(--negro);
-  }
-  .includes-list li:last-child { border-bottom: none; }
-  .includes-list li span { color: var(--gris-2); font-size: 12px; font-family: var(--mono); }
-
-  .flow-steps {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    margin-bottom: 2rem;
-  }
-  .flow-step {
-    border: 1px solid var(--borde);
-    border-radius: 6px;
-    padding: .85rem .75rem;
-    text-align: center;
-  }
-  .flow-step-num {
-    font-family: var(--mono);
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--azul);
-    display: block;
-    margin-bottom: .3rem;
-  }
-  .flow-step p { font-size: 12px; color: var(--gris-1); line-height: 1.45; }
-
-  .faq-list { margin-bottom: 2rem; }
-  .faq-item { padding: 1rem 0; border-bottom: 1px solid var(--borde); }
-  .faq-item:last-child { border-bottom: none; }
-  .faq-q { font-size: 13px; font-weight: 500; color: var(--negro); margin-bottom: .3rem; }
-  .faq-a { font-size: 13px; color: var(--gris-1); line-height: 1.6; }
-
-  .alert-box {
-    border-left: 3px solid var(--azul);
-    background: var(--azul-bg);
-    padding: .85rem 1rem;
-    border-radius: 0 5px 5px 0;
-    font-size: 13px;
-    color: var(--azul-dark);
-    margin-bottom: 2rem;
-    line-height: 1.6;
-  }
-
-  /* ── CONTACTO ── */
-  .contact-intro {
-    font-size: 14px;
-    color: var(--gris-1);
-    margin-bottom: 2rem;
-    line-height: 1.7;
-    max-width: 460px;
-  }
-  .contact-block {
-    border: 1px solid var(--borde);
-    border-radius: 6px;
-    overflow: hidden;
-    font-size: 13px;
-    margin-bottom: 2rem;
-  }
-  .contact-row {
-    display: flex;
-    align-items: center;
-    padding: 11px 14px;
-    border-bottom: 1px solid var(--borde);
-    gap: 12px;
-  }
-  .contact-row:last-child { border-bottom: none; }
-  .contact-label {
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: .06em;
-    color: var(--gris-2);
-    width: 80px;
-    flex-shrink: 0;
-  }
-  .contact-val {
-    color: var(--negro);
-  }
-  .contact-val a {
-    color: var(--azul);
-    text-decoration: none;
-  }
-  .contact-val a:hover { text-decoration: underline; }
-
-  /* ── FOOTER ── */
-  footer {
-    border-top: 1px solid var(--borde);
-    padding: 1.5rem;
-    text-align: center;
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--gris-2);
-  }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 520px) {
-    .home-areas { grid-template-columns: 1fr; }
-    .flow-steps  { grid-template-columns: 1fr 1fr; }
-    .home-h1     { font-size: 22px; }
-    .prod-h1     { font-size: 20px; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-  }
+/* FOOTER */
+footer{
+  border-top:1px solid var(--borde);
+  text-align:center;
+  padding:1.5rem;
+  font-size:11px;
+  color:var(--gris-2);
+}
 </style>
 </head>
+
 <body>
 
 <nav>
   <div class="nav-inner">
     <a class="nav-logo" href="#" onclick="show('home')">Ambilor.Lab</a>
     <ul class="nav-links">
-      <li><a href="#" onclick="show('home')"    id="nav-home">Inicio</a></li>
-      <li><a href="#" onclick="show('about')"   id="nav-about">Sobre mí</a></li>
+      <li><a href="#" onclick="show('home')" id="nav-home">Inicio</a></li>
+      <li><a href="#" onclick="show('about')" id="nav-about">Sobre mí</a></li>
       <li><a href="#" onclick="show('product')" id="nav-product">Herramientas</a></li>
       <li><a href="#" onclick="show('contact')" id="nav-contact">Contacto</a></li>
     </ul>
   </div>
 </nav>
 
-<!-- ══ HOME ══════════════════════════════════════════════════════════════ -->
+<!-- HOME -->
 <section id="home" class="visible">
   <div class="container">
-    <div class="home-eyebrow">Automatización contable · Santiago, Chile</div>
-    <h1 class="home-h1">Procesos financieros que<br/>funcionan solos.</h1>
-    <p class="home-lead">
-      Construyo herramientas de automatización para contadores, equipos financieros y administradores de PyMEs — usando las plataformas que ya tienes: Google Sheets, Apps Script y Power BI.
-    </p>
-
-    <div class="specs-block">
-      <table>
-        <thead>
-          <tr><th>Área</th><th>Tecnología</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Conciliación bancaria</td><td><span class="tag">Google Sheets + Apps Script</span></td></tr>
-          <tr><td>Business Intelligence</td><td><span class="tag">Looker Studio · Power BI</span></td></tr>
-          <tr><td>Automatización de procesos</td><td><span class="tag">Python · SQL · n8n</span></td></tr>
-          <tr><td>Formación</td><td><span class="tag">Analista de Datos — AIEP</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="home-areas">
-      <div class="area-card">
-        <div class="area-card-label">Para contadores</div>
-        <p>Herramientas que reducen el trabajo manual sin depender de software externo.</p>
-      </div>
-      <div class="area-card">
-        <div class="area-card-label">Para PyMEs</div>
-        <p>Automatizaciones sobre plataformas que ya usas — sin suscripciones adicionales.</p>
-      </div>
-      <div class="area-card">
-        <div class="area-card-label">Para equipos financieros</div>
-        <p>Dashboards, conciliaciones y reglas de negocio implementadas directamente en tus datos.</p>
-      </div>
-      <div class="area-card">
-        <div class="area-card-label">Productos digitales</div>
-        <p>Scripts y plantillas listas para instalar, documentadas y con soporte directo del autor.</p>
-      </div>
-    </div>
-
-    <button class="cta-home" onclick="show('product')">Ver herramientas disponibles →</button>
+    <h1>Procesos financieros que funcionan solos</h1>
   </div>
 </section>
 
-<!-- ══ SOBRE MÍ ══════════════════════════════════════════════════════════ -->
+<!-- ABOUT -->
 <section id="about">
-  <div class="container">
-    <div class="about-name">Jordan.R.</div>
-    <div class="about-role">Contador Público y Auditor · Analista de Datos</div>
-    <p class="about-bio">
-      Me especializo en construir automatizaciones que eliminan trabajo manual repetitivo en procesos financieros — usando herramientas accesibles para cualquier equipo contable.
-    </p>
-    <p class="about-bio" style="margin-top:-1rem">
-      Cada herramienta que publico la construí primero para resolver un problema real. El Conciliador Automático V1 nació de meses cruzando movimientos manualmente y decidir que no tenía sentido seguir haciéndolo así.
-    </p>
-
-    <div class="stack-title">Stack técnico</div>
-    <div class="stack-grid">
-      <span class="stack-pill">SQL</span>
-      <span class="stack-pill">Python</span>
-      <span class="stack-pill">Google Apps Script</span>
-      <span class="stack-pill">Looker Studio</span>
-      <span class="stack-pill">Power BI</span>
-      <span class="stack-pill">Microsoft Dynamics</span>
-      <span class="stack-pill">Bantotal</span>
-      <span class="stack-pill">n8n</span>
-    </div>
-
-    <hr class="divider"/>
-
-    <div class="stack-title">Experiencia</div>
-
-    <div class="exp-item">
-      <div class="exp-head">
-        <div class="exp-title">Analista de Control Contable y Datos</div>
-        <div class="exp-date">2023 — presente</div>
-      </div>
-      <div class="exp-org">Forum Servicios Financieros · Santiago, Chile</div>
-      <div class="exp-desc">Analista y Control Contable:
-          *Análisis y validación de grandes volúmenes de datos financieros.
-          * Desarrollo de dashboards para monitoreo y control operativo.
-          * Automatización de procesos mediante SQL, Python y Google Apps Script.
-         * Desarrollo de conciliador semiautomático de partidas contables.
-         * Validación de consistencia de datos entre sistemas financieros (Bantotal y Dynamics).
-         * Optimización de flujos de requerimientos de pago en ERP.
-         * Implementación de formularios automatizados y notificaciones para seguimiento de procesos.
-         * Participación en proyectos de mejora continua, control operativo y transformación de procesos..</div>
-    </div>
-
-    <hr class="divider"/>
-
-    <div class="stack-title">Formación</div>
-    <div class="exp-item">
-      <div class="exp-head">
-        <div class="exp-title">Analista de Datos</div>
-        <div class="exp-date">En curso</div>
-      </div>
-      <div class="exp-org">AIEP</div>
-    </div>
-    <div class="exp-item">
-      <div class="exp-head">
-        <div class="exp-title">Contador Público y Auditor</div>
-        <div class="exp-date"></div>
-      </div>
-      <div class="exp-org">Usach</div>
-    </div>
-  </div>
+  <div class="container">Sobre mí</div>
 </section>
 
-<!-- ══ HERRAMIENTAS / PRODUCTO ══════════════════════════════════════════ -->
+<!-- PRODUCT -->
 <section id="product">
   <div class="container">
+
     <div class="prod-eyebrow">Herramienta disponible</div>
-    <h1 class="prod-h1">Conciliador Automático V1<br/>para Google Sheets</h1>
+
+    <h1 class="prod-h1">
+      Conciliador Automático V1<br/>
+      para Google Sheets
+    </h1>
+
     <p class="prod-tagline">
       Cruza movimientos bancarios, facturas o registros contables en segundos. Sin código, sin fórmulas complejas — directo desde el menú de tu planilla.
     </p>
 
+    <!-- 🔥 DEMO INTEGRADO -->
+    <div class="demo-wrap">
+
+      <div class="demo-scene" id="scene">
+        <div class="demo-title">Cruzas movimientos <em>a mano</em></div>
+        <div class="demo-text">Horas de trabajo manual cada mes con riesgo de error.</div>
+
+        <div class="demo-stats">
+          <div class="demo-stat"><strong>3h</strong>manual</div>
+          <div class="demo-stat"><strong>200</strong>movimientos</div>
+        </div>
+      </div>
+
+      <div class="demo-bar" id="bar"></div>
+
+      <div class="demo-controls">
+        <button class="demo-btn" onclick="resetDemo()">⟲</button>
+        <button class="demo-btn" onclick="nextDemo()">→</button>
+      </div>
+
+    </div>
+
     <div class="price-row">
       <span class="price-num">$9.990</span>
-      <span class="price-label">CLP · pago único · sin suscripción</span>
+      <span class="price-label">CLP · pago único</span>
     </div>
 
-    <a class="buy-btn" href="https://jordana78.gumroad.com/l/gbtemx" target="_blank" rel="noopener noreferrer">
+    <a class="buy-btn" href="https://jordana78.gumroad.com/l/gbtemx" target="_blank">
       Comprar en Gumroad →
     </a>
-    <span class="guarantee-note">✓ Garantía de devolución de 7 días si no funciona</span>
 
-    <div class="alert-box">
-      Diseñado para contadores, administradores de PyMEs y cualquier persona que cruce movimientos financieros de forma manual todos los meses.
-    </div>
+    <div class="guarantee-note">✓ Garantía de 7 días</div>
 
-    <div class="section-label">Qué incluye</div>
-    <ul class="includes-list">
-      <li>Planilla base lista para instalar <span>Google Sheets (.xlsx)</span></li>
-      <li>Planilla de ejemplo con datos de prueba <span>Google Sheets (.xlsx)</span></li>
-      <li>Código fuente completo <span>10 archivos .gs documentados</span></li>
-      <li>Manual de usuario <span>PDF · 8 págs.</span></li>
-      <li>Manual técnico <span>PDF · 8 págs.</span></li>
-      <li>Guía de instalación paso a paso <span>PDF · 4 págs.</span></li>
-      <li>Licencia de uso incluida <span>uso personal o una empresa</span></li>
-    </ul>
-
-    <div class="section-label">Cómo funciona</div>
-    <div class="flow-steps">
-      <div class="flow-step">
-        <span class="flow-step-num">01</span>
-        <p>Pegas tus movimientos en la hoja MOVIMIENTOS</p>
-      </div>
-      <div class="flow-step">
-        <span class="flow-step-num">02</span>
-        <p>Configuras las reglas una vez desde la planilla</p>
-      </div>
-      <div class="flow-step">
-        <span class="flow-step-num">03</span>
-        <p>Ejecutas desde el menú "🔄 Conciliación"</p>
-      </div>
-      <div class="flow-step">
-        <span class="flow-step-num">04</span>
-        <p>Ves pares conciliados y pendientes al instante</p>
-      </div>
-    </div>
-
-    <div class="section-label">Especificaciones técnicas</div>
-    <div class="specs-block" style="margin-bottom:2rem">
-      <table>
-        <tbody>
-          <tr><td>Plataforma</td><td>Google Sheets + Apps Script (V8)</td></tr>
-          <tr><td>Tipo de conciliación</td><td>1:1 automática</td></tr>
-          <tr><td>Registros óptimos</td><td>Hasta 200 por ejecución</td></tr>
-          <tr><td>Registros máximos</td><td>~700 antes de timeout</td></tr>
-          <tr><td>Configuración de columnas</td><td>Sin tocar código, desde CONFIG_COLUMNAS</td></tr>
-          <tr><td>Filtros disponibles</td><td>Monto · Responsable · Fecha · Concepto · Extras</td></tr>
-          <tr><td>Tiempo de instalación</td><td>~5 minutos siguiendo la guía incluida</td></tr>
-          <tr><td>Requiere software adicional</td><td>No — solo una cuenta Google</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="section-label">Preguntas frecuentes</div>
-    <div class="faq-list">
-      <div class="faq-item">
-        <div class="faq-q">¿Necesito saber programar para instalarlo?</div>
-        <div class="faq-a">No. La guía de instalación incluida cubre el proceso en 9 pasos desde cero — copiar, pegar y autorizar permisos.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">¿Mis datos bancarios quedan en algún servidor?</div>
-        <div class="faq-a">No. El script corre completamente dentro de tu propia cuenta de Google. No hay ningún servidor externo involucrado — tus datos no salen de tu Drive.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">¿Funciona con cualquier banco o estructura de planilla?</div>
-        <div class="faq-a">Sí. Los nombres de columnas son configurables desde la hoja CONFIG_COLUMNAS sin modificar el código. Sirve para cualquier estructura de movimientos que tengas.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">¿Puedo usarlo en más de una empresa?</div>
-        <div class="faq-a">La licencia incluida cubre uso personal o una sola organización. Para uso en múltiples empresas o clientes, escríbeme directamente para una licencia multiempresa.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">¿Qué pasa si tengo más de 700 registros?</div>
-        <div class="faq-a">Procesa por períodos mensuales. Con menos de 200 registros el resultado es prácticamente inmediato. Con 500, tarda entre 30 segundos y 3 minutos.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">¿Funciona en Excel?</div>
-        <div class="faq-a">No. Está construido sobre Google Apps Script y requiere Google Sheets con una cuenta Google activa.</div>
-      </div>
-    </div>
-
-    <a class="buy-btn" href="https://jordana78.gumroad.com/l/gbtemx" target="_blank" rel="noopener noreferrer">
-      Comprar por $9.990 CLP →
-    </a>
-    <span class="guarantee-note">✓ Pago seguro vía Gumroad · Descarga inmediata</span>
   </div>
 </section>
 
-<!-- ══ CONTACTO ══════════════════════════════════════════════════════════ -->
+<!-- CONTACT -->
 <section id="contact">
-  <div class="container">
-    <div class="home-eyebrow">Contacto</div>
-    <h2 style="font-size:20px;font-weight:600;letter-spacing:-.3px;margin-bottom:.75rem">¿Tienes un proceso que automatizar?</h2>
-    <p class="contact-intro">
-      Si tienes un proceso contable o financiero que te consume tiempo y crees que se puede automatizar, cuéntame. Respondo en menos de 48 horas hábiles.
-    </p>
-    <p class="contact-intro" style="margin-top:-1rem">
-      También puedes escribirme si tienes dudas sobre el Conciliador Automático o quieres una licencia para múltiples empresas.
-    </p>
-
-    <div class="contact-block">
-      <div class="contact-row">
-        <span class="contact-label">Gumroad</span>
-        <span class="contact-val"><a href="https://jordana78.gumroad.com" target="_blank" rel="noopener noreferrer">jordana78.gumroad.com</a></span>
-      </div>
-      <div class="contact-row">
-        <span class="contact-label">Ubicación</span>
-        <span class="contact-val">Santiago, Chile</span>
-      </div>
-      <div class="contact-row">
-        <span class="contact-label">Idioma</span>
-        <span class="contact-val">Español</span>
-      </div>
-    </div>
-
-    <div class="specs-block">
-      <table>
-        <thead><tr><th>Tipo de proyecto</th><th>Descripción</th></tr></thead>
-        <tbody>
-          <tr><td>Conciliaciones</td><td>Automatización de cruce de movimientos financieros</td></tr>
-          <tr><td>Reportería</td><td>Dashboards en Looker Studio o Power BI</td></tr>
-          <tr><td>Automatización</td><td>Flujos en Google Apps Script, Python o n8n</td></tr>
-          <tr><td>Plantillas</td><td>Herramientas personalizadas para tu operación</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <div class="container">Contacto</div>
 </section>
 
-<!-- ══ FOOTER ══════════════════════════════════════════════════════════ -->
 <footer>
-  © 2026 Ambilor.Lab · Santiago, Chile · Todos los derechos reservados
+  © 2026 Ambilor.Lab
 </footer>
 
 <script>
-  function show(id) {
-    document.querySelectorAll('section').forEach(s => s.classList.remove('visible'));
-    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-    document.getElementById(id).classList.add('visible');
-    document.getElementById('nav-' + id).classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    return false;
-  }
-  show('home');
+function show(id){
+  document.querySelectorAll('section').forEach(s=>s.classList.remove('visible'));
+  document.getElementById(id).classList.add('visible');
+}
+
+let progress = 0;
+function nextDemo(){
+  progress += 50;
+  if(progress > 100) progress = 100;
+  document.getElementById("bar").style.width = progress + "%";
+}
+
+function resetDemo(){
+  progress = 0;
+  document.getElementById("bar").style.width = "0%";
+}
 </script>
 
 </body>
