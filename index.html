@@ -97,6 +97,60 @@ footer{border-top:1px solid var(--borde);padding:1.5rem;text-align:center;font-f
 .v2-cta-row{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
 .v2-cta-text{font-size:13px;color:var(--gris-2)}
 @media(max-width:520px){.v2-features{grid-template-columns:1fr}}
+/* === Diagramas de conexion en Guias === */
+.gvw{background:var(--gris-4);border:1px solid var(--borde);border-radius:8px;padding:20px 18px;margin-bottom:2rem}
+.gvw-cg{display:grid;grid-template-columns:1fr 144px 1fr;gap:14px;align-items:center}
+.gvw-tc{border-radius:8px;padding:20px 14px;text-align:center}
+.gvw-icon{font-size:28px;display:block}
+.gvw-name{font-size:13px;font-weight:600;margin-top:9px}
+.gvw-sub{font-size:11px;margin-top:3px;opacity:.75}
+.gvw-pills{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+.gvw-pill{font-size:10.5px;padding:2px 8px;border-radius:100px}
+.gvw-cc{text-align:center}
+.gvw-lbl{font-size:11px;color:var(--gris-2);line-height:1.6}
+.gvw-caps{display:flex;gap:7px;flex-wrap:wrap;align-items:center;padding-top:12px;margin-top:8px;border-top:1px solid var(--borde)}
+.gvw-cap{font-size:11px;padding:3px 10px;border:1px solid var(--borde);border-radius:100px;color:var(--gris-1)}
+.gvw-tl{font-size:11px;color:var(--gris-2);text-align:center;padding:9px 0 0;margin-top:4px;border-top:1px solid var(--borde)}
+@media(max-width:520px){.gvw-cg{grid-template-columns:1fr}.gvw-cc{padding:6px 0}}
+@keyframes gvfr{to{stroke-dashoffset:-22}}
+@keyframes gvfl{to{stroke-dashoffset:22}}
+@keyframes gvgp{0%,100%{opacity:.12}50%{opacity:1}}
+.gvfr{stroke-dasharray:6 4;animation:gvfr 1.5s linear infinite}
+.gvfl{stroke-dasharray:6 4;animation:gvfl 1.5s linear infinite}
+.gvg1{animation:gvgp 2s ease-in-out infinite}
+.gvg2{animation:gvgp 2s ease-in-out infinite .66s}
+.gvg3{animation:gvgp 2s ease-in-out infinite 1.33s}
+
+.gp-tabs{display:flex;gap:8px;margin-bottom:2rem;flex-wrap:wrap}
+.gp-tab{flex:1;min-width:140px;border:1px solid var(--borde);border-radius:8px;padding:12px 14px;cursor:pointer;background:var(--gris-4);font-family:var(--sans);color:var(--gris-1);transition:all .15s;text-align:left;line-height:1.4}
+.gp-tab:hover{border-color:var(--azul);color:var(--azul);background:#fff}
+.gp-tab.on{background:var(--azul);border-color:var(--azul);color:#fff}
+.gp-tab-ey{font-family:var(--mono);font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:3px;opacity:.7}
+.gp-tab-name{font-size:13px;font-weight:600;display:block}
+.gp-panel{display:none}
+.gp-panel.on{display:block}
+.gp-step{display:grid;grid-template-columns:36px 1fr 200px;gap:18px;margin-bottom:2rem;align-items:start}
+.gp-ncol{display:flex;flex-direction:column;align-items:center;padding-top:2px}
+.gp-num{width:30px;height:30px;border-radius:50%;background:var(--azul);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono)}
+.gp-vline{width:2px;background:var(--azul-bg);flex:1;min-height:24px;margin-top:6px;border-radius:2px}
+.gp-step:last-child .gp-vline{display:none}
+.gp-stitle{font-size:14px;font-weight:600;color:var(--negro);margin-bottom:4px;line-height:1.3}
+.gp-sdesc{font-size:13px;color:var(--gris-1);line-height:1.55}
+.gp-stip{font-family:var(--mono);font-size:10px;color:var(--azul);margin-top:6px}
+.gp-vis{border:1px solid var(--borde);border-radius:6px;overflow:hidden;background:#fff;min-height:72px}
+.gp-gs-hdr{background:#1a7a4a;padding:5px 9px;color:#fff;font-size:8.5px;font-weight:500;display:flex;align-items:center;gap:6px}
+.gp-pbi-hdr{background:#f2c811;padding:5px 9px;color:#333;font-size:8.5px;font-weight:600;display:flex;align-items:center;gap:6px}
+.gp-ls-hdr{background:#4285f4;padding:5px 9px;color:#fff;font-size:8.5px;font-weight:500;display:flex;align-items:center;gap:6px}
+.gp-editor{background:#1e1e1e;padding:8px 10px;font-family:var(--mono);font-size:8px;line-height:1.7;color:#9cdcfe}
+.gp-kw{color:#c586c0}.gp-fn{color:#dcdcaa}.gp-str{color:#ce9178}
+.gp-item{display:flex;align-items:center;gap:7px;padding:4px 10px;font-size:8.5px;color:#444}
+.gp-item.hl{background:var(--azul-bg);color:var(--azul);font-weight:500}
+.gp-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.gp-btn-sm{font-size:8px;padding:3px 9px;border-radius:3px;border:none;cursor:pointer;font-weight:500}
+.gp-btn-primary{background:var(--azul);color:#fff}
+.gp-btn-ghost{background:#f1f3f4;color:#444}
+@media(max-width:620px){.gp-step{grid-template-columns:30px 1fr}.gp-vis{display:none}}
+
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 .demo-section{margin-bottom:2.5rem}
 .demo-label{font-family:var(--mono);font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--gris-2);margin-bottom:.75rem}
@@ -289,6 +343,7 @@ footer{border-top:1px solid var(--borde);padding:1.5rem;text-align:center;font-f
       <li><a href="#" onclick="show('home')" id="nav-home">Inicio</a></li>
       <li><a href="#" onclick="show('about')" id="nav-about">Sobre mi</a></li>
       <li><a href="#" onclick="show('product')" id="nav-product">Herramientas</a></li>
+      <li><a href="#" onclick="show('guias')" id="nav-guias">Guias</a></li>
       <li><a href="#" onclick="show('contact')" id="nav-contact">Contacto</a></li>
     </ul>
   </div>
@@ -674,6 +729,459 @@ footer{border-top:1px solid var(--borde);padding:1.5rem;text-align:center;font-f
     </div>
 </section>
 
+<section id="guias">
+  <div class="container">
+    <div class="home-eyebrow">Guias rapidas</div>
+    <h1 class="home-h1">Los primeros pasos para...</h1>
+    <p class="home-lead">Tres conexiones que cualquier equipo contable o financiero termina necesitando. Sin rodeos, paso a paso.</p>
+
+    <div class="gp-tabs">
+      <button class="gp-tab on" onclick="showGP('as',this)">
+        <span class="gp-tab-ey">Automatizacion</span>
+        <span class="gp-tab-name">Apps Script con Google Sheets</span>
+      </button>
+      <button class="gp-tab" onclick="showGP('pbi',this)">
+        <span class="gp-tab-ey">Business Intelligence</span>
+        <span class="gp-tab-name">Excel con Power BI</span>
+      </button>
+      <button class="gp-tab" onclick="showGP('ds',this)">
+        <span class="gp-tab-ey">Reporteria</span>
+        <span class="gp-tab-name">Google Sheets con Looker Studio</span>
+      </button>
+    </div>
+
+    <!-- ── GUIA 1: Apps Script + Google Sheets ── -->
+    <div class="gp-panel on" id="gp-as">
+
+      <div class="gvw">
+        <svg width="0" height="0" style="display:block"><defs><marker id="gvma" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs></svg>
+        <div class="gvw-cg">
+          <div class="gvw-tc" style="background:#1e1e2e">
+            <i class="ti ti-code-dots" style="font-size:30px;color:#9cdcfe" aria-hidden="true"></i>
+            <div class="gvw-name" style="color:#e2e2ff">Apps Script</div>
+            <div class="gvw-sub" style="color:#6060a0">archivo .gs</div>
+            <div class="gvw-pills">
+              <span class="gvw-pill" style="background:#2a2a50;color:#9cdcfe">getValues()</span>
+              <span class="gvw-pill" style="background:#2a2a50;color:#dcdcaa">setValue()</span>
+            </div>
+          </div>
+          <div class="gvw-cc">
+            <div class="gvw-lbl">← leer datos</div>
+            <svg width="134" height="64" viewBox="0 0 134 64">
+              <line class="gvfl" x1="112" y1="18" x2="22" y2="18" stroke="#4285f4" stroke-width="1.5" marker-end="url(#gvma)"/>
+              <circle class="gvg1" cx="92" cy="18" r="3" fill="#4285f4"/>
+              <circle class="gvg2" cx="67" cy="18" r="3" fill="#4285f4"/>
+              <circle class="gvg3" cx="42" cy="18" r="3" fill="#4285f4"/>
+              <line class="gvfr" x1="22" y1="48" x2="112" y2="48" stroke="#1a7a4a" stroke-width="1.5" marker-end="url(#gvma)"/>
+              <circle class="gvg1" cx="42" cy="48" r="3" fill="#1a7a4a"/>
+              <circle class="gvg2" cx="67" cy="48" r="3" fill="#1a7a4a"/>
+              <circle class="gvg3" cx="92" cy="48" r="3" fill="#1a7a4a"/>
+            </svg>
+            <div class="gvw-lbl">escribir resultado →</div>
+          </div>
+          <div class="gvw-tc" style="background:#1a7a4a">
+            <i class="ti ti-table" style="font-size:30px;color:#fff" aria-hidden="true"></i>
+            <div class="gvw-name" style="color:#fff">Google Sheets</div>
+            <div class="gvw-sub" style="color:#b2dfb2">datos y resultados</div>
+            <div class="gvw-pills">
+              <span class="gvw-pill" style="background:#155c36;color:#a5d6a7">hojas</span>
+              <span class="gvw-pill" style="background:#155c36;color:#a5d6a7">celdas</span>
+            </div>
+          </div>
+        </div>
+        <div class="gvw-tl">El script corre en tu cuenta de Google y accede directamente a la planilla — sin exportar, sin API externa</div>
+        <div class="gvw-caps">
+          <span style="font-size:11px;color:var(--gris-2)">Permite:</span>
+          <span class="gvw-cap">Automatizar reportes</span>
+          <span class="gvw-cap">Validar datos al guardar</span>
+          <span class="gvw-cap">Enviar alertas por email</span>
+        </div>
+      </div>
+
+      <div class="gp-step">
+        <div class="gp-ncol"><div class="gp-num">1</div><div class="gp-vline"></div></div>
+        <div>
+          <div class="gp-stitle">Abre tu planilla en Google Sheets</div>
+          <div class="gp-sdesc">Ve a drive.google.com y abre la planilla donde quieres usar el script. Puede ser una existente o una nueva en blanco.</div>
+        </div>
+        <div class="gp-vis">
+          <div class="gp-gs-hdr">
+            <svg width="10" height="10" viewBox="0 0 24 24"><path d="M4 3h9l5 5v13a1 1 0 01-1 1H4a1 1 0 01-1-1V4a1 1 0 011-1z" fill="#fff" opacity=".4"/><path d="M13 3l5 5h-5V3z" fill="#fff" opacity=".6"/></svg>
+            MiPlanilla.gsheet
+          </div>
+          <div style="padding:5px 9px;font-size:8px;color:#555">
+            <div style="display:flex;gap:10px;border-bottom:1px solid #f0f0f0;padding-bottom:4px;margin-bottom:4px">
+              <span>Archivo</span><span>Editar</span><span>Ver</span>
+              <span style="color:#1a73e8;font-weight:600;text-decoration:underline">Extensiones</span>
+            </div>
+            <div style="font-size:7.5px;color:#888">Hoja1 &nbsp;·&nbsp; Datos &nbsp;·&nbsp; Resultado</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gp-step">
+        <div class="gp-ncol"><div class="gp-num">2</div><div class="gp-vline"></div></div>
+        <div>
+          <div class="gp-stitle">Extensiones → Apps Script</div>
+          <div class="gp-sdesc">Desde el menú superior de Sheets, haz clic en <strong>Extensiones</strong> y luego en <strong>Apps Script</strong>. Se abre el editor de código en una pestaña nueva del navegador.</div>
+        </div>
+        <div class="gp-vis">
+          <div style="padding:5px 9px">
+            <div style="font-size:8px;color:#333;border-bottom:1px solid #eee;padding-bottom:3px;margin-bottom:3px;font-weight:500">▾ Extensiones</div>
+            <div class="gp-item">Complementos</div>
+            <div class="gp-item hl">▶&nbsp; Apps Script</div>
+            <div class="gp-item" style="color:#aaa">Macros</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gp-step">
+        <div class="gp-ncol"><div class="gp-num">3</div><div class="gp-vline"></div></div>
+        <div>
+          <div class="gp-stitle">Escribe tu primera función</div>
+          <div class="gp-sdesc">El editor trae un archivo <code>Código.gs</code> con una función vacía. Bórrala y escribe la tuya. <code>SpreadsheetApp</code> es el punto de entrada para todo lo que tenga que ver con tu planilla.</div>
+          <div class="gp-stip">💡 Cada archivo .gs es un módulo del mismo proyecto</div>
+        </div>
+        <div class="gp-vis">
+          <div class="gp-editor">
+            <span class="gp-kw">function</span> <span class="gp-fn">miScript</span>() {<br>
+            &nbsp;<span class="gp-kw">const</span> hoja =<br>
+            &nbsp;&nbsp;SpreadsheetApp<br>
+            &nbsp;&nbsp;.getActiveSheet();<br>
+            &nbsp;hoja.getRange(<span class="gp-str">'A1'</span>)<br>
+            &nbsp;&nbsp;.setValue(<span class="gp-str">'Hola!'</span>);<br>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="gp-step">
+        <div class="gp-ncol"><div class="gp-num">4</div><div class="gp-vline"></div></div>
+        <div>
+          <div class="gp-stitle">Guarda con Ctrl+S y presiona Ejecutar ▶</div>
+          <div class="gp-sdesc">Selecciona la función en el menú desplegable del editor y haz clic en ▶. El registro de ejecución en la parte inferior te muestra si corrió bien o si hubo un error y en qué línea.</div>
+        </div>
+        <div class="gp-vis">
+          <div style="padding:7px 9px">
+            <div style="background:#f8f8f8;border:1px solid #e8e8e8;border-radius:4px;padding:4px 8px;display:flex;align-items:center;gap:8px;margin-bottom:7px">
+              <span style="border:1px solid #ccc;border-radius:3px;padding:1px 8px;font-size:7.5px;color:#444">miScript ▾</span>
+              <span style="background:#1a73e8;color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:9px">▶</span>
+              <span style="font-size:7.5px;color:#888">Ejecutar</span>
+            </div>
+            <div style="font-size:7.5px;color:#888;border-top:1px solid #eee;padding-top:5px">
+              📋 Registro de ejecucion<br>
+              <span style="color:#0f9d58">✓ Iniciando...</span><br>
+              <span style="color:#0f9d58">✓ Completado en 0.4s</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gp-step">
+        <div class="gp-ncol"><div class="gp-num">5</div></div>
+        <div>
+          <div class="gp-stitle">Acepta los permisos — solo la primera vez</div>
+          <div class="gp-sdesc">Google pide autorización la primera vez que el script quiere acceder a tu planilla. Elige tu cuenta → si ves "aplicación no verificada" haz clic en Configuración avanzada → Ir al script → Permitir. Las próximas ejecuciones no piden nada.</div>
+        </div>
+        <div class="gp-vis">
+          <div style="padding:9px 10px">
+            <div style="font-weight:600;color:#333;margin-bottom:4px;font-size:9px">🔐 Solicitud de acceso</div>
+            <div style="color:#666;font-size:8px;line-height:1.4;margin-bottom:7px">miScript quiere acceder a tus hojas de calculo de Google.</div>
+            <div style="display:flex;gap:5px;margin-bottom:7px">
+              <button class="gp-btn-sm gp-btn-ghost">Cancelar</button>
+              <button class="gp-btn-sm gp-btn-primary">Permitir</button>
+            </div>
+            <div style="font-size:7.5px;color:#0f9d58">✓ A partir de aqui el script corre directo</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── GUIA 2: Excel + Power BI ── -->
+    <div class="gp-panel" id="gp-pbi">
+
+      <div class="gvw">
+        <svg width="0" height="0" style="display:block"><defs><marker id="gvmb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs></svg>
+        <div class="gvw-cg">
+          <div class="gvw-tc" style="background:#217346">
+            <i class="ti ti-file-spreadsheet" style="font-size:30px;color:#fff" aria-hidden="true"></i>
+            <div class="gvw-name" style="color:#fff">Excel</div>
+            <div class="gvw-sub" style="color:#b2dfb2">archivo .xlsx / .xlsm</div>
+            <div class="gvw-pills">
+              <span class="gvw-pill" style="background:#185c38;color:#a5d6a7">tablas</span>
+              <span class="gvw-pill" style="background:#185c38;color:#a5d6a7">hojas</span>
+            </div>
+          </div>
+          <div class="gvw-cc">
+            <div class="gvw-lbl">Obtener datos</div>
+            <svg width="134" height="44" viewBox="0 0 134 44">
+              <line class="gvfr" x1="22" y1="22" x2="112" y2="22" stroke="#f2c811" stroke-width="2" marker-end="url(#gvmb)"/>
+              <circle class="gvg1" cx="44" cy="22" r="3.5" fill="#f2c811"/>
+              <circle class="gvg2" cx="67" cy="22" r="3.5" fill="#f2c811"/>
+              <circle class="gvg3" cx="90" cy="22" r="3.5" fill="#f2c811"/>
+            </svg>
+            <div class="gvw-lbl">importar →</div>
+          </div>
+          <div class="gvw-tc" style="background:#1c1c1c">
+            <i class="ti ti-chart-bar" style="font-size:30px;color:#f2c811" aria-hidden="true"></i>
+            <div class="gvw-name" style="color:#fff">Power BI</div>
+            <div class="gvw-sub" style="color:#aaa">Desktop o Service</div>
+            <div class="gvw-pills">
+              <span class="gvw-pill" style="background:#2e2e2e;color:#f2c811">dashboards</span>
+              <span class="gvw-pill" style="background:#2e2e2e;color:#f2c811">DAX</span>
+            </div>
+          </div>
+        </div>
+        <div class="gvw-tl">Power BI lee el archivo directamente desde tu disco — actualiza con un clic, sin reimportar manualmente</div>
+        <div class="gvw-caps">
+          <span style="font-size:11px;color:var(--gris-2)">Permite:</span>
+          <span class="gvw-cap">Dashboards interactivos</span>
+          <span class="gvw-cap">Segmentadores y filtros</span>
+          <span class="gvw-cap">Modelo de datos con DAX</span>
+        </div>
+      </div>
+
+      <div class="gp-step">
+        <div class="gp-ncol"><div class="gp-num">1</div><div class="gp-vline"></div></div>
+        <div>
+          <div class="gp-stitle">Abre Power BI Desktop y haz clic en "Obtener datos"</div>
+          <div class="gp-sdesc">Power BI Desktop es gratuito y se descarga desde powerbi.microsoft.com. Al abrirlo, verás el botón <strong>Obtener datos</strong> en la cinta de opciones de la pestaña Inicio.</div>
+          <div class="gp-stip">💡 Power BI Desktop es distinto a Power BI Service (web)</div>
+        </div>
+        <div class="gp-vis">
+          <div class="gp-pbi-hdr">
+            <svg width="10" height="10" viewBox="0 0 24 24"><rect x="3" y="14" width="4" height="8" fill="#333"/><rect x="10" y="9" width="4" height="13" fill="#333"/><rect x="17" y="4" width="4" height="18" fill="#333"/></svg>
+            Power BI Desktop
+          </div>
+          <div style="padding:7px 9px">
+            <div style="background:#f2c811;color:#333;font-size:8px;font-weight:600;padding:4px 11px;border-radius:3px;display:inline-block;margin-bottom:5px">⊞ Obtener datos ▾</div>
+            <div style="font-size:7.5px;color:#888">Inicio · Transformar · Modelado · Ver · Ayuda</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gp-step">
+        <div class="gp-ncol"><div class="gp-num">2</div><div class="gp-vline"></div></div>
+        <div>
+          <div class="gp-stitle">Elige "Libro de Excel" como fuente</div>
+          <div class="gp-sdesc">En el menú desplegable de "Obtener datos" aparecen las fuentes más comunes. Haz clic en <strong>Libro de Excel</strong>. Si no lo ves directamente, elige <strong>Más...</strong> y búscalo en la lista.</div>
+        </div>
+        <div class="gp-vis">
+          <div style="padding:5px 9px">
+            <div style="font-size:8px;color:#333;border-bottom:1px solid #eee;padding-bottom:3px;margin-bottom:3px;font-weight:500">Obtener datos</div>
+            <div class="gp-item hl"><div class="gp-dot" style="background:#217346"></div>Libro de Excel</div>
+            <div class="gp-item"><div class="gp-dot" style="background:#0078d4"></div>SQL Server</div>
+            <div class="gp-item"><div class="gp-dot" style="background:#888"></div>Mas fuentes...</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gp-step">
+        <div class="gp-ncol"><div class="gp-num">3</div><div class="gp-vline"></div></div>
+        <div>
+          <div class="gp-stitle">Navega hasta tu archivo .xlsx y ábrelo</div>
+          <div class="gp-sdesc">Aparece un selector de archivos estándar. Navega hasta tu archivo, selecciónalo y haz clic en <strong>Abrir</strong>. Power BI lo analiza y muestra lo que contiene.</div>
+        </div>
+        <div class="gp-vis">
+          <div style="padding:7px 9px">
+            <div style="border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin-bottom:5px;font-size:8px;color:#555">
+              📂 Finanzas / <strong style="color:#217346">Ventas_2025.xlsx</strong>
+            </div>
+            <div style="font-size:7.5px;color:#888;margin-bottom:6px">.xlsx &nbsp;·&nbsp; 128 KB &nbsp;·&nbsp; ene 2026</div>
+            <button style="background:#0078d4;color:#fff;border:none;border-radius:3px;padding:3px 11px;font-size:8px;cursor:pointer">Abrir</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="gp-step">
+        <div class="gp-ncol"><div class="gp-num">4</div><div class="gp-vline"></div></div>
+        <div>
+          <div class="gp-stitle">Marca la hoja o tabla que necesitas y carga</div>
+          <div class="gp-sdesc">El <strong>Navegador</strong> muestra todas las hojas y tablas del archivo. Marca las que necesitas. Si los datos necesitan limpieza elige "Transformar datos"; si están listos, clic en <strong>Cargar</strong>.</div>
+          <div class="gp-stip">💡 Las tablas con nombre (Insertar → Tabla en Excel) se cargan más limpio</div>
+        </div>
+        <div class="gp-vis">
+          <div style="padding:5px 9px">
+            <div style="font-size:8px;color:#333;border-bottom:1px solid #eee;padding-bottom:3px;margin-bottom:4px;font-weight:500">Navegador</div>
+            <div class="gp-item"><input type="checkbox" style="width:9px;height:9px;margin:0">&nbsp; Hoja1</div>
+            <div class="gp-item hl"><input type="checkbox" checked style="width:9px;height:9px;margin:0">&nbsp; Tabla_Ventas ✓</div>
+            <div class="gp-item"><input type="checkbox" style="width:9px;height:9px;margin:0">&nbsp; Parametros</div>
+            <div style="display:flex;gap:5px;padding:5px 10px">
+              <button style="background:#f0f0f0;border:none;border-radius:3px;padding:3px 7px;font-size:7.5px;cursor:pointer">Transformar</button>
+              <button style="background:#0078d4;color:#fff;border:none;border-radius:3px;padding:3px 9px;font-size:7.5px;cursor:pointer">Cargar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gp-step">
+        <div class="gp-ncol"><div class="gp-num">5</div></div>
+        <div>
+          <div class="gp-stitle">Los campos aparecen en el panel derecho — listo para visualizar</div>
+          <div class="gp-sdesc">Power BI carga la tabla y sus columnas aparecen en el panel <strong>Datos</strong> a la derecha. Desde ahí puedes arrastrar campos al lienzo para crear gráficos, tablas y tarjetas de KPI.</div>
+        </div>
+        <div class="gp-vis">
+          <div style="padding:5px 9px">
+            <div style="font-size:8px;color:#333;border-bottom:1px solid #eee;padding-bottom:3px;margin-bottom:4px;font-weight:500">📊 Tabla_Ventas</div>
+            <div class="gp-item"><div class="gp-dot" style="background:#f2c811"></div>Fecha</div>
+            <div class="gp-item"><div class="gp-dot" style="background:#0078d4"></div>Monto</div>
+            <div class="gp-item"><div class="gp-dot" style="background:#0078d4"></div>Producto</div>
+            <div class="gp-item"><div class="gp-dot" style="background:#aaa"></div>Region</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── GUIA 3: Google Sheets + Looker Studio ── -->
+    <div class="gp-panel" id="gp-ds">
+
+      <div class="gvw">
+        <svg width="0" height="0" style="display:block"><defs><marker id="gvmc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs></svg>
+        <div class="gvw-cg">
+          <div class="gvw-tc" style="background:#1a7a4a">
+            <i class="ti ti-table" style="font-size:30px;color:#fff" aria-hidden="true"></i>
+            <div class="gvw-name" style="color:#fff">Google Sheets</div>
+            <div class="gvw-sub" style="color:#b2dfb2">planilla con tus datos</div>
+            <div class="gvw-pills">
+              <span class="gvw-pill" style="background:#155c36;color:#a5d6a7">datos en vivo</span>
+              <span class="gvw-pill" style="background:#155c36;color:#a5d6a7">columnas</span>
+            </div>
+          </div>
+          <div class="gvw-cc">
+            <div class="gvw-lbl">conector nativo</div>
+            <svg width="134" height="44" viewBox="0 0 134 44">
+              <line class="gvfr" x1="22" y1="22" x2="112" y2="22" stroke="#4285f4" stroke-width="2" marker-end="url(#gvmc)"/>
+              <circle class="gvg1" cx="44" cy="22" r="3.5" fill="#4285f4"/>
+              <circle class="gvg2" cx="67" cy="22" r="3.5" fill="#4285f4"/>
+              <circle class="gvg3" cx="90" cy="22" r="3.5" fill="#4285f4"/>
+            </svg>
+            <div class="gvw-lbl">conectar →</div>
+          </div>
+          <div class="gvw-tc" style="background:#1a52c0">
+            <i class="ti ti-layout-dashboard" style="font-size:30px;color:#fff" aria-hidden="true"></i>
+            <div class="gvw-name" style="color:#fff">Looker Studio</div>
+            <div class="gvw-sub" style="color:#b8d0ff">antes Data Studio — gratis</div>
+            <div class="gvw-pills">
+              <span class="gvw-pill" style="background:#1242a0;color:#b8d0ff">informes</span>
+              <span class="gvw-pill" style="background:#1242a0;color:#b8d0ff">gráficos</span>
+            </div>
+          </div>
+        </div>
+        <div class="gvw-tl">El informe se actualiza solo cuando los datos de Sheets cambian — siempre refleja la información más reciente</div>
+        <div class="gvw-caps">
+          <span style="font-size:11px;color:var(--gris-2)">Permite:</span>
+          <span class="gvw-cap">Informes para el equipo</span>
+          <span class="gvw-cap">Gráficos que se actualizan solos</span>
+          <span class="gvw-cap">Compartir sin exponer los datos crudos</span>
+        </div>
+      </div>
+
+      <div class="gp-step">
+        <div class="gp-ncol"><div class="gp-num">1</div><div class="gp-vline"></div></div>
+        <div>
+          <div class="gp-stitle">Ve a lookerstudio.google.com y crea un informe</div>
+          <div class="gp-sdesc">Looker Studio (antes Data Studio) es gratuito con cuenta Google. Entra a lookerstudio.google.com, haz clic en el botón <strong>+ Crear</strong> y elige <strong>Informe</strong>.</div>
+        </div>
+        <div class="gp-vis">
+          <div class="gp-ls-hdr">
+            <svg width="9" height="9" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M5.5 9l2.5 2.5 4.5-4.5" stroke="#fff" stroke-width="1.5" fill="none"/></svg>
+            Looker Studio
+          </div>
+          <div style="padding:7px 9px">
+            <div style="background:#4285f4;color:#fff;font-size:8px;font-weight:500;padding:4px 11px;border-radius:18px;display:inline-block;margin-bottom:5px">+ Crear ▾</div>
+            <div style="font-size:7.5px;color:#888">Informe &nbsp;·&nbsp; Fuente de datos &nbsp;·&nbsp; Explorar</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gp-step">
+        <div class="gp-ncol"><div class="gp-num">2</div><div class="gp-vline"></div></div>
+        <div>
+          <div class="gp-stitle">Elige "Google Sheets" como conector de datos</div>
+          <div class="gp-sdesc">Al crear un informe, Looker Studio te pide una fuente de datos. En la cuadrícula de conectores, busca y haz clic en <strong>Google Sheets</strong>. No necesitas exportar a CSV.</div>
+          <div class="gp-stip">💡 Puedes conectar directo, sin exportar ni descargar nada</div>
+        </div>
+        <div class="gp-vis">
+          <div style="padding:5px 8px">
+            <div style="font-size:8px;color:#555;margin-bottom:5px">Conectar con datos</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
+              <div style="border:1px solid #dadce0;border-radius:4px;padding:5px;text-align:center;font-size:7.5px;color:#555">BigQuery</div>
+              <div style="border:2px solid #4285f4;border-radius:4px;padding:5px;text-align:center;font-size:7.5px;color:#4285f4;font-weight:600;background:#e8f0fe">Sheets ✓</div>
+              <div style="border:1px solid #dadce0;border-radius:4px;padding:5px;text-align:center;font-size:7.5px;color:#555">Analytics</div>
+              <div style="border:1px solid #dadce0;border-radius:4px;padding:5px;text-align:center;font-size:7.5px;color:#555">MySQL</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gp-step">
+        <div class="gp-ncol"><div class="gp-num">3</div><div class="gp-vline"></div></div>
+        <div>
+          <div class="gp-stitle">Elige tu planilla y la hoja exacta</div>
+          <div class="gp-sdesc">Looker Studio muestra tus planillas recientes de Google Drive. Selecciona la que quieres y luego elige la hoja específica (pestaña) que contiene los datos. También puedes pegar la URL directamente.</div>
+        </div>
+        <div class="gp-vis">
+          <div style="padding:7px 9px">
+            <div style="border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin-bottom:5px;font-size:8px;color:#333">
+              📊 <strong>Ventas_2025</strong> <span style="color:#4285f4;font-size:7px">↗</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:5px;font-size:8px;color:#555">
+              <span>Hoja:</span>
+              <select style="font-size:7.5px;padding:2px 4px;border:1px solid #ccc;border-radius:3px;color:#333">
+                <option>Enero ▾</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gp-step">
+        <div class="gp-ncol"><div class="gp-num">4</div><div class="gp-vline"></div></div>
+        <div>
+          <div class="gp-stitle">Haz clic en "Añadir al informe"</div>
+          <div class="gp-sdesc">Looker Studio detecta automáticamente los campos y sus tipos (fecha, número, texto, dimensión). Haz clic en <strong>Añadir al informe</strong> para confirmar. Si algo quedó mal tipificado lo puedes corregir luego en el panel de campos.</div>
+        </div>
+        <div class="gp-vis">
+          <div style="padding:7px 9px">
+            <div style="display:flex;justify-content:flex-end;margin-bottom:6px">
+              <button style="background:#4285f4;color:#fff;border:none;border-radius:4px;padding:5px 12px;font-size:8px;font-weight:500;cursor:pointer">Añadir al informe →</button>
+            </div>
+            <div style="font-size:7.5px;color:#888">Campos detectados:</div>
+            <div style="font-size:7.5px;color:#333;margin-top:3px">
+              📅 Fecha &nbsp;·&nbsp; 🔢 Monto &nbsp;·&nbsp; 📝 Producto &nbsp;·&nbsp; 🔤 Region
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gp-step">
+        <div class="gp-ncol"><div class="gp-num">5</div></div>
+        <div>
+          <div class="gp-stitle">Arrastra campos al lienzo y crea tu primera visualización</div>
+          <div class="gp-sdesc">Usa el menú <strong>Insertar → Gráfico</strong> para agregar visualizaciones y arrastra campos desde el panel derecho. Cualquier cambio en tu Google Sheet se refleja automáticamente en el informe al actualizar la página.</div>
+        </div>
+        <div class="gp-vis">
+          <div style="padding:6px 9px">
+            <div style="font-size:7.5px;color:#888;margin-bottom:4px">Vista previa del informe</div>
+            <div style="display:flex;align-items:flex-end;gap:3px;height:42px;padding-bottom:2px;border-bottom:1px solid #eee">
+              <div style="width:20px;height:75%;background:#4285f4;border-radius:2px 2px 0 0;opacity:.85"></div>
+              <div style="width:20px;height:50%;background:#4285f4;border-radius:2px 2px 0 0;opacity:.85"></div>
+              <div style="width:20px;height:95%;background:#4285f4;border-radius:2px 2px 0 0;opacity:.85"></div>
+              <div style="width:20px;height:40%;background:#4285f4;border-radius:2px 2px 0 0;opacity:.85"></div>
+              <div style="width:20px;height:65%;background:#4285f4;border-radius:2px 2px 0 0;opacity:.85"></div>
+            </div>
+            <div style="font-size:7.5px;color:#4285f4;margin-top:4px;font-weight:500">✓ Conectado — se actualiza desde Sheets</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
 <section id="contact">
   <div class="container">
     <div class="home-eyebrow">Contacto</div>
@@ -1041,6 +1549,14 @@ function dtogglePlay(){
 dbuildDots();
 dstartBar();
 show('home');
+
+function showGP(id, btn) {
+  document.querySelectorAll('.gp-tab').forEach(function(t){t.classList.remove('on');});
+  document.querySelectorAll('.gp-panel').forEach(function(p){p.classList.remove('on');});
+  btn.classList.add('on');
+  document.getElementById('gp-'+id).classList.add('on');
+}
+
 
 // ===== DEMO V2 — 6 ESCENAS =====
 var dN2=6,dcur2=0,dplaying2=true,draf2=null,dpbStart2=null,dDUR2=5200;
