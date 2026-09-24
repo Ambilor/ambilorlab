@@ -226,6 +226,7 @@ footer{border-top:1px solid var(--borde);padding:1.5rem;text-align:center;font-f
 .d-res .amt.pos{color:#0f9d58;font-weight:500}
 .d-res .amt.neg{color:#d93025;font-weight:500}
 .d-res .grp{font-weight:600;color:#0a0a0a;font-size:9.5px}
+.d-res .det{color:#888;font-size:9px;max-width:150px;white-space:normal;line-height:1.35}
 .d-ok{display:inline-flex;align-items:center;gap:4px;color:#16a34a;font-weight:500;font-size:9.5px}
 .d-ok::before{content:'';width:5px;height:5px;border-radius:50%;background:#16a34a}
 .d-pend{display:inline-flex;align-items:center;gap:4px;color:#d97706;font-weight:500;font-size:9.5px}
@@ -236,44 +237,34 @@ footer{border-top:1px solid var(--borde);padding:1.5rem;text-align:center;font-f
 .d-sitm .dot{width:7px;height:7px;border-radius:50%}
 .d-sitm .dot.g{background:#16a34a}
 .d-sitm .dot.y{background:#d97706}
-.d-wtag{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--azul);margin-bottom:9px;height:16px;opacity:0;transition:opacity .3s}
-.d-wtag.show{opacity:1}
-.d-wtag .blink{width:6px;height:6px;border-radius:50%;background:var(--azul);animation:dbl 1s step-end infinite}
-@keyframes dbl{50%{opacity:.2}}
 
-/* Mini Google Sheets mockup (escena 2) */
-.ms{border:1px solid #dadce0;border-radius:6px;overflow:hidden;max-width:460px;width:100%;font-size:10px;position:relative}
-.ms-tbar{display:flex;align-items:center;gap:6px;padding:4px 8px;border-bottom:1px solid #f0f0f0}
-.ms-icon svg{width:14px;height:14px}
-.ms-name{font-size:11px;font-weight:500;color:#202124}
-.ms-mbar{display:flex;align-items:center;height:20px;border-bottom:1px solid #f0f0f0;padding:0 2px}
-.ms-mi{font-size:9px;color:#3c4043;padding:0 5px;height:100%;display:flex;align-items:center;flex-shrink:0}
-.ms-conc{font-size:9px;font-weight:500;color:#1a73e8;background:#e8f0fe;padding:0 6px;margin-left:auto;height:100%;flex-shrink:0;display:flex;align-items:center;gap:3px}
-.ms-dd{position:absolute;background:#fff;border-radius:0 0 4px 4px;box-shadow:0 3px 8px rgba(0,0,0,.2);width:160px;z-index:50;padding:3px 0;display:none}
-.ms-dd.on{display:block}
-.ms-ddi{display:flex;align-items:center;gap:6px;padding:5px 10px;font-size:10px;color:#3c4043}
-.ms-ddi.hv{background:#e8f0fe}
-.ms-dico{width:13px;height:13px;border-radius:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.ms-dg{background:#0f9d58}.ms-db{background:#1a73e8}.ms-dgr{background:#9e9e9e}
-.ms-cells{padding:0}
-.ms-row{display:grid;grid-template-columns:20px repeat(5,1fr)}
-.ms-c{padding:2px 4px;border-right:1px solid #eee;border-bottom:1px solid #eee;font-size:9px;color:#3c4043;white-space:nowrap;overflow:hidden}
-.ms-c.h{background:#f8f9fa;color:#888;text-align:center}
-.ms-c.b{font-weight:600}
-.ms-c.p{color:#0f9d58}.ms-c.r{color:#d93025}
-.ms-tabs{display:flex;align-items:flex-end;background:#f8f9fa;padding:0 4px;height:18px;gap:2px;overflow:hidden;border-top:1px solid #e0e0e0}
-.ms-tab{font-size:8px;padding:0 6px;height:14px;border-radius:2px 2px 0 0;display:flex;align-items:center;margin-top:4px;flex-shrink:0}
-.ms-tab.act{background:#fff;border:1px solid #dadce0;border-bottom-color:#fff;color:#1a6b3a;font-weight:500}
-.ms-tab.inact{color:#999}
-.ms-cur{position:absolute;z-index:200;pointer-events:none;transition:top .45s ease,left .45s ease}
-.ms-cur svg{width:11px;height:11px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.4))}
-.ms-rip{position:absolute;width:13px;height:13px;border-radius:50%;border:1.5px solid rgba(26,115,232,.8);z-index:199;opacity:0;transform:scale(0)}
-.ms-rip.go{animation:msrp .28s ease-out forwards}
+/* Confirmacion visual de columnas (escena 1) */
+.d-colcheck{display:flex;align-items:center;gap:6px;font-size:10px;color:#16a34a;background:#f0fff7;border:1px solid #d1fae5;border-radius:0 0 8px 8px;padding:7px 11px;margin-top:-1px}
+.d-ccok{width:14px;height:14px;border-radius:50%;background:#16a34a;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0}
+
+/* Panel web mockup (escena 2) */
+.pw{border:1px solid #dadce0;border-radius:8px;overflow:hidden;max-width:460px;width:100%;font-size:10px;position:relative;background:#fff}
+.pw-bar{display:flex;align-items:center;gap:8px;padding:6px 10px;border-bottom:1px solid #f0f0f0;background:#fafafa}
+.pw-logo{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--azul)}
+.pw-title{font-size:10px;color:#666;font-weight:500}
+.pw-tab{font-size:8px;color:#999;padding:2px 6px;border-radius:4px;margin-left:2px}
+.pw-tab.on{background:var(--azul);color:#fff}
+.pw-body{padding:12px}
+.pw-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}
+.pw-kpi{border:1px solid #ebebeb;border-radius:6px;padding:8px 6px;text-align:center}
+.pw-kv{font-size:14px;font-weight:600;color:#0a0a0a;font-family:var(--mono);font-variant-numeric:tabular-nums}
+.pw-kl{font-size:7.5px;color:#999;margin-top:2px;text-transform:uppercase;letter-spacing:.03em}
+.pw-run{display:inline-flex;align-items:center;gap:5px;background:var(--azul);color:#fff;font-size:10px;font-weight:500;padding:6px 14px;border-radius:5px;cursor:pointer}
+.pw-status{margin-top:8px;font-size:10px;color:#666;display:flex;align-items:center;gap:5px}
+.pw-sd{width:5px;height:5px;border-radius:50%;background:#e0e0e0}
+.pw-sd.run{background:var(--azul);animation:msbl 1s step-end infinite}
+.pw-sd.ok{background:#0f9d58}
+.pw-cur{position:absolute;z-index:200;pointer-events:none;transition:top .45s ease,left .45s ease}
+.pw-cur svg{width:11px;height:11px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.4))}
+.pw-rip{position:absolute;width:13px;height:13px;border-radius:50%;border:1.5px solid rgba(26,115,232,.8);z-index:199;opacity:0;transform:scale(0)}
+.pw-rip.go{animation:msrp .28s ease-out forwards}
+
 @keyframes msrp{0%{opacity:.9;transform:scale(0)}100%{opacity:0;transform:scale(2.2)}}
-.ms-status{margin-top:8px;font-size:11px;color:#666;display:flex;align-items:center;gap:5px}
-.ms-sd{width:5px;height:5px;border-radius:50%;background:#e0e0e0}
-.ms-sd.run{background:var(--azul);animation:msbl 1s step-end infinite}
-.ms-sd.ok{background:#0f9d58}
 @keyframes msbl{50%{opacity:0}}
 
 /* Matching list (escena 4 - algoritmo) */
@@ -625,60 +616,47 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
         </div>
 
         <div class="dscene" id="ds1">
-          <div class="d-pill anim"><div class="d-dot">1</div><span class="d-pilltxt">Paso 1 - carga tus datos</span></div>
-          <div class="d-h anim">Pegas tus movimientos<br>en la hoja <em>MOVIMIENTOS</em></div>
-          <div class="d-sub anim">Cualquier estructura. Columnas configurables sin tocar codigo.</div>
+          <div class="d-pill anim"><div class="d-dot">1</div><span class="d-pilltxt">Paso 1 - conecta tu fuente</span></div>
+          <div class="d-h anim">Tu banco o ERP exporta<br>a <em>Google Sheets</em></div>
+          <div class="d-sub anim">Importa tu .xlsx o conecta un sheet externo. El sistema detecta los encabezados y te confirma visualmente que las columnas son las correctas.</div>
           <div class="d-tblw anim">
             <table class="d-tbl">
-              <thead><tr><th>ID</th><th>Concepto</th><th>Responsable</th><th>Monto</th></tr></thead>
+              <thead><tr><th>FECHA</th><th>DESCRIPCION</th><th>IMPORTE</th></tr></thead>
               <tbody>
-                <tr class="da"><td>F-001</td><td>Factura A</td><td>Proveedor X</td><td>+500.000</td></tr>
-                <tr><td>F-002</td><td>Honorario B</td><td>Proveedor Y</td><td>+120.000</td></tr>
-                <tr class="db"><td>P-001</td><td>Pago fact A</td><td>Proveedor X</td><td>-500.000</td></tr>
-                <tr><td>P-002</td><td>Abono hon B</td><td>Proveedor Y</td><td>-120.000</td></tr>
+                <tr class="da"><td>03/06</td><td>Factura A</td><td>+500.000</td></tr>
+                <tr><td>04/06</td><td>Pago fact A</td><td>-500.000</td></tr>
+                <tr class="db"><td>05/06</td><td>Honorario B</td><td>+120.000</td></tr>
+                <tr><td>06/06</td><td>Abono hon B</td><td>-120.000</td></tr>
               </tbody>
             </table>
+            <div class="d-colcheck anim"><span class="d-ccok">&#10003;</span> Columnas confirmadas: Fecha &#8594; FECHA &middot; Concepto &#8594; DESCRIPCION &middot; Monto &#8594; IMPORTE</div>
           </div>
         </div>
 
         <div class="dscene" id="ds2">
-          <div class="d-pill anim"><div class="d-dot">2</div><span class="d-pilltxt">Paso 2 - ejecutar</span></div>
-          <div class="d-h anim">Un clic desde el menu<br>de tu <em>Google Sheets</em></div>
-          <div class="d-sub anim">El sistema valida los datos antes de procesar.</div>
+          <div class="d-pill anim"><div class="d-dot">2</div><span class="d-pilltxt">Paso 2 - ejecuta desde el panel</span></div>
+          <div class="d-h anim">Abre el <em>panel de control web</em><br>y ejecuta con un clic</div>
+          <div class="d-sub anim">KPIs, grafico y resultados en una sola vista. El sistema valida los datos antes de procesar.</div>
 
-          <div class="ms anim" id="msframe">
-            <div class="ms-tbar">
-              <div class="ms-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 3h9l5 5v13a1 1 0 01-1 1H4a1 1 0 01-1-1V4a1 1 0 011-1z" fill="#23a566"/><path d="M13 3l5 5h-5V3z" fill="#1a7a4a"/></svg></div>
-              <span class="ms-name">ConciliacionV1</span>
+          <div class="pw anim" id="pwframe">
+            <div class="pw-bar">
+              <span class="pw-logo">Ambilor.Lab</span>
+              <span class="pw-title">Conciliador V1</span>
+              <span class="pw-tab on">Panel</span><span class="pw-tab">Plantillas</span><span class="pw-tab">Configuracion</span>
             </div>
-            <div class="ms-mbar" id="msmbar">
-              <span class="ms-mi">Archivo</span><span class="ms-mi">Editar</span><span class="ms-mi">Ver</span>
-              <span class="ms-mi">Insertar</span><span class="ms-mi">Formato</span><span class="ms-mi">Datos</span>
-              <span class="ms-conc" id="msbtn">&#128260; Conciliacion</span>
+            <div class="pw-body">
+              <div class="pw-kpis">
+                <div class="pw-kpi"><div class="pw-kv" id="pwPct">0%</div><div class="pw-kl">conciliacion</div></div>
+                <div class="pw-kpi"><div class="pw-kv" id="pwPares">0</div><div class="pw-kl">pares</div></div>
+                <div class="pw-kpi"><div class="pw-kv" id="pwPend">0</div><div class="pw-kl">pendientes</div></div>
+                <div class="pw-kpi"><div class="pw-kv" id="pwMonto">$0</div><div class="pw-kl">conciliado</div></div>
+              </div>
+              <div class="pw-run" id="pwbtn">&#9654; Ejecutar conciliacion</div>
+              <div class="pw-status"><div class="pw-sd" id="pwsd"></div><span id="pwst">Listo para ejecutar</span></div>
             </div>
-            <div class="ms-dd" id="msdd">
-              <div class="ms-ddi" id="msval"><div class="ms-dico ms-dg"><svg width="7" height="7" viewBox="0 0 11 11"><path d="M1.5 5.5l3 3 5-5" stroke="#fff" stroke-width="2" fill="none"/></svg></div>Validar datos</div>
-              <div class="ms-ddi" id="msexec"><div class="ms-dico ms-db"><svg width="6" height="6" viewBox="0 0 10 10"><path d="M2 1.5l7 3.5-7 3.5V1.5z" fill="#fff"/></svg></div>Ejecutar conciliacion</div>
-              <div class="ms-ddi" id="msclr"><div class="ms-dico ms-dgr"><svg width="7" height="7" viewBox="0 0 11 11"><path d="M2 2l7 7M9 2L2 9" stroke="#fff" stroke-width="2"/></svg></div>Limpiar resultados</div>
-            </div>
-            <div class="ms-cells">
-              <div class="ms-row"><div class="ms-c h"></div><div class="ms-c h">A</div><div class="ms-c h">B</div><div class="ms-c h">C</div><div class="ms-c h">D</div><div class="ms-c h">E</div></div>
-              <div class="ms-row"><div class="ms-c h">1</div><div class="ms-c b">ID</div><div class="ms-c b">Fecha</div><div class="ms-c b">Concepto</div><div class="ms-c b">Responsable</div><div class="ms-c b">Monto</div></div>
-              <div class="ms-row"><div class="ms-c h">2</div><div class="ms-c">F-001</div><div class="ms-c">03/06</div><div class="ms-c">Factura A</div><div class="ms-c">Prov. X</div><div class="ms-c p">+500.000</div></div>
-              <div class="ms-row"><div class="ms-c h">3</div><div class="ms-c">P-001</div><div class="ms-c">04/06</div><div class="ms-c">Pago fact A</div><div class="ms-c">Prov. X</div><div class="ms-c r">-500.000</div></div>
-            </div>
-            <div class="ms-tabs">
-              <div class="ms-tab act">MOVIMIENTOS</div>
-              <div class="ms-tab inact">CONFIG_COLUMNAS</div>
-              <div class="ms-tab inact">REGLAS</div>
-              <div class="ms-tab inact">CONCEPTOS</div>
-              <div class="ms-tab inact">RESULTADO</div>
-              <div class="ms-tab inact">LOG</div>
-            </div>
-            <div class="ms-cur" id="mscur" style="top:80px;left:20px"><svg viewBox="0 0 18 18" fill="none"><path d="M2 2l6 14 3-5.5 5.5-3L2 2z" fill="#1a1a1a" stroke="#fff" stroke-width="1"/></svg></div>
-            <div class="ms-rip" id="msrip"></div>
+            <div class="pw-cur" id="pwcur"><svg viewBox="0 0 18 18" fill="none"><path d="M2 2l6 14 3-5.5 5.5-3L2 2z" fill="#1a1a1a" stroke="#fff" stroke-width="1"/></svg></div>
+            <div class="pw-rip" id="pwrip"></div>
           </div>
-          <div class="ms-status anim"><div class="ms-sd" id="mssd"></div><span id="msst">Listo para ejecutar</span></div>
         </div>
 
         <div class="dscene" id="ds3">
@@ -700,13 +678,12 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
         </div>
 
         <div class="dscene" id="ds4">
-          <div class="d-pill anim"><div class="d-dot">3</div><span class="d-pilltxt">Paso 3 - resultado</span></div>
-          <div class="d-h anim">La hoja <em>RESULTADO</em><br>lista lo conciliado y pendiente</div>
-          <div class="d-sub anim">Pares agrupados por color. Pendientes destacados al final con el motivo claro.</div>
-          <div class="d-wtag" id="wtag"><div class="blink"></div>Escribiendo resultado...</div>
+          <div class="d-pill anim"><div class="d-dot">3</div><span class="d-pilltxt">Paso 3 - revisa y corrige</span></div>
+          <div class="d-h anim">Resultado en el panel:<br><em>conciliados y pendientes</em> con su motivo</div>
+          <div class="d-sub anim">Cada pendiente explica por que no concilio. Puedes deshacer un pareo o emparejar manualmente.</div>
           <div class="d-resw">
             <table class="d-res">
-              <thead><tr><th>Grupo</th><th>Estado</th><th>ID</th><th>Fecha</th><th>Concepto</th><th>Responsable</th><th style="text-align:right">Monto</th></tr></thead>
+              <thead><tr><th>Estado</th><th>ID</th><th>Concepto</th><th style="text-align:right">Monto</th><th>Detalle del match</th></tr></thead>
               <tbody id="tbody"></tbody>
             </table>
           </div>
@@ -1341,75 +1318,54 @@ function clearMsTimers(){msSeqTimers.forEach(clearTimeout);msSeqTimers=[];}
 function clearMlTimers(){mlTimers.forEach(clearTimeout);mlTimers=[];}
 function clearResTimers(){resTimers.forEach(clearTimeout);resTimers=[];}
 
-// ---- Escena 2: mini Google Sheets animado ----
-function runMiniSheets(){
+// ---- Escena 2: panel web animado ----
+function runPanelWeb(){
   clearMsTimers();
-  var msbtn=document.getElementById('msbtn');
-  var msexec=document.getElementById('msexec');
-  var msdd=document.getElementById('msdd');
-  var mscur=document.getElementById('mscur');
-  var msrip=document.getElementById('msrip');
-  var mssd=document.getElementById('mssd');
-  var msst=document.getElementById('msst');
-  var msframe=document.getElementById('msframe');
-  var msmbar=document.getElementById('msmbar');
-  if(!msbtn) return;
+  var pwbtn=document.getElementById('pwbtn');
+  var pwcur=document.getElementById('pwcur');
+  var pwrip=document.getElementById('pwrip');
+  var pwsd=document.getElementById('pwsd');
+  var pwst=document.getElementById('pwst');
+  var pwframe=document.getElementById('pwframe');
+  var pwPct=document.getElementById('pwPct');
+  var pwPares=document.getElementById('pwPares');
+  var pwPend=document.getElementById('pwPend');
+  var pwMonto=document.getElementById('pwMonto');
+  if(!pwbtn) return;
 
-  function posDD(){
-    var fr=msframe.getBoundingClientRect();
-    var br=msbtn.getBoundingClientRect();
-    var th=msframe.querySelector('.ms-tbar').offsetHeight;
-    var mh=msmbar.offsetHeight;
-    var w=160;
-    var right=br.right-fr.left;
-    var left=right-w;
-    if(left<2)left=2;
-    msdd.style.top=(th+mh)+'px';
-    msdd.style.left=left+'px';
-  }
   function pp(el){
-    var er=el.getBoundingClientRect();var fr=msframe.getBoundingClientRect();
+    var er=el.getBoundingClientRect();var fr=pwframe.getBoundingClientRect();
     return{x:er.left-fr.left+er.width/2,y:er.top-fr.top+er.height/2};
   }
   function mv(x,y,d,cb){
     msSeqTimers.push(setTimeout(function(){
-      mscur.style.left=(x-5)+'px';mscur.style.top=(y-5)+'px';
+      pwcur.style.left=(x-5)+'px';pwcur.style.top=(y-5)+'px';
       msSeqTimers.push(setTimeout(cb||function(){},460));
     },d||0));
   }
   function ck(x,y,d,cb){
     msSeqTimers.push(setTimeout(function(){
-      msrip.style.left=(x-6)+'px';msrip.style.top=(y-6)+'px';
-      msrip.className='ms-rip';void msrip.offsetWidth;msrip.className='ms-rip go';
+      pwrip.style.left=(x-6)+'px';pwrip.style.top=(y-6)+'px';
+      pwrip.className='pw-rip';void pwrip.offsetWidth;pwrip.className='pw-rip go';
       msSeqTimers.push(setTimeout(cb||function(){},300));
     },d||0));
   }
 
-  posDD();
-  msdd.classList.remove('on');
-  msexec.classList.remove('hv');
-  mssd.className='ms-sd';msst.textContent='Listo para ejecutar';
-  mscur.style.left='20px';mscur.style.top='80px';
+  pwPct.textContent='0%';pwPares.textContent='0';pwPend.textContent='0';pwMonto.textContent='$0';
+  pwsd.className='pw-sd';pwst.textContent='Listo para ejecutar';
+  pwcur.style.left='20px';pwcur.style.top='30px';
 
-  var bp=pp(msbtn);
+  var bp=pp(pwbtn);
   mv(bp.x,bp.y,500,function(){
-    ck(bp.x,bp.y,0,function(){posDD();msdd.classList.add('on');});
-    msSeqTimers.push(setTimeout(function(){
-      var ep=pp(msexec);
-      mv(ep.x,ep.y,400,function(){
-        msexec.classList.add('hv');
-        ck(ep.x,ep.y,300,function(){
-          msdd.classList.remove('on');
-          msexec.classList.remove('hv');
-          mssd.className='ms-sd run';
-          msst.textContent='Ejecutando...';
-          msSeqTimers.push(setTimeout(function(){
-            mssd.className='ms-sd ok';
-            msst.textContent='3.000 movimientos en ~3s';
-          },1600));
-        });
-      });
-    },700));
+    ck(bp.x,bp.y,0,function(){
+      pwsd.className='pw-sd run';
+      pwst.textContent='Ejecutando...';
+      msSeqTimers.push(setTimeout(function(){
+        pwPct.textContent='67%';pwPares.textContent='100';pwPend.textContent='50';pwMonto.textContent='$1,7 M';
+        pwsd.className='pw-sd ok';
+        pwst.textContent='3.000 movimientos en ~3s';
+      },1600));
+    });
   });
 }
 
@@ -1546,22 +1502,22 @@ function startMlAnimation(){
 
 // ---- Escena 5: resultado animado ----
 var RES_ROWS=[
-  {grp:'G00001',st:'ok',id:1,f:'1/1/2026',c:'Factura A',r:'Juan',a:'100.00',sign:'pos',rc:true},
-  {grp:'G00001',st:'ok',id:2,f:'20/1/2026',c:'Pago fact A',r:'Juan',a:'-100.00',sign:'neg',rc:true},
-  {grp:'G00002',st:'ok',id:8,f:'1/4/2026',c:'Factura Z',r:'Diego',a:'-2,300.00',sign:'neg',rc:true},
-  {grp:'G00002',st:'ok',id:9,f:'7/5/2026',c:'Pago fact z',r:'Diego',a:'2,300.00',sign:'pos',rc:true},
-  {grp:'-',st:'pend',id:3,f:'22/2/2026',c:'Factura B',r:'Pedro',a:'200.00',sign:'pos',rc:false},
-  {grp:'-',st:'pend',id:4,f:'28/2/2026',c:'Pago B',r:'Pedro',a:'-200.00',sign:'neg',rc:false},
-  {grp:'-',st:'pend',id:5,f:'12/3/2026',c:'Factura C',r:'Pedro',a:'300.00',sign:'pos',rc:false},
-  {grp:'-',st:'pend',id:6,f:'13/3/2026',c:'Factur D',r:'Pedro',a:'-800.00',sign:'neg',rc:false},
-  {grp:'-',st:'pend',id:7,f:'2/4/2026',c:'Pago factu d',r:'Pedro',a:'1,300.00',sign:'pos',rc:false}
+  {st:'ok',id:1,c:'Factura A',a:'100.00',sign:'pos',rc:true,det:'monto y fecha coinciden'},
+  {st:'ok',id:2,c:'Pago fact A',a:'-100.00',sign:'neg',rc:true,det:'monto y fecha coinciden'},
+  {st:'ok',id:8,c:'Factura Z',a:'-2,300.00',sign:'neg',rc:true,det:'monto coincide'},
+  {st:'ok',id:9,c:'Pago fact z',a:'2,300.00',sign:'pos',rc:true,det:'monto coincide'},
+  {st:'pend',id:3,c:'Factura B',a:'200.00',sign:'pos',rc:false,det:'sin contraparte de monto'},
+  {st:'pend',id:4,c:'Pago B',a:'-200.00',sign:'neg',rc:false,det:'fecha fuera de ventana'},
+  {st:'pend',id:5,c:'Factura C',a:'300.00',sign:'pos',rc:false,det:'concepto no cuadra'},
+  {st:'pend',id:6,c:'Factur D',a:'-800.00',sign:'neg',rc:false,det:'sin contraparte de monto'},
+  {st:'pend',id:7,c:'Pago factu d',a:'1,300.00',sign:'pos',rc:false,det:'sin contraparte de monto'}
 ];
 
 function resRowHTML(r){
-  return '<td class="grp">'+r.grp+'</td>'+
-    '<td>'+(r.st==='ok'?'<span class="d-ok">Conciliado</span>':'<span class="d-pend">Pendiente</span>')+'</td>'+
-    '<td>'+r.id+'</td><td>'+r.f+'</td><td>'+r.c+'</td><td>'+r.r+'</td>'+
-    '<td class="amt '+r.sign+'">'+r.a+'</td>';
+  return '<td>'+(r.st==='ok'?'<span class="d-ok">Conciliado</span>':'<span class="d-pend">Pendiente</span>')+'</td>'+
+    '<td>'+r.id+'</td><td>'+r.c+'</td>'+
+    '<td class="amt '+r.sign+'">'+r.a+'</td>'+
+    '<td class="det">'+r.det+'</td>';
 }
 
 function buildResRows(){
@@ -1579,14 +1535,10 @@ function buildResRows(){
 
 function playResAnimation(){
   clearResTimers();
-  var wtag=document.getElementById('wtag');
   var summary=document.getElementById('summary');
-  if(!wtag) return;
+  if(!summary) return;
   buildResRows();
-  wtag.classList.remove('show');
   summary.classList.remove('show');
-
-  resTimers.push(setTimeout(function(){wtag.classList.add('show');},100));
 
   RES_ROWS.forEach(function(r,i){
     resTimers.push(setTimeout(function(){
@@ -1602,7 +1554,6 @@ function playResAnimation(){
 
   var totalDelay=350+RES_ROWS.length*230+300;
   resTimers.push(setTimeout(function(){
-    wtag.classList.remove('show');
     summary.classList.add('show');
   },totalDelay));
 }
@@ -1620,7 +1571,7 @@ function dgoTo(i){
   document.getElementById('dn').textContent=dNUMS[i];
   document.getElementById('dctr').textContent=(i+1)+' de 6';
   dbuildDots();
-  if(i===2) setTimeout(runMiniSheets,350);
+  if(i===2) setTimeout(runPanelWeb,350);
   if(i===3) setTimeout(startMlAnimation,300);
   if(i===4) setTimeout(playResAnimation,200);
   if(dplaying) dstartBar();
