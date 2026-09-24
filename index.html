@@ -85,18 +85,6 @@ section.visible{display:block}
 .contact-val a{color:var(--azul);text-decoration:none}
 .contact-val a:hover{text-decoration:underline}
 footer{border-top:1px solid var(--borde);padding:1.5rem;text-align:center;font-family:var(--mono);font-size:11px;color:var(--gris-2)}
-.v2-teaser{margin-top:3rem;padding-top:2.5rem;border-top:1px dashed var(--borde)}
-.v2-badge{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;background:var(--azul);color:var(--blanco);padding:5px 12px;border-radius:100px;margin-bottom:1rem}
-.v2-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--blanco);animation:v2blink 1.4s step-end infinite}
-@keyframes v2blink{50%{opacity:.25}}
-.v2-h{font-size:21px;font-weight:600;letter-spacing:-.3px;margin-bottom:.5rem;line-height:1.3}
-.v2-sub{font-size:14px;color:var(--gris-1);line-height:1.65;margin-bottom:1.5rem;max-width:520px}
-.v2-features{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.5rem}
-.v2-feature{border:1px solid var(--borde);border-radius:6px;padding:.9rem 1rem}
-.v2-feature-label{font-family:var(--mono);font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--azul);margin-bottom:.3rem}
-.v2-feature p{font-size:13px;color:var(--gris-1);line-height:1.5}
-.v2-cta-row{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
-.v2-cta-text{font-size:13px;color:var(--gris-2)}
 /* metricas */
 .metrics-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1.75rem}
 .mc{background:var(--gris-4);border:1px solid var(--borde);border-radius:6px;padding:13px 8px;text-align:center}
@@ -108,12 +96,7 @@ footer{border-top:1px solid var(--borde);padding:1.5rem;text-align:center;font-f
 .proc-num{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--azul);margin-bottom:5px;display:block}
 .proc-title{font-size:13px;font-weight:600;color:var(--negro);margin-bottom:3px;line-height:1.3}
 .proc-desc{font-size:12px;color:var(--gris-1);line-height:1.5}
-/* email capture v2 */
-.v2-capture{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.v2-einput{font-family:var(--sans);font-size:13px;padding:9px 12px;border:1px solid var(--borde);border-radius:5px;outline:none;flex:1;min-width:160px;background:var(--blanco);color:var(--negro);transition:border-color .15s}
-.v2-einput:focus{border-color:var(--azul)}
 @media(max-width:460px){.metrics-strip{grid-template-columns:1fr 1fr}.proc-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:520px){.v2-features{grid-template-columns:1fr}}
 /* === Inicio: tarjetas de servicio y audiencia === */
 .hs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(182px,1fr));gap:10px;margin-bottom:2rem}
 .hs-card{border:1px solid var(--borde);border-radius:8px;overflow:hidden;background:var(--blanco)}
@@ -320,37 +303,6 @@ footer{border-top:1px solid var(--borde);padding:1.5rem;text-align:center;font-f
 .ml-ptrack{height:3px;background:#ebebeb;border-radius:2px;margin-top:10px;overflow:hidden;width:100%;max-width:460px}
 .ml-pfill{height:100%;background:var(--azul);width:0%;border-radius:2px}
 
-/* AppWeb mockup (demo V2) */
-.aw-frame{border:1px solid #dadce0;border-radius:8px;overflow:hidden;max-width:460px;width:100%;background:#fff;position:relative}
-.aw-bar{display:flex;align-items:center;gap:8px;padding:7px 11px;background:#f1f3f4;border-bottom:1px solid #e3e3e3}
-.aw-dots{display:flex;gap:5px;flex-shrink:0}
-.aw-dot{width:8px;height:8px;border-radius:50%}
-.aw-dot.r{background:#ff5f57}.aw-dot.y{background:#febc2e}.aw-dot.g{background:#28c840}
-.aw-url{flex:1;background:#fff;border:1px solid #e3e3e3;border-radius:5px;padding:4px 10px;font-size:9.5px;color:#5f6368;font-family:var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.aw-body{padding:13px 14px 16px}
-.aw-kpis{display:flex;gap:7px;margin-bottom:11px}
-.aw-kpi{flex:1;border:1px solid #ececec;border-radius:6px;padding:7px 8px;text-align:center}
-.aw-kpin{font-size:16px;font-weight:600;color:#0a0a0a;font-family:var(--mono);display:block;line-height:1.1}
-.aw-kpil{font-size:8.5px;color:#999;margin-top:2px}
-.aw-filters{display:flex;gap:5px;margin-bottom:9px;flex-wrap:wrap}
-.aw-filter{font-size:9px;color:#555;background:#f5f5f5;border:1px solid #e5e5e5;border-radius:100px;padding:3px 9px}
-.aw-filter.active{background:var(--azul-bg);color:var(--azul);border-color:var(--azul);font-weight:500}
-.aw-table{border:1px solid #ececec;border-radius:6px;overflow:hidden}
-.aw-row{display:grid;grid-template-columns:18px 1fr 1fr 64px 60px;gap:6px;align-items:center;padding:6px 9px;font-size:9.5px;border-bottom:1px solid #f2f2f2;transition:background .25s}
-.aw-row:last-child{border-bottom:none}
-.aw-row.sel{background:#f0f4ff}
-.aw-chk{width:11px;height:11px;border:1.5px solid #ccc;border-radius:3px;display:inline-block;position:relative;transition:background .15s,border-color .15s}
-.aw-chk.on{background:var(--azul);border-color:var(--azul)}
-.aw-chk.on::after{content:'';position:absolute;left:2.5px;top:-.5px;width:3px;height:6px;border:solid #fff;border-width:0 1.5px 1.5px 0;transform:rotate(45deg)}
-.aw-amt{text-align:right;font-variant-numeric:tabular-nums;color:#333}
-.aw-tag{font-size:8px;padding:1.5px 6px;border-radius:100px;text-align:center;white-space:nowrap}
-.aw-tag.pend{background:#fff3cd;color:#856404}
-.aw-tag.ok{background:#d4edda;color:#155724}
-.aw-undo{font-size:8px;color:var(--azul);text-decoration:underline;cursor:pointer;opacity:0;transition:opacity .2s}
-.aw-undo.show{opacity:1}
-.aw-selbox{position:absolute;left:50%;bottom:14px;transform:translateX(-50%) translateY(16px);background:#1a1a2e;color:#fff;border-radius:9px;padding:8px 14px;display:flex;align-items:center;gap:12px;font-size:10.5px;box-shadow:0 6px 18px rgba(0,0,0,.25);opacity:0;transition:opacity .3s,transform .3s;white-space:nowrap;z-index:30}
-.aw-selbox.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.aw-selbtn{background:var(--azul);color:#fff;border:none;border-radius:5px;padding:4px 10px;font-size:9.5px;font-weight:500}
 
 .deco{position:absolute;right:0;top:0;bottom:48px;width:140px;pointer-events:none;overflow:hidden}
 .deco-line{position:absolute;right:26px;top:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent 0%,#ebebeb 20%,#ebebeb 80%,transparent 100%)}
@@ -412,21 +364,6 @@ nav{background:rgba(255,255,255,.85)!important;backdrop-filter:blur(14px);-webki
 .demo-wrap:hover{box-shadow:0 4px 24px rgba(31,92,153,.10)}
 
 /* V2 teaser: dark card */
-.v2-teaser{margin-top:2.5rem;padding:2rem;background:linear-gradient(155deg,#0d1521 0%,#0f1c2e 100%);border:1px solid rgba(31,92,153,.32);border-radius:12px;position:relative;overflow:hidden}
-.v2-teaser::after{content:'';position:absolute;top:-90px;right:-60px;width:260px;height:260px;background:radial-gradient(circle,rgba(42,128,225,.14) 0%,transparent 65%);pointer-events:none;z-index:0}
-.v2-teaser>*{position:relative;z-index:1}
-.v2-badge{background:rgba(42,128,225,.15);border-color:rgba(42,128,225,.3);color:#7eb8f7}
-.v2-badge .dot{background:#7eb8f7}
-.v2-h{color:#fff}
-.v2-sub{color:rgba(255,255,255,.6)}
-.v2-feature{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08)}
-.v2-feature-label{color:#7eb8f7}
-.v2-feature p{color:rgba(255,255,255,.55)}
-.v2-cta-text{color:rgba(255,255,255,.4)}
-.v2-teaser .demo-label{color:rgba(255,255,255,.5)}
-.v2-teaser .v2-einput{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.15);color:#fff}
-.v2-teaser .v2-einput::placeholder{color:rgba(255,255,255,.3)}
-.v2-teaser .v2-einput:focus{border-color:rgba(42,128,225,.6)}
 
 /* process step badges */
 .proc-num{background:#1F5C99;color:#fff!important;padding:1px 7px;border-radius:3px;display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.04em;margin-bottom:8px}
@@ -465,8 +402,6 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
 @keyframes shimmer-btn{0%{left:-200%}55%,100%{left:300%}}
 .gvw-tc{transition:transform .2s,filter .2s}
 .gvw-tc:hover{transform:translateY(-4px)!important;filter:brightness(1.04)}
-.v2-feature{transition:border-color .2s,background .2s,transform .2s}
-.v2-feature:hover{border-color:rgba(42,128,225,.3)!important;background:rgba(255,255,255,.07)!important;transform:translateY(-2px)}
 .nav-links a{position:relative}
 .nav-links a.active::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:2px;background:var(--azul);border-radius:2px;animation:nav-line .25s cubic-bezier(.16,1,.3,1) both}
 @keyframes nav-line{from{transform:scaleX(0)}to{transform:scaleX(1)}}
@@ -670,7 +605,7 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
   <div class="container">
     <div class="prod-eyebrow">Herramienta disponible</div>
     <h1 class="prod-h1">Conciliador Automatico V1 para Google Sheets</h1>
-    <p class="prod-tagline">Si alguna vez has tenido que revisar, pago por pago, si cada uno corresponde a la factura correcta, sabes lo lento que es. Esta herramienta hace esa revision por ti, en segundos, dentro de tu propio Google Sheets.</p>
+    <p class="prod-tagline">Si alguna vez has tenido que revisar, pago por pago, si cada uno corresponde a la factura correcta, sabes lo lento que es. Esta herramienta hace esa revision por ti, en segundos, dentro de tu propio Google Sheets — con panel de control web incluido.</p>
     <div class="alert-box">¿Que es "conciliar"? Es comparar dos listas — por ejemplo, las facturas que emitiste y los pagos que llegaron a tu cuenta — para asegurarte de que cada una tenga su pareja. Si algo no coincide o falta, lo sabes al instante, sin revisar fila por fila.</div>
 
     <div class="demo-section">
@@ -749,10 +684,10 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
         <div class="dscene" id="ds3">
           <div class="d-pill anim"><div class="d-dot">~</div><span class="d-pilltxt">Algoritmo de matching</span></div>
           <div class="d-h anim">Cruza <em>cada movimiento</em><br>contra todos los demas</div>
-          <div class="d-sub anim">El sistema recorre los 200 registros y empareja automaticamente cada movimiento con su contraparte.</div>
+          <div class="d-sub anim">El sistema recorre todos los registros y empareja automaticamente cada movimiento con su contraparte, explicando el motivo de cada resultado.</div>
 
           <div class="ml-wrap anim">
-            <span class="ml-speed" id="speedTag">~850 comparaciones/seg</span>
+            <span class="ml-speed" id="speedTag">~3.000 movimientos en ~3 segundos</span>
             <div class="ml-head"><div>ID</div><div>Concepto</div><div>Responsable</div><div style="text-align:right">Monto</div><div></div></div>
             <div class="ml-body" id="listBody"></div>
           </div>
@@ -783,10 +718,10 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
 
         <div class="dscene" id="ds5">
           <div class="d-pill anim"><div class="d-dot">&#10003;</div><span class="d-pilltxt">Resultado final</span></div>
-          <div class="d-h anim"><em>200 movimientos</em> cruzados<br>en menos de 30 segundos</div>
+          <div class="d-h anim"><em>3.000 movimientos</em> cruzados<br>en ~3 segundos</div>
           <div class="d-sub anim">Sin software adicional. Sin Excel. Solo Google Sheets y una cuenta Google. Instalacion en 5 minutos.</div>
           <div class="d-stats anim">
-            <div class="d-stat"><span class="d-statn">30s</span><div class="d-statl">vs 3 horas manual</div></div>
+            <div class="d-stat"><span class="d-statn">3s</span><div class="d-statl">vs 3 horas manual</div></div>
             <div class="d-stat"><span class="d-statn">0</span><div class="d-statl">errores humanos</div></div>
             <div class="d-stat"><span class="d-statn">5min</span><div class="d-statl">instalacion</div></div>
           </div>
@@ -815,9 +750,10 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
     <div class="section-label">Que incluye</div>
     <ul class="includes-list">
       <li>Planilla ConciliaciónV1 <span>Google Sheets</span></li>
-      <li>Codigo fuente completo <span>10 archivos .gs (.zip)</span></li>
+      <li>Panel de control web <span>KPIs, graficos, filtros y reporte imprimible</span></li>
+      <li>Codigo fuente completo <span>14 archivos (.zip)</span></li>
       <li>Codigo fuente documentado <span>PDF de referencia - 23 pags.</span></li>
-      <li>Manual de usuario <span>PDF - 8 pags.</span></li>
+      <li>Manual de usuario actualizado <span>PDF</span></li>
       <li>Guia de instalacion paso a paso <span>PDF - 4 pags.</span></li>
     </ul>
     <div class="section-label">Especificaciones tecnicas</div>
@@ -825,10 +761,13 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
       <table><tbody>
         <tr><td>Plataforma</td><td>Google Sheets + Apps Script (V8)</td></tr>
         <tr><td>Tipo de conciliacion</td><td>1:1 automatica</td></tr>
-        <tr><td>Registros optimos</td><td>Hasta 200 por ejecucion</td></tr>
-        <tr><td>Registros maximos</td><td>~700 antes de timeout</td></tr>
-        <tr><td>Configuracion de columnas</td><td>Sin tocar codigo, desde CONFIG_COLUMNAS</td></tr>
-        <tr><td>Filtros disponibles</td><td>Monto - Responsable - Fecha - Concepto - Extras</td></tr>
+        <tr><td>Registros optimos</td><td>Hasta 3.000 por ejecucion (~3 segundos)</td></tr>
+        <tr><td>Registros maximos</td><td>~5.000 (limite practico de Apps Script)</td></tr>
+        <tr><td>Configuracion de columnas</td><td>Configurable por fuente, con confirmacion visual de encabezados</td></tr>
+        <tr><td>Filtros disponibles</td><td>Estado - Fecha - Busqueda - Paginacion - Exportar CSV</td></tr>
+        <tr><td>Panel de control web</td><td>Si - KPIs, graficos, reporte imprimible</td></tr>
+        <tr><td>Multi-fuente</td><td>Si - varias empresas o periodos</td></tr>
+        <tr><td>Ajustes manuales</td><td>Si - forzar o deshacer pares</td></tr>
         <tr><td>Tiempo de instalacion</td><td>~5 minutos siguiendo la guia incluida</td></tr>
         <tr><td>Requiere software adicional</td><td>No - solo una cuenta Google</td></tr>
       </tbody></table>
@@ -838,145 +777,16 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
       <div class="faq-item"><div class="faq-q">¿Que hace exactamente esta herramienta?</div><div class="faq-a">Compara dos listas que tu le entregas — por ejemplo, tus facturas y tus pagos — y encuentra automaticamente cuales coinciden entre si y cuales quedan sin pareja. Lo que antes tomaba horas revisando fila por fila, ahora toma segundos.</div></div>
       <div class="faq-item"><div class="faq-q">Necesito saber programar para instalarlo?</div><div class="faq-a">No. La guia de instalacion incluida cubre el proceso en 9 pasos desde cero: copiar, pegar y autorizar permisos.</div></div>
       <div class="faq-item"><div class="faq-q">Mis datos bancarios quedan en algun servidor?</div><div class="faq-a">No. El script corre completamente dentro de tu propia cuenta de Google. Tus datos no salen de tu Drive.</div></div>
-      <div class="faq-item"><div class="faq-q">Funciona con cualquier banco o estructura de planilla?</div><div class="faq-a">Si. Los nombres de columnas son configurables desde la hoja CONFIG_COLUMNAS sin modificar el codigo.</div></div>
+      <div class="faq-item"><div class="faq-q">Funciona con cualquier banco o estructura de planilla?</div><div class="faq-a">Si. Los nombres de columnas son configurables por fuente de datos y el sistema te confirma visualmente que detecto los encabezados correctos antes de ejecutar.</div></div>
       <div class="faq-item"><div class="faq-q">Puedo usarlo en mas de una empresa?</div><div class="faq-a">La licencia incluida cubre uso personal o una sola organizacion. Para multiples empresas escribeme directamente.</div></div>
-      <div class="faq-item"><div class="faq-q">Que pasa si tengo mas de 700 registros?</div><div class="faq-a">Procesa por periodos mensuales. Con menos de 200 registros el resultado es practicamente inmediato.</div></div>
-      <div class="faq-item"><div class="faq-q">Funciona en Excel?</div><div class="faq-a">No. Esta construido sobre Google Apps Script y requiere Google Sheets con una cuenta Google activa.</div></div>
+      <div class="faq-item"><div class="faq-q">Que pasa si tengo mas de 5.000 registros?</div><div class="faq-a">Procesa por periodos mensuales. Con 3.000 registros el resultado tarda unos 3 segundos.</div></div>
+      <div class="faq-item"><div class="faq-q">¿Tengo un panel de control web?</div><div class="faq-a">Si. Ademas del menu dentro de Google Sheets, incluye un panel web con KPIs, graficos, filtros, reporte imprimible y correccion manual de resultados.</div></div>
+      <div class="faq-item"><div class="faq-q">¿Puedo corregir el resultado manualmente?</div><div class="faq-a">Si. Puedes forzar un emparejamiento que el sistema no detecto o deshacer uno que consideres incorrecto. Los ajustes quedan guardados entre ejecuciones.</div></div>
+      <div class="faq-item"><div class="faq-q">Funciona en Excel?</div><div class="faq-a">No directamente. Esta construido sobre Google Apps Script y requiere Google Sheets, pero puedes subir tu archivo .xlsx a Google Drive, importarlo como Google Sheet y usarlo como fuente de datos.</div></div>
     </div>
     <a class="buy-btn" href="https://ambilorlab.gumroad.com/l/gbtemx" target="_blank" rel="noopener noreferrer">Comprar por $9.990 CLP</a>
     <span class="guarantee-note">Pago seguro via Gumroad - Descarga inmediata</span>
 
-    <div class="v2-teaser">
-      <div class="v2-badge"><span class="dot"></span>Proximamente</div>
-      <h2 class="v2-h">Conciliador Automatico V2 — ahora con AppWeb</h2>
-      <p class="v2-sub">La siguiente version deja el menu dentro de Google Sheets y pasa a tener su propia aplicacion web conectada a tu planilla. Ya esta en construccion y gran parte del motor esta funcionando:</p>
-
-      <div class="demo-section">
-        <div class="demo-label">Ver en accion</div>
-        <div class="demo-wrap" id="demo2">
-          <div class="deco"><div class="deco-line"></div><div class="deco-num" id="dn2">01</div></div>
-
-          <div class="dscene active" id="v2s0">
-            <div class="d-pill anim"><div class="d-dot">!</div><span class="d-pilltxt">Por que una V2</span></div>
-            <div class="d-h anim">No todo se paga<br><em>en un solo movimiento.</em></div>
-            <div class="d-sub anim">Anticipos, pagos parciales, notas de credito. V1 concilia 1 a 1. V2 entiende el grupo completo.</div>
-            <div class="d-stats anim">
-              <div class="d-stat"><span class="d-statn">1:1</span><div class="d-statl">lo que ya hace V1</div></div>
-              <div class="d-stat"><span class="d-statn">1:N · N:1</span><div class="d-statl">lo nuevo en V2</div></div>
-              <div class="d-stat"><span class="d-statn">AppWeb</span><div class="d-statl">interfaz propia</div></div>
-            </div>
-          </div>
-
-          <div class="dscene" id="v2s1">
-            <div class="d-pill anim"><div class="d-dot">1</div><span class="d-pilltxt">Tu propia URL</span></div>
-            <div class="d-h anim">Se abre como una app,<br>no como un <em>menu</em></div>
-            <div class="d-sub anim">Cada usuario despliega su propia AppWeb con su URL. Corre con tu cuenta de Google, no con la mia.</div>
-            <div class="aw-frame anim">
-              <div class="aw-bar">
-                <div class="aw-dots"><div class="aw-dot r"></div><div class="aw-dot y"></div><div class="aw-dot g"></div></div>
-                <div class="aw-url">script.google.com/macros/s/AKfycb.../exec</div>
-              </div>
-              <div class="aw-body">
-                <div class="aw-kpis">
-                  <div class="aw-kpi"><span class="aw-kpin">184</span><div class="aw-kpil">total</div></div>
-                  <div class="aw-kpi"><span class="aw-kpin">42</span><div class="aw-kpil">visibles</div></div>
-                  <div class="aw-kpi"><span class="aw-kpin">$4,2M</span><div class="aw-kpil">suma filtro</div></div>
-                </div>
-                <div class="aw-filters">
-                  <span class="aw-filter">Responsable: Todos</span>
-                  <span class="aw-filter active">Estado: Pendiente</span>
-                  <span class="aw-filter">Buscar...</span>
-                </div>
-                <div class="aw-table">
-                  <div class="aw-row"><span class="aw-chk"></span><span>Factura 4821</span><span>Prov. Sur</span><span class="aw-amt">+850.000</span><span class="aw-tag pend">Pendiente</span></div>
-                  <div class="aw-row"><span class="aw-chk"></span><span>Anticipo 4821-A</span><span>Prov. Sur</span><span class="aw-amt">-300.000</span><span class="aw-tag pend">Pendiente</span></div>
-                  <div class="aw-row"><span class="aw-chk"></span><span>Pago 4821-B</span><span>Prov. Sur</span><span class="aw-amt">-550.000</span><span class="aw-tag pend">Pendiente</span></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="dscene" id="v2s2">
-            <div class="d-pill anim"><div class="d-dot">2</div><span class="d-pilltxt">Mas alla del 1 a 1</span></div>
-            <div class="d-h anim">Una factura,<br><em>varios pagos parciales</em></div>
-            <div class="d-sub anim">El motor arma el grupo completo y te muestra el total cuadrado, no solo pares sueltos.</div>
-            <div class="d-resw anim">
-              <table class="d-res">
-                <thead><tr><th>Grupo</th><th>Estado</th><th>Concepto</th><th>Responsable</th><th style="text-align:right">Monto</th></tr></thead>
-                <tbody id="v2tbody"></tbody>
-              </table>
-            </div>
-            <div class="d-summary" id="v2summary">
-              <div class="d-sitm"><div class="dot g"></div>1 grupo conciliado (1:N)</div>
-              <div class="d-sitm"><div class="dot y"></div>1 movimiento pendiente</div>
-            </div>
-          </div>
-
-          <div class="dscene" id="v2s3">
-            <div class="d-pill anim"><div class="d-dot">3</div><span class="d-pilltxt">Cuando el sistema no esta seguro</span></div>
-            <div class="d-h anim">Selecciona, concilia,<br><em>deshace si te equivocas</em></div>
-            <div class="d-sub anim">Marca las filas que correspondan entre si. La caja flotante suma el total al instante.</div>
-            <div class="aw-frame anim">
-              <div class="aw-bar">
-                <div class="aw-dots"><div class="aw-dot r"></div><div class="aw-dot y"></div><div class="aw-dot g"></div></div>
-                <div class="aw-url">script.google.com/macros/s/AKfycb.../exec</div>
-              </div>
-              <div class="aw-body" style="padding-bottom:34px">
-                <div class="aw-table">
-                  <div class="aw-row" id="v2r0"><span class="aw-chk" id="v2c0"></span><span>Honorario 220</span><span>J. Soto</span><span class="aw-amt">+420.000</span><span class="aw-tag pend" id="v2t0">Pendiente</span></div>
-                  <div class="aw-row" id="v2r1"><span class="aw-chk" id="v2c1"></span><span>Pago hon. 220</span><span>J. Soto</span><span class="aw-amt">-420.000</span><span class="aw-tag pend" id="v2t1">Pendiente</span></div>
-                  <div class="aw-row"><span class="aw-chk"></span><span>Arriendo Junio</span><span>Inmob. Centro</span><span class="aw-amt">+680.000</span><span class="aw-tag pend">Pendiente</span></div>
-                </div>
-              </div>
-              <div class="aw-selbox" id="v2selbox">
-                <span id="v2selcount">2 seleccionados · $840.000</span>
-                <button class="aw-selbtn">Conciliar seleccion</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="dscene" id="v2s4">
-            <div class="d-pill anim"><div class="d-dot">4</div><span class="d-pilltxt">Menos configuracion manual</span></div>
-            <div class="d-h anim">Reconoce tus columnas<br><em>por nombre y contenido</em></div>
-            <div class="d-sub anim">Te confirma la deteccion antes de ejecutar — nunca asume en silencio.</div>
-            <div class="d-tblw anim">
-              <table class="d-tbl">
-                <thead><tr><th>Tu encabezado</th><th>Campo detectado</th><th>Confianza</th></tr></thead>
-                <tbody id="v2colbody"></tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="dscene" id="v2s5">
-            <div class="d-pill anim"><div class="d-dot">&#10003;</div><span class="d-pilltxt">Proximamente</span></div>
-            <div class="d-h anim">El mismo enfoque simple.<br><em>Mucha mas capacidad.</em></div>
-            <div class="d-sub anim">Sigo afinando el motor antes de publicarlo. Mismo nivel de privacidad de V1: todo corre en tu propia cuenta de Google.</div>
-            <div class="d-stats anim">
-              <div class="d-stat"><span class="d-statn">1:1→1:N</span><div class="d-statl">tipos de conciliacion</div></div>
-              <div class="d-stat"><span class="d-statn">AppWeb</span><div class="d-statl">interfaz propia</div></div>
-              <div class="d-stat"><span class="d-statn">100%</span><div class="d-statl">privado, como V1</div></div>
-            </div>
-          </div>
-
-          <div class="dprog" id="dprog2"></div>
-          <div class="dctrl">
-            <div class="dctrl-left">
-              <button class="dcbtn" onclick="dnav2(-1)">&#8592;</button>
-              <div class="dcdots" id="ddots2"></div>
-              <button class="dcbtn" id="dppbtn2" onclick="dtogglePlay2()">&#9646;&#9646;</button>
-              <button class="dcbtn" onclick="dnav2(1)">&#8594;</button>
-            </div>
-            <span class="dctr" id="dctr2">1 de 6</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="v2-capture" id="v2form">
-        <input type="email" class="v2-einput" id="v2email" placeholder="tu@correo.com" autocomplete="email"/>
-        <button class="cta-home" onclick="v2sub()">Notificarme</button>
-      </div>
-      <span class="v2-cta-text" id="v2note">Sin fecha aun. Te aviso cuando este disponible — sin spam.</span>
-    </div>
     </div>
 </section>
 
@@ -1595,7 +1405,7 @@ function runMiniSheets(){
           msst.textContent='Ejecutando...';
           msSeqTimers.push(setTimeout(function(){
             mssd.className='ms-sd ok';
-            msst.textContent='200 movimientos en 28s';
+            msst.textContent='3.000 movimientos en ~3s';
           },1600));
         });
       });
@@ -1626,7 +1436,7 @@ buildMlData();
 
 var ML_VISIBLE=9,ML_ROW_H=22;
 var mlPool=[],mlWindowStart=0,mlProcessed=0,mlMatched=0,mlPairIdx=0;
-var ML_SPEEDS=['~720 comparaciones/seg','~850 comparaciones/seg','~910 comparaciones/seg','~680 comparaciones/seg'];
+var ML_SPEEDS=['~950 movimientos/seg','~1.000 movimientos/seg','~1.050 movimientos/seg','~900 movimientos/seg'];
 
 function mlFmt(n){return n.toLocaleString('es-CL');}
 function mlRowHTML(d,idx){
@@ -1890,7 +1700,7 @@ show('home');
 // Scroll reveal with IntersectionObserver
 (function(){
   if(!('IntersectionObserver' in window)) return;
-  var sel='.hs-card,.ha-card,.proc-wrap,.gvw,.faq-item,.exp-item,.gp-step,.v2-feature,.specs-block,.includes-list,.contact-block,.about-bio';
+  var sel='.hs-card,.ha-card,.proc-wrap,.gvw,.faq-item,.exp-item,.gp-step,.specs-block,.includes-list,.contact-block,.about-bio';
   var obs=new IntersectionObserver(function(entries){
     entries.forEach(function(e){
       if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);}
@@ -1929,171 +1739,6 @@ function showGP(id, btn) {
   document.getElementById('gp-'+id).classList.add('on');
 }
 
-function v2sub(){
-  var inp=document.getElementById('v2email');
-  var email=(inp?inp.value:'').trim();
-  if(!email||!email.includes('@')){
-    if(inp){inp.style.borderColor='#e53935';inp.focus();setTimeout(function(){inp.style.borderColor='';},2000);}
-    return;
-  }
-  document.getElementById('v2form').innerHTML='<span style="font-size:13px;color:#0f9d58;font-weight:500">✓ Anotado. Te avisamos cuando V2 este disponible.</span>';
-  var note=document.getElementById('v2note');
-  if(note) note.textContent='Si quieres ademas escribirme directo, usa la seccion Contacto.';
-}
-
-
-// ===== DEMO V2 — 6 ESCENAS =====
-var dN2=6,dcur2=0,dplaying2=true,draf2=null,dpbStart2=null,dDUR2=5200;
-var dNUMS2=['01','02','03','04','05','06'];
-var v2Timers=[];
-function clearV2Timers(){v2Timers.forEach(clearTimeout);v2Timers=[];}
-
-// ---- Escena 2: grupo 1:N conciliado ----
-var V2_RES_ROWS=[
-  {grp:'G00012',st:'ok',c:'Factura 4821',r:'Proveedor Sur',a:'+850.000',sign:'pos'},
-  {grp:'G00012',st:'ok',c:'Anticipo 4821-A',r:'Proveedor Sur',a:'-300.000',sign:'neg'},
-  {grp:'G00012',st:'ok',c:'Pago 4821-B',r:'Proveedor Sur',a:'-550.000',sign:'neg'},
-  {grp:'-',st:'pend',c:'Arriendo Junio',r:'Inmobiliaria Centro',a:'+680.000',sign:'pos'}
-];
-function v2ResRowHTML(r){
-  return '<td class="grp">'+r.grp+'</td>'+
-    '<td>'+(r.st==='ok'?'<span class="d-ok">Conciliado</span>':'<span class="d-pend">Pendiente</span>')+'</td>'+
-    '<td>'+r.c+'</td><td>'+r.r+'</td>'+
-    '<td class="amt '+r.sign+'">'+r.a+'</td>';
-}
-function playV2Res(){
-  clearV2Timers();
-  var tbody=document.getElementById('v2tbody');
-  var summary=document.getElementById('v2summary');
-  if(!tbody) return;
-  tbody.innerHTML='';
-  summary.classList.remove('show');
-  V2_RES_ROWS.forEach(function(r,i){
-    var tr=document.createElement('tr');
-    tr.className=r.st==='ok'?'rc':'rp';
-    tr.id='v2tr'+i;
-    tr.innerHTML=v2ResRowHTML(r);
-    tbody.appendChild(tr);
-  });
-  V2_RES_ROWS.forEach(function(r,i){
-    v2Timers.push(setTimeout(function(){
-      var tr=document.getElementById('v2tr'+i);
-      if(!tr)return;
-      tr.classList.add('show');
-      if(r.st==='ok'){
-        tr.classList.add('flash');
-        v2Timers.push(setTimeout(function(){tr.classList.remove('flash');},350));
-      }
-    },300+i*260));
-  });
-  var totalDelay=300+V2_RES_ROWS.length*260+300;
-  v2Timers.push(setTimeout(function(){summary.classList.add('show');},totalDelay));
-}
-
-// ---- Escena 3: seleccion + caja flotante + deshacer ----
-function runV2Selection(){
-  clearV2Timers();
-  var c0=document.getElementById('v2c0'), c1=document.getElementById('v2c1');
-  var r0=document.getElementById('v2r0'), r1=document.getElementById('v2r1');
-  var t0=document.getElementById('v2t0'), t1=document.getElementById('v2t1');
-  var selbox=document.getElementById('v2selbox');
-  if(!c0) return;
-
-  c0.className='aw-chk';c1.className='aw-chk';
-  r0.classList.remove('sel');r1.classList.remove('sel');
-  selbox.classList.remove('show');
-  t0.className='aw-tag pend';t0.textContent='Pendiente';
-  t1.className='aw-tag pend';t1.textContent='Pendiente';
-
-  v2Timers.push(setTimeout(function(){
-    c0.className='aw-chk on';r0.classList.add('sel');
-    v2Timers.push(setTimeout(function(){
-      c1.className='aw-chk on';r1.classList.add('sel');
-      v2Timers.push(setTimeout(function(){
-        selbox.classList.add('show');
-        v2Timers.push(setTimeout(function(){
-          t0.className='aw-tag ok';t0.textContent='Conciliado';
-          t1.className='aw-tag ok';t1.textContent='Conciliado';
-          selbox.classList.remove('show');
-        },1500));
-      },350));
-    },450));
-  },500));
-}
-
-// ---- Escena 4: deteccion de columnas ----
-var V2_COLS=[
-  {h:'Fecha Emision', f:'FECHA', conf:'Alta'},
-  {h:'Monto Neto', f:'MONTO', conf:'Alta'},
-  {h:'Glosa', f:'CONCEPTO', conf:'Media'},
-  {h:'Ejecutivo', f:'RESPONSABLE', conf:'Media'}
-];
-function buildV2Cols(){
-  var tbody=document.getElementById('v2colbody');
-  if(!tbody) return;
-  tbody.innerHTML='';
-  V2_COLS.forEach(function(c,i){
-    var tr=document.createElement('tr');
-    tr.style.opacity='0';
-    tr.style.transition='opacity .35s ease';
-    tr.innerHTML='<td>'+c.h+'</td><td style="font-weight:600;color:var(--azul)">'+c.f+'</td><td style="color:'+(c.conf==='Alta'?'#0f9d58':'#d97706')+';font-weight:500">'+c.conf+'</td>';
-    tbody.appendChild(tr);
-    v2Timers.push(setTimeout(function(){tr.style.opacity='1';},250+i*220));
-  });
-}
-
-// ---- Navegacion principal demo V2 ----
-function v2goTo(i){
-  document.getElementById('v2s'+dcur2).classList.remove('active');
-  clearV2Timers();
-  dcur2=i;
-  var sc=document.getElementById('v2s'+dcur2);
-  sc.classList.add('active');
-  sc.querySelectorAll('.anim').forEach(function(el){
-    el.style.animation='none';el.offsetHeight;el.style.animation='';
-  });
-  document.getElementById('dn2').textContent=dNUMS2[i];
-  document.getElementById('dctr2').textContent=(i+1)+' de 6';
-  v2buildDots();
-  if(i===2) setTimeout(playV2Res,250);
-  if(i===3) setTimeout(runV2Selection,300);
-  if(i===4) setTimeout(buildV2Cols,250);
-  if(dplaying2) v2startBar();
-}
-function dnav2(d){v2stopBar();v2goTo((dcur2+d+dN2)%dN2);}
-function v2buildDots(){
-  var c=document.getElementById('ddots2');c.innerHTML='';
-  for(var i=0;i<dN2;i++){
-    var dd=document.createElement('div');
-    dd.className='dcdot'+(i===dcur2?' on':'');
-    (function(idx){dd.onclick=function(){v2stopBar();v2goTo(idx);};})(i);
-    c.appendChild(dd);
-  }
-}
-function v2startBar(){
-  v2stopBar();dpbStart2=Date.now();
-  var b=document.getElementById('dprog2');b.style.width='0%';
-  function tick(){
-    var pct=Math.min(100,(Date.now()-dpbStart2)/dDUR2*100);
-    b.style.width=pct+'%';
-    if(pct>=100){draf2=null;v2goTo((dcur2+1)%dN2);}
-    else draf2=requestAnimationFrame(tick);
-  }
-  draf2=requestAnimationFrame(tick);
-}
-function v2stopBar(){
-  if(draf2){cancelAnimationFrame(draf2);draf2=null;}
-  var b=document.getElementById('dprog2');
-  if(b) b.style.width='0%';
-}
-function dtogglePlay2(){
-  dplaying2=!dplaying2;
-  var b=document.getElementById('dppbtn2');
-  if(dplaying2){b.innerHTML='&#9646;&#9646;';v2startBar();}
-  else{b.innerHTML='&#9654;';v2stopBar();}
-}
-v2buildDots();
-v2startBar();
 </script>
 </body>
 </html>
