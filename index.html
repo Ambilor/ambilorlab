@@ -244,17 +244,18 @@ footer{border-top:1px solid var(--borde);padding:1.5rem;text-align:center;font-f
 
 /* Panel web mockup (escena 2) */
 .pw{border:1px solid #dadce0;border-radius:8px;overflow:hidden;max-width:460px;width:100%;font-size:10px;position:relative;background:#fff}
-.pw-bar{display:flex;align-items:center;gap:8px;padding:6px 10px;border-bottom:1px solid #f0f0f0;background:#fafafa}
+.pw-bar{display:flex;align-items:center;gap:8px;padding:6px 10px;border-bottom:1px solid #f0f0f0;background:#fafafa;justify-content:space-between}
 .pw-logo{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--azul)}
 .pw-title{font-size:10px;color:#666;font-weight:500}
-.pw-tab{font-size:8px;color:#999;padding:2px 6px;border-radius:4px;margin-left:2px}
+.pw-tabs{display:flex;gap:2px;padding:4px 10px;border-bottom:1px solid #f0f0f0;background:#fff}
+.pw-tab{font-size:8px;color:#999;padding:2px 6px;border-radius:4px}
 .pw-tab.on{background:var(--azul);color:#fff}
 .pw-body{padding:12px}
 .pw-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}
 .pw-kpi{border:1px solid #ebebeb;border-radius:6px;padding:8px 6px;text-align:center}
 .pw-kv{font-size:14px;font-weight:600;color:#0a0a0a;font-family:var(--mono);font-variant-numeric:tabular-nums}
 .pw-kl{font-size:7.5px;color:#999;margin-top:2px;text-transform:uppercase;letter-spacing:.03em}
-.pw-run{display:inline-flex;align-items:center;gap:5px;background:var(--azul);color:#fff;font-size:10px;font-weight:500;padding:6px 14px;border-radius:5px;cursor:pointer}
+.pw-run{display:inline-flex;align-items:center;gap:5px;background:var(--azul);color:#fff;font-size:9px;font-weight:500;padding:4px 10px;border-radius:5px;cursor:pointer;white-space:nowrap}
 .pw-status{margin-top:8px;font-size:10px;color:#666;display:flex;align-items:center;gap:5px}
 .pw-sd{width:5px;height:5px;border-radius:50%;background:#e0e0e0}
 .pw-sd.run{background:var(--azul);animation:msbl 1s step-end infinite}
@@ -642,6 +643,9 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
             <div class="pw-bar">
               <span class="pw-logo">Ambilor.Lab</span>
               <span class="pw-title">Conciliador V1</span>
+              <span class="pw-run" id="pwbtn">&#9654; Ejecutar conciliacion</span>
+            </div>
+            <div class="pw-tabs">
               <span class="pw-tab on">Panel</span><span class="pw-tab">Plantillas</span><span class="pw-tab">Configuracion</span>
             </div>
             <div class="pw-body">
@@ -651,7 +655,6 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
                 <div class="pw-kpi"><div class="pw-kv" id="pwPend">0</div><div class="pw-kl">pendientes</div></div>
                 <div class="pw-kpi"><div class="pw-kv" id="pwMonto">$0</div><div class="pw-kl">conciliado</div></div>
               </div>
-              <div class="pw-run" id="pwbtn">&#9654; Ejecutar conciliacion</div>
               <div class="pw-status"><div class="pw-sd" id="pwsd"></div><span id="pwst">Listo para ejecutar</span></div>
             </div>
             <div class="pw-cur" id="pwcur"><svg viewBox="0 0 18 18" fill="none"><path d="M2 2l6 14 3-5.5 5.5-3L2 2z" fill="#1a1a1a" stroke="#fff" stroke-width="1"/></svg></div>
