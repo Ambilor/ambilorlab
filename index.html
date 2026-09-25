@@ -3,8 +3,62 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#1F5C99" />
 <title>Ambilor.Lab — Automatizacion contable y financiera</title>
-<meta name="description" content="Herramientas de automatizacion para contadores, equipos financieros y PyMEs." />
+<meta name="description" content="Herramientas de automatizacion para contadores, equipos financieros y PyMEs. Conciliador Automatico V1 disponible en Google Sheets." />
+<link rel="canonical" href="https://ambilor.github.io/ambilorlab/" />
+
+<!-- Preconnect -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="preconnect" href="https://www.googletagmanager.com">
+
+<!-- Favicon -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%231F5C99'/><text x='16' y='23' font-size='17' font-weight='700' text-anchor='middle' fill='white' font-family='monospace'>A</text></svg>">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Ambilor.Lab" />
+<meta property="og:title" content="Ambilor.Lab — Automatizacion contable y financiera" />
+<meta property="og:description" content="Herramientas de automatizacion para contadores, equipos financieros y PyMEs. Conciliador Automatico V1 disponible en Google Sheets." />
+<meta property="og:url" content="https://ambilor.github.io/ambilorlab/" />
+<meta property="og:image" content="https://ambilor.github.io/ambilorlab/og-image.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Ambilor.Lab — Automatizacion contable y financiera" />
+<meta name="twitter:description" content="Herramientas de automatizacion para contadores, equipos financieros y PyMEs." />
+
+<!-- JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Jordan Riquelme",
+  "alternateName": "Ambilor",
+  "jobTitle": "Contador Publico y Auditor · Analista de Datos",
+  "description": "Construyo herramientas de automatizacion para contadores, equipos financieros y PyMEs usando Google Sheets, Apps Script y Power BI.",
+  "url": "https://ambilor.github.io/ambilorlab/",
+  "sameAs": [
+    "https://www.instagram.com/ambilor.lab/",
+    "https://www.linkedin.com/in/jordan-riquelme"
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Santiago",
+    "addressCountry": "CL"
+  }
+}
+</script>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-79ZEDG8W3S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-79ZEDG8W3S');
+</script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
 <style>
 :root {
@@ -388,6 +442,19 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
 @keyframes nav-line{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 .demo-wrap{transition:box-shadow .3s}
 .demo-wrap:hover{box-shadow:0 6px 36px rgba(31,92,153,.14)!important}
+/* scroll to top */
+.btn-top{position:fixed;bottom:24px;right:24px;width:38px;height:38px;background:var(--azul);color:#fff;border:none;border-radius:50%;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;opacity:0;transform:translateY(12px);transition:opacity .25s,transform .25s,background .15s;z-index:200;box-shadow:0 3px 12px rgba(31,92,153,.3)}
+.btn-top.show{opacity:1;transform:translateY(0)}
+.btn-top:hover{background:var(--azul-dark)}
+/* contact form */
+.cf-wrap{margin-bottom:2rem}
+.cf-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.cf-field{width:100%;font-family:var(--sans);font-size:13px;padding:10px 13px;border:1px solid var(--borde);border-radius:6px;outline:none;color:var(--negro);background:var(--blanco);transition:border-color .15s}
+.cf-field:focus{border-color:var(--azul)}
+.cf-area{height:110px;resize:vertical;line-height:1.6}
+.cf-ok{display:none;padding:12px 14px;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:6px;font-size:13px;color:#2e7d32;margin-bottom:1rem}
+@media(max-width:480px){.cf-row{grid-template-columns:1fr}}
+.about-quote{font-size:17px;font-style:italic;color:var(--azul);border-left:3px solid var(--azul);padding:8px 14px;margin-bottom:1.5rem;line-height:1.55;letter-spacing:-.01em;max-width:480px}
 </style>
 </head>
 
@@ -544,6 +611,7 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
   <div class="container">
     <div class="about-name">Jordan.R.</div>
     <div class="about-role">Contador Publico y Auditor - Analista de Datos</div>
+    <div class="about-quote">"La curiosidad te puede llevar muy lejos. Los cambios, tambien."</div>
     <p class="about-bio">En simple: construyo programas chicos que hacen, por ti, las tareas repetitivas con numeros — revisar, comparar, ordenar y resumir — para que no tengas que hacerlas a mano cada mes.</p>
     <p class="about-bio" style="margin-top:-1rem">Me especializo en construir automatizaciones que eliminan trabajo manual repetitivo en procesos financieros usando herramientas accesibles para cualquier equipo contable.</p>
     <p class="about-bio" style="margin-top:-1rem">Cada herramienta que publico la construi primero para resolver un problema real. El Conciliador Automatico V1 nacio de meses comparando pagos y facturas a mano, fila por fila, hasta decidir que no tenia sentido seguir haciendolo asi.</p>
@@ -557,7 +625,7 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
     <hr class="divider" />
     <div class="stack-title">Experiencia</div>
     <div class="exp-item">
-      <div class="exp-head"><div class="exp-title">Analista de Control Contable y Datos</div><div class="exp-date">2026 - presente</div></div>
+      <div class="exp-head"><div class="exp-title">Analista de Control Contable y Datos</div><div class="exp-date">Mar 2022 - Jun 2026</div></div>
       <div class="exp-org">Forum Servicios Financieros - Santiago, Chile</div>
       <div class="exp-desc">Analista y Control Contable:
           *Análisis y validación de grandes volúmenes de datos financieros.
@@ -573,11 +641,15 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
     <div class="stack-title">Formacion</div>
     <div class="exp-item">
       <div class="exp-head"><div class="exp-title">Analista de Datos</div><div class="exp-date">En curso</div></div>
-      <div class="exp-org">AIEP</div>
+      <div class="exp-org">AIEP / Universidad Andres Bello</div>
     </div>
     <div class="exp-item">
       <div class="exp-head"><div class="exp-title">Contador Publico y Auditor</div><div class="exp-date"></div></div>
-      <div class="exp-org">Usach</div>
+      <div class="exp-org">Universidad de Santiago de Chile (Usach)</div>
+    </div>
+    <div class="exp-item">
+      <div class="exp-head"><div class="exp-title">Aplicaciones del Lenguaje SQL en Gestion de Bases de Datos</div><div class="exp-date">2025</div></div>
+      <div class="exp-org">CAI — Facultad de Ingenieria, Usach · 40 horas</div>
     </div>
   </div>
 </section>
@@ -585,7 +657,7 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
 <section id="product">
   <div class="container">
     <div class="prod-eyebrow">Herramienta disponible</div>
-    <h1 class="prod-h1">Conciliador Automatico V1 para Google Sheets</h1>
+    <h2 class="prod-h1">Conciliador Automatico V1 para Google Sheets</h2>
     <p class="prod-tagline">Si alguna vez has tenido que revisar, pago por pago, si cada uno corresponde a la factura correcta, sabes lo lento que es. Esta herramienta hace esa revision por ti, en segundos, dentro de tu propio Google Sheets — con panel de control web incluido.</p>
     <div class="alert-box">¿Que es "conciliar"? Es comparar dos listas — por ejemplo, las facturas que emitiste y los pagos que llegaron a tu cuenta — para asegurarte de que cada una tenga su pareja. Si algo no coincide o falta, lo sabes al instante, sin revisar fila por fila.</div>
 
@@ -760,7 +832,7 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
 <section id="guias">
   <div class="container">
     <div class="home-eyebrow">Guias rapidas</div>
-    <h1 class="home-h1">Los primeros pasos para...</h1>
+    <h2 class="home-h1">Los primeros pasos para...</h2>
     <p class="home-lead">Tres conexiones que cualquier equipo contable o financiero termina necesitando. Sin rodeos, paso a paso.</p>
 
     <div class="gp-tabs">
@@ -1213,12 +1285,24 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
 <section id="contact">
   <div class="container">
     <div class="home-eyebrow">Contacto</div>
-    <h2 style="font-size:20px;font-weight:600;letter-spacing:-.3px;margin-bottom:.75rem">Quieres saber mas de lo que hago?</h2>
-    <p class="contact-intro">Sigueme en Instagram.</p>
+    <h2 style="font-size:20px;font-weight:600;letter-spacing:-.3px;margin-bottom:.75rem">Tienes alguna duda?</h2>
+    <p class="contact-intro">Contactame en mis redes o escribeme un correo directamente.</p>
+
+    <form class="cf-wrap" id="cfForm"
+      action="#"
+      onsubmit="cfSubmit(event)">
+      <div class="cf-row">
+        <input class="cf-field" type="text" name="nombre" placeholder="Tu nombre" required>
+        <input class="cf-field" type="email" name="email" placeholder="Tu correo" required>
+      </div>
+      <textarea class="cf-field cf-area" name="mensaje" placeholder="Cuentame que proceso quieres automatizar o en que puedo ayudarte..." required></textarea>
+      <button type="submit" class="cta-home" style="margin-top:4px">Enviar mensaje</button>
+    </form>
 
     <div class="contact-block">
       <div class="contact-row"><span class="contact-label">Gumroad</span><span class="contact-val"><a href="https://ambilorlab.gumroad.com" target="_blank" rel="noopener noreferrer">ambilorlab.gumroad.com</a></span></div>
-      <div class="contact-row"><span class="contact-label">Instagram</span><span class="contact-val"><a href="https://www.instagram.com/ambilor.lab/" target="_blank" rel="noopener noreferrer">@ambilor.lab</a></span></div>
+      <div class="contact-row"><span class="contact-label">Instagram</span><span class="contact-val"><a href="https://www.instagram.com/ambilor.lab/" target="_blank" rel="me noopener noreferrer">@ambilor.lab</a></span></div>
+      <div class="contact-row"><span class="contact-label">LinkedIn</span><span class="contact-val"><a href="https://www.linkedin.com/in/jordan-riquelme" target="_blank" rel="me noopener noreferrer">linkedin.com/in/jordan-riquelme</a></span></div>
       <div class="contact-row"><span class="contact-label">Ubicacion</span><span class="contact-val">Santiago, Chile</span></div>
       <div class="contact-row"><span class="contact-label">Idioma</span><span class="contact-val">Espanol</span></div>
     </div>
@@ -1233,7 +1317,9 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
   </div>
 </section>
 
-<footer>2026 Ambilor.Lab - Santiago, Chile - Todos los derechos reservados</footer>
+<button class="btn-top" id="btnTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Volver arriba">↑</button>
+
+<footer>2026 Ambilor.Lab - Santiago, Chile - Todos los derechos reservados &nbsp;·&nbsp; <a href="https://www.instagram.com/ambilor.lab/" target="_blank" rel="me noopener noreferrer" style="color:inherit;text-decoration:none">Instagram</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/jordan-riquelme" target="_blank" rel="me noopener noreferrer" style="color:inherit;text-decoration:none">LinkedIn</a></footer>
 
 <script>
 function show(id){
@@ -1573,7 +1659,26 @@ dbuildDots();
 dstartBar();
 show('home');
 
-// ═══ fluid motion JS ═══
+// scroll to top
+window.addEventListener('scroll',function(){
+  var b=document.getElementById('btnTop');
+  if(b) b.classList.toggle('show',window.scrollY>320);
+});
+
+// contact form → mailto
+function cfSubmit(e){
+  e.preventDefault();
+  var nombre  = document.querySelector('#cfForm [name="nombre"]').value.trim();
+  var email   = document.querySelector('#cfForm [name="email"]').value.trim();
+  var mensaje = document.querySelector('#cfForm [name="mensaje"]').value.trim();
+  var asunto  = encodeURIComponent('Contacto Ambilor.Lab — ' + nombre);
+  var cuerpo  = encodeURIComponent(
+    'Nombre: ' + nombre + '\n' +
+    'Email: '  + email  + '\n\n' +
+    mensaje
+  );
+  window.location.href = 'mailto:zejordanja17@gmail.com?subject=' + asunto + '&body=' + cuerpo;
+}
 
 // Animated blobs in hero
 (function(){
