@@ -513,6 +513,37 @@ nav.scrolled .nav-links a{font-size:12px}
 [data-theme="dark"] .btn-top{box-shadow:0 3px 14px rgba(0,0,0,.5)}
 [data-theme="dark"] .nav-dark-btn{border-color:#252538;color:#505070}
 [data-theme="dark"] #home{background-image:radial-gradient(rgba(31,92,153,.04) 1px,transparent 1px)}
+
+/* ── INSTALACION: mockups de los 5 pasos del metodo estandar ──
+   Mismo lenguaje visual que la demo: marco de ventana, barra de titulo,
+   chips de boton. Clases iv-* para no chocar con la demo ni con las guias. */
+.iv-win{border:1px solid var(--borde);border-radius:7px;overflow:hidden;background:#fff;max-width:400px;margin:0 auto}
+.iv-tbar{background:#f1f3f4;padding:7px 12px;display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--borde)}
+.iv-tdots{display:flex;gap:4px;flex:none}
+.iv-tdot{width:7px;height:7px;border-radius:50%;background:#dadce0}
+.iv-ttxt{font-size:10px;color:#5f6368;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iv-body{padding:14px 12px;display:flex;flex-direction:column;gap:8px}
+.iv-row{font-size:10px;color:#3c4043;line-height:1.5}
+.iv-chip{font-size:10px;padding:6px 11px;border:1px solid var(--borde);border-radius:4px;color:#3c4043;background:#fff;align-self:flex-start}
+.iv-chip.on{border-color:var(--azul);color:var(--azul);background:#eef4fb}
+.iv-chip.pri{background:var(--azul);color:#fff;border-color:var(--azul);font-weight:600}
+.iv-menu{background:#fff;border:1px solid var(--borde);border-radius:7px;box-shadow:0 6px 20px rgba(0,0,0,.10);max-width:250px;margin:0 auto;overflow:hidden}
+.iv-mhead{font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:#8a8a99;padding:7px 11px 5px;border-bottom:1px solid #eeeef2}
+.iv-mitem{font-size:10px;padding:7px 11px;color:#3c4043}
+.iv-mitem.on{background:#eef4fb;color:var(--azul);font-weight:600}
+.iv-note{font-size:10px;color:#6b6b7b;line-height:1.55;text-align:center}
+.iv-cards{display:flex;flex-direction:column;gap:8px;max-width:400px;margin:0 auto}
+.iv-card{border:1px solid var(--borde);border-left:3px solid #16A34A;border-radius:6px;padding:10px 12px;font-size:10px;color:#3c4043;line-height:1.5;background:#fff}
+#instalacion{margin-top:2.5rem}
+[data-theme="dark"] .iv-win,[data-theme="dark"] .iv-menu,[data-theme="dark"] .iv-card{background:#131320;border-color:#252538}
+[data-theme="dark"] .iv-tbar{background:#1a1a2c;border-color:#252538}
+[data-theme="dark"] .iv-tdot{background:#3a3a55}
+[data-theme="dark"] .iv-ttxt,[data-theme="dark"] .iv-row{color:#c8c8e0}
+[data-theme="dark"] .iv-chip{background:#131320;border-color:#33334d;color:#c8c8e0}
+[data-theme="dark"] .iv-chip.on{background:#16233a;border-color:var(--azul);color:#7db4e8}
+[data-theme="dark"] .iv-mitem,[data-theme="dark"] .iv-mhead{color:#9898b8}
+[data-theme="dark"] .iv-mitem.on{background:#16233a;color:#7db4e8}
+[data-theme="dark"] .iv-note{color:#7878a0}
 </style>
 </head>
 
@@ -844,6 +875,119 @@ nav.scrolled .nav-links a{font-size:12px}
             <button class="dcbtn" onclick="dnav(1)">&#8594;</button>
           </div>
           <span class="dctr" id="dctr">1 de 6</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── INSTALACION: los mismos 5 pasos del metodo estandar, version generica.
+         El copy viene de kit-instalacion/base.json y se verifica con
+         kit-instalacion/verificar-web.js (no editar el texto sin pasar ese check). ── -->
+    <div class="demo-section" id="instalacion">
+      <div class="demo-label">Como se instala</div>
+      <div class="demo-wrap" id="inst">
+        <div class="deco"><div class="deco-line"></div><div class="deco-num" id="in">01</div></div>
+
+        <div class="dscene active" id="is0">
+          <div class="d-pill anim"><div class="d-dot">1</div><span class="d-pilltxt">Paso 1 - haz tu copia</span></div>
+          <div class="d-h anim">Haz tu <em>copia</em></div>
+          <div class="d-sub anim">Abre el enlace que te enviamos y elige &ldquo;Hacer una copia&rdquo;. Tu copia se abre en tu Drive y trae la herramienta adentro, con su codigo ya dentro.</div>
+          <div class="anim">
+            <div class="iv-win">
+              <div class="iv-tbar"><div class="iv-tdots"><span class="iv-tdot"></span><span class="iv-tdot"></span><span class="iv-tdot"></span></div><span class="iv-ttxt">Google Drive</span></div>
+              <div class="iv-body">
+                <div class="iv-row">Copiar &ldquo;Mi herramienta&rdquo; en Mi Drive</div>
+                <div class="iv-row" style="color:#8a8a99">Nombre: Mi herramienta (copia)</div>
+                <span class="iv-chip pri">Hacer una copia</span>
+              </div>
+            </div>
+            <div class="iv-note" style="margin-top:10px">Elige el nombre y la carpeta donde la quieres guardar.</div>
+          </div>
+        </div>
+
+        <div class="dscene" id="is1">
+          <div class="d-pill anim"><div class="d-dot">2</div><span class="d-pilltxt">Paso 2 - abre &ldquo;Configurar herramienta&rdquo;</span></div>
+          <div class="d-h anim">Abre <em>&ldquo;Configurar herramienta&rdquo;</em></div>
+          <div class="d-sub anim">En tu copia, abre el menu de la barra superior y elige &ldquo;Tu herramienta &mdash; Ambilor.Lab&rdquo;. Se abre un panel llamado &ldquo;Configurar herramienta&rdquo;, que te va guiando paso a paso.</div>
+          <div class="anim">
+            <div class="iv-win">
+              <div class="iv-tbar"><div class="iv-tdots"><span class="iv-tdot"></span><span class="iv-tdot"></span><span class="iv-tdot"></span></div><span class="iv-ttxt">Google Sheets &mdash; menu</span></div>
+              <div class="iv-body">
+                <span class="iv-chip">Tu herramienta &mdash; Ambilor.Lab</span>
+                <span class="iv-chip on">Configurar herramienta</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dscene" id="is2">
+          <div class="d-pill anim"><div class="d-dot">3</div><span class="d-pilltxt">Paso 3 - autoriza el acceso</span></div>
+          <div class="d-h anim">Autoriza el <em>acceso</em></div>
+          <div class="d-sub anim">La primera vez, Google te pide permiso para leer tu planilla y mostrar el panel. Aparece en una pantalla de Google, no dentro de la herramienta. Acepta y sigue.</div>
+          <div class="anim">
+            <div class="iv-win">
+              <div class="iv-tbar"><div class="iv-tdots"><span class="iv-tdot"></span><span class="iv-tdot"></span><span class="iv-tdot"></span></div><span class="iv-ttxt">Google pide permiso</span></div>
+              <div class="iv-body">
+                <div class="iv-row">La herramienta necesita leer y editar tu planilla.</div>
+                <span class="iv-chip">Cancelar</span>
+                <span class="iv-chip pri">Continuar</span>
+              </div>
+            </div>
+            <div class="iv-note" style="margin-top:10px">El boton de accion puede decir Continuar o Aceptar segun tu navegador.</div>
+          </div>
+        </div>
+
+        <div class="dscene" id="is3">
+          <div class="d-pill anim"><div class="d-dot">4</div><span class="d-pilltxt">Paso 4 - publica tu panel</span></div>
+          <div class="d-h anim">Publica tu <em>panel</em></div>
+          <div class="d-sub anim">Desde el editor de Apps Script, publica el panel como aplicacion web con acceso &ldquo;Solo yo&rdquo;. Asi queda privado en tu cuenta: nadie mas lo ve.</div>
+          <div class="anim">
+            <div class="iv-win">
+              <div class="iv-tbar"><div class="iv-tdots"><span class="iv-tdot"></span><span class="iv-tdot"></span><span class="iv-tdot"></span></div><span class="iv-ttxt">Google Apps Script</span></div>
+              <div class="iv-body">
+                <span class="iv-chip">Implementar</span>
+                <span class="iv-chip on">Nueva implementacion</span>
+                <span class="iv-chip on">Aplicacion web</span>
+                <span class="iv-chip pri">Solo yo</span>
+              </div>
+            </div>
+            <div class="iv-note" style="margin-top:10px">&ldquo;Solo yo&rdquo; significa privado. No elijas &ldquo;Cualquiera&rdquo;.</div>
+          </div>
+        </div>
+
+        <div class="dscene" id="is4">
+          <div class="d-pill anim"><div class="d-dot">5</div><span class="d-pilltxt">Paso 5 - Abrelo y empieza</span></div>
+          <div class="d-h anim">Abrelo y <em>empieza</em></div>
+          <div class="d-sub anim">Vuelve a tu planilla y abre el panel. La herramienta verifica que la instalacion quedo correcta y te deja entrar.</div>
+          <div class="anim">
+            <div class="iv-win">
+              <div class="iv-tbar"><div class="iv-tdots"><span class="iv-tdot"></span><span class="iv-tdot"></span><span class="iv-tdot"></span></div><span class="iv-ttxt">Panel de la herramienta</span></div>
+              <div class="iv-body">
+                <span class="iv-chip">Verificar instalacion</span><span class="iv-chip pri">Abrir panel</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dscene" id="is5">
+          <div class="d-pill anim"><div class="d-dot">&#10003;</div><span class="d-pilltxt">Listo</span></div>
+          <div class="d-h anim">Listo. Ya quedo <em>instalado</em>.</div>
+          <div class="d-sub anim">No queda nada por instalar ni por pagar. Todo funciona dentro de tu propia cuenta de Google.</div>
+          <div class="iv-cards anim">
+            <div class="iv-card">Es privado: la herramienta vive en tu cuenta de Google, no en un servidor nuestro.</div>
+            <div class="iv-card">Es tuyo: no dependes de una suscripcion ni de una cuota de uso.</div>
+            <div class="iv-card">Si algo no coincide con lo que ves, escribeme antes de continuar.</div>
+          </div>
+        </div>
+
+        <div class="dprog" id="iprog"></div>
+        <div class="dctrl">
+          <div class="dctrl-left">
+            <button class="dcbtn" onclick="inav(-1)">&#8592;</button>
+            <div class="dcdots" id="idots"></div>
+            <button class="dcbtn" id="ippbtn" onclick="itoggle()">&#9646;&#9646;</button>
+            <button class="dcbtn" onclick="inav(1)">&#8594;</button>
+          </div>
+          <span class="dctr" id="ictr">1 de 6</span>
         </div>
       </div>
     </div>
@@ -1810,6 +1954,72 @@ function dtogglePlay(){
 }
 dbuildDots();
 dstartBar();
+
+// ---- INSTALACION: player independiente (prefijo i-) ----
+// Instancia propia con su propio estado, para no depender del player de la
+// demo ni tocarlo. Reutiliza las mismas clases CSS, por eso se ve igual.
+var icur=0,iN=6,inum=['01','02','03','04','05','06'];
+var iplaying=true,iraf=null,iDUR=7000,ibStart=0;
+function igo(i){
+  document.getElementById('is'+icur).classList.remove('active');
+  icur=i;
+  var sc=document.getElementById('is'+icur);
+  sc.classList.add('active');
+  sc.querySelectorAll('.anim').forEach(function(el){
+    el.style.animation='none';el.offsetHeight;el.style.animation='';
+  });
+  document.getElementById('in').textContent=inum[i];
+  document.getElementById('ictr').textContent=(i+1)+' de '+iN;
+  ibuildDots();
+  if(iplaying) istartBar();
+}
+function inav(d){istopBar();igo((icur+d+iN)%iN);}
+function ibuildDots(){
+  var c=document.getElementById('idots');c.innerHTML='';
+  for(var i=0;i<iN;i++){
+    var dd=document.createElement('div');
+    dd.className='dcdot'+(i===icur?' on':'');
+    (function(idx){dd.onclick=function(){istopBar();igo(idx);};})(i);
+    c.appendChild(dd);
+  }
+}
+function istartBar(){
+  istopBar();ibStart=Date.now();
+  var b=document.getElementById('iprog');b.style.width='0%';
+  function tick(){
+    var pct=Math.min(100,(Date.now()-ibStart)/iDUR*100);
+    b.style.width=pct+'%';
+    if(pct>=100){iraf=null;igo((icur+1)%iN);}
+    else iraf=requestAnimationFrame(tick);
+  }
+  iraf=requestAnimationFrame(tick);
+}
+function istopBar(){
+  if(iraf){cancelAnimationFrame(iraf);iraf=null;}
+  var b=document.getElementById('iprog');
+  if(b) b.style.width='0%';
+}
+function itoggle(){
+  iplaying=!iplaying;
+  var b=document.getElementById('ippbtn');
+  if(iplaying){b.innerHTML='&#9646;&#9646;';istartBar();}
+  else{b.innerHTML='&#9654;';istopBar();}
+}
+// arranca cuando la seccion entra en pantalla
+(function(){
+  var sec=document.getElementById('instalacion');
+  if(!sec) return;
+  ibuildDots();
+  var fired=false;
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(e.isIntersecting&&!fired){fired=true;igo(0);istartBar();io.disconnect();}
+      });
+    },{threshold:.3});
+    io.observe(sec);
+  } else { fired=true; igo(0); istartBar(); }
+})();
 show('home');
 animH1();
 setTimeout(function(){
