@@ -455,22 +455,86 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
 .cf-ok{display:none;padding:12px 14px;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:6px;font-size:13px;color:#2e7d32;margin-bottom:1rem}
 @media(max-width:480px){.cf-row{grid-template-columns:1fr}}
 .about-quote{font-size:17px;font-style:italic;color:var(--azul);border-left:3px solid var(--azul);padding:8px 14px;margin-bottom:1.5rem;line-height:1.55;letter-spacing:-.01em;max-width:480px}
+
+/* ── barra de progreso ── */
+.prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--azul),#2a80e1);width:0%;z-index:10000;transition:width .1s linear;pointer-events:none}
+
+/* ── cursor personalizado (solo mouse) ── */
+@media(pointer:fine){
+  body{cursor:none}
+  .c-dot,.c-ring{position:fixed;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%)}
+  .c-dot{width:7px;height:7px;background:var(--azul);z-index:9999;transition:transform .08s,opacity .2s}
+  .c-ring{width:26px;height:26px;border:1.5px solid rgba(31,92,153,.45);z-index:9998;transition:width .2s,height .2s,border-color .2s}
+  a:hover .c-dot,button:hover .c-dot{transform:translate(-50%,-50%) scale(2)}
+}
+
+/* ── nav condensado al scrollear ── */
+nav{transition:height .22s ease}
+nav.scrolled{height:42px}
+nav.scrolled .nav-logo{font-size:13px}
+nav.scrolled .nav-links a{font-size:12px}
+.nav-dark-btn{background:none;border:1px solid var(--borde);border-radius:6px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--gris-2);transition:color .15s,border-color .15s;flex-shrink:0}
+.nav-dark-btn:hover{color:var(--azul);border-color:var(--azul)}
+.nav-ind{position:absolute;bottom:0;height:2px;background:var(--azul);border-radius:2px 2px 0 0;transition:left .28s cubic-bezier(.16,1,.3,1),width .28s cubic-bezier(.16,1,.3,1);opacity:0}
+
+/* ── tooltips stack ── */
+.stack-pill{position:relative}
+.stack-pill::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;font-size:11px;padding:6px 11px;border-radius:5px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;font-family:var(--sans);font-weight:400;letter-spacing:0;text-transform:none;border:1px solid rgba(255,255,255,.08);z-index:50;line-height:1.4}
+.stack-pill:hover::after{opacity:1}
+
+/* ── dark mode ── */
+[data-theme="dark"]{--negro:#dcdcf0;--gris-1:#7878a0;--gris-2:#505070;--gris-4:#131320;--blanco:#0a0a14;--borde:#252538;--azul-bg:#0d1424}
+[data-theme="dark"] body{background:#0a0a14}
+[data-theme="dark"] nav{background:rgba(10,10,20,.92)!important;border-color:#252538}
+[data-theme="dark"] .hs-card,[data-theme="dark"] .ha-card,[data-theme="dark"] .mc{background:#131320;border-color:#252538}
+[data-theme="dark"] .hs-body{border-color:#252538}
+[data-theme="dark"] .demo-wrap{background:#131320!important;border-color:#252538!important}
+[data-theme="dark"] .stack-pill{background:#131320;border-color:#252538;color:#666688}
+[data-theme="dark"] .stack-pill:hover{border-color:var(--azul);color:var(--azul);background:#0d1424}
+[data-theme="dark"] .stack-pill::after{background:#252538}
+[data-theme="dark"] .specs-block table,[data-theme="dark"] .includes-list,[data-theme="dark"] .contact-block,[data-theme="dark"] .faq-list,[data-theme="dark"] .proc-wrap,[data-theme="dark"] .gvw{border-color:#252538}
+[data-theme="dark"] .specs-block th{background:#131320;color:#555570;border-color:#252538}
+[data-theme="dark"] .specs-block td{border-color:#252538}
+[data-theme="dark"] .includes-list li{border-color:#252538;color:#dcdcf0}
+[data-theme="dark"] .contact-row{border-color:#252538}
+[data-theme="dark"] .contact-row:hover{background:#131320}
+[data-theme="dark"] .faq-item{border-color:#252538}
+[data-theme="dark"] .faq-q{color:#dcdcf0}
+[data-theme="dark"] .cf-field{background:#131320;border-color:#252538;color:#dcdcf0}
+[data-theme="dark"] .cf-field::placeholder{color:#404058}
+[data-theme="dark"] .cf-field:focus{border-color:var(--azul)}
+[data-theme="dark"] .gp-tab{background:#131320;border-color:#252538;color:#666688}
+[data-theme="dark"] .gp-vis{background:#131320;border-color:#252538}
+[data-theme="dark"] .gp-stitle{color:#dcdcf0}
+[data-theme="dark"] .home-h1{background-image:linear-gradient(130deg,#dcdcf0 30%,#5ba4e0 100%)!important}
+[data-theme="dark"] .about-bio{color:#7878a0}
+[data-theme="dark"] .about-quote{color:#5ba4e0;border-color:#5ba4e0}
+[data-theme="dark"] footer{border-color:#252538;color:#404058}
+[data-theme="dark"] .btn-top{box-shadow:0 3px 14px rgba(0,0,0,.5)}
+[data-theme="dark"] .nav-dark-btn{border-color:#252538;color:#505070}
+[data-theme="dark"] #home{background-image:radial-gradient(rgba(31,92,153,.04) 1px,transparent 1px)}
 </style>
 </head>
 
 <body>
-
+<div class="prog" id="prog"></div>
+<div class="c-dot" id="cDot" style="top:0;left:0;opacity:0"></div>
+<div class="c-ring" id="cRing" style="top:0;left:0;opacity:0"></div>
 
 <nav>
-  <div class="nav-inner">
+  <div class="nav-inner" style="position:relative">
     <a class="nav-logo" href="#" onclick="show('home')">Ambilor.Lab</a>
-    <ul class="nav-links">
+    <ul class="nav-links" id="navLinks">
       <li><a href="#" onclick="show('home')" id="nav-home">Inicio</a></li>
       <li><a href="#" onclick="show('about')" id="nav-about">Sobre mi</a></li>
       <li><a href="#" onclick="show('product')" id="nav-product">Herramientas</a></li>
       <li><a href="#" onclick="show('guias')" id="nav-guias">Guias</a></li>
       <li><a href="#" onclick="show('contact')" id="nav-contact">Contacto</a></li>
     </ul>
+    <div class="nav-ind" id="navInd"></div>
+    <button class="nav-dark-btn" id="darkBtn" onclick="toggleDark()" aria-label="Cambiar tema">
+      <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>
+    </button>
   </div>
 </nav>
 
@@ -617,10 +681,13 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
     <p class="about-bio" style="margin-top:-1rem">Cada herramienta que publico la construi primero para resolver un problema real. El Conciliador Automatico V1 nacio de meses comparando pagos y facturas a mano, fila por fila, hasta decidir que no tenia sentido seguir haciendolo asi.</p>
     <div class="stack-title">Stack tecnico</div>
     <div class="stack-grid">
-      <span class="stack-pill">SQL</span><span class="stack-pill">Python</span>
-      <span class="stack-pill">Google Apps Script</span><span class="stack-pill">Looker Studio</span>
-      <span class="stack-pill">Power BI</span><span class="stack-pill">Microsoft Dynamics</span>
-      <span class="stack-pill">Bantotal</span>
+      <span class="stack-pill" data-tip="Consultas y analisis sobre bases de datos financieras">SQL</span>
+      <span class="stack-pill" data-tip="Automatizacion, procesamiento y limpieza de datos">Python</span>
+      <span class="stack-pill" data-tip="Scripts para automatizar Google Sheets y flujos de trabajo">Google Apps Script</span>
+      <span class="stack-pill" data-tip="Dashboards e informes conectados en tiempo real">Looker Studio</span>
+      <span class="stack-pill" data-tip="Modelos de datos y reporteria para equipos financieros">Power BI</span>
+      <span class="stack-pill" data-tip="Integracion y validacion de datos en ERP">Microsoft Dynamics</span>
+      <span class="stack-pill" data-tip="Validacion entre sistemas bancarios y contabilidad">Bantotal</span>
     </div>
     <hr class="divider" />
     <div class="stack-title">Experiencia</div>
@@ -807,20 +874,19 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
         <tr><td>Panel con todo de un vistazo</td><td>resultados, graficos y reporte</td></tr>
         <tr><td>Usalo con varias empresas o periodos</td><td>sin volver a configurar</td></tr>
         <tr><td>Corrige a mano si quieres</td><td>empareja o desempareja movimientos</td></tr>
-        <tr><td>Instalacion guiada, paso a paso</td><td>sin saber programar</td></tr>
+        <tr><td>Instalacion en ~5 minutos</td><td>sin saber programar</td></tr>
         <tr><td>Solo necesitas una cuenta de Google</td><td>nada mas</td></tr>
       </tbody></table>
     </div>
     <div class="section-label">Preguntas frecuentes</div>
     <div class="faq-list">
       <div class="faq-item"><div class="faq-q">¿Que hace exactamente esta herramienta?</div><div class="faq-a">Compara dos listas que tu le entregas — por ejemplo, tus facturas y tus pagos — y encuentra automaticamente cuales coinciden entre si y cuales quedan sin pareja. Lo que antes tomaba horas revisando fila por fila, ahora toma segundos.</div></div>
-      <div class="faq-item"><div class="faq-q">Necesito saber programar para instalarlo?</div><div class="faq-a">No. Partes de una copia de la planilla que ya viene lista con la herramienta instalada. Abres el menu <strong>Configurar aplicativo</strong> y la propia herramienta te va indicando, paso a paso, que hacer. No hay que copiar codigo ni usar la terminal.</div></div>
-      <div class="faq-item"><div class="faq-q">Por que me piden "publicar" el panel?</div><div class="faq-a">Porque el panel se abre como una pagina web privada de Google. Es un unico paso, lo haces una sola vez desde el menu <strong>Configurar aplicativo</strong> y queda listo para siempre. Solo tu puedes verlo, nadie mas accede a tu panel ni a tus datos.</div></div>
+      <div class="faq-item"><div class="faq-q">Necesito saber programar para instalarlo?</div><div class="faq-a">No. La guia de instalacion incluida cubre el proceso en 9 pasos desde cero: copiar, pegar y autorizar permisos.</div></div>
       <div class="faq-item"><div class="faq-q">Mis datos bancarios quedan en algun servidor?</div><div class="faq-a">No. El script corre completamente dentro de tu propia cuenta de Google. Tus datos no salen de tu Drive.</div></div>
       <div class="faq-item"><div class="faq-q">Funciona con cualquier banco o estructura de planilla?</div><div class="faq-a">Si. Los nombres de columnas son configurables por fuente de datos y el sistema te confirma visualmente que detecto los encabezados correctos antes de ejecutar.</div></div>
       <div class="faq-item"><div class="faq-q">Puedo usarlo en mas de una empresa?</div><div class="faq-a">La licencia incluida cubre uso personal o una sola organizacion. Para multiples empresas escribeme directamente.</div></div>
       <div class="faq-item"><div class="faq-q">Que pasa si tengo mas de 5.000 registros?</div><div class="faq-a">Procesa por periodos mensuales. Con 3.000 registros el resultado tarda unos 3 segundos.</div></div>
-      <div class="faq-item"><div class="faq-q">¿Tengo un panel de control web?</div><div class="faq-a">Si. Ademas del menu dentro de Google Sheets, incluye un panel web con numeros clave, graficos, filtros, reporte imprimible y correccion manual de resultados. Se activa desde el menu <strong>Configurar aplicativo</strong>, que te guia en el paso unico de publicacion.</div></div>
+      <div class="faq-item"><div class="faq-q">¿Tengo un panel de control web?</div><div class="faq-a">Si. Ademas del menu dentro de Google Sheets, incluye un panel web con numeros clave, graficos, filtros, reporte imprimible y correccion manual de resultados.</div></div>
       <div class="faq-item"><div class="faq-q">¿Puedo corregir el resultado manualmente?</div><div class="faq-a">Si. Puedes forzar un emparejamiento que el sistema no detecto o deshacer uno que consideres incorrecto. Los ajustes quedan guardados entre ejecuciones.</div></div>
       <div class="faq-item"><div class="faq-q">Funciona en Excel?</div><div class="faq-a">No directamente. Esta construido sobre Google Apps Script y requiere Google Sheets, pero puedes subir tu archivo .xlsx a Google Drive, importarlo como Google Sheet y usarlo como fuente de datos.</div></div>
     </div>
@@ -1323,17 +1389,105 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
 <footer>2026 Ambilor.Lab - Santiago, Chile - Todos los derechos reservados &nbsp;·&nbsp; <a href="https://www.instagram.com/ambilor.lab/" target="_blank" rel="me noopener noreferrer" style="color:inherit;text-decoration:none">Instagram</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/jordan-riquelme" target="_blank" rel="me noopener noreferrer" style="color:inherit;text-decoration:none">LinkedIn</a></footer>
 
 <script>
+// ── cursor personalizado ──
+(function(){
+  var dot=document.getElementById('cDot'),ring=document.getElementById('cRing');
+  if(!dot||!ring) return;
+  var cx=0,cy=0,rx=0,ry=0,raf;
+  document.addEventListener('mousemove',function(e){
+    cx=e.clientX;cy=e.clientY;
+    dot.style.left=cx+'px';dot.style.top=cy+'px';
+    dot.style.opacity='1';ring.style.opacity='1';
+  });
+  document.addEventListener('mouseleave',function(){dot.style.opacity='0';ring.style.opacity='0';});
+  (function animRing(){
+    rx+=(cx-rx)*.18;ry+=(cy-ry)*.18;
+    ring.style.left=rx+'px';ring.style.top=ry+'px';
+    raf=requestAnimationFrame(animRing);
+  })();
+})();
+
+// ── barra de progreso ──
+window.addEventListener('scroll',function(){
+  var p=document.getElementById('prog');
+  if(p){var h=document.body.scrollHeight-window.innerHeight;p.style.width=(h>0?window.scrollY/h*100:0)+'%';}
+  document.querySelector('nav').classList.toggle('scrolled',window.scrollY>80);
+  var btn=document.getElementById('btnTop');
+  if(btn) btn.classList.toggle('show',window.scrollY>320);
+});
+
+// ── dark mode ──
+function toggleDark(){
+  var dark=document.documentElement.getAttribute('data-theme')==='dark';
+  var t=dark?'light':'dark';
+  document.documentElement.setAttribute('data-theme',t);
+  localStorage.setItem('al-theme',t);
+  setDarkIcon(!dark);
+}
+function setDarkIcon(dark){
+  var b=document.getElementById('darkBtn');
+  if(!b) return;
+  b.innerHTML=dark
+    ?'<svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"/></svg>'
+    :'<svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>';
+}
+(function(){var t=localStorage.getItem('al-theme');if(t){document.documentElement.setAttribute('data-theme',t);setDarkIcon(t==='dark');}})();
+
+// ── indicador de nav ──
+function moveNavInd(el){
+  var ind=document.getElementById('navInd');
+  var links=document.getElementById('navLinks');
+  if(!ind||!links||!el) return;
+  var lr=links.getBoundingClientRect();
+  var er=el.getBoundingClientRect();
+  ind.style.left=(er.left-lr.left)+'px';
+  ind.style.width=er.width+'px';
+  ind.style.opacity='1';
+}
+
+// ── animacion H1 palabra por palabra ──
+function animH1(){
+  var h1=document.querySelector('#home .home-h1');
+  if(!h1||h1.dataset.anim) return;
+  h1.dataset.anim='1';
+  var words=h1.textContent.trim().split(' ');
+  h1.textContent='';
+  words.forEach(function(w,i){
+    if(i>0) h1.appendChild(document.createTextNode(' '));
+    var s=document.createElement('span');
+    s.textContent=w;
+    s.style.cssText='display:inline;opacity:0;transition:opacity .45s ease;transition-delay:'+(i*70+80)+'ms';
+    h1.appendChild(s);
+  });
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){
+      h1.querySelectorAll('span').forEach(function(s){s.style.opacity='1';});
+    });
+  });
+}
+
+// ── feedback formulario ──
+function cfSubmit(e){
+  e.preventDefault();
+  var nombre=document.querySelector('#cfForm [name="nombre"]').value.trim();
+  var email=document.querySelector('#cfForm [name="email"]').value.trim();
+  var mensaje=document.querySelector('#cfForm [name="mensaje"]').value.trim();
+  var btn=document.querySelector('#cfForm button[type="submit"]');
+  if(btn){btn.textContent='Abriendo tu correo...';btn.disabled=true;}
+  var asunto=encodeURIComponent('Contacto Ambilor.Lab — '+nombre);
+  var cuerpo=encodeURIComponent('Nombre: '+nombre+'\nEmail: '+email+'\n\n'+mensaje);
+  window.location.href='mailto:zejordanja17@gmail.com?subject='+asunto+'&body='+cuerpo;
+  setTimeout(function(){if(btn){btn.textContent='Enviar mensaje';btn.disabled=false;}},2000);
+}
+
 function show(id){
   var current=document.querySelector('section.visible');
   var target=document.getElementById(id);
   document.querySelectorAll('.nav-links a').forEach(function(a){a.classList.remove('active');});
   var navEl=document.getElementById('nav-'+id);
-  if(navEl) navEl.classList.add('active');
+  if(navEl){navEl.classList.add('active');moveNavInd(navEl);}
   function activate(){
-    document.querySelectorAll('section').forEach(function(s){
-      s.classList.remove('visible');
-      s.style.cssText='';
-    });
+    document.querySelectorAll('section').forEach(function(s){s.classList.remove('visible');s.style.cssText='';});
     target.classList.add('visible');
     window.scrollTo({top:0,behavior:'instant'});
     setTimeout(function(){
@@ -1342,16 +1496,14 @@ function show(id){
         if(r.top<window.innerHeight+40) el.classList.add('in');
       });
     },60);
+    if(id==='home') animH1();
   }
   if(current&&current!==target){
-    current.style.opacity='0';
-    current.style.transform='translateY(8px)';
+    current.style.opacity='0';current.style.transform='translateY(8px)';
     current.style.transition='opacity .2s ease,transform .2s ease';
     current.style.pointerEvents='none';
     setTimeout(activate,210);
-  } else {
-    activate();
-  }
+  } else { activate(); }
   return false;
 }
 
@@ -1659,6 +1811,11 @@ function dtogglePlay(){
 dbuildDots();
 dstartBar();
 show('home');
+animH1();
+setTimeout(function(){
+  var el=document.getElementById('nav-home');
+  if(el) moveNavInd(el);
+},100);
 
 // scroll to top
 window.addEventListener('scroll',function(){
