@@ -90,13 +90,7 @@ footer{border-top:1px solid var(--borde);padding:1.5rem;text-align:center;font-f
 .mc{background:var(--gris-4);border:1px solid var(--borde);border-radius:6px;padding:13px 8px;text-align:center}
 .mc-n{font-family:var(--mono);font-size:22px;font-weight:600;color:var(--negro);display:block;letter-spacing:-.5px;line-height:1.1}
 .mc-l{font-size:11px;color:var(--gris-2);margin-top:3px;line-height:1.3;display:block}
-/* pasos proyecto a medida */
-.proc-wrap{border:1px solid var(--borde);border-radius:8px;padding:1.25rem 1rem;background:var(--gris-4);margin-bottom:1.75rem}
-.proc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-.proc-num{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--azul);margin-bottom:5px;display:block}
-.proc-title{font-size:13px;font-weight:600;color:var(--negro);margin-bottom:3px;line-height:1.3}
-.proc-desc{font-size:12px;color:var(--gris-1);line-height:1.5}
-@media(max-width:460px){.metrics-strip{grid-template-columns:1fr 1fr}.proc-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:460px){.metrics-strip{grid-template-columns:1fr 1fr}}
 /* === Inicio: tarjetas de servicio y audiencia === */
 .hs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(182px,1fr));gap:10px;margin-bottom:2rem}
 .hs-card{border:1px solid var(--borde);border-radius:8px;overflow:hidden;background:var(--blanco)}
@@ -354,11 +348,6 @@ nav{background:rgba(255,255,255,.85)!important;backdrop-filter:blur(14px);-webki
 /* demo wrap: subtle hover glow */
 .demo-wrap{transition:box-shadow .3s}
 .demo-wrap:hover{box-shadow:0 4px 24px rgba(31,92,153,.10)}
-
-/* V2 teaser: dark card */
-
-/* process step badges */
-.proc-num{background:#1F5C99;color:#fff!important;padding:1px 7px;border-radius:3px;display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.04em;margin-bottom:8px}
 
 /* guide connection cards */
 .gvw-tc{transition:transform .2s}
@@ -1224,35 +1213,8 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
 <section id="contact">
   <div class="container">
     <div class="home-eyebrow">Contacto</div>
-    <h2 style="font-size:20px;font-weight:600;letter-spacing:-.3px;margin-bottom:.75rem">Tienes un proceso que automatizar?</h2>
-    <p class="contact-intro">Si tienes un proceso contable o financiero que te consume tiempo y crees que se puede automatizar, cuentame. Respondo segun disponibilidad.</p>
-    <p class="contact-intro" style="margin-top:-1rem">Tambien puedes escribirme si tienes dudas sobre el Conciliador Automatico o quieres una licencia para multiples empresas.</p>
-
-    <div class="section-label" style="margin-top:0">Como funciona un proyecto a medida</div>
-    <div class="proc-wrap">
-      <div class="proc-grid">
-        <div>
-          <span class="proc-num">01</span>
-          <div class="proc-title">Me describes el problema</div>
-          <div class="proc-desc">Un mensaje en Gumroad o por correo. Sin formularios ni llamadas previas.</div>
-        </div>
-        <div>
-          <span class="proc-num">02</span>
-          <div class="proc-title">Te propongo un enfoque</div>
-          <div class="proc-desc">Que hare, cuanto tarda, que necesito de tu parte y cuanto cuesta — dependiendo del alcance.</div>
-        </div>
-        <div>
-          <span class="proc-num">03</span>
-          <div class="proc-title">Confirmas y empezamos</div>
-          <div class="proc-desc">Sin anticipo. Solo confirmas cuando el enfoque y el precio te convienen.</div>
-        </div>
-        <div>
-          <span class="proc-num">04</span>
-          <div class="proc-title">Te entrego funcionando</div>
-          <div class="proc-desc">Con documentacion incluida. Si algo falla despues de la entrega, lo resuelvo.</div>
-        </div>
-      </div>
-    </div>
+    <h2 style="font-size:20px;font-weight:600;letter-spacing:-.3px;margin-bottom:.75rem">Quieres saber mas de lo que hago?</h2>
+    <p class="contact-intro">Sigueme en Instagram.</p>
 
     <div class="contact-block">
       <div class="contact-row"><span class="contact-label">Gumroad</span><span class="contact-val"><a href="https://ambilorlab.gumroad.com" target="_blank" rel="noopener noreferrer">ambilorlab.gumroad.com</a></span></div>
@@ -1650,7 +1612,7 @@ show('home');
 // Scroll reveal with IntersectionObserver
 (function(){
   if(!('IntersectionObserver' in window)) return;
-  var sel='.hs-card,.ha-card,.proc-wrap,.gvw,.faq-item,.exp-item,.gp-step,.specs-block,.includes-list,.contact-block,.about-bio';
+  var sel='.hs-card,.ha-card,.gvw,.faq-item,.exp-item,.gp-step,.specs-block,.includes-list,.contact-block,.about-bio';
   var obs=new IntersectionObserver(function(entries){
     entries.forEach(function(e){
       if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);}
