@@ -1963,10 +1963,11 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
 scene.add(new THREE.HemisphereLight(0xffffff, 0xaebfd2, 0.9));
 const sun = new THREE.DirectionalLight(0xffffff, 0.6); sun.position.set(3, 5, 6); scene.add(sun);
+const TEX_S = 1.6;
 const ANISO = renderer.capabilities.getMaxAnisotropy();
 function tex(w, h, draw){
-  const c = document.createElement('canvas'); c.width = w; c.height = h;
-  const g = c.getContext('2d'); draw(g, w, h);
+  const c = document.createElement('canvas'); c.width = w * TEX_S; c.height = h * TEX_S;
+  const g = c.getContext('2d'); g.scale(TEX_S, TEX_S); draw(g, w, h);
   const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; t.anisotropy = ANISO;
   return t;
 }
@@ -2056,8 +2057,8 @@ const pends = PEND.map(i => {
 
 // ---------- panel de control web ----------
 const PW = 4.3, PH = 2.75;
-const pcan = document.createElement('canvas'); pcan.width = 1000; pcan.height = 640;
-const pg = pcan.getContext('2d');
+const pcan = document.createElement('canvas'); pcan.width = 1000 * TEX_S; pcan.height = 640 * TEX_S;
+const pg = pcan.getContext('2d'); pg.scale(TEX_S, TEX_S);
 const ptex = new THREE.CanvasTexture(pcan); ptex.encoding = THREE.sRGBEncoding; ptex.anisotropy = ANISO;
 const panel = new THREE.Mesh(new THREE.PlaneGeometry(PW, PH), basic({ map:ptex })); panel.renderOrder = 10; scene.add(panel);
 const panelShadow = new THREE.Mesh(new THREE.PlaneGeometry(PW + 0.1, PH + 0.1), basic({ color:col(C.ink) })); panelShadow.renderOrder = 9; scene.add(panelShadow);
@@ -2129,8 +2130,8 @@ function updatePanel(t){
 
 
 // ---------- escala: contador de movimientos procesados ----------
-const ccan = document.createElement('canvas'); ccan.width = 1480; ccan.height = 180;
-const cg = ccan.getContext('2d');
+const ccan = document.createElement('canvas'); ccan.width = 1480 * TEX_S; ccan.height = 180 * TEX_S;
+const cg = ccan.getContext('2d'); cg.scale(TEX_S, TEX_S);
 const ctex = new THREE.CanvasTexture(ccan); ctex.encoding = THREE.sRGBEncoding; ctex.anisotropy = ANISO;
 const counter = new THREE.Mesh(new THREE.PlaneGeometry(TW, TW*180/1480), basic({ map:ctex })); counter.renderOrder = 6; table.add(counter);
 const scan = new THREE.Mesh(new THREE.PlaneGeometry(TW + 0.1, 0.55), basic({ color:col(C.brand) })); scan.renderOrder = 5; table.add(scan);
@@ -2272,8 +2273,8 @@ const RES_ORDER = [0,1,4,8,5,6,7,10,9,11,2,3];
 const PARTNER = {}; [...PAIRS, MANUAL].forEach(([a,b]) => { PARTNER[a] = b; PARTNER[b] = a; });
 const rid = i => 'M-' + String(i + 1).padStart(2, '0');
 const RS = 4.4;
-const rcan = document.createElement('canvas'); rcan.width = 1000; rcan.height = 1000;
-const rg = rcan.getContext('2d');
+const rcan = document.createElement('canvas'); rcan.width = 1000 * TEX_S; rcan.height = 1000 * TEX_S;
+const rg = rcan.getContext('2d'); rg.scale(TEX_S, TEX_S);
 const rtex = new THREE.CanvasTexture(rcan); rtex.encoding = THREE.sRGBEncoding; rtex.anisotropy = ANISO;
 const result = new THREE.Mesh(new THREE.PlaneGeometry(RS, RS), basic({ map:rtex })); result.renderOrder = 10; scene.add(result);
 const resultShadow = new THREE.Mesh(new THREE.PlaneGeometry(RS + 0.1, RS + 0.1), basic({ color:col(C.ink) })); resultShadow.renderOrder = 9; scene.add(resultShadow);
