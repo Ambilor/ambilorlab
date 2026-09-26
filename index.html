@@ -580,6 +580,12 @@ nav.scrolled .nav-links a{font-size:12px}
 [data-theme="dark"] .al-demo__cta:hover{background:#7db4e8}
 [data-theme="dark"] .al-demo__stage{box-shadow:0 0 0 1px #252538}
 [data-theme="dark"] .al-demo__fallback{border-top-color:#252538}
+.al-demo__tip{margin:1.2rem 0 0; padding:.8rem 1.0rem; border-radius:12px; background:#fff5e6; border-left:4px solid #e08a2c; font-size:.95rem; line-height:1.5; color:var(--al-ink); max-width:46ch}
+.al-demo__checks{margin:1.3rem 0 0; padding:0; list-style:none; display:flex; flex-direction:column; gap:.55rem; font-size:1rem; max-width:46ch}
+.al-demo__checks li{display:flex; gap:.6rem; line-height:1.45}
+.al-demo__checks li::before{content:"✓"; color:#2f8a5b; font-weight:800}
+.al-demo__contact{display:inline-block; margin-top:1.1rem; font-size:.95rem; color:var(--al-brand); font-weight:600}
+[data-theme="dark"] .al-demo__tip{background:#252015; color:#dcdcf0}
 </style>
 </head>
 
@@ -859,116 +865,27 @@ nav.scrolled .nav-links a{font-size:12px}
       </div>
     </div>
 
-    <!-- ── INSTALACION: los mismos 5 pasos del metodo estandar, version generica.
-         El copy viene de kit-instalacion/base.json y se verifica con
-         kit-instalacion/verificar-web.js (no editar el texto sin pasar ese check). ── -->
+        <!-- ── INSTALACION 3D (Three.js) ── -->
     <div class="demo-section" id="instalacion">
       <div class="demo-label">Como se instala</div>
-      <div class="demo-wrap" id="inst">
-        <div class="deco"><div class="deco-line"></div><div class="deco-num" id="in">01</div></div>
-
-        <div class="dscene active" id="is0">
-          <div class="d-pill anim"><div class="d-dot">1</div><span class="d-pilltxt">Paso 1 - haz tu copia</span></div>
-          <div class="d-h anim">Haz tu <em>copia</em></div>
-          <div class="d-sub anim">Abre el enlace que te enviamos y elige &ldquo;Hacer una copia&rdquo;. Tu copia se abre en tu Drive y trae la herramienta adentro, con su codigo ya dentro.</div>
-          <div class="anim">
-            <div class="iv-win">
-              <div class="iv-tbar"><div class="iv-tdots"><span class="iv-tdot"></span><span class="iv-tdot"></span><span class="iv-tdot"></span></div><span class="iv-ttxt">Google Drive</span></div>
-              <div class="iv-body">
-                <div class="iv-row">Copiar &ldquo;Mi herramienta&rdquo; en Mi Drive</div>
-                <div class="iv-row" style="color:#8a8a99">Nombre: Mi herramienta (copia)</div>
-                <span class="iv-chip pri">Hacer una copia</span>
-              </div>
-            </div>
-            <div class="iv-note" style="margin-top:10px">Elige el nombre y la carpeta donde la quieres guardar.</div>
+      <div class="al-demo" id="como-se-instala" aria-label="Cómo se instala el Conciliador Automático V1">
+        <div class="al-demo__grid">
+          <div class="al-demo__copy" aria-live="polite">
+            <p class="al-demo__kicker"></p>
+            <h3 class="al-demo__title"></h3>
+            <p class="al-demo__body"></p>
+            <div class="al-demo__extra"></div>
           </div>
+          <div class="al-demo__stage"><canvas aria-hidden="true"></canvas></div>
         </div>
-
-        <div class="dscene" id="is1">
-          <div class="d-pill anim"><div class="d-dot">2</div><span class="d-pilltxt">Paso 2 - abre &ldquo;Configurar herramienta&rdquo;</span></div>
-          <div class="d-h anim">Abre <em>&ldquo;Configurar herramienta&rdquo;</em></div>
-          <div class="d-sub anim">En tu copia, abre el menu de la barra superior y elige &ldquo;Tu herramienta &mdash; Ambilor.Lab&rdquo;. Se abre un panel llamado &ldquo;Configurar herramienta&rdquo;, que te va guiando paso a paso.</div>
-          <div class="anim">
-            <div class="iv-win">
-              <div class="iv-tbar"><div class="iv-tdots"><span class="iv-tdot"></span><span class="iv-tdot"></span><span class="iv-tdot"></span></div><span class="iv-ttxt">Google Sheets &mdash; menu</span></div>
-              <div class="iv-body">
-                <span class="iv-chip">Tu herramienta &mdash; Ambilor.Lab</span>
-                <span class="iv-chip on">Configurar herramienta</span>
-              </div>
-            </div>
-          </div>
+        <div class="al-demo__controls">
+          <button class="al-demo__btn" type="button" data-act="prev" aria-label="Paso anterior">&#8592;</button>
+          <button class="al-demo__btn al-demo__btn--play" type="button" data-act="play" aria-label="Pausar">&#9646;&#9646;</button>
+          <button class="al-demo__btn" type="button" data-act="next" aria-label="Paso siguiente">&#8594;</button>
+          <ol class="al-demo__steps"></ol>
+          <span class="al-demo__count">1 de 6</span>
         </div>
-
-        <div class="dscene" id="is2">
-          <div class="d-pill anim"><div class="d-dot">3</div><span class="d-pilltxt">Paso 3 - autoriza el acceso</span></div>
-          <div class="d-h anim">Autoriza el <em>acceso</em></div>
-          <div class="d-sub anim">La primera vez, Google te pide permiso para leer tu planilla y mostrar el panel. Aparece en una pantalla de Google, no dentro de la herramienta. Acepta y sigue.</div>
-          <div class="anim">
-            <div class="iv-win">
-              <div class="iv-tbar"><div class="iv-tdots"><span class="iv-tdot"></span><span class="iv-tdot"></span><span class="iv-tdot"></span></div><span class="iv-ttxt">Google pide permiso</span></div>
-              <div class="iv-body">
-                <div class="iv-row">La herramienta necesita leer y editar tu planilla.</div>
-                <span class="iv-chip">Cancelar</span>
-                <span class="iv-chip pri">Continuar</span>
-              </div>
-            </div>
-            <div class="iv-note" style="margin-top:10px">El boton de accion puede decir Continuar o Aceptar segun tu navegador.</div>
-          </div>
-        </div>
-
-        <div class="dscene" id="is3">
-          <div class="d-pill anim"><div class="d-dot">4</div><span class="d-pilltxt">Paso 4 - publica tu panel</span></div>
-          <div class="d-h anim">Publica tu <em>panel</em></div>
-          <div class="d-sub anim">Desde el editor de Apps Script, publica el panel como aplicacion web con acceso &ldquo;Solo yo&rdquo;. Asi queda privado en tu cuenta: nadie mas lo ve.</div>
-          <div class="anim">
-            <div class="iv-win">
-              <div class="iv-tbar"><div class="iv-tdots"><span class="iv-tdot"></span><span class="iv-tdot"></span><span class="iv-tdot"></span></div><span class="iv-ttxt">Google Apps Script</span></div>
-              <div class="iv-body">
-                <span class="iv-chip">Implementar</span>
-                <span class="iv-chip on">Nueva implementacion</span>
-                <span class="iv-chip on">Aplicacion web</span>
-                <span class="iv-chip pri">Solo yo</span>
-              </div>
-            </div>
-            <div class="iv-note" style="margin-top:10px">&ldquo;Solo yo&rdquo; significa privado. No elijas &ldquo;Cualquiera&rdquo;.</div>
-          </div>
-        </div>
-
-        <div class="dscene" id="is4">
-          <div class="d-pill anim"><div class="d-dot">5</div><span class="d-pilltxt">Paso 5 - Abrelo y empieza</span></div>
-          <div class="d-h anim">Abrelo y <em>empieza</em></div>
-          <div class="d-sub anim">Vuelve a tu planilla y abre el panel. La herramienta verifica que la instalacion quedo correcta y te deja entrar.</div>
-          <div class="anim">
-            <div class="iv-win">
-              <div class="iv-tbar"><div class="iv-tdots"><span class="iv-tdot"></span><span class="iv-tdot"></span><span class="iv-tdot"></span></div><span class="iv-ttxt">Panel de la herramienta</span></div>
-              <div class="iv-body">
-                <span class="iv-chip">Verificar instalacion</span><span class="iv-chip pri">Abrir panel</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="dscene" id="is5">
-          <div class="d-pill anim"><div class="d-dot">&#10003;</div><span class="d-pilltxt">Listo</span></div>
-          <div class="d-h anim">Listo. Ya quedo <em>instalado</em>.</div>
-          <div class="d-sub anim">No queda nada por instalar ni por pagar. Todo funciona dentro de tu propia cuenta de Google.</div>
-          <div class="iv-cards anim">
-            <div class="iv-card">Es privado: la herramienta vive en tu cuenta de Google, no en un servidor nuestro.</div>
-            <div class="iv-card">Es tuyo: no dependes de una suscripcion ni de una cuota de uso.</div>
-            <div class="iv-card">Si algo no coincide con lo que ves, escribeme antes de continuar.</div>
-          </div>
-        </div>
-
-        <div class="dprog" id="iprog"></div>
-        <div class="dctrl">
-          <div class="dctrl-left">
-            <button class="dcbtn" onclick="inav(-1)">&#8592;</button>
-            <div class="dcdots" id="idots"></div>
-            <button class="dcbtn" id="ippbtn" onclick="itoggle()">&#9646;&#9646;</button>
-            <button class="dcbtn" onclick="inav(1)">&#8594;</button>
-          </div>
-          <span class="dctr" id="ictr">1 de 6</span>
-        </div>
+        <p class="al-demo__note">Pantallas ilustrativas. Los textos y botones pueden variar levemente según tu navegador e idioma de Google.</p>
       </div>
     </div>
 
@@ -2429,5 +2346,473 @@ requestAnimationFrame(frame);
 })();
 })();
 </script>
+
+<!-- Demo 3D "Como se instala" (three.js). -->
+<script>
+/* Demo 3D de instalacion del Conciliador Automatico V1. */
+(function(){
+const TEX_S = 1.6;
+const root = document.getElementById('como-se-instala');
+if (!root) return;
+const CONTACT_HREF = '#contacto';
+
+const STEPS = [
+  { a:0, b:5.2, short:'Copia', kicker:'Paso 1: haz tu copia', title:'Haz tu copia',
+    body:'Abre el enlace que te enviamos y elige “Hacer una copia”. Tu copia se abre en tu Drive y trae la herramienta adentro, con su código ya incluido.' },
+  { a:5.2, b:10.4, short:'Configurar', kicker:'Paso 2: abre “Configurar herramienta”', title:'Abre “Configurar herramienta”',
+    body:'En tu copia, abre el menú de la barra superior y elige “Tu herramienta — Ambilor.Lab”. Se abre un panel llamado “Configurar herramienta”, que te va guiando paso a paso.' },
+  { a:10.4, b:14.8, short:'Autorizar', kicker:'Paso 3: autoriza el acceso', title:'Autoriza el acceso',
+    body:'La primera vez, Google te pide permiso para leer tu planilla y mostrar el panel. Aparece en una pantalla de Google, no dentro de la herramienta. Acepta y sigue.',
+    tip:'El botón puede decir “Continuar” o “Aceptar” según tu navegador.' },
+  { a:14.8, b:21.2, short:'Publicar', kicker:'Paso 4: publica tu panel', title:'Publica tu panel',
+    body:'Desde el editor de Apps Script, publica el panel como aplicación web con acceso “Solo yo”. Así queda privado en tu cuenta: nadie más lo ve.',
+    tip:'“Solo yo” significa privado. No elijas “Cualquiera”.' },
+  { a:21.2, b:26.6, short:'Abrir', kicker:'Paso 5: ábrelo y empieza', title:'Ábrelo y empieza',
+    body:'Vuelve a tu planilla y abre el panel. La herramienta verifica que la instalación quedó correcta y te deja entrar.' },
+  { a:26.6, b:31, short:'Listo', kicker:'Listo', title:'Ya quedó instalado',
+    body:'No queda nada por instalar ni por pagar. Todo funciona dentro de tu propia cuenta de Google.',
+    checks:['Es privado: la herramienta vive en tu cuenta de Google, no en un servidor nuestro.', 'Es tuyo: no dependes de una suscripción ni de una cuota de uso.'],
+    contact:'Si algo no coincide con lo que ves, escríbeme antes de continuar.' }
+];
+const DUR = 31;
+
+const canvas = root.querySelector('canvas');
+const stage = root.querySelector('.al-demo__stage');
+const copy = root.querySelector('.al-demo__copy');
+const elK = root.querySelector('.al-demo__kicker'), elT = root.querySelector('.al-demo__title');
+const elB = root.querySelector('.al-demo__body'), elX = root.querySelector('.al-demo__extra');
+const elCount = root.querySelector('.al-demo__count');
+const playBtn = root.querySelector('[data-act="play"]');
+const list = root.querySelector('.al-demo__steps');
+const fills = STEPS.map((s, i) => {
+  const li = document.createElement('li');
+  li.innerHTML = `<button class="al-demo__step" type="button" aria-label="Ir a: ${s.kicker}"><span class="al-demo__track"><i></i></span><span class="al-demo__label">${s.short}</span></button>`;
+  li.firstChild.addEventListener('click', () => go(i));
+  list.appendChild(li);
+  return { fill: li.querySelector('i'), btn: li.firstChild };
+});
+
+const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const HOLD = 0.45;
+let T = 0, playing = !reduce, current = -1, visible = true, needsRender = true;
+
+function fillCopy(i){
+  const s = STEPS[i];
+  elK.textContent = s.kicker; elT.textContent = s.title; elB.textContent = s.body;
+  elX.innerHTML = '';
+  if (s.tip) { const p = document.createElement('p'); p.className = 'al-demo__tip'; p.textContent = s.tip; elX.appendChild(p); }
+  if (s.checks) {
+    const ul = document.createElement('ul'); ul.className = 'al-demo__checks';
+    s.checks.forEach(c => { const li = document.createElement('li'); li.textContent = c; ul.appendChild(li); });
+    elX.appendChild(ul);
+  }
+  if (s.contact) { const a = document.createElement('a'); a.className = 'al-demo__contact'; a.href = CONTACT_HREF; a.textContent = s.contact; elX.appendChild(a); }
+}
+function setStep(i){
+  if (i === current) return;
+  const first = current === -1;
+  current = i;
+  elCount.textContent = `${i + 1} de ${STEPS.length}`;
+  fills.forEach((f, j) => { if (j === i) f.btn.setAttribute('aria-current', 'step'); else f.btn.removeAttribute('aria-current'); });
+  if (first || reduce) { fillCopy(i); return; }
+  copy.classList.add('is-changing');
+  setTimeout(() => { fillCopy(i); copy.classList.remove('is-changing'); }, 280);
+}
+const stepOf = t => { for (let i = STEPS.length - 1; i >= 0; i--) if (t >= STEPS[i].a) return i; return 0; };
+function go(i){
+  i = (i + STEPS.length) % STEPS.length;
+  T = playing ? STEPS[i].a + 0.001 : STEPS[i].b - HOLD;
+  setStep(i); needsRender = true;
+}
+function setPlaying(p){
+  playing = p;
+  playBtn.textContent = p ? '▮▮' : '▶';
+  playBtn.setAttribute('aria-label', p ? 'Pausar' : 'Reproducir');
+  if (p && T >= STEPS[current].b - HOLD - 0.01) T = STEPS[current].a + 0.001;
+  needsRender = true;
+}
+root.querySelector('[data-act="prev"]').addEventListener('click', () => go(current - 1));
+root.querySelector('[data-act="next"]').addEventListener('click', () => go(current + 1));
+playBtn.addEventListener('click', () => setPlaying(!playing));
+root.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') { go(current + 1); e.preventDefault(); }
+  if (e.key === 'ArrowLeft') { go(current - 1); e.preventDefault(); }
+});
+if (reduce) T = STEPS[0].b - HOLD;
+setStep(stepOf(T));
+
+if (!window.THREE) return;
+const FONT = getComputedStyle(root).fontFamily || 'system-ui, sans-serif';
+const C = { paper:'#eef2f7', ink:'#12304d', muted:'#4f6983', brand:'#1f5c99', brandDark:'#164a7d', hi:'#f5c84c', soft:'#8aa2bb', line:'#c9d5e3', ok:'#2f8a5b', warn:'#e08a2c' };
+const clamp = (x,a=0,b=1) => Math.min(b, Math.max(a, x));
+const ease = x => { x = clamp(x); return x < .5 ? 4*x*x*x : 1 - Math.pow(-2*x+2, 3)/2; };
+const easeOut = x => { x = clamp(x); return 1 - Math.pow(1-x, 3); };
+const lerp = (a,b,t) => a + (b-a)*t;
+
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
+renderer.outputEncoding = THREE.sRGBEncoding;
+renderer.setClearColor(0x000000, 0);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
+const ANISO = renderer.capabilities.getMaxAnisotropy();
+const basic = (opts) => new THREE.MeshBasicMaterial(Object.assign({ transparent:true, side:THREE.DoubleSide, depthWrite:false }, opts));
+const col = hex => new THREE.Color(hex).convertSRGBToLinear();
+
+const CW = 1200, CH = 950, PW = 4.8, PH = PW * CH / CW;
+function rr(g,x,y,w,h,r){ g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }
+function txt(g, s, x, y, size, weight, color, align = 'left'){ g.font = `${weight} ${size}px ${FONT}`; g.fillStyle = color; g.textAlign = align; g.textBaseline = 'middle'; g.fillText(s, x, y); }
+function wrap(g, s, x, y, maxW, size, weight, color, lh = 1.3){
+  g.font = `${weight} ${size}px ${FONT}`; g.fillStyle = color; g.textAlign = 'left'; g.textBaseline = 'middle';
+  let line = '', yy = y;
+  s.split(' ').forEach(w => { const t = line ? line + ' ' + w : w; if (g.measureText(t).width > maxW && line) { g.fillText(line, x, yy); line = w; yy += size*lh; } else line = t; });
+  g.fillText(line, x, yy); return yy;
+}
+const press = (lt, tc) => clamp(1 - Math.abs(lt - tc) / 0.15);
+function btn(g, x, y, w, h, label, kind, pr = 0, size = 24){
+  const i = pr * 4;
+  rr(g, x + i, y + i, w - i*2, h - i*2, (h - i*2) / 2);
+  if (kind === 'primary') { g.fillStyle = pr > 0 ? C.brandDark : C.brand; g.fill(); txt(g, label, x + w/2, y + h/2 + 1, size, 800, '#fff', 'center'); }
+  else if (kind === 'disabled') { g.fillStyle = '#e3e9f0'; g.fill(); txt(g, label, x + w/2, y + h/2 + 1, size, 700, C.soft, 'center'); }
+  else { g.strokeStyle = C.line; g.lineWidth = 3; g.stroke(); if (pr > 0) { g.fillStyle = '#eef2f7'; g.fill(); } txt(g, label, x + w/2, y + h/2 + 1, size, 700, C.ink, 'center'); }
+}
+function base(g, title){
+  g.clearRect(0, 0, CW, CH);
+  g.fillStyle = '#ffffff'; rr(g, 0, 0, CW, CH, 34); g.fill();
+  g.save(); rr(g, 0, 0, CW, CH, 34); g.clip();
+  g.fillStyle = '#eef2f7'; g.fillRect(0, 0, CW, 76);
+  g.fillStyle = C.line; g.fillRect(0, 76, CW, 2);
+  g.restore();
+  g.fillStyle = C.brand; rr(g, 30, 22, 32, 32, 8); g.fill();
+  txt(g, title, 78, 39, 26, 700, C.ink);
+}
+function overlay(g, a){ g.save(); rr(g, 0, 0, CW, CH, 34); g.clip(); g.fillStyle = `rgba(18,48,77,${0.32*a})`; g.fillRect(0, 0, CW, CH); g.restore(); }
+function dialog(g, x, y, w, h){ g.save(); g.shadowColor = 'rgba(18,48,77,.25)'; g.shadowBlur = 40; g.shadowOffsetY = 12; g.fillStyle = '#fff'; rr(g, x, y, w, h, 24); g.fill(); g.restore(); }
+function banner(g, x, y, w, h, label, color = C.ok){ g.fillStyle = color; rr(g, x, y, w, h, h/2); g.fill(); txt(g, label, x + w/2, y + h/2 + 1, 24, 800, '#fff', 'center'); }
+function checkDot(g, x, y, on, pop = 1){
+  g.beginPath(); g.arc(x, y, 18 * (on ? pop : 1), 0, Math.PI*2);
+  if (on) { g.fillStyle = C.ok; g.fill(); txt(g, '✓', x, y + 1, 22, 800, '#fff', 'center'); }
+  else { g.strokeStyle = C.line; g.lineWidth = 3; g.stroke(); }
+}
+function sheetIcon(g, x, y, s, color = C.ok){
+  g.fillStyle = color; rr(g, x, y, s, s*1.2, s*0.14); g.fill();
+  g.strokeStyle = '#fff'; g.lineWidth = Math.max(2, s*0.06);
+  for (let k = 1; k <= 3; k++) { g.beginPath(); g.moveTo(x + s*0.2, y + s*0.3*k); g.lineTo(x + s*0.8, y + s*0.3*k); g.stroke(); }
+  g.beginPath(); g.moveTo(x + s*0.5, y + s*0.2); g.lineTo(x + s*0.5, y + s); g.stroke();
+}
+
+const DRAW = [
+  (g, lt) => {
+    base(g, 'Google Drive');
+    txt(g, 'Mi Drive', 36, 130, 24, 800, C.ink); txt(g, 'Recientes', 36, 178, 22, 600, C.muted); txt(g, 'Compartidos', 36, 222, 22, 600, C.muted);
+    g.fillStyle = C.line; g.fillRect(230, 96, 2, CH - 130);
+    txt(g, 'Nombre', 270, 128, 20, 700, C.soft);
+    const files = ['Presupuesto 2026', 'Informe mensual', 'Cartolas septiembre', 'Proveedores'];
+    const nIn = easeOut((lt - 2.7) / 0.4);
+    const rowY = k => 190 + k*70;
+    if (nIn > 0) {
+      g.globalAlpha = nIn;
+      const hl = 1 - ease((lt - 3.6) / 1.0);
+      g.fillStyle = `rgba(245,200,76,${0.55*hl})`; g.fillRect(250, rowY(0) - 32, CW - 280, 64);
+      sheetIcon(g, 272, rowY(0) - 22, 36); txt(g, 'Mi herramienta (copia)', 330, rowY(0), 24, 800, C.ink);
+      txt(g, 'ahora', CW - 60, rowY(0), 20, 600, C.soft, 'right');
+      g.globalAlpha = 1;
+    }
+    files.forEach((f, k) => {
+      const y = rowY(k + nIn);
+      g.strokeStyle = C.line; g.lineWidth = 2; g.beginPath(); g.moveTo(250, y + 35); g.lineTo(CW - 30, y + 35); g.stroke();
+      sheetIcon(g, 272, y - 22, 36, C.soft); txt(g, f, 330, y, 24, 600, C.ink);
+    });
+    const d = 1 - ease((lt - 2.4) / 0.35);
+    if (d > 0) {
+      overlay(g, d); g.globalAlpha = d;
+      dialog(g, 200, 190, 800, 540);
+      txt(g, 'Copiar “Mi herramienta” en Mi Drive', 240, 260, 32, 800, C.ink);
+      txt(g, 'Nombre', 240, 330, 22, 700, C.muted);
+      g.strokeStyle = C.brand; g.lineWidth = 3; rr(g, 240, 352, 720, 64, 12); g.stroke();
+      txt(g, 'Mi herramienta (copia)', 262, 385, 24, 600, C.ink);
+      txt(g, 'Carpeta', 240, 450, 22, 700, C.muted);
+      g.strokeStyle = C.line; rr(g, 240, 472, 720, 64, 12); g.stroke();
+      txt(g, 'Mi Drive ▾', 262, 505, 24, 600, C.ink);
+      txt(g, 'Elige el nombre y la carpeta donde la quieres guardar.', 240, 580, 21, 400, C.muted);
+      btn(g, 520, 632, 180, 62, 'Cancelar', 'ghost');
+      btn(g, 716, 632, 244, 62, 'Hacer una copia', 'primary', press(lt, 2.25));
+      g.globalAlpha = 1;
+    }
+    const ts = easeOut((lt - 3.0) / 0.35);
+    if (ts > 0) { g.globalAlpha = ts; g.fillStyle = C.ink; rr(g, 330, 850 + (1-ts)*20, 540, 64, 32); g.fill(); txt(g, '✓ Copia creada en Mi Drive', 600, 883 + (1-ts)*20, 24, 700, '#fff', 'center'); g.globalAlpha = 1; }
+  },
+  (g, lt) => {
+    base(g, 'Google Sheets');
+    sheetIcon(g, 30, 98, 30); txt(g, 'Mi herramienta (copia)', 76, 118, 26, 700, C.ink);
+    let x = 32;
+    ['Archivo','Editar','Ver','Insertar','Datos','Extensiones'].forEach(m => { txt(g, m, x, 168, 21, 600, C.muted); g.font = `600 21px ${FONT}`; x += g.measureText(m).width + 26; });
+    const open = lt > 1.05 && lt < 1.95;
+    g.font = `800 21px ${FONT}`; const mw = g.measureText('Tu herramienta — Ambilor.Lab').width;
+    if (open || (lt > 0.85 && lt < 1.05)) { g.fillStyle = 'rgba(31,92,153,.12)'; rr(g, 770, 148, mw + 20, 40, 10); g.fill(); }
+    txt(g, 'Tu herramienta — Ambilor.Lab', 780, 168, 21, 800, C.brand);
+    g.fillStyle = '#f6f8fb'; g.fillRect(0, 196, CW, 38);
+    g.strokeStyle = C.line; g.lineWidth = 1.5;
+    for (let c = 0; c <= 8; c++) { const cx = 60 + c*150; g.beginPath(); g.moveTo(cx, 196); g.lineTo(cx, CH - 20); g.stroke(); if (c < 8) txt(g, 'ABCDEFGH'[c], cx + 75, 215, 18, 700, C.soft, 'center'); }
+    for (let r = 0; r < 18; r++) { const ry = 234 + r*40; g.beginPath(); g.moveTo(0, ry); g.lineTo(CW, ry); g.stroke(); txt(g, String(r + 1), 30, ry + 20, 16, 600, C.soft, 'center'); }
+    [[0,'FECHA'],[1,'DESCRIPCION'],[2,'IMPORTE']].forEach(([c, s]) => txt(g, s, 72 + c*150, 254, 17, 800, C.ink));
+    for (let r = 1; r < 8; r++) for (let c = 0; c < 3; c++) { g.fillStyle = '#dde5ee'; rr(g, 72 + c*150, 264 + r*40 - 6, [70, 110, 80][c], 12, 6); g.fill(); }
+    if (open) {
+      dialog(g, 770, 192, 380, 76);
+      const hov = lt > 1.65;
+      if (hov) { g.fillStyle = '#eef2f7'; g.fillRect(778, 200, 364, 60); }
+      txt(g, 'Configurar herramienta', 796, 230, 22, 700, C.ink);
+    }
+    const sp = ease((lt - 2.0) / 0.5);
+    if (sp > 0) {
+      const px = CW - 460*sp;
+      g.save(); rr(g, 0, 0, CW, CH, 34); g.clip();
+      g.fillStyle = '#fff'; g.fillRect(px, 196, 460, CH - 196);
+      g.fillStyle = C.brand; g.fillRect(px, 196, 5, CH - 196);
+      g.restore();
+      txt(g, 'Configurar herramienta', px + 36, 250, 26, 800, C.ink);
+      txt(g, 'Te guía paso a paso.', px + 36, 290, 20, 600, C.muted);
+      ['Autoriza el acceso', 'Publica tu panel', 'Ábrelo y empieza'].forEach((s, k) => {
+        const a = easeOut((lt - 2.5 - k*0.2) / 0.3); if (a <= 0) return;
+        g.globalAlpha = a;
+        const y = 340 + k*96;
+        g.strokeStyle = k === 0 ? C.brand : C.line; g.lineWidth = 3; rr(g, px + 30, y, 400, 76, 16); g.stroke();
+        g.beginPath(); g.arc(px + 72, y + 38, 20, 0, Math.PI*2); g.fillStyle = k === 0 ? C.brand : '#eef2f7'; g.fill();
+        txt(g, String(k + 1), px + 72, y + 39, 20, 800, k === 0 ? '#fff' : C.muted, 'center');
+        txt(g, s, px + 108, y + 38, 22, 700, C.ink);
+        g.globalAlpha = 1;
+      });
+    }
+  },
+  (g, lt) => {
+    base(g, 'Google');
+    const ok = lt > 1.5;
+    wrap(g, 'La herramienta quiere acceder a tu cuenta de Google', 120, 180, 900, 38, 800, C.ink, 1.2);
+    txt(g, 'La herramienta necesita leer y editar tu planilla.', 120, 300, 25, 400, C.muted);
+    ['Leer y editar tu planilla', 'Mostrar el panel de la herramienta'].forEach((s, k) => {
+      const y = 390 + k*80;
+      g.strokeStyle = C.line; g.lineWidth = 2; g.beginPath(); g.moveTo(120, y + 40); g.lineTo(1080, y + 40); g.stroke();
+      sheetIcon(g, 124, y - 18, 30, k ? C.brand : C.ok); txt(g, s, 180, y, 24, 600, C.ink);
+    });
+    g.globalAlpha = ok ? 0.35 : 1;
+    btn(g, 640, 640, 200, 64, 'Cancelar', 'ghost');
+    btn(g, 860, 640, 220, 64, 'Continuar', 'primary', press(lt, 1.35));
+    g.globalAlpha = 1;
+    const b = easeOut((lt - 1.5) / 0.35);
+    if (b > 0) { g.globalAlpha = b; banner(g, 120, 760 + (1-b)*16, 420, 64, '✓ Acceso autorizado'); g.globalAlpha = 1; }
+    txt(g, 'El botón puede decir Continuar o Aceptar según tu navegador.', 120, 880, 20, 400, C.soft);
+  },
+  (g, lt) => {
+    base(g, 'Google Apps Script');
+    btn(g, 900, 12, 270, 52, 'Implementar ▾', 'primary', press(lt, 0.95), 22);
+    txt(g, 'Archivos', 34, 124, 20, 700, C.soft);
+    g.fillStyle = 'rgba(31,92,153,.1)'; rr(g, 20, 150, 200, 50, 10); g.fill(); txt(g, 'Código.gs', 38, 175, 22, 700, C.ink);
+    g.fillStyle = C.line; g.fillRect(236, 78, 2, CH - 110);
+    [320, 520, 410, 280, 600, 460, 350, 540, 300, 480, 390, 260, 440, 330].forEach((w, k) => {
+      const y = 130 + k*52;
+      txt(g, String(k + 1), 280, y, 18, 600, C.soft, 'right');
+      g.fillStyle = k % 4 === 0 ? '#c9dcef' : '#e3e9f0'; rr(g, 310 + (k % 3 ? 30 : 0), y - 8, w, 16, 8); g.fill();
+    });
+    if (lt > 0.95 && lt < 1.65) {
+      dialog(g, 880, 72, 290, 70);
+      if (lt > 1.4) { g.fillStyle = '#eef2f7'; g.fillRect(888, 80, 274, 54); }
+      txt(g, 'Nueva implementación', 904, 107, 22, 700, C.ink);
+    }
+    const d = ease((lt - 1.6) / 0.3);
+    if (d > 0) {
+      overlay(g, d); g.globalAlpha = d;
+      dialog(g, 180, 140, 840, 740);
+      txt(g, 'Nueva implementación', 224, 205, 32, 800, C.ink);
+      txt(g, 'Tipo', 224, 275, 21, 700, C.muted);
+      g.strokeStyle = C.line; g.lineWidth = 3; rr(g, 224, 296, 752, 64, 12); g.stroke();
+      if (lt > 2.1) txt(g, '✓ Aplicación web', 246, 329, 24, 700, C.ok); else txt(g, 'Seleccionar tipo ▾', 246, 329, 24, 600, C.soft);
+      txt(g, 'Quién tiene acceso', 224, 410, 21, 700, C.muted);
+      const sel = lt > 2.9;
+      [['Solo yo', 470], ['Cualquiera', 540]].forEach(([s, y], k) => {
+        g.beginPath(); g.arc(250, y, 15, 0, Math.PI*2); g.strokeStyle = (sel && !k) ? C.brand : C.soft; g.lineWidth = 3; g.stroke();
+        if (sel && !k) { g.beginPath(); g.arc(250, y, 8, 0, Math.PI*2); g.fillStyle = C.brand; g.fill(); }
+        txt(g, s, 280, y, 24, (sel && !k) ? 800 : 600, C.ink);
+      });
+      const w = easeOut((lt - 3.0) / 0.3);
+      if (w > 0) {
+        g.globalAlpha = d * w; g.fillStyle = '#fff5e6'; rr(g, 224, 596, 752, 76, 14); g.fill();
+        g.fillStyle = C.warn; g.fillRect(224, 596, 6, 76);
+        txt(g, '“Solo yo” significa privado. No elijas “Cualquiera”.', 250, 634, 22, 700, C.ink);
+        g.globalAlpha = d;
+      }
+      if (lt < 4.1) btn(g, 756, 760, 220, 64, 'Implementar', 'primary', press(lt, 3.9));
+      const b = easeOut((lt - 4.1) / 0.35);
+      if (b > 0) { g.globalAlpha = d * b; banner(g, 224, 760, 520, 64, '✓ Panel publicado: solo tú lo ves'); }
+      g.globalAlpha = 1;
+    }
+  },
+  (g, lt) => {
+    base(g, 'Panel de la herramienta');
+    const dash = ease((lt - 3.1) / 0.4);
+    if (dash < 1) {
+      g.globalAlpha = 1 - dash;
+      txt(g, 'Instalación', 64, 150, 34, 800, C.ink);
+      txt(g, 'Comprueba que todo quedó bien antes de empezar.', 64, 198, 22, 400, C.muted);
+      btn(g, 64, 240, 340, 66, 'Verificar instalación', 'ghost', press(lt, 0.8));
+      ['Copia en tu Drive', 'Acceso autorizado', 'Panel publicado (Solo yo)'].forEach((s, k) => {
+        const tc = 1.0 + k*0.5, on = lt > tc, y = 370 + k*80;
+        checkDot(g, 90, y, on, 1 + Math.sin(clamp((lt - tc)/0.25)*Math.PI)*0.25);
+        txt(g, s, 130, y, 25, on ? 700 : 600, on ? C.ink : C.soft);
+      });
+      btn(g, 64, 640, 280, 66, 'Abrir panel', lt > 2.3 ? 'primary' : 'disabled', press(lt, 2.9));
+      g.globalAlpha = 1;
+    }
+    if (dash > 0) {
+      g.globalAlpha = dash;
+      const y0 = 100 + (1 - dash)*20;
+      g.fillStyle = C.brand; rr(g, 40, y0, CW - 80, 84, 20); g.fill();
+      txt(g, 'Ambilor.Lab', 72, y0 + 42, 30, 800, '#fff'); txt(g, 'Conciliador V1', CW - 72, y0 + 42, 26, 600, '#fff', 'right');
+      [['Panel', 60, true], ['Plantillas', 170, false], ['Configuracion', 320, false]].forEach(([s, x, on]) => {
+        txt(g, s, x, y0 + 130, 24, on ? 800 : 600, on ? C.ink : C.soft);
+        if (on) { g.font = `800 24px ${FONT}`; g.fillStyle = C.brand; g.fillRect(x, y0 + 148, g.measureText(s).width, 4); }
+      });
+      btn(g, 60, y0 + 180, CW - 120, 80, '▶  Ejecutar conciliacion', 'primary', 0, 30);
+      txt(g, 'Listo para ejecutar', 60, y0 + 300, 24, 600, C.soft);
+      const tw = (CW - 120 - 3*20) / 4;
+      [['0%', 'conciliacion'], ['0', 'pares'], ['0', 'pendientes'], ['$0', 'conciliado']].forEach(([v, l], i) => {
+        const x = 60 + i*(tw + 20);
+        g.fillStyle = '#eef2f7'; rr(g, x, y0 + 340, tw, 200, 20); g.fill();
+        txt(g, v, x + 22, y0 + 420, 56, 800, C.ink); txt(g, l, x + 22, y0 + 495, 22, 600, C.muted);
+      });
+      g.globalAlpha = 1;
+    }
+  },
+  (g, lt) => {
+    g.clearRect(0, 0, CW, CH);
+    g.fillStyle = '#ffffff'; rr(g, 0, 0, CW, CH, 34); g.fill();
+    const p = easeOut((lt - 0.1) / 0.4), pop = 1 + Math.sin(clamp((lt - 0.1)/0.4)*Math.PI)*0.18;
+    if (p > 0) { g.beginPath(); g.arc(600, 150, 64*p*pop, 0, Math.PI*2); g.fillStyle = C.ok; g.fill(); txt(g, '✓', 600, 154, 70*p, 800, '#fff', 'center'); }
+    txt(g, 'Listo. Ya quedó instalado.', 600, 272, 40, 800, C.ink, 'center');
+    const c = easeOut((lt - 0.6) / 0.4);
+    if (c > 0) {
+      g.globalAlpha = c;
+      g.setLineDash([14, 10]); g.strokeStyle = C.brand; g.lineWidth = 3; rr(g, 120, 340, 960, 360, 28); g.stroke(); g.setLineDash([]);
+      g.fillStyle = C.brand; rr(g, 150, 372, 26, 22, 5); g.fill();
+      g.beginPath(); g.arc(163, 372, 9, Math.PI, 0); g.strokeStyle = C.brand; g.lineWidth = 4; g.stroke();
+      txt(g, 'Tu cuenta de Google', 190, 384, 26, 800, C.brand);
+      g.globalAlpha = 1;
+    }
+    [['Planilla', 'tus datos', C.ok], ['Panel', 'solo tú lo ves', C.brand], ['Apps Script', 'el código', C.ink]].forEach(([s, sub, color], k) => {
+      const a = easeOut((lt - 0.9 - k*0.2) / 0.35); if (a <= 0) return;
+      const x = 170 + k*300, y = 440 + (1 - a)*20;
+      g.globalAlpha = a;
+      g.fillStyle = '#f6f8fb'; rr(g, x, y, 260, 210, 20); g.fill();
+      sheetIcon(g, x + 26, y + 30, 48, color);
+      txt(g, s, x + 26, y + 125, 28, 800, C.ink); txt(g, sub, x + 26, y + 168, 21, 600, C.muted);
+      g.globalAlpha = 1;
+    });
+    const l = easeOut((lt - 1.7) / 0.4);
+    if (l > 0) {
+      g.globalAlpha = l;
+      txt(g, '✓ Privado: nada sale de tu cuenta.', 150, 780, 25, 700, C.ink);
+      txt(g, '✓ Tuyo: sin suscripción ni cuota de uso.', 150, 836, 25, 700, C.ink);
+      g.globalAlpha = 1;
+    }
+  }
+];
+
+const CURSOR = [
+  { keys:[[1.4,1100,900],[2.1,860,664],[2.6,860,664],[3.3,1060,860]], clicks:[2.25] },
+  { keys:[[0.2,1100,820],[0.85,880,168],[1.2,880,168],[1.65,920,230],[1.95,920,230],[2.6,640,620]], clicks:[1.05,1.85] },
+  { keys:[[0.3,300,860],[1.15,970,672],[1.6,970,672],[2.3,1080,860]], clicks:[1.35] },
+  { keys:[[0.2,700,700],[0.8,1050,38],[1.05,1050,38],[1.4,1030,107],[1.7,1030,107],[2.7,256,472],[3.05,256,472],[3.7,866,792],[4.15,866,792],[4.8,1100,900]], clicks:[0.95,1.55,2.9,3.9] },
+  { keys:[[0.2,700,820],[0.65,230,273],[0.95,230,273],[2.55,200,673],[3.0,200,673],[3.6,900,880]], clicks:[0.8,2.9] },
+  null
+];
+
+const cards = DRAW.map(() => {
+  const cv = document.createElement('canvas'); cv.width = CW * TEX_S; cv.height = CH * TEX_S;
+  const g = cv.getContext('2d'); g.scale(TEX_S, TEX_S);
+  const tx = new THREE.CanvasTexture(cv); tx.encoding = THREE.sRGBEncoding; tx.anisotropy = ANISO;
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(PW, PH), basic({ map:tx })); m.renderOrder = 5; scene.add(m);
+  const sh = new THREE.Mesh(new THREE.PlaneGeometry(PW + 0.08, PH + 0.08), basic({ color:col(C.ink) })); sh.renderOrder = 4; scene.add(sh);
+  return { m, sh, g, tx };
+});
+const cursorGeo = new THREE.PlaneGeometry(0.24, 0.31); cursorGeo.translate(0.12, -0.155, 0);
+const ctex = (() => { const c = document.createElement('canvas'); c.width = 104 * TEX_S; c.height = 136 * TEX_S; const g = c.getContext('2d'); g.scale(TEX_S, TEX_S);
+  g.beginPath(); g.moveTo(8, 6); g.lineTo(8, 110); g.lineTo(34, 86); g.lineTo(52, 128); g.lineTo(70, 120); g.lineTo(52, 80); g.lineTo(88, 80); g.closePath();
+  g.fillStyle = C.ink; g.fill(); g.strokeStyle = '#fff'; g.lineWidth = 7; g.lineJoin = 'round'; g.stroke();
+  const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; return t; })();
+const cursor = new THREE.Mesh(cursorGeo, basic({ map:ctex })); cursor.renderOrder = 20; scene.add(cursor);
+const ring = new THREE.Mesh(new THREE.RingGeometry(0.06, 0.085, 40), basic({ color:col(C.brand) })); ring.renderOrder = 19; scene.add(ring);
+const tmp = new THREE.Vector3();
+const pxToLocal = (x, y) => tmp.set((x / CW - 0.5) * PW, (0.5 - y / CH) * PH, 0.04);
+
+function updateCards(t){
+  cards.forEach((c, i) => {
+    const s = STEPS[i];
+    const e = i === 0 ? ease((t + 0.3) / 0.7) : ease((t - (s.a - 0.35)) / 0.7);
+    const x = i === STEPS.length - 1 ? 0 : ease((t - (s.b - 0.35)) / 0.7);
+    const vis = e > 0.001 && x < 0.999;
+    c.m.visible = c.sh.visible = vis;
+    if (!vis) return;
+    DRAW[i](c.g, t - s.a); c.tx.needsUpdate = true;
+    c.m.position.set(lerp(5.6, 0, e) - 5.6*x, -0.05, -1.6*(1 - e) - 1.6*x);
+    c.m.rotation.set(-0.04, 0.55*(1 - e) - 0.55*x + Math.sin(t*0.5)*0.04*e*(1 - x), 0);
+    c.m.material.opacity = Math.min(e, 1 - x);
+    c.sh.position.set(c.m.position.x + 0.06, c.m.position.y - 0.08, c.m.position.z - 0.05);
+    c.sh.rotation.copy(c.m.rotation);
+    c.sh.material.opacity = 0.13 * Math.min(e, 1 - x);
+    c.m.updateMatrixWorld();
+  });
+}
+function updateCursor(t){
+  const i = stepOf(t), cfg = CURSOR[i], lt = t - STEPS[i].a;
+  cursor.visible = ring.visible = false;
+  if (!cfg) return;
+  const k = cfg.keys, first = k[0][0], last = k[k.length - 1][0];
+  const op = easeOut((lt - first + 0.2) / 0.2) * (1 - ease((lt - last) / 0.3));
+  if (op <= 0) return;
+  let px = k[0][1], py = k[0][2];
+  for (let n = 1; n < k.length; n++) {
+    if (lt >= k[n-1][0]) { const p = ease((lt - k[n-1][0]) / (k[n][0] - k[n-1][0])); px = lerp(k[n-1][1], k[n][1], p); py = lerp(k[n-1][2], k[n][2], p); }
+  }
+  const card = cards[i].m;
+  card.localToWorld(pxToLocal(px, py));
+  cursor.position.copy(tmp); cursor.rotation.copy(card.rotation);
+  const click = Math.max(0, ...cfg.clicks.map(c => clamp(1 - Math.abs(lt - c) / 0.1)));
+  cursor.scale.setScalar(1 - click*0.18);
+  cursor.material.opacity = op * card.material.opacity;
+  cursor.visible = true;
+  const rp = Math.max(...cfg.clicks.map(c => (lt >= c && lt < c + 0.45) ? (lt - c) / 0.45 : -1));
+  if (rp >= 0) {
+    ring.visible = true; ring.position.copy(tmp); ring.position.z -= 0.01; ring.rotation.copy(card.rotation);
+    ring.scale.setScalar(0.6 + rp*1.6); ring.material.opacity = (1 - rp) * 0.8 * op;
+  }
+}
+
+function resize(){
+  const w = Math.max(1, stage.clientWidth), h = Math.max(1, stage.clientHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h; camera.updateProjectionMatrix();
+  needsRender = true;
+}
+new ResizeObserver(resize).observe(stage); resize();
+if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible = es[0].isIntersecting; }, { threshold:0.05 }).observe(stage);
+
+let last = performance.now();
+function frame(now){
+  const dt = Math.min(0.05, (now - last) / 1000); last = now;
+  if (visible && (playing || needsRender)) {
+    if (playing) { T += dt; if (T >= DUR) T = 0; }
+    setStep(stepOf(T));
+    camera.position.set(Math.sin(T*0.3)*0.18, Math.cos(T*0.25)*0.1, 8.6);
+    camera.lookAt(0, 0, 0);
+    updateCards(T); updateCursor(T);
+    renderer.render(scene, camera);
+    fills.forEach((f, i) => { const s = STEPS[i]; f.fill.style.width = (clamp((T - s.a) / (s.b - s.a)) * 100) + '%'; });
+    needsRender = false;
+  }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+})();
+</script>
+
 </body>
 </html>
