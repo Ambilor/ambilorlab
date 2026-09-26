@@ -456,6 +456,7 @@ nav.scrolled .nav-links a{font-size:12px}
    three.js no carga o no hay WebGL, la seccion sigue mostrando
    texto real en vez de una caja vacia (modo .al-demo--no3d).
    ================================================================ */
+.demo-breakout{width:100%}
 .al-demo{
   --al-brand:#1F5C99; --al-brand-dark:#164a7d; --al-ink:#12304d; --al-muted:#4f6983;
   --al-paper:#eef2f7; --al-line:#c9d5e3; --al-hi:#f5c84c;
@@ -528,14 +529,19 @@ nav.scrolled .nav-links a{font-size:12px}
   .al-demo__copy{min-height:22rem}
   .al-demo--no3d .al-demo__grid{grid-template-columns:1fr}
 }
-/* Ventana baja (portatil con la barra del navegador abierta): el eje que
-   falta es el vertical, no el horizontal. Poner escena y texto en dos
-   columnas desperdicia el ancho que si sobra y hace que el bloque entre
-   completo en pantalla, con los controles a la vista mientras la escena
-   corre. Por eso el alto se aprieta con vh en todo el bloque. */
+/* Ventana baja (portatil con la barra del navegador abierta): lo que
+   falta es alto, no ancho. El limite era el container de 660px del sitio:
+   con escena y texto en dos columnas dentro de 612px no habia forma de
+   agrandar la escena sin estrujar el texto. Asi que el demo se saca de
+   la columna y se centra a 880px, y la escena se dimensiona con la altura
+   que sobra (62vh) en vez de con la columna. El rotulo "Ver en accion"
+   se queda en la columna del sitio para no desalinear nada, y el texto
+   conserva ancho de lectura. Ademas el bloque entra entero y los
+   controles quedan a la vista mientras la escena corre. */
 @media (min-width:640px) and (max-height:840px){
-  .al-demo__grid{grid-template-columns:minmax(0,.92fr) minmax(0,1fr); gap:clamp(20px,3vw,34px)}
-  .al-demo__stage{order:0; margin:0; max-width:none}
+  .demo-breakout{width:min(880px,calc(100vw - 3rem)); margin-left:50%; transform:translateX(-50%)}
+  .al-demo__grid{grid-template-columns:minmax(240px,.62fr) minmax(0,1fr); gap:clamp(20px,3vw,34px)}
+  .al-demo__stage{order:0; margin:0; max-width:min(100%,62vh)}
   .al-demo__copy{min-height:0}
   .al-demo--no3d .al-demo__grid{grid-template-columns:1fr}
 }
@@ -797,7 +803,8 @@ nav.scrolled .nav-links a{font-size:12px}
 
     <div class="demo-section">
       <div class="demo-label">Ver en accion</div>
-      <div class="al-demo" id="ver-en-accion" aria-label="Conciliador Automatico V1 en accion">
+      <div class="demo-breakout">
+        <div class="al-demo" id="ver-en-accion" aria-label="Conciliador Automatico V1 en accion">
         <div class="al-demo__grid">
           <div class="al-demo__copy">
             <p class="al-demo__kicker">El problema que resuelve</p>
@@ -856,6 +863,7 @@ nav.scrolled .nav-links a{font-size:12px}
           </ol>
           <a class="al-demo__cta al-demo__cta--fb" href="#incluye">Ver qué incluye</a>
         </div>
+      </div>
       </div>
     </div>
 
