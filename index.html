@@ -12,6 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
 <link rel="preconnect" href="https://www.googletagmanager.com">
 
 <!-- Favicon -->
@@ -241,108 +242,6 @@ footer{border-top:1px solid var(--borde);padding:1.5rem;text-align:center;font-f
 .d-h{font-size:22px;font-weight:600;color:#0a0a0a;line-height:1.22;letter-spacing:-.03em;margin-bottom:7px}
 .d-h em{font-style:normal;color:var(--azul)}
 .d-sub{font-size:13px;color:#666;line-height:1.6;max-width:460px;margin-bottom:16px}
-.d-stats{display:flex;gap:0}
-.d-stat{padding:13px 18px;border:1px solid #ebebeb}
-.d-stat+.d-stat{border-left:none}
-.d-stat:first-child{border-radius:8px 0 0 8px}
-.d-stat:last-child{border-radius:0 8px 8px 0}
-.d-statn{font-size:26px;font-weight:600;color:#0a0a0a;letter-spacing:-.04em;line-height:1;display:block;margin-bottom:3px;font-family:var(--mono)}
-.d-statl{font-size:10px;color:#999}
-.d-tblw{width:100%;max-width:460px;border:1px solid #ebebeb;border-radius:8px;overflow:hidden}
-.d-tbl{width:100%;border-collapse:collapse;font-size:11px}
-.d-tbl th{background:#fafafa;color:#999;padding:7px 11px;text-align:left;font-weight:500;font-size:10px;border-bottom:1px solid #ebebeb}
-.d-tbl td{padding:7px 11px;border-bottom:1px solid #f3f3f3;color:#444}
-.d-tbl tr:last-child td{border-bottom:none}
-.d-tbl tr.da td{background:#f0f8ff;color:#0a0a0a;font-weight:500}
-.d-tbl tr.db td{background:#f0fff7;color:#0a0a0a;font-weight:500}
-.d-steps{display:grid;grid-template-columns:1fr 1fr;gap:9px;max-width:460px;width:100%}
-.d-sitem{border:1px solid #ebebeb;border-radius:8px;padding:11px 13px;position:relative}
-.d-sitem::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--azul)}
-.d-sn{font-size:10px;font-weight:600;color:var(--azul);display:block;margin-bottom:3px}
-.d-st{font-size:11px;color:#555;line-height:1.4}
-.d-resw{width:100%;border:1px solid #ebebeb;border-radius:8px;overflow:hidden}
-.d-res{width:100%;border-collapse:collapse;font-size:10.5px}
-.d-res th{background:#fafafa;color:#999;padding:6px 9px;text-align:left;font-weight:500;font-size:9px;border-bottom:1px solid #ebebeb;text-transform:uppercase;letter-spacing:.02em;white-space:nowrap}
-.d-res td{padding:6px 9px;border-bottom:1px solid #f3f3f3;color:#444;white-space:nowrap}
-.d-res tr:last-child td{border-bottom:none}
-.d-res tr{opacity:0;transform:translateY(-6px);transition:opacity .35s ease,background .3s,transform .35s ease}
-.d-res tr.show{opacity:1;transform:translateY(0)}
-.d-res tr.rc td{background:#f0fff7}
-.d-res tr.rp td{background:#fffbf0}
-.d-res tr.flash td{background:#dcfce7}
-.d-res .amt{font-variant-numeric:tabular-nums;text-align:right}
-.d-res .amt.pos{color:#0f9d58;font-weight:500}
-.d-res .amt.neg{color:#d93025;font-weight:500}
-.d-res .grp{font-weight:600;color:#0a0a0a;font-size:9.5px}
-.d-res .det{color:#888;font-size:9px;max-width:150px;white-space:normal;line-height:1.35}
-.d-ok{display:inline-flex;align-items:center;gap:4px;color:#16a34a;font-weight:500;font-size:9.5px}
-.d-ok::before{content:'';width:5px;height:5px;border-radius:50%;background:#16a34a}
-.d-pend{display:inline-flex;align-items:center;gap:4px;color:#d97706;font-weight:500;font-size:9.5px}
-.d-pend::before{content:'';width:5px;height:5px;border-radius:50%;background:#d97706}
-.d-summary{display:flex;gap:16px;margin-top:12px;opacity:0;transition:opacity .4s}
-.d-summary.show{opacity:1}
-.d-sitm{display:flex;align-items:center;gap:6px;font-size:12px;color:#666}
-.d-sitm .dot{width:7px;height:7px;border-radius:50%}
-.d-sitm .dot.g{background:#16a34a}
-.d-sitm .dot.y{background:#d97706}
-
-/* Confirmacion visual de columnas (escena 1) */
-.d-colcheck{display:flex;align-items:center;gap:6px;font-size:10px;color:#16a34a;background:#f0fff7;border:1px solid #d1fae5;border-radius:0 0 8px 8px;padding:7px 11px;margin-top:-1px}
-.d-ccok{width:14px;height:14px;border-radius:50%;background:#16a34a;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0}
-
-/* Panel web mockup (escena 2) */
-.pw{border:1px solid #dadce0;border-radius:8px;overflow:hidden;max-width:460px;width:100%;font-size:10px;position:relative;background:#fff}
-.pw-bar{display:flex;align-items:center;gap:8px;padding:6px 10px;border-bottom:1px solid #f0f0f0;background:#fafafa;justify-content:space-between}
-.pw-logo{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--azul)}
-.pw-title{font-size:10px;color:#666;font-weight:500}
-.pw-tabs{display:flex;gap:2px;padding:4px 10px;border-bottom:1px solid #f0f0f0;background:#fff}
-.pw-tab{font-size:8px;color:#999;padding:2px 6px;border-radius:4px}
-.pw-tab.on{background:var(--azul);color:#fff}
-.pw-body{padding:12px}
-.pw-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}
-.pw-kpi{border:1px solid #ebebeb;border-radius:6px;padding:8px 6px;text-align:center}
-.pw-kv{font-size:14px;font-weight:600;color:#0a0a0a;font-family:var(--mono);font-variant-numeric:tabular-nums}
-.pw-kl{font-size:7.5px;color:#999;margin-top:2px;text-transform:uppercase;letter-spacing:.03em}
-.pw-run{display:inline-flex;align-items:center;gap:5px;background:var(--azul);color:#fff;font-size:9px;font-weight:500;padding:4px 10px;border-radius:5px;cursor:pointer;white-space:nowrap}
-.pw-status{margin-top:8px;font-size:10px;color:#666;display:flex;align-items:center;gap:5px}
-.pw-sd{width:5px;height:5px;border-radius:50%;background:#e0e0e0}
-.pw-sd.run{background:var(--azul);animation:msbl 1s step-end infinite}
-.pw-sd.ok{background:#0f9d58}
-.pw-cur{position:absolute;z-index:200;pointer-events:none;transition:top .45s ease,left .45s ease}
-.pw-cur svg{width:11px;height:11px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.4))}
-.pw-rip{position:absolute;width:13px;height:13px;border-radius:50%;border:1.5px solid rgba(26,115,232,.8);z-index:199;opacity:0;transform:scale(0)}
-.pw-rip.go{animation:msrp .28s ease-out forwards}
-
-@keyframes msrp{0%{opacity:.9;transform:scale(0)}100%{opacity:0;transform:scale(2.2)}}
-@keyframes msbl{50%{opacity:0}}
-
-/* Matching list (escena 4 - algoritmo) */
-.ml-wrap{border:1px solid #ebebeb;border-radius:10px;overflow:hidden;background:#fafafa;width:100%;max-width:460px;position:relative}
-.ml-head{display:grid;grid-template-columns:62px 1fr 1fr 84px 64px;padding:6px 12px;font-size:9px;font-weight:500;color:#999;background:#fff;border-bottom:1px solid #ebebeb;text-transform:uppercase;letter-spacing:.03em}
-.ml-body{position:relative;height:190px;overflow:hidden}
-.ml-row{position:absolute;left:0;right:0;display:grid;grid-template-columns:62px 1fr 1fr 84px 64px;padding:4px 12px;font-size:11px;align-items:center;background:#fff;border-bottom:1px solid #f2f2f2;transition:background .18s,box-shadow .18s,opacity .25s;opacity:1}
-.ml-row .id{color:#888;font-weight:500;font-size:10px}
-.ml-row .concept{color:#0a0a0a;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ml-row .resp{color:#666;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ml-row .amt{font-variant-numeric:tabular-nums;font-weight:500;text-align:right;font-size:11px}
-.ml-row .amt.pos{color:#0f9d58}
-.ml-row .amt.neg{color:#d93025}
-.ml-row.scanning{background:#f0f4ff;box-shadow:inset 3px 0 0 var(--azul)}
-.ml-row.matched-row{background:#f0fff7;box-shadow:inset 3px 0 0 #16a34a}
-.ml-row.pending-row{opacity:.35}
-.ml-tag{font-size:8px;font-weight:600;padding:1.5px 6px;border-radius:100px;white-space:nowrap}
-.ml-tag.ok{background:#dcfce7;color:#16a34a}
-.ml-tag.scan{background:#e0e9fb;color:var(--azul)}
-.ml-tag.wait{background:#f3f3f3;color:#bbb}
-.ml-badge{justify-self:end}
-.ml-speed{position:absolute;top:0;right:0;font-size:9px;color:var(--azul);background:#f0f4ff;padding:2px 8px;border-radius:0 0 0 8px;font-weight:500}
-.ml-counters{display:flex;justify-content:center;gap:28px;margin-top:12px}
-.ml-cstat{text-align:center}
-.ml-cn{font-size:18px;font-weight:600;color:#0a0a0a;font-variant-numeric:tabular-nums;font-family:var(--mono)}
-.ml-cl{font-size:10px;color:#999;margin-top:2px}
-.ml-ptrack{height:3px;background:#ebebeb;border-radius:2px;margin-top:10px;overflow:hidden;width:100%;max-width:460px}
-.ml-pfill{height:100%;background:var(--azul);width:0%;border-radius:2px}
-
 
 .deco{position:absolute;right:0;top:0;bottom:48px;width:140px;pointer-events:none;overflow:hidden}
 .deco-line{position:absolute;right:26px;top:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent 0%,#ebebeb 20%,#ebebeb 80%,transparent 100%)}
@@ -360,7 +259,7 @@ footer{border-top:1px solid var(--borde);padding:1.5rem;text-align:center;font-f
 
 @media(max-width:520px){
   .demo-wrap{height:640px}
-  .d-stats,.dctrl{flex-wrap:wrap}
+  .dctrl{flex-wrap:wrap}
   .deco{display:none}
 }
 
@@ -544,6 +443,122 @@ nav.scrolled .nav-links a{font-size:12px}
 [data-theme="dark"] .iv-mitem,[data-theme="dark"] .iv-mhead{color:#9898b8}
 [data-theme="dark"] .iv-mitem.on{background:#16233a;color:#7db4e8}
 [data-theme="dark"] .iv-note{color:#7878a0}
+
+/* ================================================================
+   DEMO 3D "VER EN ACCION" (three.js) - Conciliador Automatico V1
+   Adaptado desde ver-en-accion-conciliador.html al ancho real del
+   sitio (--max:660px) y al dark mode.
+   NOTA de diseno: el canvas 3D se mantiene en tema claro a
+   proposito, en light y en dark. Representa una captura del panel
+   real, no un elemento de la pagina; asi se lee igual que una
+   imagen de producto y no compite con la paleta del sitio.
+   El copy de los 6 pasos vive en el HTML (mejora progresiva): si
+   three.js no carga o no hay WebGL, la seccion sigue mostrando
+   texto real en vez de una caja vacia (modo .al-demo--no3d).
+   ================================================================ */
+.al-demo{
+  --al-brand:#1F5C99; --al-brand-dark:#164a7d; --al-ink:#12304d; --al-muted:#4f6983;
+  --al-paper:#eef2f7; --al-line:#c9d5e3; --al-hi:#f5c84c;
+  color:var(--al-ink); max-width:none; margin:0; padding:0; box-sizing:border-box;
+  display:block; /* el sitio oculta toda seccion salvo las pestanas activas: no usar esa etiqueta aqui */
+  container-type:inline-size;
+}
+.al-demo *{box-sizing:border-box}
+.al-demo__grid{display:grid; grid-template-columns:1fr; gap:26px; align-items:center}
+.al-demo__copy{min-height:0; display:flex; flex-direction:column; justify-content:center; transition:opacity .28s ease, transform .28s ease}
+.al-demo__copy.is-changing{opacity:0; transform:translateY(8px)}
+.al-demo__kicker{margin:0 0 .6rem; color:var(--al-brand); font-weight:600; font-size:1rem}
+.al-demo__title{margin:0 0 1rem; font-size:clamp(1.5rem,2.6vw,2.125rem); line-height:1.12; font-weight:800; letter-spacing:-.01em; text-wrap:balance}
+.al-demo__body{margin:0; font-size:1.0625rem; line-height:1.6; color:var(--al-muted); max-width:46ch}
+.al-demo__stats{display:flex; flex-wrap:wrap; gap:14px 32px; margin:1.6rem 0 0; padding:0; list-style:none}
+.al-demo__stats li{display:flex; flex-direction:column}
+.al-demo__stats strong{font-size:2rem; line-height:1; font-weight:800; color:var(--al-ink); font-variant-numeric:tabular-nums}
+.al-demo__stats span{margin-top:.35rem; font-size:.9rem; color:var(--al-muted)}
+.al-demo__map{margin:1.4rem 0 0; padding:0; list-style:none; display:flex; flex-direction:column; gap:.45rem; font-size:.95rem}
+.al-demo__map li{display:flex; align-items:center; gap:.6rem}
+.al-demo__map b{display:inline-block; min-width:6.2rem; padding:.2rem .7rem; border-radius:999px; background:#2f8a5b; color:#fff; font-weight:700; font-size:.85rem}
+.al-demo__map code{font-family:inherit; font-weight:700; color:var(--al-brand)}
+.al-demo__cta{display:inline-block; margin-top:1.6rem; padding:.85rem 1.5rem; border-radius:999px; background:var(--al-brand); color:#fff; font-weight:700; text-decoration:none}
+.al-demo__cta:hover{background:var(--al-brand-dark)}
+.al-demo__cta:focus-visible{outline:3px solid var(--al-brand); outline-offset:3px}
+.al-demo__stage{
+  order:-1; position:relative; width:100%; max-width:340px; margin:0 auto; aspect-ratio:1/1;
+  border-radius:22px; overflow:hidden;
+  background-color:var(--al-paper);
+  background-image:linear-gradient(rgba(31,92,153,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(31,92,153,.08) 1px,transparent 1px);
+  background-size:32px 32px; box-shadow:inset 0 0 0 1px var(--al-line);
+}
+.al-demo__stage canvas{display:block; width:100%; height:100%}
+.al-demo__controls{display:flex; align-items:center; gap:10px; margin-top:26px}
+.al-demo__btn{
+  flex:none; width:44px; height:44px; border-radius:50%; border:2px solid var(--al-brand);
+  background:transparent; color:var(--al-brand); font:inherit; font-weight:800; font-size:1.05rem;
+  display:grid; place-items:center; cursor:pointer; padding:0;
+}
+.al-demo__btn--play{background:var(--al-brand); color:#fff}
+.al-demo__btn:hover{background:var(--al-brand); color:#fff}
+.al-demo__btn:focus-visible, .al-demo__step:focus-visible{outline:3px solid var(--al-brand); outline-offset:3px}
+.al-demo__steps{flex:1; display:grid; grid-template-columns:repeat(6,1fr); gap:8px; margin:0 0 0 10px; padding:0; list-style:none}
+.al-demo__step{width:100%; background:none; border:0; padding:6px 0; cursor:pointer; text-align:left; font:inherit; color:var(--al-muted)}
+.al-demo__track{display:block; height:4px; border-radius:2px; background:var(--al-line); overflow:hidden}
+.al-demo__track i{display:block; height:100%; width:0; background:var(--al-brand)}
+.al-demo__label{display:block; margin-top:8px; font-size:.8rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.al-demo__step[aria-current="step"] .al-demo__label{color:var(--al-ink); font-weight:700}
+.al-demo__note{margin:14px 0 0; font-size:.85rem; color:var(--al-muted)}
+.al-demo__count{flex:none; margin-left:8px; font-size:.9rem; color:var(--al-muted); font-variant-numeric:tabular-nums}
+/* Fallback sin 3D: se oculta el canvas y se listan los 6 pasos en texto. */
+.al-demo__fallback{display:none}
+.al-demo--no3d .al-demo__stage,
+.al-demo--no3d .al-demo__controls{display:none}
+.al-demo--no3d .al-demo__fallback{display:block; margin:1.6rem 0 0; padding-top:1.4rem; border-top:1px solid var(--al-line)}
+.al-demo__fbh{margin:0 0 1rem; font-size:.8rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--al-muted)}
+.al-demo__fblist{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:1.1rem}
+.al-demo__fblist li{display:flex; flex-direction:column}
+.al-demo__fbk{font-size:.75rem; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--al-brand)}
+.al-demo__fbt{font-size:1.05rem; font-weight:700; line-height:1.25; margin:.15rem 0 .3rem}
+.al-demo__fbb{font-size:.95rem; line-height:1.55; color:var(--al-muted); margin:0; max-width:56ch}
+/* Mejora progresiva: 2 columnas solo si el contenedor llega a 900px.
+   Hoy el .container esta topado a 660px, asi que nunca se activa.
+   Se usa @container y NO un media query de viewport: un
+   min-width de viewport se activaria en pantallas anchas y
+   estrangularia el copy dentro de la columna de 660px. */
+@container (min-width:900px){
+  .al-demo__grid{grid-template-columns:minmax(0,5fr) minmax(0,6fr); gap:clamp(24px,4vw,56px)}
+  .al-demo__stage{order:0; max-width:none; margin:0}
+  .al-demo__copy{min-height:22rem}
+}
+@media (max-width:760px){
+  .al-demo__label{display:none}
+  .al-demo__steps{margin-left:4px; gap:5px}
+}
+@media (prefers-reduced-motion: reduce){ .al-demo__copy{transition:none} }
+[data-theme="dark"] .al-demo{color:#dcdcf0}
+[data-theme="dark"] .al-demo__kicker,
+[data-theme="dark"] .al-demo__fbk,
+[data-theme="dark"] .al-demo__map code{color:#5ba4e0}
+[data-theme="dark"] .al-demo__title,
+[data-theme="dark"] .al-demo__stats strong,
+[data-theme="dark"] .al-demo__step[aria-current="step"] .al-demo__label{color:#dcdcf0}
+[data-theme="dark"] .al-demo__body,
+[data-theme="dark"] .al-demo__stats span,
+[data-theme="dark"] .al-demo__map,
+[data-theme="dark"] .al-demo__note,
+[data-theme="dark"] .al-demo__count,
+[data-theme="dark"] .al-demo__step,
+[data-theme="dark"] .al-demo__label,
+[data-theme="dark"] .al-demo__fbh,
+[data-theme="dark"] .al-demo__fbb{color:#7878a0}
+[data-theme="dark"] .al-demo__track{background:#252538}
+[data-theme="dark"] .al-demo__track i{background:#5ba4e0}
+[data-theme="dark"] .al-demo__btn{border-color:#5ba4e0;color:#5ba4e0}
+[data-theme="dark"] .al-demo__btn--play{background:#5ba4e0;color:#0a0a14}
+[data-theme="dark"] .al-demo__btn:hover{background:#5ba4e0;color:#0a0a14}
+[data-theme="dark"] .al-demo__btn:focus-visible,
+[data-theme="dark"] .al-demo__step:focus-visible{outline-color:#5ba4e0}
+[data-theme="dark"] .al-demo__cta{background:#5ba4e0;color:#0a0a14}
+[data-theme="dark"] .al-demo__cta:hover{background:#7db4e8}
+[data-theme="dark"] .al-demo__stage{box-shadow:0 0 0 1px #252538}
+[data-theme="dark"] .al-demo__fallback{border-top-color:#252538}
 </style>
 </head>
 
@@ -761,120 +776,64 @@ nav.scrolled .nav-links a{font-size:12px}
 
     <div class="demo-section">
       <div class="demo-label">Ver en accion</div>
-      <div class="demo-wrap" id="demo">
-        <div class="deco"><div class="deco-line"></div><div class="deco-num" id="dn">01</div></div>
-
-        <div class="dscene active" id="ds0">
-          <div class="d-pill anim"><div class="d-dot">!</div><span class="d-pilltxt">El problema que resuelve</span></div>
-          <div class="d-h anim">Cruzas movimientos a mano.<br><em>Cada mes.</em></div>
-          <div class="d-sub anim">Cada factura debe coincidir con su pago, fila por fila, en planillas de cientos de filas. Hacerlo a mano toma horas — y un solo numero mal copiado puede generar un problema despues.</div>
-          <div class="d-stats anim">
-            <div class="d-stat"><span class="d-statn">200</span><div class="d-statl">movimientos tipicos</div></div>
-            <div class="d-stat"><span class="d-statn">3h</span><div class="d-statl">tiempo manual</div></div>
-            <div class="d-stat"><span class="d-statn">&#8734;</span><div class="d-statl">riesgo de error</div></div>
-          </div>
-        </div>
-
-        <div class="dscene" id="ds1">
-          <div class="d-pill anim"><div class="d-dot">1</div><span class="d-pilltxt">Paso 1 - conecta tu fuente</span></div>
-          <div class="d-h anim">Tu banco o ERP exporta<br>a <em>Google Sheets</em></div>
-          <div class="d-sub anim">Importa tu .xlsx o conecta un sheet externo. El sistema detecta los encabezados y te confirma visualmente que las columnas son las correctas.</div>
-          <div class="d-tblw anim">
-            <table class="d-tbl">
-              <thead><tr><th>FECHA</th><th>DESCRIPCION</th><th>IMPORTE</th></tr></thead>
-              <tbody>
-                <tr class="da"><td>03/06</td><td>Factura A</td><td>+500.000</td></tr>
-                <tr><td>04/06</td><td>Pago fact A</td><td>-500.000</td></tr>
-                <tr class="db"><td>05/06</td><td>Honorario B</td><td>+120.000</td></tr>
-                <tr><td>06/06</td><td>Abono hon B</td><td>-120.000</td></tr>
-              </tbody>
-            </table>
-            <div class="d-colcheck anim"><span class="d-ccok">&#10003;</span> Columnas confirmadas: Fecha &#8594; FECHA &middot; Concepto &#8594; DESCRIPCION &middot; Monto &#8594; IMPORTE</div>
-          </div>
-        </div>
-
-        <div class="dscene" id="ds2">
-          <div class="d-pill anim"><div class="d-dot">2</div><span class="d-pilltxt">Paso 2 - ejecuta desde el panel</span></div>
-          <div class="d-h anim">Abre el <em>panel de control web</em><br>y ejecuta con un clic</div>
-          <div class="d-sub anim">Resultados, grafico y numeros clave en una sola vista. El sistema valida los datos antes de procesar.</div>
-
-          <div class="pw anim" id="pwframe">
-            <div class="pw-bar">
-              <span class="pw-logo">Ambilor.Lab</span>
-              <span class="pw-title">Conciliador V1</span>
-              <span class="pw-run" id="pwbtn">&#9654; Ejecutar conciliacion</span>
+      <div class="al-demo" id="ver-en-accion" aria-label="Conciliador Automatico V1 en accion">
+        <div class="al-demo__grid">
+          <div class="al-demo__copy">
+            <p class="al-demo__kicker">El problema que resuelve</p>
+            <h3 class="al-demo__title">Cruzas movimientos a mano. Cada mes.</h3>
+            <p class="al-demo__body">Cada factura debe coincidir con su pago, fila por fila, en planillas de cientos de filas. Hacerlo a mano toma horas, y un solo número mal copiado puede generar un problema después.</p>
+            <div class="al-demo__extra">
+              <ul class="al-demo__stats">
+                <li><strong>200</strong><span>movimientos típicos</span></li>
+                <li><strong>3 h</strong><span>tiempo manual</span></li>
+              </ul>
             </div>
-            <div class="pw-tabs">
-              <span class="pw-tab on">Panel</span><span class="pw-tab">Plantillas</span><span class="pw-tab">Configuracion</span>
-            </div>
-            <div class="pw-body">
-              <div class="pw-kpis">
-                <div class="pw-kpi"><div class="pw-kv" id="pwPct">0%</div><div class="pw-kl">conciliacion</div></div>
-                <div class="pw-kpi"><div class="pw-kv" id="pwPares">0</div><div class="pw-kl">pares</div></div>
-                <div class="pw-kpi"><div class="pw-kv" id="pwPend">0</div><div class="pw-kl">pendientes</div></div>
-                <div class="pw-kpi"><div class="pw-kv" id="pwMonto">$0</div><div class="pw-kl">conciliado</div></div>
-              </div>
-              <div class="pw-status"><div class="pw-sd" id="pwsd"></div><span id="pwst">Listo para ejecutar</span></div>
-            </div>
-            <div class="pw-cur" id="pwcur"><svg viewBox="0 0 18 18" fill="none"><path d="M2 2l6 14 3-5.5 5.5-3L2 2z" fill="#1a1a1a" stroke="#fff" stroke-width="1"/></svg></div>
-            <div class="pw-rip" id="pwrip"></div>
           </div>
+          <div class="al-demo__stage"><canvas aria-hidden="true"></canvas></div>
         </div>
-
-        <div class="dscene" id="ds3">
-          <div class="d-pill anim"><div class="d-dot">~</div><span class="d-pilltxt">Algoritmo de matching</span></div>
-          <div class="d-h anim">Cruza <em>cada movimiento</em><br>contra todos los demas</div>
-          <div class="d-sub anim">El sistema recorre todos los registros y empareja automaticamente cada movimiento con su contraparte, explicando el motivo de cada resultado.</div>
-
-          <div class="ml-wrap anim">
-            <span class="ml-speed" id="speedTag">~3.000 movimientos en ~3 segundos</span>
-            <div class="ml-head"><div>ID</div><div>Concepto</div><div>Responsable</div><div style="text-align:right">Monto</div><div></div></div>
-            <div class="ml-body" id="listBody"></div>
-          </div>
-          <div class="ml-ptrack anim"><div class="ml-pfill" id="pfill"></div></div>
-          <div class="ml-counters anim">
-            <div class="ml-cstat"><div class="ml-cn" id="cProc">0</div><div class="ml-cl">procesados</div></div>
-            <div class="ml-cstat"><div class="ml-cn" id="cMatch">0</div><div class="ml-cl">pares conciliados</div></div>
-            <div class="ml-cstat"><div class="ml-cn">200</div><div class="ml-cl">total registros</div></div>
-          </div>
+        <div class="al-demo__controls">
+          <button class="al-demo__btn" type="button" data-act="prev" aria-label="Paso anterior">&#8592;</button>
+          <button class="al-demo__btn al-demo__btn--play" type="button" data-act="play" aria-label="Pausar">&#9646;&#9646;</button>
+          <button class="al-demo__btn" type="button" data-act="next" aria-label="Paso siguiente">&#8594;</button>
+          <ol class="al-demo__steps"></ol>
+          <span class="al-demo__count">1 de 6</span>
         </div>
-
-        <div class="dscene" id="ds4">
-          <div class="d-pill anim"><div class="d-dot">3</div><span class="d-pilltxt">Paso 3 - revisa y corrige</span></div>
-          <div class="d-h anim">Resultado en el panel:<br><em>conciliados y pendientes</em> con su motivo</div>
-          <div class="d-sub anim">Cada pendiente explica por que no concilio. Puedes deshacer un pareo o emparejar manualmente.</div>
-          <div class="d-resw">
-            <table class="d-res">
-              <thead><tr><th>Estado</th><th>ID</th><th>Concepto</th><th style="text-align:right">Monto</th><th>Detalle del match</th></tr></thead>
-              <tbody id="tbody"></tbody>
-            </table>
-          </div>
-          <div class="d-summary" id="summary">
-            <div class="d-sitm"><div class="dot g"></div>2 pares conciliados</div>
-            <div class="d-sitm"><div class="dot y"></div>5 movimientos pendientes</div>
-          </div>
-        </div>
-
-        <div class="dscene" id="ds5">
-          <div class="d-pill anim"><div class="d-dot">&#10003;</div><span class="d-pilltxt">Resultado final</span></div>
-          <div class="d-h anim"><em>3.000 movimientos</em> cruzados<br>en ~3 segundos</div>
-          <div class="d-sub anim">Sin software adicional. Sin Excel. Solo Google Sheets y una cuenta Google. Instalacion en 5 minutos.</div>
-          <div class="d-stats anim">
-            <div class="d-stat"><span class="d-statn">3s</span><div class="d-statl">vs 3 horas manual</div></div>
-            <div class="d-stat"><span class="d-statn">0</span><div class="d-statl">errores humanos</div></div>
-            <div class="d-stat"><span class="d-statn">5min</span><div class="d-statl">instalacion</div></div>
-          </div>
-        </div>
-
-        <div class="dprog" id="dprog"></div>
-        <div class="dctrl">
-          <div class="dctrl-left">
-            <button class="dcbtn" onclick="dnav(-1)">&#8592;</button>
-            <div class="dcdots" id="ddots"></div>
-            <button class="dcbtn" id="dppbtn" onclick="dtogglePlay()">&#9646;&#9646;</button>
-            <button class="dcbtn" onclick="dnav(1)">&#8594;</button>
-          </div>
-          <span class="dctr" id="dctr">1 de 6</span>
+        <p class="al-demo__note">Demostración ilustrativa con datos de ejemplo. La herramienta funciona dentro de tu Google Sheets.</p>
+        <div class="al-demo__fallback">
+          <p class="al-demo__fbh">La demostración en 6 pasos</p>
+          <ol class="al-demo__fblist">
+            <li>
+              <span class="al-demo__fbk">El problema que resuelve</span>
+              <span class="al-demo__fbt">Cruzas movimientos a mano. Cada mes.</span>
+              <p class="al-demo__fbb">Cada factura debe coincidir con su pago, fila por fila, en planillas de cientos de filas. Hacerlo a mano toma horas, y un solo número mal copiado puede generar un problema después.</p>
+            </li>
+            <li>
+              <span class="al-demo__fbk">Paso 1: conecta tu fuente</span>
+              <span class="al-demo__fbt">Tu banco o ERP exporta a Google Sheets</span>
+              <p class="al-demo__fbb">Importa tu .xlsx o conecta un sheet externo. El sistema detecta los encabezados y te confirma visualmente que las columnas son las correctas.</p>
+            </li>
+            <li>
+              <span class="al-demo__fbk">Paso 2: ejecuta desde el panel</span>
+              <span class="al-demo__fbt">Abre el panel de control web y ejecuta con un clic</span>
+              <p class="al-demo__fbb">Resultados, gráfico y números clave en una sola vista. El sistema valida los datos antes de procesar.</p>
+            </li>
+            <li>
+              <span class="al-demo__fbk">Algoritmo de matching</span>
+              <span class="al-demo__fbt">Cruza cada movimiento contra todos los demás</span>
+              <p class="al-demo__fbb">El sistema recorre todos los registros y empareja automáticamente cada movimiento con su contraparte, explicando el motivo de cada resultado.</p>
+            </li>
+            <li>
+              <span class="al-demo__fbk">Paso 3: revisa y corrige</span>
+              <span class="al-demo__fbt">Lo que no calzó, lo resuelves tú</span>
+              <p class="al-demo__fbb">Cada pendiente queda a la vista. Si sabes que una transferencia sin referencia corresponde a una factura, la emparejas a mano o deshaces un pareo, y el ajuste queda guardado entre ejecuciones.</p>
+            </li>
+            <li>
+              <span class="al-demo__fbk">Resultado final</span>
+              <span class="al-demo__fbt">Así queda tu conciliación</span>
+              <p class="al-demo__fbb">Cada movimiento con su estado, su contraparte y el detalle del match. Filtra los pendientes y exporta los resultados con un clic, listos para compartir o archivar.</p>
+            </li>
+          </ol>
+          <a class="al-demo__cta al-demo__cta--fb" href="#incluye">Ver qué incluye</a>
         </div>
       </div>
     </div>
@@ -999,7 +958,7 @@ nav.scrolled .nav-links a{font-size:12px}
     <a class="buy-btn" href="https://ambilorlab.gumroad.com/l/gbtemx" target="_blank" rel="noopener noreferrer">Comprar en Gumroad</a>
     <span class="guarantee-note">Garantia de devolucion de 7 dias si no funciona</span>
     <div class="alert-box">Pensado para cualquier persona que revise pagos, facturas o movimientos de dinero a mano cada mes — seas contador, dueño de una PyME, o la persona encargada de las cuentas en tu empresa.</div>
-    <div class="section-label">Que incluye</div>
+    <div class="section-label" id="incluye">Que incluye</div>
     <ul class="includes-list">
       <li>La planilla lista para usar <span>dentro de Google Sheets</span></li>
       <li>Panel con todo de un vistazo <span>resultados, graficos y reporte para imprimir</span></li>
@@ -1651,310 +1610,6 @@ function show(id){
   return false;
 }
 
-// ===== DEMO 6 ESCENAS =====
-var dN=6,dcur=0,dplaying=true,draf=null,dpbStart=null,dDUR=5200;
-var dNUMS=['01','02','03','04','05','06'];
-var msSeqTimers=[];
-var mlTimers=[];
-var resTimers=[];
-
-function clearMsTimers(){msSeqTimers.forEach(clearTimeout);msSeqTimers=[];}
-function clearMlTimers(){mlTimers.forEach(clearTimeout);mlTimers=[];}
-function clearResTimers(){resTimers.forEach(clearTimeout);resTimers=[];}
-
-// ---- Escena 2: panel web animado ----
-function runPanelWeb(){
-  clearMsTimers();
-  var pwbtn=document.getElementById('pwbtn');
-  var pwcur=document.getElementById('pwcur');
-  var pwrip=document.getElementById('pwrip');
-  var pwsd=document.getElementById('pwsd');
-  var pwst=document.getElementById('pwst');
-  var pwframe=document.getElementById('pwframe');
-  var pwPct=document.getElementById('pwPct');
-  var pwPares=document.getElementById('pwPares');
-  var pwPend=document.getElementById('pwPend');
-  var pwMonto=document.getElementById('pwMonto');
-  if(!pwbtn) return;
-
-  function pp(el){
-    var er=el.getBoundingClientRect();var fr=pwframe.getBoundingClientRect();
-    return{x:er.left-fr.left+er.width/2,y:er.top-fr.top+er.height/2};
-  }
-  function mv(x,y,d,cb){
-    msSeqTimers.push(setTimeout(function(){
-      pwcur.style.left=(x-5)+'px';pwcur.style.top=(y-5)+'px';
-      msSeqTimers.push(setTimeout(cb||function(){},460));
-    },d||0));
-  }
-  function ck(x,y,d,cb){
-    msSeqTimers.push(setTimeout(function(){
-      pwrip.style.left=(x-6)+'px';pwrip.style.top=(y-6)+'px';
-      pwrip.className='pw-rip';void pwrip.offsetWidth;pwrip.className='pw-rip go';
-      msSeqTimers.push(setTimeout(cb||function(){},300));
-    },d||0));
-  }
-
-  pwPct.textContent='0%';pwPares.textContent='0';pwPend.textContent='0';pwMonto.textContent='$0';
-  pwsd.className='pw-sd';pwst.textContent='Listo para ejecutar';
-  pwcur.style.left='20px';pwcur.style.top='30px';
-
-  var bp=pp(pwbtn);
-  mv(bp.x,bp.y,500,function(){
-    ck(bp.x,bp.y,0,function(){
-      pwsd.className='pw-sd run';
-      pwst.textContent='Ejecutando...';
-      msSeqTimers.push(setTimeout(function(){
-        pwPct.textContent='67%';pwPares.textContent='100';pwPend.textContent='50';pwMonto.textContent='$1,7 M';
-        pwsd.className='pw-sd ok';
-        pwst.textContent='3.000 movimientos en ~3s';
-      },1600));
-    });
-  });
-}
-
-// ---- Escena 4: algoritmo de matching masivo ----
-var CONCEPTS=['Factura','Honorario','Servicio','Arriendo','Comision','Boleta','Anticipo','Cuota'];
-var PAYWORDS=['Pago','Abono','Cancela','Transferencia','Deposito'];
-var PROVS=['Proveedor X','Proveedor Y','Proveedor Z','Proveedor W','Proveedor V','Servicios ABC','Comercial RT','Distribuidora Sur'];
-var ML_TOTAL_PAIRS=100;
-var ML_DATA=[],ML_PAIRS=[];
-function buildMlData(){
-  ML_DATA=[];ML_PAIRS=[];
-  for(var i=0;i<ML_TOTAL_PAIRS;i++){
-    var concept=CONCEPTS[i%CONCEPTS.length];
-    var letter=String.fromCharCode(65+(i%26));
-    var prov=PROVS[i%PROVS.length];
-    var amt=(Math.floor(Math.random()*900)+50)*1000;
-    var idNum=String(i+1).padStart(3,'0');
-    ML_DATA.push({id:'F-'+idNum,c:concept+' '+letter,r:prov,a:amt,sign:1});
-    ML_DATA.push({id:'P-'+idNum,c:PAYWORDS[i%PAYWORDS.length]+' '+letter,r:prov,a:amt,sign:-1});
-  }
-  for(var i=0;i<ML_TOTAL_PAIRS;i++){ML_PAIRS.push([i*2,i*2+1]);}
-}
-buildMlData();
-
-var ML_VISIBLE=9,ML_ROW_H=22;
-var mlPool=[],mlWindowStart=0,mlProcessed=0,mlMatched=0,mlPairIdx=0;
-var ML_SPEEDS=['~950 movimientos/seg','~1.000 movimientos/seg','~1.050 movimientos/seg','~900 movimientos/seg'];
-
-function mlFmt(n){return n.toLocaleString('es-CL');}
-function mlRowHTML(d,idx){
-  return '<div class="id">'+d.id+'</div>'+
-    '<div class="concept">'+d.c+'</div>'+
-    '<div class="resp">'+d.r+'</div>'+
-    '<div class="amt '+(d.sign>0?'pos':'neg')+'">'+(d.sign>0?'+':'-')+mlFmt(d.a)+'</div>'+
-    '<div class="ml-badge"><span class="ml-tag wait" id="tag'+idx+'">Pendiente</span></div>';
-}
-
-function buildMlPool(){
-  var listBody=document.getElementById('listBody');
-  if(!listBody) return;
-  listBody.innerHTML='';
-  mlPool=[];
-  var poolSize=ML_VISIBLE+2;
-  for(var i=0;i<poolSize;i++){
-    var row=document.createElement('div');
-    row.className='ml-row pending-row';
-    row.style.top=(i*ML_ROW_H)+'px';
-    listBody.appendChild(row);
-    mlPool.push(row);
-  }
-}
-
-function mlRenderWindow(){
-  var poolSize=mlPool.length;
-  for(var slot=0;slot<poolSize;slot++){
-    var pairOffset=Math.floor(slot/2);
-    var pairIndex=mlWindowStart+pairOffset;
-    if(pairIndex>=ML_PAIRS.length){ mlPool[slot].style.opacity='0'; continue; }
-    var pair=ML_PAIRS[pairIndex];
-    var dataIdx=(slot%2===0)?pair[0]:pair[1];
-    var d=ML_DATA[dataIdx];
-    mlPool[slot].innerHTML=mlRowHTML(d,'x'+slot);
-    mlPool[slot].style.top=(slot*ML_ROW_H)+'px';
-    mlPool[slot].style.opacity='1';
-    mlPool[slot].className='ml-row pending-row';
-  }
-}
-
-function mlSetTag(slot,cls,text){
-  var t=document.getElementById('tagx'+slot);
-  if(t){t.className='ml-tag '+cls;t.textContent=text;}
-}
-function mlMarkSlot(slot,cls){
-  if(!mlPool[slot])return;
-  mlPool[slot].classList.remove('pending-row','scanning','matched-row');
-  mlPool[slot].classList.add(cls);
-}
-
-function mlProcessNext(){
-  var cProc=document.getElementById('cProc');
-  var cMatch=document.getElementById('cMatch');
-  var pfill=document.getElementById('pfill');
-  var speedTag=document.getElementById('speedTag');
-  if(!cProc) return;
-
-  if(mlPairIdx>=ML_PAIRS.length){
-    mlTimers.push(setTimeout(function(){
-      mlWindowStart=0;mlPairIdx=0;mlProcessed=0;mlMatched=0;
-      cProc.textContent='0';cMatch.textContent='0';pfill.style.width='0%';
-      mlRenderWindow();
-      mlTimers.push(setTimeout(mlProcessNext,400));
-    },1200));
-    return;
-  }
-
-  var poolSize=mlPool.length;
-  var slotOffset=mlPairIdx-mlWindowStart;
-  if(slotOffset>=Math.floor(poolSize/2)-1){
-    mlWindowStart++;
-    mlRenderWindow();
-    slotOffset=mlPairIdx-mlWindowStart;
-  }
-  var slotA=slotOffset*2,slotB=slotOffset*2+1;
-
-  mlMarkSlot(slotA,'scanning');mlMarkSlot(slotB,'scanning');
-  mlSetTag(slotA,'scan','...');mlSetTag(slotB,'scan','...');
-
-  mlTimers.push(setTimeout(function(){
-    mlMarkSlot(slotA,'matched-row');mlMarkSlot(slotB,'matched-row');
-    mlSetTag(slotA,'ok','OK');mlSetTag(slotB,'ok','OK');
-
-    mlMatched++;mlProcessed+=2;mlPairIdx++;
-    cMatch.textContent=mlMatched;
-    cProc.textContent=Math.min(mlProcessed,200);
-    pfill.style.width=((mlProcessed/200)*100)+'%';
-
-    if(mlMatched%14===0){
-      speedTag.textContent=ML_SPEEDS[Math.floor(Math.random()*ML_SPEEDS.length)];
-    }
-    mlTimers.push(setTimeout(mlProcessNext,95));
-  },130));
-}
-
-function startMlAnimation(){
-  clearMlTimers();
-  buildMlPool();
-  mlWindowStart=0;mlPairIdx=0;mlProcessed=0;mlMatched=0;
-  mlRenderWindow();
-  document.getElementById('cProc').textContent='0';
-  document.getElementById('cMatch').textContent='0';
-  document.getElementById('pfill').style.width='0%';
-  mlTimers.push(setTimeout(mlProcessNext,500));
-}
-
-// ---- Escena 5: resultado animado ----
-var RES_ROWS=[
-  {st:'ok',id:1,c:'Factura A',a:'100.00',sign:'pos',rc:true,det:'monto y fecha coinciden'},
-  {st:'ok',id:2,c:'Pago fact A',a:'-100.00',sign:'neg',rc:true,det:'monto y fecha coinciden'},
-  {st:'ok',id:8,c:'Factura Z',a:'-2,300.00',sign:'neg',rc:true,det:'monto coincide'},
-  {st:'ok',id:9,c:'Pago fact z',a:'2,300.00',sign:'pos',rc:true,det:'monto coincide'},
-  {st:'pend',id:3,c:'Factura B',a:'200.00',sign:'pos',rc:false,det:'sin contraparte de monto'},
-  {st:'pend',id:4,c:'Pago B',a:'-200.00',sign:'neg',rc:false,det:'fecha fuera de ventana'},
-  {st:'pend',id:5,c:'Factura C',a:'300.00',sign:'pos',rc:false,det:'concepto no cuadra'},
-  {st:'pend',id:6,c:'Factur D',a:'-800.00',sign:'neg',rc:false,det:'sin contraparte de monto'},
-  {st:'pend',id:7,c:'Pago factu d',a:'1,300.00',sign:'pos',rc:false,det:'sin contraparte de monto'}
-];
-
-function resRowHTML(r){
-  return '<td>'+(r.st==='ok'?'<span class="d-ok">Conciliado</span>':'<span class="d-pend">Pendiente</span>')+'</td>'+
-    '<td>'+r.id+'</td><td>'+r.c+'</td>'+
-    '<td class="amt '+r.sign+'">'+r.a+'</td>'+
-    '<td class="det">'+r.det+'</td>';
-}
-
-function buildResRows(){
-  var tbody=document.getElementById('tbody');
-  if(!tbody) return;
-  tbody.innerHTML='';
-  RES_ROWS.forEach(function(r,i){
-    var tr=document.createElement('tr');
-    tr.className=r.rc?'rc':'rp';
-    tr.id='tr'+i;
-    tr.innerHTML=resRowHTML(r);
-    tbody.appendChild(tr);
-  });
-}
-
-function playResAnimation(){
-  clearResTimers();
-  var summary=document.getElementById('summary');
-  if(!summary) return;
-  buildResRows();
-  summary.classList.remove('show');
-
-  RES_ROWS.forEach(function(r,i){
-    resTimers.push(setTimeout(function(){
-      var tr=document.getElementById('tr'+i);
-      if(!tr)return;
-      tr.classList.add('show');
-      if(r.st==='ok'){
-        tr.classList.add('flash');
-        resTimers.push(setTimeout(function(){tr.classList.remove('flash');},350));
-      }
-    },350+i*230));
-  });
-
-  var totalDelay=350+RES_ROWS.length*230+300;
-  resTimers.push(setTimeout(function(){
-    summary.classList.add('show');
-  },totalDelay));
-}
-
-// ---- Navegacion principal de la demo ----
-function dgoTo(i){
-  document.getElementById('ds'+dcur).classList.remove('active');
-  clearMsTimers();clearMlTimers();clearResTimers();
-  dcur=i;
-  var sc=document.getElementById('ds'+dcur);
-  sc.classList.add('active');
-  sc.querySelectorAll('.anim').forEach(function(el){
-    el.style.animation='none';el.offsetHeight;el.style.animation='';
-  });
-  document.getElementById('dn').textContent=dNUMS[i];
-  document.getElementById('dctr').textContent=(i+1)+' de 6';
-  dbuildDots();
-  if(i===2) setTimeout(runPanelWeb,350);
-  if(i===3) setTimeout(startMlAnimation,300);
-  if(i===4) setTimeout(playResAnimation,200);
-  if(dplaying) dstartBar();
-}
-function dnav(d){dstopBar();dgoTo((dcur+d+dN)%dN);}
-function dbuildDots(){
-  var c=document.getElementById('ddots');c.innerHTML='';
-  for(var i=0;i<dN;i++){
-    var dd=document.createElement('div');
-    dd.className='dcdot'+(i===dcur?' on':'');
-    (function(idx){dd.onclick=function(){dstopBar();dgoTo(idx);};})(i);
-    c.appendChild(dd);
-  }
-}
-function dstartBar(){
-  dstopBar();dpbStart=Date.now();
-  var b=document.getElementById('dprog');b.style.width='0%';
-  function tick(){
-    var pct=Math.min(100,(Date.now()-dpbStart)/dDUR*100);
-    b.style.width=pct+'%';
-    if(pct>=100){draf=null;dgoTo((dcur+1)%dN);}
-    else draf=requestAnimationFrame(tick);
-  }
-  draf=requestAnimationFrame(tick);
-}
-function dstopBar(){
-  if(draf){cancelAnimationFrame(draf);draf=null;}
-  var b=document.getElementById('dprog');
-  if(b) b.style.width='0%';
-}
-function dtogglePlay(){
-  dplaying=!dplaying;
-  var b=document.getElementById('dppbtn');
-  if(dplaying){b.innerHTML='&#9646;&#9646;';dstartBar();}
-  else{b.innerHTML='&#9654;';dstopBar();}
-}
-dbuildDots();
-dstartBar();
-
 // ---- INSTALACION: player independiente (prefijo i-) ----
 // Instancia propia con su propio estado, para no depender del player de la
 // demo ni tocarlo. Reutiliza las mismas clases CSS, por eso se ve igual.
@@ -2124,6 +1779,633 @@ function showGP(id, btn) {
   document.getElementById('gp-'+id).classList.add('on');
 }
 
+</script>
+
+<!-- Demo 3D "Ver en accion" (three.js). Va al final del body y SIN async/defer
+     a proposito: el script inline siguiente necesita window.THREE ya disponible,
+     y asi el parser no se bloquea con ~600 KB antes de mostrar el contenido. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* Demo 3D del Conciliador Automatico V1.
+   Adaptada de ver-en-accion-conciliador.html al sitio (ancho 660px, dark mode).
+   El copy de los 6 pasos esta tambien en el HTML, asi que si three.js no carga
+   o el navegador no tiene WebGL la seccion cae en .al-demo--no3d y muestra los
+   6 pasos en texto en vez de una caja vacia. */
+(function(){
+var root = document.getElementById('ver-en-accion');
+if (!root) return;
+
+const STEPS = [
+  { a:0, b:3.6, short:'El problema', kicker:'El problema que resuelve',
+    title:'Cruzas movimientos a mano. Cada mes.',
+    body:'Cada factura debe coincidir con su pago, fila por fila, en planillas de cientos de filas. Hacerlo a mano toma horas, y un solo número mal copiado puede generar un problema después.',
+    stats:[['200','movimientos típicos'],['3 h','tiempo manual']] },
+  { a:3.6, b:8.0, short:'Conecta', kicker:'Paso 1: conecta tu fuente',
+    title:'Tu banco o ERP exporta a Google Sheets',
+    body:'Importa tu .xlsx o conecta un sheet externo. El sistema detecta los encabezados y te confirma visualmente que las columnas son las correctas.',
+    map:[['Fecha','FECHA'],['Concepto','DESCRIPCION'],['Monto','IMPORTE']] },
+  { a:8.0, b:10.9, short:'Ejecuta', kicker:'Paso 2: ejecuta desde el panel',
+    title:'Abre el panel de control web y ejecuta con un clic',
+    body:'Resultados, gráfico y números clave en una sola vista. El sistema valida los datos antes de procesar.' },
+  { a:10.9, b:15.3, short:'Matching', kicker:'Algoritmo de matching',
+    title:'Cruza cada movimiento contra todos los demás',
+    body:'El sistema recorre todos los registros y empareja automáticamente cada movimiento con su contraparte, explicando el motivo de cada resultado.',
+    stats:[['~3.000','movimientos'],['~3 s','de proceso']] },
+  { a:15.3, b:21.0, short:'Revisa', kicker:'Paso 3: revisa y corrige',
+    title:'Lo que no calzó, lo resuelves tú',
+    body:'Cada pendiente queda a la vista. Si sabes que una transferencia sin referencia corresponde a una factura, la emparejas a mano o deshaces un pareo, y el ajuste queda guardado entre ejecuciones.' },
+  { a:21.0, b:28.8, short:'Resultado', kicker:'Resultado final',
+    title:'Así queda tu conciliación',
+    body:'Cada movimiento con su estado, su contraparte y el detalle del match. Filtra los pendientes y exporta los resultados con un clic, listos para compartir o archivar.',
+    stats:[['3 s','vs 3 horas manual'],['5 min','instalación']],
+    cta:'Ver qué incluye' }
+];
+/* Ancla real de la seccion de compra del index.html (id="incluye"). */
+const CTA_HREF = '#incluye';
+const DUR = 28.8;
+
+const canvas = root.querySelector('canvas');
+const stage = root.querySelector('.al-demo__stage');
+const copy = root.querySelector('.al-demo__copy');
+const elK = root.querySelector('.al-demo__kicker'), elT = root.querySelector('.al-demo__title');
+const elB = root.querySelector('.al-demo__body'), elX = root.querySelector('.al-demo__extra');
+const elCount = root.querySelector('.al-demo__count');
+const playBtn = root.querySelector('[data-act="play"]');
+const list = root.querySelector('.al-demo__steps');
+
+function hasWebGL(){
+  try {
+    const c = document.createElement('canvas');
+    return !!(window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl')));
+  } catch(e){ return false; }
+}
+function fallback(){
+  root.classList.add('al-demo--no3d');
+  if (window.console) console.warn('[al-demo] 3D no disponible, se muestra la version en texto.');
+}
+
+// La lista de pasos (ol.al-demo__steps) llega vacia desde el HTML; el copy del paso 1 si viene escrito.
+const fills = [];
+if (!list.children.length) {
+  STEPS.forEach((s, i) => {
+    const li = document.createElement('li');
+    li.innerHTML = '<button class="al-demo__step" type="button" aria-label="Ir a: ' + s.kicker + '"><span class="al-demo__track"><i></i></span><span class="al-demo__label">' + s.short + '</span></button>';
+    li.firstChild.addEventListener('click', () => go(i));
+    list.appendChild(li);
+    fills.push({ fill: li.querySelector('i'), btn: li.firstChild });
+  });
+} else {
+  Array.prototype.forEach.call(list.querySelectorAll('.al-demo__step'), (btn, i) => {
+    btn.addEventListener('click', () => go(i));
+    fills.push({ fill: btn.querySelector('i'), btn: btn });
+  });
+}
+
+const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+let T = 0, playing = !reduce, current = -1, visible = true, needsRender = true;
+
+function fillCopy(i){
+  const s = STEPS[i];
+  elK.textContent = s.kicker; elT.textContent = s.title; elB.textContent = s.body;
+  elX.innerHTML = '';
+  if (s.stats) {
+    const ul = document.createElement('ul'); ul.className = 'al-demo__stats';
+    s.stats.forEach(([v, l]) => { const li = document.createElement('li'); li.innerHTML = '<strong></strong><span></span>'; li.children[0].textContent = v; li.children[1].textContent = l; ul.appendChild(li); });
+    elX.appendChild(ul);
+  }
+  if (s.cta) {
+    const a = document.createElement('a'); a.className = 'al-demo__cta'; a.href = CTA_HREF; a.textContent = s.cta;
+    elX.appendChild(a);
+  }
+  if (s.map) {
+    const ul = document.createElement('ul'); ul.className = 'al-demo__map';
+    s.map.forEach(([a, b]) => { const li = document.createElement('li'); li.innerHTML = '<b></b><span>→</span><code></code>'; li.children[0].textContent = '✓ ' + a; li.children[2].textContent = b; ul.appendChild(li); });
+    elX.appendChild(ul);
+  }
+}
+function setStep(i){
+  if (i === current) return;
+  const first = current === -1;
+  current = i;
+  elCount.textContent = (i + 1) + ' de ' + STEPS.length;
+  fills.forEach((f, j) => { if (j === i) f.btn.setAttribute('aria-current', 'step'); else f.btn.removeAttribute('aria-current'); });
+  if (first || reduce) { fillCopy(i); return; }
+  copy.classList.add('is-changing');
+  setTimeout(() => { fillCopy(i); copy.classList.remove('is-changing'); }, 280);
+}
+const stepOf = t => { for (let i = STEPS.length - 1; i >= 0; i--) if (t >= STEPS[i].a) return i; return 0; };
+function go(i){
+  i = (i + STEPS.length) % STEPS.length;
+  T = playing ? STEPS[i].a + 0.001 : STEPS[i].b - 0.05;
+  setStep(i); needsRender = true;
+}
+function setPlaying(p){
+  playing = p;
+  playBtn.textContent = p ? '▮▮' : '▶';
+  playBtn.setAttribute('aria-label', p ? 'Pausar' : 'Reproducir');
+  if (p && T >= STEPS[current].b - 0.06) T = STEPS[current].a + 0.001;
+  needsRender = true;
+}
+root.querySelector('[data-act="prev"]').addEventListener('click', () => go(current - 1));
+root.querySelector('[data-act="next"]').addEventListener('click', () => go(current + 1));
+playBtn.addEventListener('click', () => setPlaying(!playing));
+root.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') { go(current + 1); e.preventDefault(); }
+  if (e.key === 'ArrowLeft') { go(current - 1); e.preventDefault(); }
+});
+
+if (reduce) T = STEPS[0].b - 0.05;
+setStep(stepOf(T));   // el copy se pinta antes de tocar 3D: pase lo que pase hay texto
+
+if (!window.THREE || !hasWebGL()) { fallback(); return; }
+
+(async function init(){
+try { await Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 2500))]); } catch(e) {}
+try {
+const FONT = getComputedStyle(root).fontFamily || 'system-ui, sans-serif';
+/* Paleta del canvas 3D: se mantiene en tema claro a proposito, tambien en dark
+   mode. Representa una captura del panel real, no un elemento de la pagina. */
+const C = { paper:'#eef2f7', ink:'#12304d', muted:'#4f6983', brand:'#1f5c99', hi:'#f5c84c', soft:'#8aa2bb', line:'#c9d5e3' };
+
+const clamp = (x,a=0,b=1) => Math.min(b, Math.max(a, x));
+const ease = x => { x = clamp(x); return x < .5 ? 4*x*x*x : 1 - Math.pow(-2*x+2, 3)/2; };
+const easeOut = x => { x = clamp(x); return 1 - Math.pow(1-x, 3); };
+const lerp = (a,b,t) => a + (b-a)*t;
+function rng(seed){ return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const R = rng(11);
+const col = hex => new THREE.Color(hex).convertSRGBToLinear();
+
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
+renderer.outputEncoding = THREE.sRGBEncoding;
+renderer.setClearColor(0x000000, 0);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
+scene.add(new THREE.HemisphereLight(0xffffff, 0xaebfd2, 0.9));
+const sun = new THREE.DirectionalLight(0xffffff, 0.6); sun.position.set(3, 5, 6); scene.add(sun);
+const ANISO = renderer.capabilities.getMaxAnisotropy();
+function tex(w, h, draw){
+  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  const g = c.getContext('2d'); draw(g, w, h);
+  const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; t.anisotropy = ANISO;
+  return t;
+}
+function rr(g,x,y,w,h,r){ g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }
+const basic = (opts) => new THREE.MeshBasicMaterial(Object.assign({ transparent:true, side:THREE.DoubleSide, depthWrite:false }, opts));
+
+// ---------- datos de demo (mismo formato que el ejemplo de la web) ----------
+const C2 = { warn:'#e08a2c', ok:'#2f8a5b' };
+const DATA = [
+  ['03/09','Factura F-101','+500.000'], ['04/09','Pago F-101','-500.000'],
+  ['05/09','Honorario B-22','+120.000'], ['06/09','Comisión mantención','-6.200'],
+  ['08/09','Factura F-102','+245.000'], ['09/09','Factura F-103','+89.700'],
+  ['10/09','Pago F-103','-89.700'], ['11/09','Factura F-104','+410.500'],
+  ['12/09','Pago F-102','-245.000'], ['15/09','Honorario B-23','+64.000'],
+  ['16/09','Pago F-104','-410.500'], ['17/09','Transf. sin referencia','-64.000']
+];
+const PAIRS = [[0,1],[4,8],[5,6],[7,10]];
+const MANUAL = [9, 11];
+const PEND = [2, 3, 9, 11];
+
+function pillTex(label, fill, ink, w = 360, h = 100, size = 40){
+  return tex(w, h, (g) => {
+    g.fillStyle = fill; rr(g, 2, 2, w-4, h-4, (h-4)/2); g.fill();
+    g.fillStyle = ink; g.font = `800 ${size}px ${FONT}`; g.textBaseline = 'middle'; g.textAlign = 'center';
+    g.fillText(label, w/2, h/2+2);
+  });
+}
+
+// ---------- tabla ----------
+const TW = 3.7, TX = -0.3, RH = 0.28, TEXW = 1480;
+const slotY = i => 0.55 - i*0.34;
+const HEAD_Y = 0.92;
+const pxToX = px => TX - TW/2 + px/TEXW*TW;
+
+function rowTex(d){
+  return tex(TEXW, 112, (g,w,h) => {
+    g.fillStyle = '#ffffff'; g.fillRect(0,0,w,h);
+    g.strokeStyle = C.line; g.lineWidth = 4; g.strokeRect(2,2,w-4,h-4);
+    const inc = d[2][0] === '+';
+    g.fillStyle = inc ? C.ink : C.brand; g.fillRect(0,0,12,h);
+    g.textBaseline = 'middle';
+    g.fillStyle = C.soft; g.font = `600 38px ${FONT}`; g.fillText(d[0], 40, h/2+2);
+    g.fillStyle = C.ink; g.font = `600 40px ${FONT}`; g.fillText(d[1], 230, h/2+2);
+    g.textAlign = 'right'; g.fillStyle = inc ? C.ink : C.brand; g.font = `800 42px ${FONT}`; g.fillText(d[2], w-36, h/2+2);
+  });
+}
+const table = new THREE.Group(); scene.add(table);
+const rowGeo = new THREE.PlaneGeometry(TW, RH);
+const rows = DATA.map((d, i) => {
+  const m = new THREE.Mesh(rowGeo, basic({ map: rowTex(d) })); m.renderOrder = 3; table.add(m);
+  return { m, i, c:{ x:(R()-.5)*4.6, y:-4 + R()*7.4, z:-5 + R()*6, rx:(R()-.5)*2.2, ry:(R()-.5)*2.2, rz:(R()-.5)*1.6, s:R()*2-1 } };
+});
+const head = new THREE.Mesh(new THREE.PlaneGeometry(TW, RH), basic({ map: tex(TEXW, 112, (g,w,h) => {
+  g.fillStyle = C.brand; rr(g,0,0,w,h,18); g.fill();
+  g.fillStyle = '#fff'; g.font = `800 40px ${FONT}`; g.textBaseline = 'middle';
+  g.fillText('FECHA', 40, h/2+2); g.fillText('DESCRIPCION', 230, h/2+2);
+  g.textAlign = 'right'; g.fillText('IMPORTE', w-36, h/2+2);
+}) }));
+head.renderOrder = 3; table.add(head);
+
+// column mapping chips: the tool's field -> the sheet's header
+const MAP = [['Fecha', 110], ['Concepto', 420], ['Monto', 1300]];
+const chips = MAP.map(([name, px]) => {
+  const off = pillTex(name, C.ink, '#fff'), on = pillTex('✓ ' + name, C2.ok, '#fff');
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(1.0, 0.28), basic({ map:off })); m.renderOrder = 6; table.add(m);
+  const ln = new THREE.Mesh(new THREE.PlaneGeometry(0.03, 1), basic({ color:col(C.ink) })); ln.renderOrder = 5; table.add(ln);
+  return { m, ln, off, on, x: pxToX(px), checked:false };
+});
+const CHIP_Y = 1.55;
+
+// matching arcs on the right edge of the table
+const ARC_X = TX + TW/2 + 0.02, TUB = 48, RAD = 6;
+const arcs = PAIRS.map(([a, b]) => {
+  const d = 0.2 + 0.08*Math.abs(b - a);
+  const curve = new THREE.CubicBezierCurve3(
+    new THREE.Vector3(ARC_X, slotY(a), 0), new THREE.Vector3(ARC_X + d, slotY(a), 0),
+    new THREE.Vector3(ARC_X + d, slotY(b), 0), new THREE.Vector3(ARC_X, slotY(b), 0));
+  const m = new THREE.Mesh(new THREE.TubeGeometry(curve, TUB, 0.02, RAD, false), basic({ color:col(C.brand) }));
+  m.renderOrder = 4; table.add(m); return m;
+});
+const hiGeo = new THREE.PlaneGeometry(1, RH + 0.06);
+const his = PAIRS.map(pair => pair.map(i => { const m = new THREE.Mesh(hiGeo, basic({ color:col(C.hi) })); m.renderOrder = 1; m.position.set(0, slotY(i), -0.02); table.add(m); return m; }));
+const pends = PEND.map(i => {
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(1.0, 0.24), basic({ map:pillTex('Sin par', C2.warn, '#fff', 360, 90, 40) }));
+  m.renderOrder = 7; m.position.set(0.35, slotY(i), 0.05); table.add(m); return m;
+});
+
+// ---------- panel de control web ----------
+const PW = 4.3, PH = 2.75;
+const pcan = document.createElement('canvas'); pcan.width = 1000; pcan.height = 640;
+const pg = pcan.getContext('2d');
+const ptex = new THREE.CanvasTexture(pcan); ptex.encoding = THREE.sRGBEncoding; ptex.anisotropy = ANISO;
+const panel = new THREE.Mesh(new THREE.PlaneGeometry(PW, PH), basic({ map:ptex })); panel.renderOrder = 10; scene.add(panel);
+const panelShadow = new THREE.Mesh(new THREE.PlaneGeometry(PW + 0.1, PH + 0.1), basic({ color:col(C.ink) })); panelShadow.renderOrder = 9; scene.add(panelShadow);
+const fmtCLP = n => '$' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+function drawPanel(t){
+  const g = pg, w = 1000, h = 640;
+  g.clearRect(0,0,w,h);
+  g.fillStyle = '#ffffff'; rr(g, 0, 0, w, h, 34); g.fill();
+  g.save(); rr(g, 0, 0, w, h, 34); g.clip();
+  g.fillStyle = C.brand; g.fillRect(0, 0, w, 96);
+  g.restore();
+  g.textBaseline = 'middle';
+  g.fillStyle = '#fff'; g.font = `800 36px ${FONT}`; g.textAlign = 'left'; g.fillText('Ambilor.Lab', 38, 50);
+  g.font = `600 30px ${FONT}`; g.textAlign = 'right'; g.fillText('Conciliador V1', w-38, 50);
+  g.textAlign = 'left';
+  [['Panel', 38, true], ['Plantillas', 170, false], ['Configuracion', 330, false]].forEach(([s, x, on]) => {
+    g.fillStyle = on ? C.ink : C.soft; g.font = `${on ? 800 : 600} 30px ${FONT}`; g.fillText(s, x, 140);
+    if (on) { g.fillStyle = C.brand; g.fillRect(x, 162, g.measureText(s).width, 5); }
+  });
+  const pr = clamp(1 - Math.abs(t - 9.45) / 0.18);
+  const inset = pr * 8;
+  g.fillStyle = pr > 0 ? '#164a7d' : C.brand; rr(g, 38 + inset, 196 + inset, w - 76 - inset*2, 92 - inset*2, 46 - inset); g.fill();
+  g.fillStyle = '#fff'; g.font = `800 38px ${FONT}`; g.textAlign = 'center'; g.fillText('▶  Ejecutar conciliacion', w/2, 244);
+  const p1 = t > 15 ? easeOut((t - 16.0) / 1.0) : 0, p2 = easeOut((t - 19.8) / 0.8);
+  const V1 = [67, 4, 4, 1245200], V2 = [83, 5, 2, 1309200];
+  const V = V1.map((x, i) => lerp(x*p1, V2[i], p2));
+  let st = 'Listo para ejecutar', stc = C.soft;
+  if (t > 9.45 && t < 10.2) st = 'Validando datos…';
+  else if (t >= 10.2 && t < 15) { st = '✓ Datos validados'; stc = C2.ok; }
+  else if (t >= 15 && t < 19.3) { st = p1 < 1 ? 'Conciliando…' : '✓ 4 pares conciliados, 4 pendientes'; stc = p1 < 1 ? C.soft : C2.ok; }
+  else if (t >= 19.3) { st = p2 < 1 ? 'Guardando ajuste manual…' : '✓ Ajuste guardado: 5 pares, 2 pendientes'; stc = p2 < 1 ? C.soft : C2.ok; }
+  g.textAlign = 'left'; g.fillStyle = stc; g.font = `600 30px ${FONT}`; g.fillText(st, 40, 330);
+  const vals = [Math.round(V[0]) + '%', String(Math.round(V[1])), String(Math.round(V[2])), fmtCLP(Math.round(V[3]/100)*100)];
+  const labels = ['conciliacion', 'pares', 'pendientes', 'conciliado'];
+  const tw = (w - 76 - 3*16) / 4;
+  vals.forEach((v, i) => {
+    const x = 38 + i*(tw + 16);
+    g.fillStyle = '#eef2f7'; rr(g, x, 372, tw, 226, 22); g.fill();
+    let size = 66; g.font = `800 ${size}px ${FONT}`;
+    while (g.measureText(v).width > tw - 28 && size > 20) { size -= 2; g.font = `800 ${size}px ${FONT}`; }
+    g.fillStyle = i === 2 ? C2.warn : C.ink; g.textAlign = 'left'; g.fillText(v, x + 16, 468);
+    g.fillStyle = C.muted; g.font = `600 28px ${FONT}`; g.fillText(labels[i], x + 16, 550);
+  });
+  ptex.needsUpdate = true;
+}
+function panelState(t){
+  if (t < 13) {
+    const a = ease((t - 8.0) / 0.6), o = ease((t - 10.6) / 0.5);
+    return { pres:a*(1-o), y:lerp(-2.8, -1.0, a) + o*4.5, z:1.4, rx:lerp(-0.6, -0.06, a) };
+  }
+  if (t < 18.9) {
+    const a = ease((t - 15.4) / 0.6), o = ease((t - 17.1) / 0.45);
+    return { pres:a*(1-o), y:lerp(-3.4, -1.0, a) + o*4.5, z:1.4, rx:lerp(-0.6, -0.06, a) };
+  }
+  const a = ease((t - 19.3) / 0.5), o = ease((t - 20.5) / 0.6);
+  return { pres:a*(1-o), y:lerp(3.4, -1.0, a) + o*1.2, z:1.4 - o*8, rx:lerp(0.4, -0.06, a) + o*0.4 };
+}
+function updatePanel(t){
+  const s = panelState(t);
+  panel.visible = panelShadow.visible = s.pres > 0.001;
+  if (!panel.visible) return s;
+  drawPanel(t);
+  panel.position.set(0, s.y, s.z); panel.rotation.set(s.rx, Math.sin(t*0.5)*0.05, 0);
+  panelShadow.position.set(0.06, s.y - 0.08, s.z - 0.05); panelShadow.rotation.copy(panel.rotation);
+  panel.material.opacity = s.pres; panelShadow.material.opacity = s.pres * 0.14;
+  return s;
+}
+
+
+// ---------- escala: contador de movimientos procesados ----------
+const ccan = document.createElement('canvas'); ccan.width = 1480; ccan.height = 180;
+const cg = ccan.getContext('2d');
+const ctex = new THREE.CanvasTexture(ccan); ctex.encoding = THREE.sRGBEncoding; ctex.anisotropy = ANISO;
+const counter = new THREE.Mesh(new THREE.PlaneGeometry(TW, TW*180/1480), basic({ map:ctex })); counter.renderOrder = 6; table.add(counter);
+const scan = new THREE.Mesh(new THREE.PlaneGeometry(TW + 0.1, 0.55), basic({ color:col(C.brand) })); scan.renderOrder = 5; table.add(scan);
+const fmtN = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+function updateScale(t, fade){
+  const inA = easeOut((t - 11.0) / 0.3), outA = ease((t - 15.0) / 0.3);
+  const op = inA * (1 - outA) * fade;
+  counter.visible = op > 0.001;
+  const run = clamp((t - 11.2) / 3.0);
+  if (counter.visible) {
+    const g = cg, w = 1480, h = 180;
+    g.clearRect(0, 0, w, h);
+    g.fillStyle = '#ffffff'; rr(g, 2, 2, w-4, h-4, 30); g.fill();
+    g.strokeStyle = C.line; g.lineWidth = 4; g.stroke();
+    g.textBaseline = 'middle'; g.textAlign = 'left';
+    const n = fmtN(Math.round(3000 * run));
+    g.fillStyle = C.brand; g.font = `800 92px ${FONT}`; g.fillText(n, 44, h/2 + 4);
+    const nw = g.measureText('3.000').width;
+    g.fillStyle = C.ink; g.font = `600 44px ${FONT}`; g.fillText('movimientos procesados', 44 + nw + 28, h/2 + 6);
+    g.textAlign = 'right'; g.fillStyle = run >= 1 ? C2.ok : C.ink; g.font = `800 60px ${FONT}`;
+    g.fillText((run >= 1 ? '✓ ' : '') + (3.0 * run).toFixed(1).replace('.', ',') + ' s', w - 44, h/2 + 4);
+    ctex.needsUpdate = true;
+    counter.position.set(TX, 1.5 + (1 - inA)*0.2, 0.03);
+    counter.material.opacity = op;
+  }
+  // a scan band sweeps the rows while the counter runs
+  const scanning = t > 11.2 && t < 14.2;
+  scan.visible = scanning;
+  if (scanning) {
+    const ph = ((t - 11.2) / 0.5) % 1;
+    scan.position.set(TX, lerp(slotY(0) + 0.3, slotY(11) - 0.3, ph), 0.02);
+    scan.material.opacity = 0.13 * fade * Math.sin(ph * Math.PI);
+  }
+}
+
+// ---------- corrección manual ----------
+const [M1, M2] = MANUAL;
+const manualArc = (() => {
+  const d = 0.2 + 0.08*Math.abs(M2 - M1);
+  const curve = new THREE.CubicBezierCurve3(
+    new THREE.Vector3(ARC_X, slotY(M1), 0), new THREE.Vector3(ARC_X + d, slotY(M1), 0),
+    new THREE.Vector3(ARC_X + d, slotY(M2), 0), new THREE.Vector3(ARC_X, slotY(M2), 0));
+  const m = new THREE.Mesh(new THREE.TubeGeometry(curve, TUB, 0.024, RAD, false), basic({ color:col(C2.ok) }));
+  m.renderOrder = 4; table.add(m); return m;
+})();
+const manualHis = MANUAL.map(i => { const m = new THREE.Mesh(hiGeo, basic({ color:col(C.hi) })); m.renderOrder = 1; m.position.set(0, slotY(i), -0.02); table.add(m); return m; });
+const rings = MANUAL.map(i => { const m = new THREE.Mesh(new THREE.PlaneGeometry(TW + 0.12, RH + 0.1), basic({ color:col(C.brand) })); m.renderOrder = 2; m.position.set(TX, slotY(i), -0.015); table.add(m); return m; });
+const manualChipTex = pillTex('✓ Par manual', C2.ok, '#fff', 400, 90, 38);
+const manualChips = MANUAL.map(i => { const m = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 0.24), basic({ map:manualChipTex })); m.renderOrder = 7; m.position.set(0.35, slotY(i), 0.05); table.add(m); return m; });
+const cursorGeo = new THREE.PlaneGeometry(0.26, 0.34); cursorGeo.translate(0.13, -0.17, 0);
+const cursor = new THREE.Mesh(cursorGeo, basic({ map: tex(104, 136, (g) => {
+  g.beginPath(); g.moveTo(8, 6); g.lineTo(8, 110); g.lineTo(34, 86); g.lineTo(52, 128); g.lineTo(70, 120); g.lineTo(52, 80); g.lineTo(88, 80); g.closePath();
+  g.fillStyle = C.ink; g.fill(); g.strokeStyle = '#ffffff'; g.lineWidth = 7; g.lineJoin = 'round'; g.stroke();
+}) }));
+cursor.renderOrder = 20; table.add(cursor);
+function updateManual(t, fade){
+  const P0 = [1.9, -3.7], P1 = [0.55, slotY(M1) - 0.02], P2 = [0.55, slotY(M2) - 0.02];
+  const m1 = ease((t - 17.6) / 0.5), m2 = ease((t - 18.3) / 0.4);
+  const x = lerp(lerp(P0[0], P1[0], m1), P2[0], m2), y = lerp(lerp(P0[1], P1[1], m1), P2[1], m2);
+  const click = Math.max(clamp(1 - Math.abs(t - 18.15)/0.1), clamp(1 - Math.abs(t - 18.75)/0.1));
+  const cv = easeOut((t - 17.45) / 0.2) * (1 - ease((t - 19.2) / 0.25));
+  cursor.visible = cv > 0.001;
+  cursor.position.set(x, y, 0.12);
+  cursor.scale.setScalar(1 - click*0.18);
+  cursor.material.opacity = cv * fade;
+  const ringOut = ease((t - 19.05) / 0.3);
+  rings.forEach((r, k) => {
+    const on = easeOut((t - (k ? 18.75 : 18.15)) / 0.15);
+    r.material.opacity = on * (1 - ringOut) * fade;
+  });
+  const p = ease((t - 18.85) / 0.4);
+  manualArc.geometry.setDrawRange(0, Math.floor(p*TUB)*RAD*6);
+  manualArc.material.opacity = p > 0 ? fade : 0;
+  const HW = TW + 0.1;
+  manualHis.forEach(m => {
+    const s = easeOut((t - 19.05) / 0.4);
+    m.scale.x = Math.max(HW*s, 1e-4); m.position.x = TX - HW/2 + HW*s/2;
+    m.material.opacity = s > 0 ? fade*0.95 : 0;
+  });
+  manualChips.forEach((m, k) => {
+    const a = easeOut((t - 19.1 - k*0.1) / 0.3);
+    m.scale.setScalar(Math.max(lerp(0.6, 1, a), 1e-4)); m.material.opacity = a * fade;
+  });
+}
+
+function updateTable(t, pres){
+  const ex = ease((t - 21.0) / 0.8);
+  table.visible = t < 22.0;
+  if (!table.visible) return;
+  table.position.set(0, ex*1.5, -ex*10); table.rotation.x = -ex*0.5;
+  const fade = (1 - ex) * (1 - 0.8*pres);
+  rows.forEach(r => {
+    const c = r.c, i = r.i;
+    const dx = Math.sin(t*0.7 + c.s*6)*0.25, dy = Math.cos(t*0.55 + c.s*5)*0.3;
+    const a = ease((t - 3.6 - i*0.05) / 1.3);
+    r.m.position.set(lerp(c.x+dx, TX, a), lerp(c.y+dy, slotY(i), a), lerp(c.z, 0, a));
+    r.m.rotation.set(lerp(c.rx + t*0.15*c.s, 0, a), lerp(c.ry + t*0.2*c.s, 0, a), lerp(c.rz, 0, a));
+    r.m.material.opacity = fade * easeOut(t/0.6 - i*0.015);
+  });
+  const ha = ease((t - 4.8) / 0.5);
+  head.position.set(TX, HEAD_Y + (1-ha)*0.2, 0); head.material.opacity = ha * fade;
+  chips.forEach((c, i) => {
+    const inA = easeOut((t - 5.5 - i*0.2) / 0.35), outA = ease((t - 7.8) / 0.4);
+    const chk = t > 6.6 + i*0.18;
+    if (chk !== c.checked) { c.checked = chk; c.m.material.map = chk ? c.on : c.off; c.m.material.needsUpdate = true; }
+    const pop = chk ? 1 + Math.sin(clamp((t - 6.6 - i*0.18)/0.25)*Math.PI)*0.12 : 1;
+    c.m.position.set(c.x, CHIP_Y + (1-inA)*0.3, 0.02);
+    c.m.scale.setScalar(Math.max(inA*pop, 1e-4));
+    c.m.material.opacity = inA * (1-outA) * fade;
+    const lg = ease((t - 5.9 - i*0.2) / 0.3), top = CHIP_Y - 0.14, bot = HEAD_Y + RH/2, len = top - bot;
+    c.ln.scale.y = Math.max(len*lg, 1e-4); c.ln.position.set(c.x, top - len*lg/2, 0.01);
+    c.ln.material.color = col(chk ? C2.ok : C.ink);
+    c.ln.material.opacity = (lg > 0 ? 1 : 0) * (1-outA) * fade;
+  });
+  arcs.forEach((m, k) => {
+    const p = ease((t - 11.3 - k*0.35) / 0.6);
+    m.geometry.setDrawRange(0, Math.floor(p*TUB)*RAD*6);
+    m.material.opacity = p > 0 ? fade : 0;
+  });
+  const HW = TW + 0.1;
+  his.forEach((pair, k) => pair.forEach(m => {
+    const s = easeOut((t - 11.8 - k*0.35) / 0.4);
+    m.scale.x = Math.max(HW*s, 1e-4); m.position.x = TX - HW/2 + HW*s/2;
+    m.material.opacity = s > 0 ? fade*0.95 : 0;
+  }));
+  pends.forEach((m, i) => {
+    const a = easeOut((t - 13.9 - i*0.15) / 0.35);
+    const gone = MANUAL.includes(PEND[i]) ? ease((t - 18.85) / 0.25) : 0;
+    m.scale.setScalar(Math.max(lerp(0.6, 1, a) * (1 - gone*0.4), 1e-4)); m.material.opacity = a * (1 - gone) * fade;
+  });
+  updateScale(t, fade);
+  updateManual(t, fade);
+}
+
+// ---------- cierre: hoja de resultados ----------
+const T5 = 21.2;
+// rows grouped as the result sheet shows them: each pair together, pendientes at the end
+const RES_ORDER = [0,1,4,8,5,6,7,10,9,11,2,3];
+const PARTNER = {}; [...PAIRS, MANUAL].forEach(([a,b]) => { PARTNER[a] = b; PARTNER[b] = a; });
+const rid = i => 'M-' + String(i + 1).padStart(2, '0');
+const RS = 4.4;
+const rcan = document.createElement('canvas'); rcan.width = 1000; rcan.height = 1000;
+const rg = rcan.getContext('2d');
+const rtex = new THREE.CanvasTexture(rcan); rtex.encoding = THREE.sRGBEncoding; rtex.anisotropy = ANISO;
+const result = new THREE.Mesh(new THREE.PlaneGeometry(RS, RS), basic({ map:rtex })); result.renderOrder = 10; scene.add(result);
+const resultShadow = new THREE.Mesh(new THREE.PlaneGeometry(RS + 0.1, RS + 0.1), basic({ color:col(C.ink) })); resultShadow.renderOrder = 9; scene.add(resultShadow);
+
+function chip(g, x, y, w, h, label, on, size = 24){
+  rr(g, x, y, w, h, h/2);
+  if (on) { g.fillStyle = C.brand; g.fill(); } else { g.strokeStyle = C.line; g.lineWidth = 3; g.stroke(); }
+  g.fillStyle = on ? '#fff' : C.ink; g.font = `700 ${size}px ${FONT}`; g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.fillText(label, x + w/2, y + h/2 + 1);
+}
+function drawResult(t){
+  const g = rg, w = 1000, h = 1000;
+  g.clearRect(0,0,w,h);
+  g.fillStyle = '#ffffff'; rr(g, 0, 0, w, h, 34); g.fill();
+  g.save(); rr(g, 0, 0, w, h, 34); g.clip(); g.fillStyle = C.brand; g.fillRect(0, 0, w, 90); g.restore();
+  g.textBaseline = 'middle'; g.textAlign = 'left';
+  g.fillStyle = '#fff'; g.font = `800 34px ${FONT}`; g.fillText('Ambilor.Lab', 36, 47);
+  g.font = `600 28px ${FONT}`; g.textAlign = 'right'; g.fillText('Resultados', w - 36, 47);
+  const shown = RES_ORDER.filter((_, n) => t > T5 + 0.75 + n*0.09).length;
+  const done = shown === 12;
+  g.textAlign = 'left'; g.fillStyle = C.ink; g.font = `800 32px ${FONT}`; g.fillText('Conciliación de septiembre', 36, 138);
+  const exported = t > 26.35;
+  g.fillStyle = done ? C2.ok : C.soft; g.font = `600 24px ${FONT}`; g.textAlign = 'right';
+  g.fillText(exported ? '✓ Resultados exportados' : done ? '✓ 10 conciliados, 2 pendientes' : 'Cargando resultados…', w - 36, 140);
+  // filters, and the export / print actions
+  const pf = clamp(Math.min(ease((t - 24.0) / 0.3), 1 - ease((t - 25.1) / 0.3)));
+  const pendOn = pf > 0.5;
+  chip(g, 36, 184, 150, 50, 'Todos 12', !pendOn);
+  chip(g, 198, 184, 210, 50, 'Conciliados 10', false);
+  chip(g, 420, 184, 190, 50, 'Pendientes 2', pendOn);
+  const pe = clamp(1 - Math.abs(t - 25.9) / 0.22);
+  chip(g, 700 + pe*3, 184 + pe*3, 128 - pe*6, 50 - pe*6, 'Exportar', pe > 0 || (t > 25.9 && t < 26.7), 22);
+  chip(g, 840, 184, 124, 50, 'Reporte', false, 22);
+  // column header
+  const HY = 256, RH2 = 56, X = { est:36, id:212, con:300, mon:700, det:726 };
+  g.fillStyle = '#eef2f7'; g.fillRect(20, HY, w - 40, 46);
+  g.fillStyle = C.muted; g.font = `700 22px ${FONT}`; g.textAlign = 'left';
+  g.fillText('Estado', X.est, HY + 24); g.fillText('ID', X.id, HY + 24); g.fillText('Concepto', X.con, HY + 24); g.fillText('Detalle del match', X.det, HY + 24);
+  g.textAlign = 'right'; g.fillText('Monto', X.mon, HY + 24);
+  RES_ORDER.forEach((i, n) => {
+    const a = easeOut((t - T5 - 0.75 - n*0.09) / 0.3);
+    if (a <= 0) return;
+    const pend = !(i in PARTNER);
+    const y = HY + 50 + n*RH2 + (1 - a)*14;
+    g.globalAlpha = a * (pend ? 1 : 1 - 0.8*pf);
+    if (pend && pf > 0) { g.fillStyle = `rgba(245,200,76,${0.55*pf})`; g.fillRect(20, y, w - 40, RH2); }
+    g.strokeStyle = C.line; g.lineWidth = 2; g.beginPath(); g.moveTo(20, y + RH2); g.lineTo(w - 20, y + RH2); g.stroke();
+    rr(g, X.est, y + 11, 150, 34, 17); g.fillStyle = pend ? C2.warn : C2.ok; g.fill();
+    g.fillStyle = '#fff'; g.font = `700 20px ${FONT}`; g.textAlign = 'center'; g.fillText(pend ? 'Pendiente' : 'Conciliado', X.est + 75, y + 29);
+    g.textAlign = 'left'; g.fillStyle = C.soft; g.font = `600 22px ${FONT}`; g.fillText(rid(i), X.id, y + 29);
+    g.fillStyle = C.ink; g.font = `600 23px ${FONT}`; g.fillText(DATA[i][1], X.con, y + 29);
+    g.textAlign = 'right'; g.font = `800 23px ${FONT}`; g.fillStyle = DATA[i][2][0] === '+' ? C.ink : C.brand; g.fillText(DATA[i][2], X.mon, y + 29);
+    g.textAlign = 'left'; g.font = `600 22px ${FONT}`; g.fillStyle = pend ? C2.warn : C.muted;
+    g.fillText(pend ? 'Sin contraparte' : (MANUAL.includes(i) ? 'Par manual con ' : 'Par con ') + rid(PARTNER[i]), X.det, y + 29);
+    g.globalAlpha = 1;
+  });
+  rtex.needsUpdate = true;
+}
+
+// ---------- exportación ----------
+const exportCard = new THREE.Mesh(new THREE.PlaneGeometry(1.9, 2.4), basic({ map: tex(380, 480, (g, w, h) => {
+  g.fillStyle = '#ffffff'; rr(g, 3, 3, w-6, h-6, 26); g.fill();
+  g.strokeStyle = C.line; g.lineWidth = 4; g.stroke();
+  // sheet icon
+  g.fillStyle = C2.ok; rr(g, 28, 28, 64, 78, 10); g.fill();
+  g.strokeStyle = '#ffffff'; g.lineWidth = 3;
+  for (let k = 0; k < 3; k++) { g.beginPath(); g.moveTo(40, 52 + k*16); g.lineTo(80, 52 + k*16); g.stroke(); }
+  g.beginPath(); g.moveTo(60, 44); g.lineTo(60, 92); g.stroke();
+  g.fillStyle = C.ink; g.font = `800 25px ${FONT}`; g.textBaseline = 'middle'; g.textAlign = 'left';
+  g.fillText('Resultados_sept', 108, 56);
+  g.fillStyle = C.muted; g.font = `600 20px ${FONT}`; g.fillText('12 filas, 5 columnas', 108, 88);
+  // mini preview of the exported sheet
+  const top = 138;
+  g.fillStyle = C.brand; g.fillRect(28, top, w - 56, 28);
+  g.fillStyle = '#fff'; g.font = `700 15px ${FONT}`;
+  ['Estado','ID','Concepto','Monto'].forEach((c, k) => g.fillText(c, 36 + [0, 88, 138, 262][k], top + 15));
+  RES_ORDER.forEach((i, n) => {
+    const y = top + 28 + n*24, pend = !(i in PARTNER);
+    g.fillStyle = n % 2 ? '#f6f8fb' : '#ffffff'; g.fillRect(28, y, w - 56, 24);
+    g.fillStyle = pend ? C2.warn : C2.ok; rr(g, 34, y + 5, 72, 14, 7); g.fill();
+    g.fillStyle = C.soft; g.font = `600 13px ${FONT}`; g.fillText(rid(i), 124, y + 13);
+    g.fillStyle = C.ink; g.fillText(DATA[i][1].slice(0, 16), 174, y + 13);
+    g.textAlign = 'right'; g.font = `700 13px ${FONT}`; g.fillText(DATA[i][2], w - 36, y + 13); g.textAlign = 'left';
+  });
+  g.strokeStyle = C.line; g.lineWidth = 2; g.strokeRect(28, top, w - 56, 28 + 12*24);
+}) }));
+exportCard.renderOrder = 12; scene.add(exportCard);
+const exportShadow = new THREE.Mesh(new THREE.PlaneGeometry(1.96, 2.46), basic({ color:col(C.ink) })); exportShadow.renderOrder = 11; scene.add(exportShadow);
+function updateExport(t){
+  const a = ease((t - 26.1) / 0.75);
+  exportCard.visible = exportShadow.visible = a > 0.001;
+  if (!exportCard.visible) return;
+  const from = new THREE.Vector3(1.16, -0.42, 0.55), to = new THREE.Vector3(1.05, -1.45, 2.0);
+  const arc = Math.sin(a * Math.PI) * 0.45;
+  exportCard.position.set(lerp(from.x, to.x, a) + arc*0.4, lerp(from.y, to.y, a) + arc + Math.sin(t*1.6)*0.03*a, lerp(from.z, to.z, a));
+  exportCard.rotation.set(lerp(-0.05, -0.06, a), lerp(0, -0.28, a), lerp(0.25, -0.04, a));
+  exportCard.scale.setScalar(Math.max(lerp(0.08, 1, a), 1e-4));
+  exportCard.material.opacity = clamp(a * 2);
+  exportShadow.position.set(exportCard.position.x + 0.07, exportCard.position.y - 0.09, exportCard.position.z - 0.05);
+  exportShadow.rotation.copy(exportCard.rotation); exportShadow.scale.copy(exportCard.scale);
+  exportShadow.material.opacity = 0.16 * a;
+}
+function updateCube(t){
+  const a = ease((t - T5) / 0.7);
+  result.visible = resultShadow.visible = a > 0.001;
+  if (!result.visible) return;
+  drawResult(t);
+  result.position.set(0, lerp(-3.6, -0.85, a), 0.5);
+  result.rotation.set(lerp(-0.7, -0.05, a), Math.sin(t*0.45)*0.05, 0);
+  resultShadow.position.set(0.06, result.position.y - 0.08, 0.45); resultShadow.rotation.copy(result.rotation);
+  result.material.opacity = a; resultShadow.material.opacity = a * 0.14;
+}
+
+
+
+function resize(){
+  const w = Math.max(1, stage.clientWidth), h = Math.max(1, stage.clientHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h; camera.updateProjectionMatrix();
+  needsRender = true;
+}
+new ResizeObserver(resize).observe(stage); resize();
+if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible = es[0].isIntersecting; }, { threshold:0.05 }).observe(stage);
+// No renderizar con la pestana en segundo plano: la demo es un RAF perpetuo.
+document.addEventListener('visibilitychange', () => { visible = !document.hidden; needsRender = true; });
+
+let last = performance.now();
+function frame(now){
+  const dt = Math.min(0.05, (now - last) / 1000); last = now;
+  if (visible && !document.hidden && (playing || needsRender)) {
+    if (playing) { T += dt; if (T >= DUR) T = 0; }
+    setStep(stepOf(T));
+    const t = T;
+    camera.position.set(Math.sin(t*0.35)*0.2, -0.85 + Math.cos(t*0.3)*0.12, lerp(11.2, 9.9, easeOut(t/3.5)) - ease((t - T5)/4.6)*0.8);
+    camera.lookAt(camera.position.x*0.4, -0.85, 0);
+    const ps = updatePanel(t);
+    updateTable(t, ps.pres); updateCube(t); updateExport(t);
+    renderer.render(scene, camera);
+    fills.forEach((f, i) => { const s = STEPS[i]; f.fill.style.width = (clamp((T - s.a) / (s.b - s.a)) * 100) + '%'; });
+    needsRender = false;
+  }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+} catch(err) {
+  /* Si three.js o WebGL fallan a mitad de la inicializacion, la seccion no
+     puede quedar en blanco: caemos al modo texto. */
+  if (window.console) console.warn('[al-demo] error al iniciar el 3D:', err);
+  fallback();
+}
+})();
+})();
 </script>
 </body>
 </html>
