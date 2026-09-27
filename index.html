@@ -414,7 +414,18 @@ nav.scrolled .nav-links a{font-size:12px}
    Se unifico el 2026-09-27. */
 .al-demo *{box-sizing:border-box}
 .al-demo__grid{display:grid; grid-template-columns:1fr; gap:clamp(14px,2.2vh,26px); align-items:center}
-.al-demo__copy{min-height:0; display:flex; flex-direction:column; justify-content:center; transition:opacity .28s ease, transform .28s ease}
+/* min-height reservado (no 0) para que el alto de la seccion NO dependa de
+   cuanto texto tenga el paso activo. Antes la columna hugging su contenido:
+   entre el paso mas corto (105px) y el mas largo (250px en "ver en accion" y
+   222px en "como se instala") la seccion variaba 145px y 117px, y con ello
+   se movia todo lo que queda abajo. Medido el 2026-09-27 en 6 viewports: el
+   copy mas alto en cualquiera de ellos es 305px (2 columnas, copy mas
+   angosto), asi que 21rem = 336px cubre todos los casos con margen.
+   Es un min-height, no un height: si en algun navegador o tamano el texto
+   llegara a exceder el espacio, la caja crece (nunca recorta) y se degrada
+   al comportamiento anterior. Se mide en rem para que escale con el tamano
+   de fuente que elija el visitante. */
+.al-demo__copy{min-height:21rem; display:flex; flex-direction:column; justify-content:center; transition:opacity .28s ease, transform .28s ease}
 .al-demo__copy.is-changing{opacity:0; transform:translateY(8px)}
 .al-demo__kicker{font-family:var(--mono); font-size:10.5px; font-weight:500; text-transform:uppercase; letter-spacing:.08em; color:var(--azul); margin-bottom:.5rem}
 .al-demo__title{font-size:18px; font-weight:600; letter-spacing:-.3px; line-height:1.35; color:var(--negro); margin-bottom:.6rem; text-wrap:balance}
@@ -478,7 +489,11 @@ nav.scrolled .nav-links a{font-size:12px}
 @media (min-width:640px) and (max-height:840px){
   .al-demo__grid{grid-template-columns:minmax(0,.92fr) minmax(0,1fr); gap:clamp(20px,3vw,34px)}
   .al-demo__stage{order:0; margin:0; max-width:none}
-  .al-demo__copy{min-height:0}
+  /* Mismo min-height reservado que en una columna (ver la regla base): sin esto
+     esta media query lo volvia a 0 y el alto de la seccion volvia a depender
+     del texto del paso. Aqui la columna es mas angosta, asi que el copy llega
+     mas alto: 305px medidos, y 21rem = 336px los cubre igual. */
+  .al-demo__copy{min-height:21rem}
   .al-demo--no3d .al-demo__grid{grid-template-columns:1fr}
 }
 @media (max-width:760px){
