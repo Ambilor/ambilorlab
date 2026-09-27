@@ -306,6 +306,28 @@ nav{background:rgba(255,255,255,.85)!important;backdrop-filter:blur(14px);-webki
 .home-h1{background:linear-gradient(130deg,#111 0%,#1F5C99 28%,#2a80e1 55%,#111 100%)!important;background-size:200% auto!important;-webkit-background-clip:text!important;background-clip:text!important;-webkit-text-fill-color:transparent!important;color:#111;animation:grad-shift 5s ease-in-out infinite}
 @keyframes grad-shift{0%,100%{background-position:0% center}50%{background-position:100% center}}
 section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
+/* ── transicion de vista (2026-09-27) ─────────────────────────────────────
+   Antes el cambio de pestana era un fundido de .2s con 8px de desplazamiento:
+   practically invisible, y era lo unico que señalaba el cambio de vista.
+   Ahora hay tres señales simultaneas y de escala muy distinta:
+     1. la vista que sale se ALEJA (scale .985) en vez de solo desvanecerse;
+     2. la que entra se ACERCA (scale 1.02 -> 1), que es lo que el ojo lee
+        como "ha cambiado de plano";
+     3. una linea de marca cruza la pantalla, para que el cambio se perciba
+        aunque el contenido sea parecido.
+   Todo dura ~420ms: se nota, pero no frena la navegacion. */
+section.visible.entering{animation:view-in .42s cubic-bezier(.16,1,.3,1) both}
+@keyframes view-in{from{opacity:0;transform:scale(1.02)}to{opacity:1;transform:none}}
+.view-wipe{position:fixed;left:0;right:0;top:50%;height:2px;z-index:150;pointer-events:none;
+  background:linear-gradient(90deg,rgba(31,92,153,0) 0%,var(--azul) 18%,var(--azul) 82%,rgba(31,92,153,0) 100%);
+  box-shadow:0 0 14px rgba(31,92,153,.45);transform:scaleX(0);opacity:0}
+.view-wipe.go{animation:wipe .42s cubic-bezier(.16,1,.3,1) both}
+@keyframes wipe{
+  0%{transform:scaleX(0) translateX(-40%);opacity:0}
+  22%{opacity:1}
+  78%{opacity:1}
+  100%{transform:scaleX(1) translateX(0);opacity:0}
+}
 @keyframes sec-in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 .rv{opacity:0;transform:translateY(22px);transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1)}
 .rv.in{opacity:1;transform:none}
@@ -315,7 +337,7 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
 .ha-card{transition:transform .2s,box-shadow .2s}
 /* el transform se dejo en el bloque del sistema de tilt (arriba): el !important
    de esta regla lo pisaba y anulaba la inclinacion 3D en las .ha-card */
-.ha-card:hover{box-shadow:0 0 0 1px rgba(31,92,153,.18),0 8px 24px rgba(31,92,153,.13)!important}
+.ha-card:hover{box-shadow:0 0 0 1px rgba(31,92,153,.22),0 10px 36px rgba(31,92,153,.16),0 28px 56px rgba(31,92,153,.07)!important}
 .cta-home,.buy-btn{position:relative!important;overflow:hidden!important}
 .cta-home::after,.buy-btn::after{content:'';position:absolute;top:-50%;left:-200%;width:50%;height:200%;background:linear-gradient(to right,transparent,rgba(255,255,255,.28),transparent);transform:skewX(-22deg);animation:shimmer-btn 3.5s ease-in-out infinite}
 @keyframes shimmer-btn{0%{left:-200%}55%,100%{left:300%}}
@@ -333,9 +355,17 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
    no se engancha y estas reglas ni siquiera se activan. */
 .hs-card,.ha-card{--mx:0;--my:0;position:relative}
 @media (hover:hover) and (pointer:fine){
-  /* lift de respaldo cuando no hay tilt (sin JS, o con movimiento reducido) */
-  .hs-card:hover,.ha-card:hover{transform:translateY(-3px)}
-  /* inclinacion: 6 grados es el techo de "suave" que pide la marca */
+  /* Z legible: el scale es lo que haceVisible la inclinacion.
+     Diagnostico del 2026-09-27: con solo 6 grados, la tarjeta no se notaba
+     NADA. No era que el angulo fuera pequeno, es que una tarjeta blanca plana
+     con borde de 1px sobre fondo blanco NO TIENE MARCO DE REFERENCIA: el ojo
+     no tiene contra que medir el giro, y un paralax de 9px esta por debajo del
+     umbral de percepcion. El scale 1.02 hace que la tarjeta se vea DESPEGARSE
+     del plano (su sombra se separa y sus bordes se separan del resto), y esa
+     es la referencia que hace legible la rotacion. Orden deliberado:
+     primero se despega, despues se inclina. */
+  .hs-card:hover,.ha-card:hover{transform:translateY(-8px) scale(1.04)}
+  /* inclinacion: el multiplicador es 20 grados, pero el JS limita --mx/--my a +-0.5, asi que el ANGULO REAL MAXIMO es 10 grados. Ojo: durante varios dias el codigo decia "6deg" cuando en realidad entregaba 3, porque el limite del JS se come la mitad. Si se sube este numero, el delivered es la mitad. */
   /* La regla base NO declara transform, a proposito. Si lo hiciera, pisaria la
      del reveal (.rv translateY(22px) -> .rv.in none) porque .hs-card.tilt es mas
      especifico, y las tarjetas aparecerian de golpe sin la subida leve que pide
@@ -344,15 +374,18 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
      La transition declara opacity y box-shadow porque el shorthand anterior las
      habia borrado (regresion detectada en la revision: el fade se perdia). */
   .hs-card.tilt,.ha-card.tilt{transition:transform .5s var(--ease),box-shadow .2s,opacity .6s}
-  .hs-card.tilt.is-tilting,.ha-card.tilt.is-tilting{transform:perspective(700px) rotateY(calc(var(--mx)*6deg)) rotateX(calc(var(--my)*-6deg)) translateY(-4px);transition:transform .1s linear,box-shadow .2s}
+  .hs-card.tilt.is-tilting,.ha-card.tilt.is-tilting{transform:perspective(700px) rotateY(calc(var(--mx)*20deg)) rotateX(calc(var(--my)*-20deg)) translateY(-8px) scale(1.04);transition:transform .1s linear,box-shadow .2s}
   /* parallax interno: la capa visual se desplaza en contra del puntero, que es
-     lo que produce la sensacion de caja con contenido y no de imagen que rota */
-  .hs-card.tilt .hs-vis{transform:translate3d(calc(var(--mx)*-9px),calc(var(--my)*-9px),0)}
-  .hs-card.tilt .hs-title{transform:translate3d(calc(var(--mx)*-4px),calc(var(--my)*-4px),0)}
-  .hs-card.tilt .hs-lbl,.hs-card.tilt .hs-desc{transform:translate3d(calc(var(--mx)*-2px),calc(var(--my)*-2px),0)}
-  .ha-card.tilt .ha-icon{transform:translate3d(calc(var(--mx)*-7px),calc(var(--my)*-7px),0)}
-  .ha-card.tilt .ha-name{transform:translate3d(calc(var(--mx)*-4px),calc(var(--my)*-4px),0)}
-  .ha-card.tilt .ha-row{transform:translate3d(calc(var(--mx)*-2px),calc(var(--my)*-2px),0)}
+     lo que produce la sensacion de caja con contenido y no de imagen que rota.
+     Escala por capas, no uniforme: la imagen visual es la que mas se mueve
+     (15px) y el TEXTO casi nada (7px y 3px), porque el texto compete con la
+     lectura y la marca pide que el movimiento no la distraiga. */
+  .hs-card.tilt .hs-vis{transform:translate3d(calc(var(--mx)*-15px),calc(var(--my)*-15px),0)}
+  .hs-card.tilt .hs-title{transform:translate3d(calc(var(--mx)*-7px),calc(var(--my)*-7px),0)}
+  .hs-card.tilt .hs-lbl,.hs-card.tilt .hs-desc{transform:translate3d(calc(var(--mx)*-3px),calc(var(--my)*-3px),0)}
+  .ha-card.tilt .ha-icon{transform:translate3d(calc(var(--mx)*-12px),calc(var(--my)*-12px),0)}
+  .ha-card.tilt .ha-name{transform:translate3d(calc(var(--mx)*-7px),calc(var(--my)*-7px),0)}
+  .ha-card.tilt .ha-row{transform:translate3d(calc(var(--mx)*-3px),calc(var(--my)*-3px),0)}
   /* hairline: la barra superior que se dibuja de izquierda a derecha */
   .hs-card::before,.ha-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--azul);transform:scaleX(0);transform-origin:left center;transition:transform .45s var(--ease);pointer-events:none;z-index:3}
   .hs-card:hover::before,.ha-card:hover::before{transform:scaleX(1)}
@@ -1604,8 +1637,17 @@ function show(id){
   var navEl=document.getElementById('nav-'+id);
   if(navEl){navEl.classList.add('active');moveNavInd(navEl);}
   function activate(){
-    document.querySelectorAll('section').forEach(function(s){s.classList.remove('visible');s.style.cssText='';});
+    document.querySelectorAll('section').forEach(function(s){s.classList.remove('visible','entering');s.style.cssText='';});
     target.classList.add('visible');
+    if(current&&current!==target){
+      // la vista entrante se acerca desde scale 1.02: es la señal de "cambio de plano"
+      target.classList.add('entering');
+      target.addEventListener('animationend',function once(e){
+        if(e.target!==target)return;
+        target.removeEventListener('animationend',once);
+        target.classList.remove('entering');
+      });
+    }
     window.scrollTo({top:0,behavior:'instant'});
     setTimeout(function(){
       target.querySelectorAll('.rv:not(.in)').forEach(function(el){
@@ -1616,12 +1658,24 @@ function show(id){
     if(id==='home') animH1();
   }
   if(current&&current!==target){
-    current.style.opacity='0';current.style.transform='translateY(8px)';
-    current.style.transition='opacity .2s ease,transform .2s ease';
+    // la vista saliente se aleja en vez de solo desvanecerse
+    current.style.transform='scale(.985)';
+    current.style.opacity='0';
+    current.style.transition='opacity .24s ease,transform .24s ease';
     current.style.pointerEvents='none';
-    setTimeout(activate,210);
+    viewWipe();
+    setTimeout(activate,240);
   } else { activate(); }
   return false;
+}
+// linea de marca que cruza la pantalla durante el cambio de vista
+function viewWipe(){
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var w=document.querySelector('.view-wipe');
+  if(!w){w=document.createElement('div');w.className='view-wipe';document.body.appendChild(w);}
+  w.classList.remove('go');
+  void w.offsetWidth;               // reinicia la animacion si se hace click seguido
+  w.classList.add('go');
 }
 
 // El player de la seccion "Como se instala" ya no vive aqui: usa el mismo
