@@ -375,8 +375,8 @@ section.visible.entering{animation:view-in .42s cubic-bezier(.16,1,.3,1) both}
   .hs-card.tilt .hs-title{will-change:auto}
   
   .ha-card.tilt .ha-icon{transform:translate3d(calc(var(--mx)*-12px),calc(var(--my)*-12px),0)}
-  .ha-card.tilt .ha-name{transform:translate3d(calc(var(--mx)*-7px),calc(var(--my)*-7px),0)}
-  .ha-card.tilt .ha-row{transform:translate3d(calc(var(--mx)*-3px),calc(var(--my)*-3px),0)}
+  /* .ha-name y .ha-row son texto: sin transform (un transform sobre el glifo le quita el antialiasing subpixel y se ve borroso). Solo el icono, que es grafico, lleva parallax. */
+  
   /* hairline: la barra superior que se dibuja de izquierda a derecha */
   .hs-card::before,.ha-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--azul);transform:scaleX(0);transform-origin:left center;transition:transform .45s var(--ease);pointer-events:none;z-index:3}
   .hs-card:hover::before,.ha-card:hover::before{transform:scaleX(1)}
