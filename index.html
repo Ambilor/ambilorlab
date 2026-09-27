@@ -65,7 +65,7 @@
 :root {
   --azul:#1F5C99;--azul-dark:#163f6b;--azul-bg:#EBF2FA;--negro:#111111;
   --gris-1:#444444;--gris-2:#888888;--gris-4:#F4F4F4;--blanco:#FFFFFF;
-  --borde:#E2E2E2;--max:900px;
+  --borde:#E2E2E2;--max:900px;--ease:cubic-bezier(.16,1,.3,1);
   --mono:ui-monospace,Menlo,Consolas,monospace;
   --sans:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif;
 }
@@ -232,7 +232,18 @@ footer{border-top:1px solid var(--borde);padding:1.5rem;text-align:center;font-f
 .gp-btn-ghost{background:#f1f3f4;color:#444}
 @media(max-width:620px){.gp-step{grid-template-columns:30px 1fr}.gp-vis{display:none}}
 
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+/* La marca (4.4) exige respetar prefers-reduced-motion de forma explicita, y
+   hasta 2026-09-27 no se respetaba: las 4 animaciones decorativas infinitas
+   (los dos blobs difuminados, el gradiente y el brillo de los botones) segian
+   corriendo, y las tarjetas conservaban una transicion de transform de .6s.
+   Este es el patron estandar de accesibilidad: sin movimiento, sin transiciones
+   y sin bucles. Lo verifica la sonda reduced.mjs contando lo que sigue corriendo.
+   Las demos 3D no se ven afectadas (usan rAF, no animaciones CSS) y su propio JS
+   ya consulta la preferencia. */
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+}
 .demo-section{margin-bottom:2.5rem}
 .demo-label{font-family:var(--mono);font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--gris-2);margin-bottom:.75rem}
 /* El player legacy de escenas (.dscene/.d-pill/.d-h/.deco/.dctrl) se elimino
@@ -302,13 +313,57 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
 .rv-d2{transition-delay:.2s}
 .hs-card:hover{box-shadow:0 0 0 1px rgba(31,92,153,.22),0 10px 36px rgba(31,92,153,.16),0 28px 56px rgba(31,92,153,.07)!important}
 .ha-card{transition:transform .2s,box-shadow .2s}
-.ha-card:hover{transform:translateY(-3px)!important;box-shadow:0 0 0 1px rgba(31,92,153,.18),0 8px 24px rgba(31,92,153,.13)!important}
+/* el transform se dejo en el bloque del sistema de tilt (arriba): el !important
+   de esta regla lo pisaba y anulaba la inclinacion 3D en las .ha-card */
+.ha-card:hover{box-shadow:0 0 0 1px rgba(31,92,153,.18),0 8px 24px rgba(31,92,153,.13)!important}
 .cta-home,.buy-btn{position:relative!important;overflow:hidden!important}
 .cta-home::after,.buy-btn::after{content:'';position:absolute;top:-50%;left:-200%;width:50%;height:200%;background:linear-gradient(to right,transparent,rgba(255,255,255,.28),transparent);transform:skewX(-22deg);animation:shimmer-btn 3.5s ease-in-out infinite}
 @keyframes shimmer-btn{0%{left:-200%}55%,100%{left:300%}}
 .gvw-tc{transition:transform .2s,filter .2s}
 .gvw-tc:hover{transform:translateY(-4px)!important;filter:brightness(1.04)}
+
+/* ═══ P1 · sistema de inclinacion 3D con parallax (marca 4.4) ═══
+   La profundidad viene de ROTAR LA CARA de la tarjeta, no de una sombra mas
+   pesada: el techo de sombra es el que ya fija el :hover mas abajo (L~303/305).
+   Por eso no se agranda nada — la sombra se pinta en el espacio transformado y
+   ya "acompana" la rotacion sola.
+   El JS solo escribe --mx/--my (-0.5..0.5) una vez por frame; toda la matematica
+   (rotacion, lift, parallax) vive aqui, en CSS. Solo aplica con puntero fino
+   (hover:hover + pointer:fine) y, en JS, sin prefers-reduced-motion: en tactil
+   no se engancha y estas reglas ni siquiera se activan. */
+.hs-card,.ha-card{--mx:0;--my:0;position:relative}
+@media (hover:hover) and (pointer:fine){
+  /* lift de respaldo cuando no hay tilt (sin JS, o con movimiento reducido) */
+  .hs-card:hover,.ha-card:hover{transform:translateY(-3px)}
+  /* inclinacion: 6 grados es el techo de "suave" que pide la marca */
+  /* La regla base NO declara transform, a proposito. Si lo hiciera, pisaria la
+     del reveal (.rv translateY(22px) -> .rv.in none) porque .hs-card.tilt es mas
+     especifico, y las tarjetas aparecerian de golpe sin la subida leve que pide
+     la marca 4.4. Ademas asi no hay capa GPU permanente: el perspective solo
+     existe mientras hay puntero encima.
+     La transition declara opacity y box-shadow porque el shorthand anterior las
+     habia borrado (regresion detectada en la revision: el fade se perdia). */
+  .hs-card.tilt,.ha-card.tilt{transition:transform .5s var(--ease),box-shadow .2s,opacity .6s}
+  .hs-card.tilt.is-tilting,.ha-card.tilt.is-tilting{transform:perspective(700px) rotateY(calc(var(--mx)*6deg)) rotateX(calc(var(--my)*-6deg)) translateY(-4px);transition:transform .1s linear,box-shadow .2s}
+  /* parallax interno: la capa visual se desplaza en contra del puntero, que es
+     lo que produce la sensacion de caja con contenido y no de imagen que rota */
+  .hs-card.tilt .hs-vis{transform:translate3d(calc(var(--mx)*-9px),calc(var(--my)*-9px),0)}
+  .hs-card.tilt .hs-title{transform:translate3d(calc(var(--mx)*-4px),calc(var(--my)*-4px),0)}
+  .hs-card.tilt .hs-lbl,.hs-card.tilt .hs-desc{transform:translate3d(calc(var(--mx)*-2px),calc(var(--my)*-2px),0)}
+  .ha-card.tilt .ha-icon{transform:translate3d(calc(var(--mx)*-7px),calc(var(--my)*-7px),0)}
+  .ha-card.tilt .ha-name{transform:translate3d(calc(var(--mx)*-4px),calc(var(--my)*-4px),0)}
+  .ha-card.tilt .ha-row{transform:translate3d(calc(var(--mx)*-2px),calc(var(--my)*-2px),0)}
+  /* hairline: la barra superior que se dibuja de izquierda a derecha */
+  .hs-card::before,.ha-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--azul);transform:scaleX(0);transform-origin:left center;transition:transform .45s var(--ease);pointer-events:none;z-index:3}
+  .hs-card:hover::before,.ha-card:hover::before{transform:scaleX(1)}
+}
+/* el azul de marca (#1F5C99) casi no se ve sobre el fondo oscuro: en dark mode
+   el hairline usa el azul claro que ya se usa en los modos oscuros de Ambilor */
+[data-theme="dark"] .hs-card::before,[data-theme="dark"] .ha-card::before{background:#4A90D9}
+/* nav: el subrayado crece desde la izquierda en vez de aparecer de golpe */
 .nav-links a{position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:2px;background:var(--azul);border-radius:2px;transform:scaleX(0);transform-origin:right center;transition:transform .4s var(--ease)}
+.nav-links a:hover::after{transform:scaleX(1);transform-origin:left center}
 .nav-links a.active::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:2px;background:var(--azul);border-radius:2px;animation:nav-line .25s cubic-bezier(.16,1,.3,1) both}
 @keyframes nav-line{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 /* scroll to top */
@@ -1653,21 +1708,48 @@ function cfSubmit(e){
   });
 })();
 
-// 3D tilt on service cards
+// P1 · inclinacion 3D con parallax (marca 4.4).
+// El JS NO escribe la transform: escribe solo --mx/--my (-0.5..0.5) y deja que
+// el CSS calcule rotacion, lift y parallax. Antes se escribia un string de
+// transform y un style.transition en CADA mousemove, lo que provocaba un
+// recomputo de estilo por evento. Ahora se agrupa con requestAnimationFrame.
 (function(){
-  document.querySelectorAll('.hs-card').forEach(function(card){
-    card.addEventListener('mousemove',function(e){
-      var r=card.getBoundingClientRect();
-      var x=(e.clientX-r.left)/r.width-.5;
-      var y=(e.clientY-r.top)/r.height-.5;
-      card.style.transition='transform .08s ease,box-shadow .2s ease';
-      card.style.transform='perspective(700px) rotateX('+(-y*5)+'deg) rotateY('+(x*5)+'deg) translateY(-4px)';
-    });
-    card.addEventListener('mouseleave',function(){
-      card.style.transition='transform .45s cubic-bezier(.16,1,.3,1),box-shadow .2s ease';
-      card.style.transform='';
-    });
-  });
+  var mqHover=window.matchMedia?matchMedia('(hover:hover) and (pointer:fine)'):null;
+  var mqReduce=window.matchMedia?matchMedia('(prefers-reduced-motion: reduce)'):null;
+  // Sin puntero fino (tactil) no hay tilt, y con movimiento reducido tampoco:
+  // se respeta la preferencia del sistema y se evita el efecto al tocar.
+  if(mqHover&&!mqHover.matches)return;
+  if(mqReduce&&mqReduce.matches)return;
+  var cards=document.querySelectorAll('.hs-card,.ha-card');
+  for(var i=0;i<cards.length;i++){
+    (function(card){
+      var raf=0,mx=0,my=0;
+      function paint(){
+        raf=0;
+        card.style.setProperty('--mx',mx.toFixed(3));
+        card.style.setProperty('--my',my.toFixed(3));
+      }
+      function track(e){
+        var r=card.getBoundingClientRect();
+        if(!r.width||!r.height)return;
+        mx=(e.clientX-r.left)/r.width-.5;
+        my=(e.clientY-r.top)/r.height-.5;
+        if(!raf)raf=requestAnimationFrame(paint);
+      }
+      card.classList.add('tilt');
+      card.addEventListener('mouseenter',function(e){
+        card.classList.add('is-tilting');
+        track(e);
+      });
+      card.addEventListener('mousemove',track,{passive:true});
+      card.addEventListener('mouseleave',function(){
+        if(raf){cancelAnimationFrame(raf);raf=0;}
+        card.classList.remove('is-tilting');
+        card.style.setProperty('--mx','0');
+        card.style.setProperty('--my','0');
+      });
+    })(cards[i]);
+  }
 })();
 
 
