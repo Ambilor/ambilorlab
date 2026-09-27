@@ -1899,8 +1899,14 @@ const scene = new THREE.Scene();
 // Funcion para refrescar colores y re-renderizar texturas al cambiar tema
 function refreshThemeColors() {
   Object.assign(C, getThemeColors());
-  // Re-dibujar todas las texturas canvas
-  cards.forEach((c, i) => { DRAW[i](c.g, 0); c.tx.needsUpdate = true; });
+  // Re-dibujar la pantalla visible actualmente usando el tiempo global T
+  cards.forEach((c, i) => {
+    const s = STEPS[i];
+    const lt = T - s.a;  // tiempo local de la pantalla actual
+    DRAW[i](c.g, lt);
+    c.tx.needsUpdate = true;
+  });
+  // Tambien actualizar texturas estaticas (panel, contador, resultados)
   ptex.needsUpdate = true;
   ctex.needsUpdate = true;
   rtex.needsUpdate = true;
@@ -2535,8 +2541,8 @@ function base(g, title){
   g.fillStyle = C.brand; rr(g, 30, 22, 32, 32, 8); g.fill();
   txt(g, title, 78, 39, 38, 700, C.ink);
 }
-function overlay(g, a){ g.save(); rr(g, 0, 0, CW, CH, 34); g.clip(); g.fillStyle = isDark ? `rgba(10,10,20,${0.45*a})` : `rgba(18,48,77,${0.32*a})`; g.fillRect(0, 0, CW, CH); g.restore(); }
-function dialog(g, x, y, w, h){ g.save(); g.shadowColor = 'rgba(18,48,77,.25)'; g.shadowBlur = 40; g.shadowOffsetY = 12; g.fillStyle = isDark ? '#1a1a2e' : '#fff'; rr(g, x, y, w, h, 24); g.fill(); g.restore(); }
+function overlay(g, a){ g.save(); rr(g, 0, 0, CW, CH, 34); g.clip(); const dark = document.documentElement.dataset.theme === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches; g.fillStyle = dark ? `rgba(10,10,20,${0.45*a})` : `rgba(18,48,77,${0.32*a})`; g.fillRect(0, 0, CW, CH); g.restore(); }
+function dialog(g, x, y, w, h){ g.save(); g.shadowColor = 'rgba(18,48,77,.25)'; g.shadowBlur = 40; g.shadowOffsetY = 12; const dark = document.documentElement.dataset.theme === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches; g.fillStyle = dark ? '#1a1a2e' : '#fff'; rr(g, x, y, w, h, 24); g.fill(); g.restore(); }
 function banner(g, x, y, w, h, label, color = C.ok){ g.fillStyle = color; rr(g, x, y, w, h, h/2); g.fill(); txt(g, label, x + w/2, y + h/2 + 1, 35, 800, '#fff', 'center'); }
 function checkDot(g, x, y, on, pop = 1){
   g.beginPath(); g.arc(x, y, 18 * (on ? pop : 1), 0, Math.PI*2);
