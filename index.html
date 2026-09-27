@@ -318,16 +318,6 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
    Todo dura ~420ms: se nota, pero no frena la navegacion. */
 section.visible.entering{animation:view-in .42s cubic-bezier(.16,1,.3,1) both}
 @keyframes view-in{from{opacity:0;transform:scale(1.02)}to{opacity:1;transform:none}}
-.view-wipe{position:fixed;left:0;right:0;top:50%;height:2px;z-index:150;pointer-events:none;
-  background:linear-gradient(90deg,rgba(31,92,153,0) 0%,var(--azul) 18%,var(--azul) 82%,rgba(31,92,153,0) 100%);
-  box-shadow:0 0 14px rgba(31,92,153,.45);transform:scaleX(0);opacity:0}
-.view-wipe.go{animation:wipe .42s cubic-bezier(.16,1,.3,1) both}
-@keyframes wipe{
-  0%{transform:scaleX(0) translateX(-40%);opacity:0}
-  22%{opacity:1}
-  78%{opacity:1}
-  100%{transform:scaleX(1) translateX(0);opacity:0}
-}
 @keyframes sec-in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 .rv{opacity:0;transform:translateY(22px);transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1)}
 .rv.in{opacity:1;transform:none}
@@ -380,9 +370,10 @@ section.visible.entering{animation:view-in .42s cubic-bezier(.16,1,.3,1) both}
      Escala por capas, no uniforme: la imagen visual es la que mas se mueve
      (15px) y el TEXTO casi nada (7px y 3px), porque el texto compete con la
      lectura y la marca pide que el movimiento no la distraiga. */
-  .hs-card.tilt .hs-vis{transform:translate3d(calc(var(--mx)*-15px),calc(var(--my)*-15px),0)}
-  .hs-card.tilt .hs-title{transform:translate3d(calc(var(--mx)*-7px),calc(var(--my)*-7px),0)}
-  .hs-card.tilt .hs-lbl,.hs-card.tilt .hs-desc{transform:translate3d(calc(var(--mx)*-3px),calc(var(--my)*-3px),0)}
+  /*   transform sobre texto saca al glifo de la ruta de antialiasing subpixel y lo deja visiblemente mas blandito. */
+.hs-card.tilt .hs-vis{transform:translate3d(calc(var(--mx)*-15px),calc(var(--my)*-15px),0)}
+  .hs-card.tilt .hs-title{will-change:auto}
+  
   .ha-card.tilt .ha-icon{transform:translate3d(calc(var(--mx)*-12px),calc(var(--my)*-12px),0)}
   .ha-card.tilt .ha-name{transform:translate3d(calc(var(--mx)*-7px),calc(var(--my)*-7px),0)}
   .ha-card.tilt .ha-row{transform:translate3d(calc(var(--mx)*-3px),calc(var(--my)*-3px),0)}
@@ -1658,24 +1649,17 @@ function show(id){
     if(id==='home') animH1();
   }
   if(current&&current!==target){
-    // la vista saliente se aleja en vez de solo desvanecerse
-    current.style.transform='scale(.985)';
+    // la vista saliente se aleja y baja un poco, en vez de solo desvanecerse:
+    // el desplazamiento vertical es lo que da sensacion de cambio de lugar. Sin
+    // lineas ni barras: una linea horizontal cruzando la pantalla se leyo como
+    // interferencia, no como transicion (rechazado por el Director 2026-09-27)
+    current.style.transform='translateY(-10px) scale(.985)';
     current.style.opacity='0';
-    current.style.transition='opacity .24s ease,transform .24s ease';
+    current.style.transition='opacity .22s ease,transform .22s ease';
     current.style.pointerEvents='none';
-    viewWipe();
-    setTimeout(activate,240);
+    setTimeout(activate,220);
   } else { activate(); }
   return false;
-}
-// linea de marca que cruza la pantalla durante el cambio de vista
-function viewWipe(){
-  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var w=document.querySelector('.view-wipe');
-  if(!w){w=document.createElement('div');w.className='view-wipe';document.body.appendChild(w);}
-  w.classList.remove('go');
-  void w.offsetWidth;               // reinicia la animacion si se hace click seguido
-  w.classList.add('go');
 }
 
 // El player de la seccion "Como se instala" ya no vive aqui: usa el mismo
