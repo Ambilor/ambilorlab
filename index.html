@@ -266,8 +266,8 @@ nav{background:rgba(255,255,255,.85)!important;backdrop-filter:blur(14px);-webki
 .home-eyebrow::before,.prod-eyebrow::before{content:'';width:14px;height:2px;background:#1F5C99;border-radius:2px;flex-shrink:0}
 
 /* service cards: lift on hover */
-.hs-card{box-shadow:0 1px 3px rgba(0,0,0,.04);transition:transform .2s,box-shadow .2s}
-.hs-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(31,92,153,.12)}
+.hs-card{box-shadow:0 1px 3px rgba(0,0,0,.04);transition:box-shadow .2s,border-color .2s}
+.hs-card:hover{box-shadow:0 8px 28px rgba(31,92,153,.12)}
 
 /* audience cards: left accent + hover */
 .ha-card{border-left:3px solid #1F5C99;transition:box-shadow .2s}
@@ -324,7 +324,7 @@ section.visible.entering{animation:view-in .42s cubic-bezier(.16,1,.3,1) both}
 .rv-d1{transition-delay:.1s}
 .rv-d2{transition-delay:.2s}
 .hs-card:hover{box-shadow:0 0 0 1px rgba(31,92,153,.22),0 10px 36px rgba(31,92,153,.16),0 28px 56px rgba(31,92,153,.07)!important}
-.ha-card{transition:transform .2s,box-shadow .2s}
+.ha-card{transition:box-shadow .2s,border-color .2s}
 /* el transform se dejo en el bloque del sistema de tilt (arriba): el !important
    de esta regla lo pisaba y anulaba la inclinacion 3D en las .ha-card */
 .ha-card:hover{box-shadow:0 0 0 1px rgba(31,92,153,.22),0 10px 36px rgba(31,92,153,.16),0 28px 56px rgba(31,92,153,.07)!important}
@@ -354,7 +354,13 @@ section.visible.entering{animation:view-in .42s cubic-bezier(.16,1,.3,1) both}
      del plano (su sombra se separa y sus bordes se separan del resto), y esa
      es la referencia que hace legible la rotacion. Orden deliberado:
      primero se despega, despues se inclina. */
-  .hs-card:hover,.ha-card:hover{transform:translateY(-8px) scale(1.04)}
+  /* REGLA DURA: la tarjeta NO lleva transform, en reposo ni en hover. Cualquier transform
+   (rotacion, scale, translateY) en un ancestro del texto resamplea los glifos y se
+   ven blanditos: es el costo de un elemento compuesto, no un bug corregible. La
+   profundidad de estas tarjetas se consigue SOLO con sombra y borde, que no tocan
+   la composicion del texto. La unica capa que se mueve es .hs-vis, que es un <svg>
+   sin texto dentro. */
+.hs-card:hover,.ha-card:hover{border-color:rgba(31,92,153,.34);transition:box-shadow .2s,border-color .2s}
   /* inclinacion: el multiplicador es 20 grados, pero el JS limita --mx/--my a +-0.5, asi que el ANGULO REAL MAXIMO es 10 grados. Ojo: durante varios dias el codigo decia "6deg" cuando en realidad entregaba 3, porque el limite del JS se come la mitad. Si se sube este numero, el delivered es la mitad. */
   /* La regla base NO declara transform, a proposito. Si lo hiciera, pisaria la
      del reveal (.rv translateY(22px) -> .rv.in none) porque .hs-card.tilt es mas
@@ -363,18 +369,20 @@ section.visible.entering{animation:view-in .42s cubic-bezier(.16,1,.3,1) both}
      existe mientras hay puntero encima.
      La transition declara opacity y box-shadow porque el shorthand anterior las
      habia borrado (regresion detectada en la revision: el fade se perdia). */
-  .hs-card.tilt,.ha-card.tilt{transition:transform .5s var(--ease),box-shadow .2s,opacity .6s}
-  .hs-card.tilt.is-tilting,.ha-card.tilt.is-tilting{transform:perspective(700px) rotateY(calc(var(--mx)*20deg)) rotateX(calc(var(--my)*-20deg)) translateY(-8px) scale(1.04);transition:transform .1s linear,box-shadow .2s}
+  /* La transicion del reveal (.rv, especificidad 0,1,0) debe governs la tarjeta. Por eso
+   la transicion de hover va en :hover (0,2,0) y no aqui: si se declarara en la
+   tarjeta, le ganaria al reveal y la subida de 22px se volveria un salto. */
+  
   /* parallax interno: la capa visual se desplaza en contra del puntero, que es
      lo que produce la sensacion de caja con contenido y no de imagen que rota.
      Escala por capas, no uniforme: la imagen visual es la que mas se mueve
      (15px) y el TEXTO casi nada (7px y 3px), porque el texto compete con la
      lectura y la marca pide que el movimiento no la distraiga. */
   /*   transform sobre texto saca al glifo de la ruta de antialiasing subpixel y lo deja visiblemente mas blandito. */
-.hs-card.tilt .hs-vis{transform:translate3d(calc(var(--mx)*-15px),calc(var(--my)*-15px),0)}
+.hs-card.tilt .hs-vis{transform:translate3d(calc(var(--mx)*-8px),calc(var(--my)*-8px),0);transition:transform .35s var(--ease)}
   .hs-card.tilt .hs-title{will-change:auto}
   
-  .ha-card.tilt .ha-icon{transform:translate3d(calc(var(--mx)*-12px),calc(var(--my)*-12px),0)}
+  
   /* .ha-name y .ha-row son texto: sin transform (un transform sobre el glifo le quita el antialiasing subpixel y se ve borroso). Solo el icono, que es grafico, lleva parallax. */
   
   /* hairline: la barra superior que se dibuja de izquierda a derecha */
