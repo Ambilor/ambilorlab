@@ -227,41 +227,9 @@ footer{border-top:1px solid var(--borde);padding:1.5rem;text-align:center;font-f
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 .demo-section{margin-bottom:2.5rem}
 .demo-label{font-family:var(--mono);font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--gris-2);margin-bottom:.75rem}
-.demo-wrap{background:#fff;border-radius:12px;overflow:hidden;height:560px;position:relative;border:1px solid #e8e8e8}
-.dscene{position:absolute;inset:0 0 48px 0;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:28px 28px;opacity:0;pointer-events:none;transition:opacity .15s;overflow:auto}
-.dscene.active{opacity:1;pointer-events:auto}
-.dscene.active .anim{animation:dup .55s cubic-bezier(.16,1,.3,1) both}
-.dscene.active .anim:nth-child(1){animation-delay:.05s}
-.dscene.active .anim:nth-child(2){animation-delay:.12s}
-.dscene.active .anim:nth-child(3){animation-delay:.19s}
-.dscene.active .anim:nth-child(4){animation-delay:.26s}
-@keyframes dup{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.d-pill{display:inline-flex;align-items:center;gap:6px;background:#f0f4ff;border-radius:100px;padding:4px 12px 4px 4px;margin-bottom:12px}
-.d-dot{width:18px;height:18px;border-radius:50%;background:var(--azul);color:#fff;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.d-pilltxt{font-size:11px;font-weight:500;color:var(--azul)}
-.d-h{font-size:22px;font-weight:600;color:#0a0a0a;line-height:1.22;letter-spacing:-.03em;margin-bottom:7px}
-.d-h em{font-style:normal;color:var(--azul)}
-.d-sub{font-size:13px;color:#666;line-height:1.6;max-width:460px;margin-bottom:16px}
-
-.deco{position:absolute;right:0;top:0;bottom:48px;width:140px;pointer-events:none;overflow:hidden}
-.deco-line{position:absolute;right:26px;top:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent 0%,#ebebeb 20%,#ebebeb 80%,transparent 100%)}
-.deco-num{position:absolute;right:34px;font-size:90px;font-weight:700;color:#f5f5f5;letter-spacing:-.05em;line-height:1;bottom:24px}
-
-.dprog{position:absolute;bottom:48px;left:0;height:2px;background:var(--azul);width:0;z-index:10}
-.dctrl{position:absolute;bottom:0;left:0;right:0;height:48px;border-top:1px solid #ebebeb;display:flex;align-items:center;justify-content:space-between;padding:0 22px;background:#fff;z-index:20}
-.dctrl-left{display:flex;align-items:center;gap:8px}
-.dcbtn{background:none;border:1px solid #e0e0e0;color:#999;width:26px;height:26px;border-radius:6px;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center}
-.dcbtn:hover{border-color:var(--azul);color:var(--azul)}
-.dcdots{display:flex;gap:5px;align-items:center}
-.dcdot{width:5px;height:5px;border-radius:50%;background:#e0e0e0;cursor:pointer}
-.dcdot.on{background:var(--azul);width:16px;border-radius:3px}
-.dctr{font-size:10px;color:#bbb}
-
-@media(max-width:520px){
-  .demo-wrap{height:640px}
-  .dctrl{flex-wrap:wrap}
-  .deco{display:none}
-}
+/* El player legacy de escenas (.dscene/.d-pill/.d-h/.deco/.dctrl) se elimino
+   el 2026-09-27 al migrar las dos secciones al canvas 3D compartido. Sus reglas
+   quedaron huerfanas y se retiraron con el mismo cambio. */
 
 /* ═══ polish ═══ */
 
@@ -297,10 +265,6 @@ nav{background:rgba(255,255,255,.85)!important;backdrop-filter:blur(14px);-webki
 /* buttons: gradient + shadow */
 .cta-home,.buy-btn{background:linear-gradient(130deg,#1F5C99,#2a80e1)!important;box-shadow:0 3px 12px rgba(31,92,153,.24);transition:box-shadow .2s,transform .15s!important;letter-spacing:.01em}
 .cta-home:hover,.buy-btn:hover{background:linear-gradient(130deg,#163f6b,#1F5C99)!important;box-shadow:0 6px 20px rgba(31,92,153,.35)!important;transform:translateY(-1px)!important}
-
-/* demo wrap: subtle hover glow */
-.demo-wrap{transition:box-shadow .3s}
-.demo-wrap:hover{box-shadow:0 4px 24px rgba(31,92,153,.10)}
 
 /* guide connection cards */
 .gvw-tc{transition:transform .2s}
@@ -339,8 +303,6 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
 .nav-links a{position:relative}
 .nav-links a.active::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:2px;background:var(--azul);border-radius:2px;animation:nav-line .25s cubic-bezier(.16,1,.3,1) both}
 @keyframes nav-line{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-.demo-wrap{transition:box-shadow .3s}
-.demo-wrap:hover{box-shadow:0 6px 36px rgba(31,92,153,.14)!important}
 /* scroll to top */
 .btn-top{position:fixed;bottom:24px;right:24px;width:38px;height:38px;background:var(--azul);color:#fff;border:none;border-radius:50%;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;opacity:0;transform:translateY(12px);transition:opacity .25s,transform .25s,background .15s;z-index:200;box-shadow:0 3px 12px rgba(31,92,153,.3)}
 .btn-top.show{opacity:1;transform:translateY(0)}
@@ -387,7 +349,6 @@ nav.scrolled .nav-links a{font-size:12px}
 [data-theme="dark"] nav{background:rgba(10,10,20,.92)!important;border-color:#252538}
 [data-theme="dark"] .hs-card,[data-theme="dark"] .ha-card,[data-theme="dark"] .mc{background:#131320;border-color:#252538}
 [data-theme="dark"] .hs-body{border-color:#252538}
-[data-theme="dark"] .demo-wrap{background:#131320!important;border-color:#252538!important}
 [data-theme="dark"] .stack-pill{background:#131320;border-color:#252538;color:#666688}
 [data-theme="dark"] .stack-pill:hover{border-color:var(--azul);color:var(--azul);background:#0d1424}
 [data-theme="dark"] .stack-pill::after{background:#252538}
@@ -413,36 +374,11 @@ nav.scrolled .nav-links a{font-size:12px}
 [data-theme="dark"] .nav-dark-btn{border-color:#252538;color:#505070}
 [data-theme="dark"] #home{background-image:radial-gradient(rgba(31,92,153,.04) 1px,transparent 1px)}
 
-/* ── INSTALACION: mockups de los 5 pasos del metodo estandar ──
-   Mismo lenguaje visual que la demo: marco de ventana, barra de titulo,
-   chips de boton. Clases iv-* para no chocar con la demo ni con las guias. */
-.iv-win{border:1px solid var(--borde);border-radius:7px;overflow:hidden;background:#fff;max-width:400px;margin:0 auto}
-.iv-tbar{background:#f1f3f4;padding:7px 12px;display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--borde)}
-.iv-tdots{display:flex;gap:4px;flex:none}
-.iv-tdot{width:7px;height:7px;border-radius:50%;background:#dadce0}
-.iv-ttxt{font-size:10px;color:#5f6368;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.iv-body{padding:14px 12px;display:flex;flex-direction:column;gap:8px}
-.iv-row{font-size:10px;color:#3c4043;line-height:1.5}
-.iv-chip{font-size:10px;padding:6px 11px;border:1px solid var(--borde);border-radius:4px;color:#3c4043;background:#fff;align-self:flex-start}
-.iv-chip.on{border-color:var(--azul);color:var(--azul);background:#eef4fb}
-.iv-chip.pri{background:var(--azul);color:#fff;border-color:var(--azul);font-weight:600}
-.iv-menu{background:#fff;border:1px solid var(--borde);border-radius:7px;box-shadow:0 6px 20px rgba(0,0,0,.10);max-width:250px;margin:0 auto;overflow:hidden}
-.iv-mhead{font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:#8a8a99;padding:7px 11px 5px;border-bottom:1px solid #eeeef2}
-.iv-mitem{font-size:10px;padding:7px 11px;color:#3c4043}
-.iv-mitem.on{background:#eef4fb;color:var(--azul);font-weight:600}
-.iv-note{font-size:10px;color:#6b6b7b;line-height:1.55;text-align:center}
-.iv-cards{display:flex;flex-direction:column;gap:8px;max-width:400px;margin:0 auto}
-.iv-card{border:1px solid var(--borde);border-left:3px solid #16A34A;border-radius:6px;padding:10px 12px;font-size:10px;color:#3c4043;line-height:1.5;background:#fff}
+/* ── INSTALACION ──
+   El mockup iv-* (marco de ventana, chips) dejo de usarse cuando la
+   seccion migro al canvas 3D compartido con "Ver en accion": sus estilos
+   quedaron huerfanos y se eliminaron el 2026-09-27. */
 #instalacion{margin-top:2.5rem}
-[data-theme="dark"] .iv-win,[data-theme="dark"] .iv-menu,[data-theme="dark"] .iv-card{background:#131320;border-color:#252538}
-[data-theme="dark"] .iv-tbar{background:#1a1a2c;border-color:#252538}
-[data-theme="dark"] .iv-tdot{background:#3a3a55}
-[data-theme="dark"] .iv-ttxt,[data-theme="dark"] .iv-row{color:#c8c8e0}
-[data-theme="dark"] .iv-chip{background:#131320;border-color:#33334d;color:#c8c8e0}
-[data-theme="dark"] .iv-chip.on{background:#16233a;border-color:var(--azul);color:#7db4e8}
-[data-theme="dark"] .iv-mitem,[data-theme="dark"] .iv-mhead{color:#9898b8}
-[data-theme="dark"] .iv-mitem.on{background:#16233a;color:#7db4e8}
-[data-theme="dark"] .iv-note{color:#7878a0}
 
 /* ================================================================
    DEMO 3D "VER EN ACCION" (three.js) - Conciliador Automatico V1
@@ -456,9 +392,12 @@ nav.scrolled .nav-links a{font-size:12px}
    three.js no carga o no hay WebGL, la seccion sigue mostrando
    texto real en vez de una caja vacia (modo .al-demo--no3d).
    ================================================================ */
+/* Tokens del canvas 3D. El panel se dibuja siempre en tema claro (es una
+   captura del producto real), asi que no hay variante oscura: por eso solo
+   se declara la paleta clara. Las variantes --al-*-dark se eliminaron el
+   2026-09-27 al unificar las dos demos. */
 .al-demo{
-  --al-brand:#1F5C99; --al-brand-dark:#164a7d; --al-ink:#12304d; --al-muted:#4f6983;
-  --al-paper:#eef2f7; --al-paper-dark:#1a1a2e; --al-line:#c9d5e3; --al-line-dark:#2d2d44; --al-hi:#f5c84c;
+  --al-ink:#12304d; --al-paper:#eef2f7; --al-line:#c9d5e3;
   font-family:var(--sans);
   color:var(--al-ink); max-width:none; margin:0; 
   background:var(--blanco,#fff); border:1px solid var(--borde,#dadce0);
@@ -468,9 +407,11 @@ nav.scrolled .nav-links a{font-size:12px}
   display:block;
   container-type:inline-size;
 }
-#como-se-instala{
-  background:#f8fafc;
-}
+/* Las dos demos hermanas comparten esta caja al 100%: mismo fondo, mismo
+   borde, mismo radio y misma sombra. No hay override por id — la tarjeta
+   "Como se instala" usaba #f8fafc (gris azulado) mientras "Ver en accion"
+   era blanco puro, y eso se corregia despues con !important en dark mode.
+   Se unifico el 2026-09-27. */
 .al-demo *{box-sizing:border-box}
 .al-demo__grid{display:grid; grid-template-columns:1fr; gap:clamp(14px,2.2vh,26px); align-items:center}
 .al-demo__copy{min-height:0; display:flex; flex-direction:column; justify-content:center; transition:opacity .28s ease, transform .28s ease}
@@ -526,17 +467,9 @@ nav.scrolled .nav-links a{font-size:12px}
 .al-demo__fbk{font-family:var(--mono); font-size:10px; font-weight:500; letter-spacing:.06em; text-transform:uppercase; color:var(--azul)}
 .al-demo__fbt{font-size:15px; font-weight:600; line-height:1.35; margin:.2rem 0 .25rem; color:var(--negro)}
 .al-demo__fbb{font-size:13px; line-height:1.6; color:var(--gris-1); margin:0; max-width:520px}
-/* Mejora progresiva: 2 columnas solo si el contenedor llega a 900px.
-   Hoy el .container esta topado a 660px, asi que nunca se activa.
-   Se usa @container y NO un media query de viewport: un
-   min-width de viewport se activaria en pantallas anchas y
-   estrangularia el copy dentro de la columna de 660px. */
-@container (min-width:900px){
-  .al-demo__grid{grid-template-columns:minmax(0,5fr) minmax(0,6fr); gap:clamp(24px,4vw,56px)}
-  .al-demo__stage{order:0; max-width:none; margin:0}
-  .al-demo__copy{min-height:22rem}
-  .al-demo--no3d .al-demo__grid{grid-template-columns:1fr}
-}
+/* La demo y la guia comparten el mismo grid de una columna: el .container
+   esta topado a 660px, asi que un breakpoint de 900px nunca se activaba y la
+   regla era inerte. Se elimino el 2026-09-27. */
 /* Ventana baja (portatil con la barra del navegador abierta): el eje que
    falta es el vertical, no el horizontal. Poner escena y texto en dos
    columnas desperdicia el ancho que si sobra y hace que el bloque entre
@@ -562,9 +495,7 @@ nav.scrolled .nav-links a{font-size:12px}
   .al-demo__stage{max-width:min(340px,100%,max(280px,36vh))}
 }
 @media (prefers-reduced-motion: reduce){ .al-demo__copy{transition:none} }
-[data-theme="dark"] .al-demo{color:#dcdcf0; background:#131320 !important; border-color:#252538; box-shadow:none}
-[data-theme="dark"] #como-se-instala{background:#10101a !important}
-[data-theme="dark"] .demo-section{background:transparent}
+[data-theme="dark"] .al-demo{color:#dcdcf0; background:#131320; border-color:#252538; box-shadow:none}
 [data-theme="dark"] .container{background:transparent}
 [data-theme="dark"] .al-demo__kicker,
 [data-theme="dark"] .al-demo__fbk,
@@ -578,7 +509,7 @@ nav.scrolled .nav-links a{font-size:12px}
 [data-theme="dark"] .al-demo__step[aria-current="step"] .al-demo__label{color:#dcdcf0}
 [data-theme="dark"] .al-demo__body,
 [data-theme="dark"] .al-demo__fbb,
-[data-demo__checks] li{color:#a0a0b8}
+[data-theme="dark"] .al-demo__checks li{color:#a0a0b8}
 [data-theme="dark"] .al-demo__checks{color:#a0a0b8}
 [data-theme="dark"] .al-demo__checks li::before{color:#5ba4e0}
 [data-theme="dark"] .al-demo__stats span,
@@ -597,11 +528,10 @@ nav.scrolled .nav-links a{font-size:12px}
 [data-theme="dark"] .al-demo__step:focus-visible{outline-color:#5ba4e0}
 [data-theme="dark"] .al-demo__cta{background:#5ba4e0;color:#0a0a14}
 [data-theme="dark"] .al-demo__cta:hover{background:#7db4e8}
-[data-theme="dark"] .al-demo__stage{
-  background-color:var(--al-paper-dark);
-  background-image:linear-gradient(rgba(90,164,224,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(90,164,224,.08) 1px,transparent 1px);
-  box-shadow:inset 0 0 0 1px var(--al-line-dark), 0 0 0 1px #252538;
-}
+/* El marco de la escena (.al-demo__stage) se queda en tema claro tambien en
+   dark, en las dos demos. Antes se ponia navy en dark mientras el canvas ya
+   era claro: un panel claro flotando sobre un escritorio oscuro, que no se
+   parece a nada real. Unificado con el canvas el 2026-09-27. */
 [data-theme="dark"] .al-demo__fallback{border-top-color:#252538}
 .al-demo__tip{margin:1rem 0 0; padding:.75rem .95rem; border-radius:0 5px 5px 0; background:var(--azul-bg); border-left:3px solid var(--azul); font-size:13px; line-height:1.55; color:var(--azul-dark); max-width:440px}
 .al-demo__checks{margin:1rem 0 0; padding:0; list-style:none; display:flex; flex-direction:column; gap:.45rem; font-size:13px; color:var(--gris-1); max-width:440px}
@@ -895,9 +825,9 @@ nav.scrolled .nav-links a{font-size:12px}
       <div class="al-demo" id="como-se-instala" aria-label="Cómo se instala el Conciliador Automático V1">
         <div class="al-demo__grid">
           <div class="al-demo__copy" aria-live="polite">
-            <p class="al-demo__kicker"></p>
-            <h3 class="al-demo__title"></h3>
-            <p class="al-demo__body"></p>
+            <p class="al-demo__kicker">Paso 1: haz tu copia</p>
+            <h3 class="al-demo__title">Haz tu copia</h3>
+            <p class="al-demo__body">Abre el enlace que te enviamos y elige “Hacer una copia”. Tu copia se abre en tu Drive y trae la herramienta adentro, con su código ya incluido.</p>
             <div class="al-demo__extra"></div>
           </div>
           <div class="al-demo__stage"><canvas aria-hidden="true"></canvas></div>
@@ -909,7 +839,44 @@ nav.scrolled .nav-links a{font-size:12px}
           <ol class="al-demo__steps"></ol>
           <span class="al-demo__count">1 de 6</span>
         </div>
-        <p class="al-demo__note">Pantallas ilustrativas. Los textos y botones pueden variar levemente según tu navegador e idioma de Google.</p>
+        <p class="al-demo__note">Demostración ilustrativa. Los textos y botones pueden variar levemente según tu navegador e idioma de Google.</p>
+        <div class="al-demo__fallback">
+          <p class="al-demo__fbh">La instalación en 6 pasos</p>
+          <ol class="al-demo__fblist">
+            <li>
+              <span class="al-demo__fbk">Paso 1: haz tu copia</span>
+              <span class="al-demo__fbt">Haz tu copia</span>
+              <p class="al-demo__fbb">Abre el enlace que te enviamos y elige “Hacer una copia”. Tu copia se abre en tu Drive y trae la herramienta adentro, con su código ya incluido.</p>
+            </li>
+            <li>
+              <span class="al-demo__fbk">Paso 2: abre “Configurar herramienta”</span>
+              <span class="al-demo__fbt">Abre “Configurar herramienta”</span>
+              <p class="al-demo__fbb">En tu copia, abre el menú de la barra superior y elige “Tu herramienta — Ambilor.Lab”. Se abre un panel llamado “Configurar herramienta”, que te va guiando paso a paso.</p>
+            </li>
+            <li>
+              <span class="al-demo__fbk">Paso 3: autoriza el acceso</span>
+              <span class="al-demo__fbt">Autoriza el acceso</span>
+              <p class="al-demo__fbb">La primera vez, Google te pide permiso para leer tu planilla y mostrar el panel. Aparece en una pantalla de Google, no dentro de la herramienta. Acepta y sigue.</p>
+              <p class="al-demo__tip">El botón puede decir “Continuar” o “Aceptar” según tu navegador.</p>
+            </li>
+            <li>
+              <span class="al-demo__fbk">Paso 4: publica tu panel</span>
+              <span class="al-demo__fbt">Publica tu panel</span>
+              <p class="al-demo__fbb">Desde el editor de Apps Script, publica el panel como aplicación web con acceso “Solo yo”. Así queda privado en tu cuenta: nadie más lo ve.</p>
+              <p class="al-demo__tip">“Solo yo” significa privado. No elijas “Cualquiera”.</p>
+            </li>
+            <li>
+              <span class="al-demo__fbk">Paso 5: ábrelo y empieza</span>
+              <span class="al-demo__fbt">Ábrelo y empieza</span>
+              <p class="al-demo__fbb">Vuelve a tu planilla y abre el panel. La herramienta verifica que la instalación quedó correcta y te deja entrar.</p>
+            </li>
+            <li>
+              <span class="al-demo__fbk">Listo</span>
+              <span class="al-demo__fbt">Ya quedó instalado</span>
+              <p class="al-demo__fbb">No queda nada por instalar ni por pagar. Todo funciona dentro de tu propia cuenta de Google.</p>
+            </li>
+          </ol>
+        </div>
       </div>
     </div>
 
@@ -1572,71 +1539,11 @@ function show(id){
   return false;
 }
 
-// ---- INSTALACION: player independiente (prefijo i-) ----
-// Instancia propia con su propio estado, para no depender del player de la
-// demo ni tocarlo. Reutiliza las mismas clases CSS, por eso se ve igual.
-var icur=0,iN=6,inum=['01','02','03','04','05','06'];
-var iplaying=true,iraf=null,iDUR=7000,ibStart=0;
-function igo(i){
-  document.getElementById('is'+icur).classList.remove('active');
-  icur=i;
-  var sc=document.getElementById('is'+icur);
-  sc.classList.add('active');
-  sc.querySelectorAll('.anim').forEach(function(el){
-    el.style.animation='none';el.offsetHeight;el.style.animation='';
-  });
-  document.getElementById('in').textContent=inum[i];
-  document.getElementById('ictr').textContent=(i+1)+' de '+iN;
-  ibuildDots();
-  if(iplaying) istartBar();
-}
-function inav(d){istopBar();igo((icur+d+iN)%iN);}
-function ibuildDots(){
-  var c=document.getElementById('idots');c.innerHTML='';
-  for(var i=0;i<iN;i++){
-    var dd=document.createElement('div');
-    dd.className='dcdot'+(i===icur?' on':'');
-    (function(idx){dd.onclick=function(){istopBar();igo(idx);};})(i);
-    c.appendChild(dd);
-  }
-}
-function istartBar(){
-  istopBar();ibStart=Date.now();
-  var b=document.getElementById('iprog');b.style.width='0%';
-  function tick(){
-    var pct=Math.min(100,(Date.now()-ibStart)/iDUR*100);
-    b.style.width=pct+'%';
-    if(pct>=100){iraf=null;igo((icur+1)%iN);}
-    else iraf=requestAnimationFrame(tick);
-  }
-  iraf=requestAnimationFrame(tick);
-}
-function istopBar(){
-  if(iraf){cancelAnimationFrame(iraf);iraf=null;}
-  var b=document.getElementById('iprog');
-  if(b) b.style.width='0%';
-}
-function itoggle(){
-  iplaying=!iplaying;
-  var b=document.getElementById('ippbtn');
-  if(iplaying){b.innerHTML='&#9646;&#9646;';istartBar();}
-  else{b.innerHTML='&#9654;';istopBar();}
-}
-// arranca cuando la seccion entra en pantalla
-(function(){
-  var sec=document.getElementById('instalacion');
-  if(!sec) return;
-  ibuildDots();
-  var fired=false;
-  if('IntersectionObserver' in window){
-    var io=new IntersectionObserver(function(es){
-      es.forEach(function(e){
-        if(e.isIntersecting&&!fired){fired=true;igo(0);istartBar();io.disconnect();}
-      });
-    },{threshold:.3});
-    io.observe(sec);
-  } else { fired=true; igo(0); istartBar(); }
-})();
+// El player de la seccion "Como se instala" ya no vive aqui: usa el mismo
+// componente .al-demo que "Ver en accion" (ver el script three.js al final del
+// body). El player anterior, con prefijo i-, quedo muerto tras esa migracion
+// y se elimino el 2026-09-27: pedia #idots/#iprog/#ippbtn, que ya no existen
+// en el HTML, y su null.innerHTML lanzaba en cada carga de pagina.
 show('home');
 animH1();
 setTimeout(function(){
@@ -1902,36 +1809,12 @@ renderer.outputEncoding = THREE.sRGBEncoding;
 renderer.setClearColor(0x000000, 0);
 const scene = new THREE.Scene();
 
-// Funcion para refrescar colores y re-renderizar texturas al cambiar tema
-function refreshThemeColors() {
-  Object.assign(C, getThemeColors());
-  // Re-dibujar la pantalla visible actualmente usando el tiempo global T
-  cards.forEach((c, i) => {
-    const s = STEPS[i];
-    const lt = T - s.a;  // tiempo local de la pantalla actual
-    DRAW[i](c.g, lt);
-    c.tx.needsUpdate = true;
-  });
-  // Tambien actualizar texturas estaticas (panel, contador, resultados)
-  ptex.needsUpdate = true;
-  ctex.needsUpdate = true;
-  rtex.needsUpdate = true;
-  needsRender = true;
-}
-
-// Observer para cambios de tema (data-theme en html)
-const themeObserver = new MutationObserver(mutations => {
-  for (const m of mutations) {
-    if (m.attributeName === 'data-theme') {
-      refreshThemeColors();
-      break;
-    }
-  }
-});
-themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-
-// Tambien escuchar prefers-color-scheme como fallback
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', refreshThemeColors);
+// El paleta del canvas es FIJO en tema claro (ver C mas abajo): el panel 3D
+// representa una captura del producto real, no un elemento de la pagina, asi
+// que no sigue al toggle de tema. Por eso aca no hay observer de data-theme:
+// el 2026-09-27 se elimino el que habia, porque llamaba a getThemeColors(),
+// cards y DRAW, que pertenecen al demo de "Como se instala" (su scope) y
+// explotaban con ReferenceError en cada toggle de tema.
 const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
 scene.add(new THREE.HemisphereLight(0xffffff, 0xaebfd2, 0.9));
 const sun = new THREE.DirectionalLight(0xffffff, 0.6); sun.position.set(3, 5, 6); scene.add(sun);
@@ -2409,7 +2292,10 @@ requestAnimationFrame(frame);
 const TEX_S = 1.6;
 const root = document.getElementById('como-se-instala');
 if (!root) return;
-const CONTACT_HREF = '#contacto';
+/* El link de contacto lo abre la SPA, no un ancla: la seccion real es
+   id="contact" y show() la muestra. Antes apuntaba a "#contacto", que no
+   existe, asi que el paso 6 llevaba a la nada. Corregido 2026-09-27. */
+const CONTACT_HREF = '#contact';
 
 const STEPS = [
   { a:0, b:5.2, short:'Copia', kicker:'Paso 1: haz tu copia', title:'Haz tu copia',
@@ -2448,7 +2334,7 @@ const fills = STEPS.map((s, i) => {
 });
 
 const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-const HOLD = 0.45;
+const HOLD = 0.05;
 let T = 0, playing = !reduce, current = -1, visible = true, needsRender = true;
 
 function fillCopy(i){
@@ -2461,7 +2347,7 @@ function fillCopy(i){
     s.checks.forEach(c => { const li = document.createElement('li'); li.textContent = c; ul.appendChild(li); });
     elX.appendChild(ul);
   }
-  if (s.contact) { const a = document.createElement('a'); a.className = 'al-demo__contact'; a.href = CONTACT_HREF; a.textContent = s.contact; elX.appendChild(a); }
+  if (s.contact) { const a = document.createElement('a'); a.className = 'al-demo__contact'; a.href = CONTACT_HREF; a.textContent = s.contact; a.addEventListener('click', ev => { ev.preventDefault(); if (typeof show === 'function') show('contact'); }); elX.appendChild(a); }
 }
 function setStep(i){
   if (i === current) return;
@@ -2496,16 +2382,38 @@ root.addEventListener('keydown', e => {
 if (reduce) T = STEPS[0].b - HOLD;
 setStep(stepOf(T));
 
-if (!window.THREE) return;
-const FONT = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
-// Paleta de colores reactiva a cambios de tema
-function getThemeColors() {
-  const dark = document.documentElement.dataset.theme === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches;
-  return dark
-    ? { paper:'#1a1a2e', ink:'#e8e8f0', muted:'#a0a0b8', brand:'#5ba4e0', brandDark:'#7db4e8', hi:'#f5c84c', soft:'#6b7b9e', line:'#2d2d44', ok:'#4ade80', warn:'#fbbf24' }
-    : { paper:'#eef2f7', ink:'#12304d', muted:'#4f6983', brand:'#1f5c99', brandDark:'#164a7d', hi:'#f5c84c', soft:'#8aa2bb', line:'#c9d5e3', ok:'#2f8a5b', warn:'#e08a2c' };
+/* Mismo contrato que "Ver en accion": si three.js no carga o el navegador no
+   tiene WebGL, la seccion cae en .al-demo--no3d y muestra los 6 pasos en
+   texto (el markup esta en el HTML) en vez de una caja vacia con controles
+   muertos. Antes esta seccion solo chequeaba window.THREE. Unificado 2026-09-27. */
+function hasWebGL(){
+  try {
+    const c = document.createElement('canvas');
+    return !!(window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl')));
+  } catch(e){ return false; }
 }
-const C = getThemeColors();
+function fallback(){
+  root.classList.add('al-demo--no3d');
+  if (window.console) console.warn('[al-demo instalacion] 3D no disponible, se muestra la version en texto.');
+}
+
+if (!window.THREE || !hasWebGL()) { fallback(); return; }
+
+/* try/catch plano a proposito: envolve el arranque del 3D sin re-indentar las
+   ~380 lineas siguientes, para que el diff siga siendo revisable. Si algo
+   falla a mitad de armado (textura, contexto WebGL), caemos al modo texto en
+   lugar de dejar la seccion en blanco. Mismo criterio que "Ver en accion". */
+try {
+const FONT = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+/* Paleta del canvas 3D: FIJA en tema claro, igual que "Ver en accion" (ver el
+   bloque de ese demo mas arriba). Mismo criterio en las dos secciones: el
+   panel 3D es una captura del producto real —Google Drive y Sheets son
+   claros—, no un elemento de la pagina, asi que no sigue al toggle de tema.
+   Antes esta paleta era reactiva y ademas miraba prefers-color-scheme, que
+   el sitio no usa para nada (el tema es manual, via localStorage 'al-theme'):
+   eso dejaba el canvas navy en una pagina clara en cualquier computador con
+   el SO en oscuro. Se unifico con A el 2026-09-27. */
+const C = { paper:'#eef2f7', ink:'#12304d', muted:'#4f6983', brand:'#1f5c99', brandDark:'#164a7d', hi:'#f5c84c', soft:'#8aa2bb', line:'#c9d5e3', ok:'#2f8a5b', warn:'#e08a2c' };
 const clamp = (x,a=0,b=1) => Math.min(b, Math.max(a, x));
 const ease = x => { x = clamp(x); return x < .5 ? 4*x*x*x : 1 - Math.pow(-2*x+2, 3)/2; };
 const easeOut = x => { x = clamp(x); return 1 - Math.pow(1-x, 3); };
@@ -2547,8 +2455,8 @@ function base(g, title){
   g.fillStyle = C.brand; rr(g, 30, 22, 32, 32, 8); g.fill();
   txt(g, title, 78, 39, 38, 700, C.ink);
 }
-function overlay(g, a){ g.save(); rr(g, 0, 0, CW, CH, 34); g.clip(); const dark = document.documentElement.dataset.theme === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches; g.fillStyle = dark ? `rgba(10,10,20,${0.45*a})` : `rgba(18,48,77,${0.32*a})`; g.fillRect(0, 0, CW, CH); g.restore(); }
-function dialog(g, x, y, w, h){ g.save(); g.shadowColor = 'rgba(18,48,77,.25)'; g.shadowBlur = 40; g.shadowOffsetY = 12; const dark = document.documentElement.dataset.theme === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches; g.fillStyle = dark ? '#1a1a2e' : '#fff'; rr(g, x, y, w, h, 24); g.fill(); g.restore(); }
+function overlay(g, a){ g.save(); rr(g, 0, 0, CW, CH, 34); g.clip(); g.fillStyle = `rgba(18,48,77,${0.32*a})`; g.fillRect(0, 0, CW, CH); g.restore(); }
+function dialog(g, x, y, w, h){ g.save(); g.shadowColor = 'rgba(18,48,77,.25)'; g.shadowBlur = 40; g.shadowOffsetY = 12; g.fillStyle = '#fff'; rr(g, x, y, w, h, 24); g.fill(); g.restore(); }
 function banner(g, x, y, w, h, label, color = C.ok){ g.fillStyle = color; rr(g, x, y, w, h, h/2); g.fill(); txt(g, label, x + w/2, y + h/2 + 1, 35, 800, '#fff', 'center'); }
 function checkDot(g, x, y, on, pop = 1){
   g.beginPath(); g.arc(x, y, 18 * (on ? pop : 1), 0, Math.PI*2);
@@ -2849,7 +2757,7 @@ function updateCursor(t){
 
 function resize(){
   const w = Math.max(1, stage.clientWidth), h = Math.max(1, stage.clientHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
   renderer.setSize(w, h, false);
   camera.aspect = w / h; camera.updateProjectionMatrix();
   needsRender = true;
@@ -2864,7 +2772,9 @@ function frame(now){
     if (playing) { T += dt; if (T >= DUR) T = 0; }
     setStep(stepOf(T));
     camera.position.set(Math.sin(T*0.3)*0.18, Math.cos(T*0.25)*0.1, 8.6);
-    camera.lookAt(0, 0, 0);
+    // Misma compensacion de orbita que usa la demo "ver en accion": sin esto la
+    // escena se va de centro horizontalmente a medida que la camara orbita.
+    camera.lookAt(camera.position.x*0.4, camera.position.y, 0);
     updateCards(T); updateCursor(T);
     renderer.render(scene, camera);
     fills.forEach((f, i) => { const s = STEPS[i]; f.fill.style.width = (clamp((T - s.a) / (s.b - s.a)) * 100) + '%'; });
@@ -2873,6 +2783,12 @@ function frame(now){
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
+} catch (err) {
+  /* Si three.js o WebGL fallan a mitad de la inicializacion, la seccion no
+     puede quedar en blanco: caemos al modo texto con los 6 pasos. */
+  if (window.console) console.warn('[al-demo instalacion] error al iniciar el 3D:', err);
+  fallback();
+}
 })();
 </script>
 
