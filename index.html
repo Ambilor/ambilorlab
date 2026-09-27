@@ -65,7 +65,7 @@
 :root {
   --azul:#1F5C99;--azul-dark:#163f6b;--azul-bg:#EBF2FA;--negro:#111111;
   --gris-1:#444444;--gris-2:#888888;--gris-4:#F4F4F4;--blanco:#FFFFFF;
-  --borde:#E2E2E2;--max:660px;
+  --borde:#E2E2E2;--max:900px;
   --mono:ui-monospace,Menlo,Consolas,monospace;
   --sans:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif;
 }
@@ -78,6 +78,14 @@ nav{position:sticky;top:0;z-index:100;background:var(--blanco);border-bottom:1px
 .nav-links{display:flex;gap:1.75rem;list-style:none}
 .nav-links a{font-size:13px;color:var(--gris-1);text-decoration:none;transition:color .15s}
 .nav-links a:hover,.nav-links a.active{color:var(--azul)}
+/* En telefono el logo y los 5 enlaces no entran en una linea (470px medidos, y
+   el ancho menor util es 360px): la pagina scrolleaba 80-110px de lado, que es
+   justo el salto de lado que hace que el demo se vea corgado. Se parten en dos
+   lineas en vez de esconder enlaces detras de un scroll invisible. */
+@media (max-width:560px){
+  .nav-inner{height:auto; min-height:52px; flex-wrap:wrap; row-gap:.35rem; padding-top:.5rem; padding-bottom:.5rem}
+  .nav-links{gap:.9rem; flex-wrap:wrap}
+}
 section{display:none}
 section.visible{display:block}
 .container{max-width:var(--max);margin:0 auto;padding:3.5rem 1.5rem}
@@ -424,7 +432,12 @@ nav.scrolled .nav-links a{font-size:12px}
    llegara a exceder el espacio, la caja crece (nunca recorta) y se degrada
    al comportamiento anterior. Se mide en rem para que escale con el tamano
    de fuente que elija el visitante. */
-.al-demo__copy{min-height:18rem; display:flex; flex-direction:column; justify-content:center; transition:opacity .28s ease, transform .28s ease}
+/* El tope de 560px no acorta el texto (el parrafo ya se limita a 440px): con el
+   contenedor a 900px, sin tope la columna de texto mide ~780px en una columna y
+   el texto de 440px queda pegado a la izquierda con 340px de vacio al lado.
+   Centrado, el bloque se ve parejo. En dos columnas la columna es de ~356px,
+   mas angosta que el tope, asi que no cambia nada. */
+.al-demo__copy{min-height:18rem; max-width:560px; margin-inline:auto; display:flex; flex-direction:column; justify-content:center; transition:opacity .28s ease, transform .28s ease}
 .al-demo__copy.is-changing{opacity:0; transform:translateY(8px)}
 .al-demo__kicker{font-family:var(--mono); font-size:10.5px; font-weight:500; text-transform:uppercase; letter-spacing:.08em; color:var(--azul); margin-bottom:.5rem}
 .al-demo__title{font-size:18px; font-weight:600; letter-spacing:-.3px; line-height:1.35; color:var(--negro); margin-bottom:.6rem; text-wrap:balance}
@@ -480,15 +493,15 @@ nav.scrolled .nav-links a{font-size:12px}
 /* La demo y la guia comparten el mismo grid de una columna: el .container
    esta topado a 660px, asi que un breakpoint de 900px nunca se activaba y la
    regla era inerte. Se elimino el 2026-09-27. */
-/* Dos columnas cuando sobra ancho, para que el bloque entre completo en
-   pantalla. Apiladas, escena (340px) + texto suman ~900px y eso solo cabe en
-   ventanas de 1050px o mas: el titulo de la seccion, el contenedor y la barra
-   del navegador se comen el resto. En la franja de 841-1050px de alto hay
-   ancho de sobra y falta alto, asi que escena y texto van uno al lado del
-   otro y el bloque queda en ~500px. Por eso el alto se aprieta con vh en todo
-   el bloque. Requiere 900px de ancho porque por debajo la columna de texto
-   queda tan angosta que el copy sube a 305px o mas. */
-@media (min-width:900px) and (max-height:1050px){
+/* Dos columnas desde 900px de ancho, sin condicion de alto. Con el contenedor
+   a 900px las dos caben holgadas (texto ~356px, escena ~387px) y el bloque
+   queda en ~580px, que entra en cualquier ventana; ademas la escena gana 47%
+   de lado lineal y con ello 2.2x los pixeles con que se dibuja, que es lo que
+   la hacia verse mas suave cuando estaba en 263px. Antes el alto tambien
+   decidia: por encima de 1050px volvia a una columna y al achicar la ventana
+   el demo cambiaba de forma, que es un salto raro. En dos columnas la columna
+   de texto es mas angosta, asi que la reserva sube a 21rem = 336px. */
+@media (min-width:900px){
   .al-demo__grid{grid-template-columns:minmax(0,.92fr) minmax(0,1fr); gap:clamp(20px,3vw,34px)}
   .al-demo__stage{order:0; margin:0; max-width:none}
   /* Mismo criterio que en una columna (ver la regla base): sin esto esta
