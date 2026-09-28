@@ -519,38 +519,51 @@ nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:cent
   escenaHada.add(estela);
   var historia = [];
   // giro de una capa cada tanto (como el cubo del inicio)
-  // giros de capa. El cubo empieza desordenado y cada giro se anota; al llegar
-  // al final del inicio deshace sus giros hasta quedar resuelto (y lo celebra).
-  // Si se vuelve hacia arriba, sigue desordenandose.
-  var giro = null, proximoGiro = 1.5, historial = [], resuelto = false, fiesta = 0;
-  function empezarGiro(eje, capa, dir, dur, anotar){
-    var pivote = new THREE.Group(); cubo.add(pivote);
-    piezasCubo.forEach(function(pz){ if (Math.round(pz.position[eje] / 0.33) === capa) pivote.attach(pz); });
-    giro = { pivote: pivote, eje: eje, fin: dir * Math.PI / 2, t: 0, dur: dur };
-    if (anotar) historial.push({ eje: eje, capa: capa, dir: dir });
+  // El cubo se resuelve al ritmo del desplazamiento: arriba esta desordenado con
+  // una mezcla fija de giros; cada tramo que se baja deshace una parte y el
+  // ultimo desplazamiento completa el ultimo giro. Al subir se vuelve a
+  // desordenar en el mismo orden (el estado depende solo de cuanto se ha bajado).
+  var MEZCLA = [], NM = 14, aplicados = 0, pivote = null, resuelto = false, fiesta = 0, nivel = NM;
+  (function(){ var ejes = ['x', 'y', 'z'], ant = '';
+    for (var m = 0; m < NM; m++) { var e; do { e = ejes[Math.floor(Math.random() * 3)]; } while (e === ant); ant = e;
+      MEZCLA.push({ eje: e, capa: Math.floor(Math.random() * 3) - 1, dir: Math.random() < .5 ? -1 : 1 }); } })();
+  function redondear(pz){ pz.position.set(Math.round(pz.position.x / .33) * .33, Math.round(pz.position.y / .33) * .33, Math.round(pz.position.z / .33) * .33); }
+  function nuevoPivote(mv){
+    var pv = new THREE.Group(); pv.userData.mv = mv; cubo.add(pv);
+    piezasCubo.forEach(function(pz){ if (Math.round(pz.position[mv.eje] / 0.33) === mv.capa) pv.attach(pz); });
+    return pv;
   }
-  function terminarGiro(){
-    giro.pivote.rotation[giro.eje] = giro.fin; giro.pivote.updateMatrixWorld(true);
-    [].slice.call(giro.pivote.children).forEach(function(pz){ cubo.attach(pz); pz.position.set(Math.round(pz.position.x / .33) * .33, Math.round(pz.position.y / .33) * .33, Math.round(pz.position.z / .33) * .33); });
-    cubo.remove(giro.pivote); giro = null;
+  function soltar(pv, ang){
+    pv.rotation[pv.userData.mv.eje] = ang; pv.updateMatrixWorld(true);
+    [].slice.call(pv.children).forEach(function(pz){ cubo.attach(pz); redondear(pz); });
+    cubo.remove(pv);
   }
-  function giroAzar(dur){ var ejes = ['x', 'y', 'z']; empezarGiro(ejes[Math.floor(Math.random() * 3)], Math.floor(Math.random() * 3) - 1, Math.random() < .5 ? -1 : 1, dur, true); }
-  for (var m = 0; m < 9; m++) { giroAzar(0); terminarGiro(); }        // empieza desordenado
-  function avanzarGiro(dt, alFinal){
-    if (!giro) {
-      if (alFinal) {
-        if (historial.length) { var h = historial.pop(); empezarGiro(h.eje, h.capa, -h.dir, 0.2, false); resuelto = false; }
-        else if (!resuelto) { resuelto = true; fiesta = 1; }             // ¡resuelto!
-        return;
-      }
-      resuelto = false;
-      proximoGiro -= dt; if (proximoGiro <= 0) { giroAzar(0.45); proximoGiro = 1.6 + Math.random() * 2.2; }
-      return;
-    }
-    giro.t = Math.min(1, giro.t + dt / giro.dur);
-    var e = giro.t < .5 ? 2 * giro.t * giro.t : 1 - Math.pow(-2 * giro.t + 2, 2) / 2;
-    giro.pivote.rotation[giro.eje] = giro.fin * e;
-    if (giro.t >= 1) terminarGiro();
+  function aplicar(mv, sentido){ soltar(nuevoPivote(mv), sentido * mv.dir * Math.PI / 2); }
+  // estado inicial: la mezcla completa aplicada (los giros se deshacen desde el ultimo)
+  MEZCLA.forEach(function(mv){ aplicar(mv, 1); }); aplicados = NM;
+  // L = giros aun aplicados (con fraccion): k completos + el giro k a medio deshacer
+  function fijarNivel(L){
+    L = Math.max(0, Math.min(NM, L));
+    var k = Math.floor(L), f = L - k; if (k === NM) f = 0;
+    // el pivote en curso corresponde al giro k (aplicado en fraccion f)
+    if (pivote && (pivote.userData.i !== k || aplicados !== k)) { soltar(pivote, 0); pivote = null; }
+    while (aplicados < k) { aplicar(MEZCLA[aplicados], 1); aplicados++; }
+    while (aplicados > k) { aplicados--; aplicar(MEZCLA[aplicados], -1); }
+    if (f > 0.002) {
+      if (!pivote) { pivote = nuevoPivote(MEZCLA[k]); pivote.userData.i = k; }
+      var e = f < .5 ? 2 * f * f : 1 - Math.pow(-2 * f + 2, 2) / 2;
+      pivote.rotation[MEZCLA[k].eje] = MEZCLA[k].dir * Math.PI / 2 * e;
+    } else if (pivote) { soltar(pivote, 0); pivote = null; }
+    var ahora = k === 0 && f <= 0.002;
+    if (ahora && !resuelto) fiesta = 1;
+    resuelto = ahora;
+  }
+  function avanzarGiro(dt){
+    var avance = total > 0 ? Math.min(1, Math.max(0, scrollY / total)) : 0;
+    var meta = NM * (1 - avance);
+    if (avance >= 0.999) meta = 0;                                       // el ultimo desplazamiento lo completa
+    nivel += (meta - nivel) * Math.min(1, dt * 8); if (Math.abs(meta - nivel) < 0.004) nivel = meta;
+    fijarNivel(nivel);
   }
   var hadaVel = new THREE.Vector3(), hadaObj = new THREE.Vector3(), zPrev = null, visitaAnt = null, tamSuave = 70;
   function moverHada(dt, t, zc){
@@ -589,7 +602,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:cent
     aura.scale.setScalar(escalaHada * 3); aura.material.opacity = (quieto ? 0.4 : 0.8) + Math.sin(t * 2.2) * 0.12;
     // al final del inicio (el cierre) el cubo se resuelve
     var alFinal = guiaI === estaciones.length - 1 && guiaViaje < 0;
-    avanzarGiro(dt, alFinal);
+    avanzarGiro(dt);
     fiesta = Math.max(0, fiesta - dt * 0.5);
     if (fiesta > 0) { aura.material.opacity = Math.min(1, aura.material.opacity + fiesta); aura.scale.setScalar(escalaHada * (3 + fiesta * 2.5)); }
     for (var mi = 0; mi < matsCaras.length; mi++) matsCaras[mi].emissiveIntensity = 0.18 + fiesta * 0.8;
