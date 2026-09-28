@@ -450,12 +450,15 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
 .prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--azul),#2a80e1);width:0%;z-index:10000;transition:width .1s linear;pointer-events:none}
 
 /* ── cursor personalizado (solo mouse) ── */
-@media(pointer:fine){
-  body{cursor:none}
-  .c-dot,.c-ring{position:fixed;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%)}
-  .c-dot{width:7px;height:7px;background:var(--azul);z-index:9999;transition:transform .08s,opacity .2s}
-  .c-ring{width:26px;height:26px;border:1.5px solid rgba(31,92,153,.45);z-index:9998;transition:width .2s,height .2s,border-color .2s}
-  a:hover .c-dot,button:hover .c-dot{transform:translate(-50%,-50%) scale(2)}
+/* 2026-09-28: se usa el cursor real del sistema (responde al instante, sin
+   depender de los FPS de la pagina). Antes se ocultaba y se dibujaba un punto
+   que solo se movia cuando la pagina dibujaba un cuadro: con el 3D pesado el
+   mouse se sentia "lagueado". El anillo queda como adorno y se mueve con
+   transform (sin recalcular el diseno). */
+.c-dot{display:none}
+.c-ring{display:none}
+@media(hover:hover) and (pointer:fine){
+  .c-ring{display:block;position:fixed;left:0;top:0;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;pointer-events:none;border:1.5px solid rgba(31,92,153,.45);z-index:9998;will-change:transform;transition:opacity .2s,border-color .2s}
 }
 
 /* ── nav condensado al scrollear ── */
@@ -2930,18 +2933,24 @@ html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) ro
 (function(){
   var dot=document.getElementById('cDot'),ring=document.getElementById('cRing');
   if(!dot||!ring) return;
-  var cx=0,cy=0,rx=0,ry=0,raf;
+  // el anillo sigue al cursor real con transform y un suavizado por tiempo (igual
+  // de rapido a 30 o a 120 FPS); se detiene cuando alcanza al cursor
+  if(!window.matchMedia||!matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+  var cx=0,cy=0,rx=0,ry=0,raf=0,tAnt=0,primero=true;
+  function mover(t){
+    var dt=Math.min(.05,tAnt?(t-tAnt)/1000:.016);tAnt=t;
+    var k=1-Math.exp(-dt*24);
+    rx+=(cx-rx)*k;ry+=(cy-ry)*k;
+    ring.style.transform='translate3d('+rx.toFixed(1)+'px,'+ry.toFixed(1)+'px,0)';
+    if(Math.abs(cx-rx)+Math.abs(cy-ry)>.3) raf=requestAnimationFrame(mover); else {raf=0;tAnt=0;}
+  }
   document.addEventListener('mousemove',function(e){
     cx=e.clientX;cy=e.clientY;
-    dot.style.left=cx+'px';dot.style.top=cy+'px';
-    dot.style.opacity='1';ring.style.opacity='1';
-  });
-  document.addEventListener('mouseleave',function(){dot.style.opacity='0';ring.style.opacity='0';});
-  (function animRing(){
-    rx+=(cx-rx)*.18;ry+=(cy-ry)*.18;
-    ring.style.left=rx+'px';ring.style.top=ry+'px';
-    raf=requestAnimationFrame(animRing);
-  })();
+    if(primero){rx=cx;ry=cy;primero=false;}
+    ring.style.opacity='1';
+    if(!raf) raf=requestAnimationFrame(mover);
+  },{passive:true});
+  document.addEventListener('mouseleave',function(){ring.style.opacity='0';});
 })();
 
 // ── rueda del mouse en Inicio: respaldo (2026-09-28) ──
@@ -3482,7 +3491,8 @@ window.AL3D = (function(){
   // quieto y el cubo recorre sus elementos: titulo, tarjetas, botones) y entre
   // bloques un tramo de viaje. P va de 0 a N-1 (suavizado para que el 3D y el
   // texto vayan juntos).
-  var LECTURA = [0.6, 1.3, 1.6, 0.5], VIAJE = 0.9;     // en altos de pantalla
+  // 2026-09-28: recorrido ~35 % mas corto (antes habia que girar mucho la rueda)
+  var LECTURA = [0.4, 0.85, 1.05, 0.35], VIAJE = 0.6;     // en altos de pantalla
   var tunel = document.querySelector('#home .i3-tunel'), inicios = [], total = 0;
   function tramos(){
     var H = innerHeight, y = 0;
@@ -3638,8 +3648,21 @@ window.AL3D = (function(){
   var renderer;
   try { renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, powerPreference: 'high-performance' }); }
   catch (e) { document.body.classList.add('i3-estatico'); canvas.style.display='none'; estaciones.forEach(function(e){ e.style.visibility='visible'; }); return; }
-  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+  // densidad de pixeles: hasta 1,5x (antes 2x). Si el equipo no alcanza ~40 FPS
+  // en Inicio, ajustarCalidad() la baja de a poco hasta 1x.
+  var PR = Math.min(devicePixelRatio || 1, 1.5), sumaDt = 0, nDt = 0;
+  renderer.setPixelRatio(PR);
   renderer.setClearColor(0x06080C, 1);
+  function ajustarCalidad(dt){
+    sumaDt += dt; nDt++;
+    if (nDt < 90) return;
+    var prom = sumaDt / nDt; sumaDt = 0; nDt = 0;
+    if (prom > 0.025 && PR > 1) {
+      PR = Math.max(1, PR - 0.25);
+      renderer.setPixelRatio(PR); if (renderHada) renderHada.setPixelRatio(PR);
+      medir();
+    }
+  }
   var scene = new THREE.Scene();
   scene.fog = new THREE.Fog(0x06080C, 7, 30);
   var sucio = true;   // pedir un cuadro nuevo fuera de Inicio (el fondo se dibuja solo si cambia)
@@ -3848,7 +3871,7 @@ window.AL3D = (function(){
   var escenaHada = new THREE.Scene(), renderHada = null;
   try {
     renderHada = new THREE.WebGLRenderer({ canvas: document.getElementById('i3CapaHada'), antialias: true, alpha: true });
-    renderHada.setPixelRatio(Math.min(devicePixelRatio || 1, 2)); renderHada.setClearColor(0x000000, 0);
+    renderHada.setPixelRatio(PR); renderHada.setClearColor(0x000000, 0);
     escenaHada.add(new THREE.AmbientLight(0x8fb4e8, 0.6));
     var dlH = new THREE.DirectionalLight(0xffffff, 0.95); dlH.position.set(3, 5, 6); escenaHada.add(dlH);
   } catch (e) { renderHada = null; escenaHada = scene; document.getElementById('i3CapaHada').style.display = 'none'; }
@@ -4092,8 +4115,10 @@ window.AL3D = (function(){
     if (!visible) return;
     var dt = Math.min(.05, (ahora - ultimo) / 1000); ultimo = ahora;
     var home = enInicio();
-    if (home) { P += (Pobj - P) * Math.min(1, dt * 7); if (Math.abs(Pobj - P) < 0.0005) P = Pobj; }
-    var dmx = (tx - mx) * .05, dmy = (ty - my) * .05; mx += dmx; my += dmy;
+    if (home) { P += (Pobj - P) * Math.min(1, dt * 9); if (Math.abs(Pobj - P) < 0.0005) P = Pobj; }
+    var kx = 1 - Math.exp(-dt * 5);                                      // suavizado por tiempo (no por cuadro)
+    var dmx = (tx - mx) * kx, dmy = (ty - my) * kx; mx += dmx; my += dmy;
+    if (home) ajustarCalidad(dt);
     if (giroActivo) inclinarContenido(home);
     var viajando = tViaje < 1;
     if (viajando) tViaje = Math.min(1, tViaje + dt / 0.7);
@@ -4826,7 +4851,7 @@ function resize(){
   // 3 y 4: 60.4 fps con tope 1.5, 2, 3 o sin tope (el stage es de 340px y el
   // upload de textura no satura el hilo), o sea que el tope no compraba
   // rendimiento, solo bajaba la resolucion.
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 3));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.setSize(w, h, false);
   camera.aspect = w / h; camera.updateProjectionMatrix();
   needsRender = true;
@@ -5391,7 +5416,7 @@ function resize(){
   // 3 y 4: 60.4 fps con tope 1.5, 2, 3 o sin tope (el stage es de 340px y el
   // upload de textura no satura el hilo), o sea que el tope no compraba
   // rendimiento, solo bajaba la resolucion.
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 3));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.setSize(w, h, false);
   camera.aspect = w / h; camera.updateProjectionMatrix();
   needsRender = true;
