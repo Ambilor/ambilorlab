@@ -316,8 +316,6 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
      3. una linea de marca cruza la pantalla, para que el cambio se perciba
         aunque el contenido sea parecido.
    Todo dura ~420ms: se nota, pero no frena la navegacion. */
-section.visible.entering{animation:view-in .42s cubic-bezier(.16,1,.3,1) both}
-@keyframes view-in{from{opacity:0;transform:scale(1.02)}to{opacity:1;transform:none}}
 @keyframes sec-in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 .rv{opacity:0;transform:translateY(22px);transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1)}
 .rv.in{opacity:1;transform:none}
@@ -1630,43 +1628,24 @@ function cfSubmit(e){
 }
 
 function show(id){
-  var current=document.querySelector('section.visible');
   var target=document.getElementById(id);
   document.querySelectorAll('.nav-links a').forEach(function(a){a.classList.remove('active');});
   var navEl=document.getElementById('nav-'+id);
   if(navEl){navEl.classList.add('active');moveNavInd(navEl);}
-  function activate(){
-    document.querySelectorAll('section').forEach(function(s){s.classList.remove('visible','entering');s.style.cssText='';});
-    target.classList.add('visible');
-    if(current&&current!==target){
-      // la vista entrante se acerca desde scale 1.02: es la señal de "cambio de plano"
-      target.classList.add('entering');
-      target.addEventListener('animationend',function once(e){
-        if(e.target!==target)return;
-        target.removeEventListener('animationend',once);
-        target.classList.remove('entering');
-      });
-    }
-    window.scrollTo({top:0,behavior:'instant'});
-    setTimeout(function(){
-      target.querySelectorAll('.rv:not(.in)').forEach(function(el){
-        var r=el.getBoundingClientRect();
-        if(r.top<window.innerHeight+40) el.classList.add('in');
-      });
-    },60);
-    if(id==='home') animH1();
-  }
-  if(current&&current!==target){
-    // la vista saliente se aleja y baja un poco, en vez de solo desvanecerse:
-    // el desplazamiento vertical es lo que da sensacion de cambio de lugar. Sin
-    // lineas ni barras: una linea horizontal cruzando la pantalla se leyo como
-    // interferencia, no como transicion (rechazado por el Director 2026-09-27)
-    current.style.transform='translateY(-10px) scale(.985)';
-    current.style.opacity='0';
-    current.style.transition='opacity .22s ease,transform .22s ease';
-    current.style.pointerEvents='none';
-    setTimeout(activate,220);
-  } else { activate(); }
+  // Cambio de pestana INSTANTANEO. Se retiro la transicion de seccion (fundido +
+  // escala de entrada y salida) el 2026-09-27 a pedido del Director: no se leia
+  // bien. Lo que sigue igual es el reveal .rv de los bloques de dentro, que es
+  // otra cosa y si se quiere.
+  document.querySelectorAll('section').forEach(function(s){s.classList.remove('visible');s.style.cssText='';});
+  target.classList.add('visible');
+  window.scrollTo({top:0,behavior:'instant'});
+  setTimeout(function(){
+    target.querySelectorAll('.rv:not(.in)').forEach(function(el){
+      var r=el.getBoundingClientRect();
+      if(r.top<window.innerHeight+40) el.classList.add('in');
+    });
+  },60);
+  if(id==='home') animH1();
   return false;
 }
 
