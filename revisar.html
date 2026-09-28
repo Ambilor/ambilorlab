@@ -158,16 +158,18 @@ async function revisarAlto(v, H){
   });
   if (grandes.size) avisos.push('Dibujo demasiado grande: ' + [...grandes].slice(0, 3).join(', '));
   // controles del cubo dentro del inicio
-  if (actual === 'home') { const p = doc.getElementById('hxPlay'), hxr = doc.querySelector('.hx').getBoundingClientRect(); if (p) { const pr = p.getBoundingClientRect(); if (pr.bottom > hxr.bottom + 1 || pr.right > W + 1) avisos.push('Controles del cubo fuera del inicio'); } }
   if (cortados.size) avisos.push('Texto cortado: ' + [...cortados].slice(0, 2).join(' · '));
   const pie = doc.querySelector('footer').getBoundingClientRect();
   const vacio = Math.round(H - (pie.bottom + win.scrollY));
   if (vacio > 4) avisos.push('Vacío bajo el pie: ' + vacio + ' px');
   // bloques que deben caber en el alto visible
   const cabe = (nombre, alto) => { if (alto > H + 2) avisos.push(`${nombre} no cabe: ${Math.round(alto)} de ${H} px`); };
-  if (actual === 'home') cabe('Inicio (hasta los botones)', doc.querySelector('.hx-ctas').getBoundingClientRect().bottom + win.scrollY);
+  // Inicio (recorrido 3D): cada bloque debe caber en el alto visible bajo la barra
+  if (actual === 'home') {
+    const barra = doc.querySelector('nav').getBoundingClientRect().height;
+    doc.querySelectorAll('#home .i3-estacion').forEach(e => cabe('Bloque "' + ((e.querySelector('.i3-eyebrow') || {}).textContent || '').trim() + '"', e.offsetHeight + barra));
+  }
   // escenas del inicio: en tablet y computador cada una debe caber completa en la pantalla
-  if (actual === 'home' && W >= 640 && H >= 500) doc.querySelectorAll('.hx-escena').forEach(e => cabe('Escena "' + (e.querySelector('.hx-eyebrow') || {}).textContent + '"', e.getBoundingClientRect().height));
   // En ventanas de ancho de celular y menos de 500px de alto (ventana minima de
   // iPad) la demo no cabe entera: se revisa que no se salga ni se corte, no el alto.
   if (actual === 'product' && !(W < 640 && H < 500)) doc.querySelectorAll('.al-demo').forEach(d => cabe('Demo "' + d.id + '"', d.getBoundingClientRect().bottom - d.previousElementSibling.getBoundingClientRect().top));
