@@ -1577,6 +1577,23 @@ footer{margin-top:auto}
   .gp-modo-pasos .gp-stip{margin-top:4px}
 }
 @media (max-width:639px) and (max-height:605px){ .gp-modo-pasos .gp-stip{display:none} }
+/* 2026-09-28 iPhone SE con barra de Chrome (~375x553): Herramientas y Guias mas
+   compactas para caber en la primera pantalla */
+@media (max-width:639px) and (max-height:580px){
+  #product .prod-h1{font-size:17.5px}
+  #product .prod-eyebrow{margin-bottom:.3rem}
+  #ver-en-accion .al-demo__body{font-size:12px;line-height:1.38}
+  #ver-en-accion .al-demo__title{font-size:15px}
+  #ver-en-accion .al-demo__copy{min-height:150px}
+  #ver-en-accion .al-demo__stage{height:max(84px, min(100cqw, calc(100svh - var(--resto))))}
+  #como-se-instala .al-demo__stage{height:max(110px, min(100cqw, calc(100svh - var(--resto))))}
+  #como-se-instala .al-demo__note{display:none}
+  #guias .home-h1{font-size:22px;margin-bottom:.3rem}
+  #guias .gp-tabs{margin-bottom:8px}
+  #guias .gp-tab{padding:6px 8px}
+  .gp-prog{margin-bottom:8px}
+  .gp-modo-pasos .gp-step.act{min-height:230px}
+}
 /* 2026-09-28 modo ventana de iPad: la ventana puede ser chica en ancho y en
    alto a la vez. Ademas del ancho, el diseno se ajusta por el alto visible. */
 /* Inicio en ventana chica y casi cuadrada (disposicion de celular, poco alto) */
@@ -1988,6 +2005,12 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
   border-color:rgba(31,92,153,.55)!important;box-shadow:0 0 0 1px rgba(31,92,153,.22),0 0 32px -8px rgba(31,92,153,.35),0 20px 50px -30px rgba(18,48,77,.3)!important}
 [data-theme="dark"] #about .ab2-perfil:hover,[data-theme="dark"] #about .ab2-flujo li:hover,[data-theme="dark"] #about .ab2-exp:hover,[data-theme="dark"] #about .ab2-tools li:hover,[data-theme="dark"] #product .pi-card:hover,[data-theme="dark"] #product .pi-num:hover,[data-theme="dark"] #product .alert-box:hover,[data-theme="dark"] #product .al-demo:hover,[data-theme="dark"] #product .pi-faq:hover,[data-theme="dark"] #guias .gvw:hover,[data-theme="dark"] #guias .gp-step:hover,[data-theme="dark"] #guias .gp-tab:not(.on):hover,[data-theme="dark"] #contact .ct-lista:hover,[data-theme="dark"] #contact .cf-wrap:hover,[data-theme="dark"] .marco-luz{
   border-color:rgba(143,193,255,.5)!important;box-shadow:0 0 0 1px rgba(76,141,219,.3),0 0 42px -8px rgba(76,141,219,.5),0 30px 80px -30px rgba(0,0,0,.8)!important}
+
+/* boton para activar el giroscopio en iPhone/iPad (solo aparece donde hace falta) */
+#home .i3-giro{display:inline-flex;align-items:center;gap:7px;margin:1rem auto 0;font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--glow-2);background:rgba(76,141,219,.1);border:1px solid rgba(143,193,255,.3);border-radius:100px;padding:7px 14px;cursor:pointer}
+#home .i3-giro[hidden]{display:none}
+#home .i3-giro i{font-size:15px}
+[data-theme="light"] #home .i3-giro{color:var(--azul);background:rgba(31,92,153,.07);border-color:rgba(31,92,153,.3)}
 </style>
 </head>
 
@@ -2030,12 +2053,13 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
   <div class="i3-estacion i3-centro" aria-label="Inicio">
     <div class="i3-eyebrow">Ambilor.Lab / Automatización contable</div>
     <h1 class="i3-titulo">Procesos financieros<br>que funcionan solos<span class="i3-p">.</span></h1>
-    <p class="i3-lead">Revisar que cada pago tenga su factura, armar el resumen de ventas, recorrer listados larguísimos línea por línea. Construyo programas que hacen ese trabajo solos, con un clic, dentro de Google Sheets, Excel y las herramientas que tu equipo ya usa.</p>
+    <p class="i3-lead">Soluciones simples y de bajo costo que se instalan en minutos, dentro de Google Sheets, Excel y las herramientas que tu equipo ya usa. Sin software caro ni proyectos eternos: con poco logras mucho, y el trabajo repetitivo pasa a hacerse solo.</p>
     <div class="i3-ctas">
       <a class="i3-btn i3-btn--pri" href="#" onclick="return show('product')">Ver herramientas <span aria-hidden="true">→</span></a>
       <a class="i3-btn i3-btn--sec" href="#" onclick="return show('contact')">Conversemos</a>
     </div>
     <p class="i3-pista">Desplaza para avanzar <b aria-hidden="true">↓</b></p>
+    <button type="button" class="i3-giro" hidden><i class="ti ti-device-mobile-rotated" aria-hidden="true"></i> Activar 3D con movimiento</button>
   </div>
 
   <div class="i3-estacion" aria-label="Qué automatizo">
@@ -3374,7 +3398,7 @@ window.AL3D = (function(){
   // centro del bloque: al avanzar se abren hacia los lados y arriba, y la camara
   // pasa por en medio de ellas
   var piezas = estaciones.map(function(e){
-    return [].slice.call(e.querySelectorAll(':scope > .i3-eyebrow, :scope > h1, :scope > h2, :scope > .i3-lead, :scope > .i3-ctas, :scope > .i3-pista, .i3-tarjeta')).map(function(el){ return { el: el, dx: 0, dy: 0 }; });
+    return [].slice.call(e.querySelectorAll(':scope > .i3-eyebrow, :scope > h1, :scope > h2, :scope > .i3-lead, :scope > .i3-ctas, :scope > .i3-pista, :scope > .i3-giro, .i3-tarjeta')).map(function(el){ return { el: el, dx: 0, dy: 0 }; });
   });
   function medirPiezas(){
     if (!enInicio()) return;
@@ -3880,6 +3904,33 @@ window.AL3D = (function(){
   // puntero: la camara mira levemente hacia donde esta el mouse
   var mx = 0, my = 0, tx = 0, ty = 0;
   addEventListener('pointermove', function(e){ if (e.pointerType !== 'mouse') return; tx = e.clientX / innerWidth - .5; ty = e.clientY / innerHeight - .5; }, { passive:true });
+  // giroscopio (2026-09-28): en telefonos y tablets, inclinar el aparato mueve la
+  // camara como el mouse en computador. El centro se recalibra solo (se acomoda a
+  // como se sostiene el aparato). iPhone/iPad piden permiso con un toque: boton
+  // "Activar 3D con movimiento" en la portada; Android no lo necesita.
+  (function(){
+    var DOE = window.DeviceOrientationEvent, tactil = window.matchMedia && matchMedia('(pointer:coarse)').matches;
+    if (reduce || !DOE || !tactil) return;
+    var base = null, on = false;
+    function leer(e){
+      if (e.beta == null || e.gamma == null) return;
+      var ang = (screen.orientation && screen.orientation.angle) || window.orientation || 0, x, y;
+      if (ang === 90) { x = e.beta; y = -e.gamma; } else if (ang === -90 || ang === 270) { x = -e.beta; y = e.gamma; } else { x = e.gamma; y = e.beta; }
+      if (!base) base = { x: x, y: y };
+      base.x += (x - base.x) * 0.01; base.y += (y - base.y) * 0.01;          // recalibra de a poco
+      tx = Math.max(-.5, Math.min(.5, (x - base.x) / 40)); ty = Math.max(-.5, Math.min(.5, (y - base.y) / 40));
+    }
+    function activar(){ if (on) return; on = true; addEventListener('deviceorientation', leer, { passive:true }); }
+    var btn = document.querySelector('#home .i3-giro');
+    if (typeof DOE.requestPermission === 'function') {
+      if (!btn) return;
+      btn.hidden = false; setTimeout(function(){ window.dispatchEvent(new Event('resize')); }, 50);
+      btn.addEventListener('click', function(){
+        var fin = function(){ btn.remove(); window.dispatchEvent(new Event('resize')); };
+        DOE.requestPermission().then(function(r){ if (r === 'granted') activar(); fin(); }).catch(fin);
+      });
+    } else activar();
+  })();
 
   var ultimo = performance.now(), visible = true;
   document.addEventListener('visibilitychange', function(){ visible = !document.hidden; if (visible) { ultimo = performance.now(); requestAnimationFrame(bucle); } });
