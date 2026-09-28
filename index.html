@@ -1201,6 +1201,10 @@ footer{color:#6B7280}
 /* 2026-09-28: barra que se esconde al bajar y vuelve al subir */
 nav{transition:height .22s ease, transform .3s ease}
 nav.nav-oculta{transform:translateY(-100%)}
+/* al condensarse la barra (52 -> 42 px) el contenido sube 10 px y Chrome/Edge
+   corregian el desplazamiento hacia atras: cerca de los 80 px la pagina se
+   quedaba pegada. Sin anclaje de scroll, el desplazamiento sigue parejo. */
+html,body{overflow-anchor:none}
 nav:focus-within{transform:none}
 /* en telefono la barra usa dos filas: condensarla a 42px dejaba las pestanas
    fuera de su fondo, encima del contenido */
