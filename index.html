@@ -3523,6 +3523,15 @@ window.AL3D = (function(){
     var gr = g.createRadialGradient(w/2, h/2, 0, w/2, h/2, w/2); gr.addColorStop(0, 'rgba(143,193,255,.55)'); gr.addColorStop(.4, 'rgba(76,141,219,.18)'); gr.addColorStop(1, 'rgba(76,141,219,0)');
     g.fillStyle = gr; g.fillRect(0, 0, w, h); }), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
   aura.scale.set(1.3, 1.3, 1); hada.add(aura);   // (se ajusta con el cubo en moverHada)
+  // en tema claro la luz aditiva no se ve (no hay nada que aclarar sobre fondo blanco):
+  // aura azul profundo con mezcla normal
+  var texAuraOscuro = aura.material.map, texAuraClaro = lienzo(128, 128, function(g, w, h){
+    var gr = g.createRadialGradient(w/2, h/2, 0, w/2, h/2, w/2); gr.addColorStop(0, 'rgba(31,92,153,.42)'); gr.addColorStop(.45, 'rgba(76,141,219,.16)'); gr.addColorStop(1, 'rgba(76,141,219,0)');
+    g.fillStyle = gr; g.fillRect(0, 0, w, h); });
+  // onda que se expande desde el cubo al completarse (se ve en ambos temas)
+  var onda = new THREE.Sprite(new THREE.SpriteMaterial({ map: lienzo(256, 256, function(g, w, h){
+    g.strokeStyle = '#fff'; g.lineWidth = 7; g.beginPath(); g.arc(w/2, h/2, w/2 - 8, 0, Math.PI * 2); g.stroke(); }), color: 0x8FC1FF, transparent: true, opacity: 0, depthWrite: false }));
+  hada.add(onda);
   // estela de destellos
   var NE = 46, estelaPos = new Float32Array(NE * 3), estelaAlfa = [];
   var gEst = new THREE.BufferGeometry(); gEst.setAttribute('position', new THREE.BufferAttribute(estelaPos, 3));
@@ -3616,6 +3625,9 @@ window.AL3D = (function(){
     avanzarGiro(dt);
     fiesta = Math.max(0, fiesta - dt * 0.5);
     if (fiesta > 0) { aura.material.opacity = Math.min(1, aura.material.opacity + fiesta); aura.scale.setScalar(escalaHada * (3 + fiesta * 2.5)); }
+    // dos ondas seguidas: crecen y se desvanecen
+    var fo = 1 - fiesta; onda.visible = fiesta > 0.01;
+    if (onda.visible) { var u1 = Math.min(1, fo * 1.6); onda.scale.setScalar(escalaHada * (1.2 + u1 * 5)); onda.material.opacity = (1 - u1) * 0.9; }
     for (var mi = 0; mi < matsCaras.length; mi++) matsCaras[mi].emissiveIntensity = 0.18 + fiesta * 0.8;
     // aviso "Todo conciliado" junto al cubo
     if (avisoCubo) {
@@ -3644,6 +3656,10 @@ window.AL3D = (function(){
   function aplicarTema(){
     var claro = document.documentElement.getAttribute('data-theme') === 'light', col = claro ? 0xEEF2F7 : 0x06080C;
     renderer.setClearColor(col, 1); scene.fog.color.setHex(col); matPolvo.color.setHex(claro ? 0x1F5C99 : 0x8FC1FF); sucio = true;
+    // brillo del cubo segun el fondo
+    aura.material.map = claro ? texAuraClaro : texAuraOscuro; aura.material.blending = claro ? THREE.NormalBlending : THREE.AdditiveBlending; aura.material.needsUpdate = true;
+    estela.material.color.setHex(claro ? 0x1F5C99 : 0x8FC1FF); estela.material.blending = claro ? THREE.NormalBlending : THREE.AdditiveBlending; estela.material.needsUpdate = true;
+    onda.material.color.setHex(claro ? 0x1F5C99 : 0x8FC1FF);
   }
   aplicarTema();
   new MutationObserver(aplicarTema).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
