@@ -104,7 +104,10 @@ nav{position:-webkit-sticky;position:sticky;top:0;z-index:100;background:var(--b
   .nav-logo{order:0}
   .nav-dark-btn{order:1;margin-left:auto}
   .nav-links{order:2;flex:1 0 100%;flex-wrap:nowrap;justify-content:space-between;gap:.5rem;margin:0!important}
+  .nav-links a{white-space:nowrap}
 }
+/* 320px (iPad con Slide Over o en un tercio): los 5 enlaces en una fila */
+@media (max-width:360px){ .nav-links a{font-size:12px} .nav-links{gap:.25rem} }
 section{display:none}
 section.visible{display:block}
 .container{max-width:var(--max);margin:0 auto;padding:3.5rem 1.5rem}
@@ -834,6 +837,73 @@ nav.scrolled .nav-links a{font-size:12px}
 .hx-panel-t{font-size:18px;font-weight:600;letter-spacing:-.02em;color:var(--negro);margin-bottom:.45rem}
 .hx-panel-d{font-size:14px;line-height:1.6;color:var(--gris-1)}
 
+/* 2026-09-28: los dibujos de "Que automatizo" cuentan su historia al aparecer
+   (una sola vez, cuando la tarjeta entra en pantalla y recibe .in):
+   01 las filas entran y se enlazan los pares, 02 crecen las barras y se traza
+   la tendencia, 03 se presiona "1 clic" y los meses se resuelven solos.
+   "Antes -> Ahora": el tachado se dibuja y despues aparece el "Ahora".
+   Sin nada de esto con movimiento reducido. */
+.hx-art-manual text{opacity:var(--o,1)}
+.hx-art-links .off{--o:.7}
+.hx-who-a{text-decoration:none}
+.hx-who-x{font-style:normal}
+.hx-who-x s{text-decoration:none;-webkit-box-decoration-break:clone;box-decoration-break:clone;
+  background:linear-gradient(rgba(152,162,179,.55),rgba(152,162,179,.55)) 0 58%/100% 1px no-repeat}
+@keyframes hx-in{from{opacity:0}to{opacity:var(--o,1)}}
+@keyframes hx-in-izq{from{opacity:0;transform:translateX(-10px)}to{opacity:var(--o,1);transform:none}}
+@keyframes hx-in-arriba{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes hx-pop{0%{opacity:0;transform:scale(.6)}70%{opacity:1;transform:scale(1.08)}100%{opacity:1;transform:none}}
+@keyframes hx-crece{from{transform:scaleY(0)}to{transform:none}}
+@keyframes hx-traza{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes hx-clic{0%,100%{transform:none}45%{transform:scale(.9)}}
+@keyframes hx-tacha{from{background-size:0% 1px}to{background-size:100% 1px}}
+@media (prefers-reduced-motion:no-preference){
+  .hx-art g,.hx-art rect,.hx-art text,.hx-art path{transform-box:fill-box}
+  /* 01 Conciliacion */
+  .hx-panel.in .hx-art-rows>g{animation:hx-in-izq .5s var(--ease) both}
+  .hx-panel.in .hx-art-rows>g:nth-child(1){animation-delay:.2s}
+  .hx-panel.in .hx-art-rows>g:nth-child(2){animation-delay:.32s}
+  .hx-panel.in .hx-art-rows>g:nth-child(3){animation-delay:.44s}
+  .hx-panel.in .hx-art-rows>g:nth-child(4){animation-delay:.56s}
+  .hx-panel.in .hx-art-rows>g:nth-child(5){animation-delay:.68s}
+  .hx-panel.in .hx-art-links path{animation:hx-in .5s ease 1s both,hx-flow 1.6s linear infinite}
+  .hx-panel.in .hx-art-links path:nth-child(2){animation-delay:1.3s,0s}
+  .hx-panel.in .hx-art-links .off{animation:hx-in .4s ease 1.6s both}
+  .hx-panel.in .hx-art-sinpar{transform-origin:left center;animation:hx-pop .5s var(--ease) 1.75s both}
+  /* 02 Reporteria */
+  .hx-panel.in .hx-art-grid text{animation:hx-in .4s ease both}
+  .hx-panel.in .hx-art-grid text:nth-child(1){animation-delay:.2s}
+  .hx-panel.in .hx-art-grid text:nth-child(2){animation-delay:.28s}
+  .hx-panel.in .hx-art-grid text:nth-child(3){animation-delay:.36s}
+  .hx-panel.in .hx-art-grid text:nth-child(4){animation-delay:.44s}
+  .hx-panel.in .hx-art-grid text:nth-child(5){animation-delay:.52s}
+  .hx-panel.in .hx-art-grid text:nth-child(6){animation-delay:.6s}
+  .hx-panel.in .hx-art-arrow{animation:hx-in .4s ease .8s both}
+  .hx-panel.in .hx-art-bars rect{transform-origin:center bottom;animation:hx-crece .6s var(--ease) both}
+  .hx-panel.in .hx-art-bars rect:nth-child(1){animation-delay:1s}
+  .hx-panel.in .hx-art-bars rect:nth-child(2){animation-delay:1.12s}
+  .hx-panel.in .hx-art-bars rect:nth-child(3){animation-delay:1.24s}
+  .hx-panel.in .hx-art-bars rect:nth-child(4){animation-delay:1.36s}
+  .hx-panel.in .hx-art-trend{stroke-dasharray:1;animation:hx-traza .8s ease 1.65s both}
+  /* 03 Automatizacion */
+  .hx-panel.in .hx-art-manual text{animation:hx-in-izq .5s var(--ease) both}
+  .hx-panel.in .hx-art-manual text:nth-child(1){animation-delay:.2s}
+  .hx-panel.in .hx-art-manual text:nth-child(2){animation-delay:.38s}
+  .hx-panel.in .hx-art-manual text:nth-child(3){animation-delay:.56s}
+  .hx-panel.in .hx-art-btn,.hx-panel.in .hx-art-btnt{transform-origin:251px 39px;transform-box:view-box;animation:hx-in .4s ease 1s both,hx-clic .4s ease 1.55s}
+  .hx-panel.in .hx-art-ok text{transform-origin:left center;animation:hx-pop .45s var(--ease) both}
+  .hx-panel.in .hx-art-ok text:nth-child(1){animation-delay:1.9s}
+  .hx-panel.in .hx-art-ok text:nth-child(2){animation-delay:2.1s}
+  .hx-panel.in .hx-art-ok text:nth-child(3){animation-delay:2.3s}
+  .hx-panel.in .hx-art-cap{animation:hx-in .6s ease 2.2s both}
+  /* Antes -> Ahora */
+  .hx-who-c.in .hx-who-x s{animation:hx-tacha .7s var(--ease) .45s both}
+  .hx-who-c.in .hx-who-b{animation:hx-in-arriba .6s var(--ease) 1.05s both}
+}
+/* 2026-09-28: pie de pagina legible (antes casi no se leia en tema oscuro) */
+footer{color:#6B7280}
+[data-theme="dark"] footer{color:#7C8698}
+
 /* PRODUCTO FLOTANDO */
 .hx-show{position:relative;padding:clamp(3rem,8vh,5rem) 0 clamp(5rem,12vh,8rem);isolation:isolate}
 .hx-show-glow{position:absolute;left:50%;top:58%;width:min(1100px,120vw);height:620px;transform:translate(-50%,-50%);z-index:-1;pointer-events:none;background:
@@ -876,7 +946,7 @@ nav.scrolled .nav-links a{font-size:12px}
 .hx-who-a,.hx-who-b{display:grid;grid-template-columns:62px 1fr;gap:10px;font-size:14px;line-height:1.55;padding:.55rem 0}
 .hx-who-a{color:var(--gris-2);text-decoration:line-through;text-decoration-color:rgba(152,162,179,.35)}
 .hx-who-b{color:var(--negro);border-top:1px dashed var(--borde)}
-.hx-who-a span,.hx-who-b span{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding-top:3px;text-decoration:none;display:inline-block}
+.hx-who-a>span,.hx-who-b>span{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding-top:3px;text-decoration:none;display:inline-block}
 .hx-who-b span{color:var(--ok-n)}
 
 /* CIERRE */
@@ -914,6 +984,13 @@ nav.scrolled .nav-links a{font-size:12px}
   .hx-mock-kpis{grid-template-columns:repeat(2,1fr)}
   .hx-who{grid-template-columns:1fr}
 }
+/* 2026-09-28 pantalla dividida: "Para quien" mantiene dos columnas desde 640px
+   (en una sola no cabia en la pantalla en ventanas de 700 a 900px) y las
+   coordenadas del rotulo superior se ocultan si no caben junto a el */
+@media (min-width:640px){ .hx-who{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:679px){ .hx-hud--tr,.hx-hud--br{display:none} }
+.hx-hud--tl{white-space:nowrap}
+@media (max-width:360px){ .hx-hud--tl{letter-spacing:.08em;font-size:10px} }
 @media (max-width:560px){
   .hx{padding-top:290px}
   .hx-line--r{padding-left:0}
@@ -1245,12 +1322,15 @@ footer{margin-top:auto}
    paso, sus cifras y la lista de pasos en vertical; a la derecha la escena con
    todo el alto que deja la pantalla. Apilar escena + texto + controles no cabe
    en ~690px de alto (iPad horizontal con barras del navegador). */
-@media (orientation:landscape) and (min-width:640px) and (min-height:501px){
+/* 2026-09-28: una ventana casi cuadrada (computador con la ventana a la mitad)
+   usa tambien la disposicion horizontal: apilada no cabe */
+@media (orientation:landscape) and (min-width:640px) and (min-height:501px),
+       (min-aspect-ratio:9/10) and (min-width:640px) and (min-height:501px){
   .al-demo{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);grid-template-rows:min-content 1fr auto;column-gap:clamp(20px,3vw,40px)}
   .al-demo__grid{display:contents}
   .al-demo__copy,#como-se-instala .al-demo__copy{grid-column:1;grid-row:1;display:flex;flex-direction:column;min-height:0;padding-top:.3rem}
   .al-demo__stage,#como-se-instala .al-demo__stage{grid-column:2;grid-row:1 / span 2;order:0;align-self:start;
-    height:max(280px, min(52cqw, calc(100svh - 356px)))}   /* cabe junto al encabezado de Herramientas */
+    height:max(240px, min(52cqw, calc(100svh - 356px)))}   /* cabe junto al encabezado de Herramientas */
   #product .prod-cab{margin-bottom:1.2rem}
   #product .demo-label{margin-bottom:.5rem}
   .al-demo__controls{grid-column:1;grid-row:2;align-self:start;flex-wrap:wrap;margin-top:1.4rem}   /* junto al texto: sin hueco */
@@ -1267,7 +1347,8 @@ footer{margin-top:auto}
 }
 /* horizontal y bajo (iPad, portatil): la lista de pasos vuelve a una fila
    compacta para que la columna del texto no sea mas alta que la escena */
-@media (orientation:landscape) and (min-width:640px) and (min-height:501px) and (max-height:860px){
+@media (orientation:landscape) and (min-width:640px) and (min-height:501px) and (max-height:860px),
+       (min-aspect-ratio:9/10) and (min-width:640px) and (min-height:501px) and (max-height:860px){
   .al-demo__steps{grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;margin-top:8px}
   .al-demo__step{display:block;padding:3px 0}
   .al-demo__track{width:auto}
@@ -1275,11 +1356,24 @@ footer{margin-top:auto}
   .al-demo__controls{margin-top:1rem}
   .al-demo__cta{margin-top:.7rem;padding:7px 16px}
   .al-demo__stats strong{font-size:clamp(22px,2vw,28px)}
+  .al-demo__stats{gap:10px 12px}   /* las dos cifras lado a lado en columnas angostas */
   .al-demo__body{font-size:14px;line-height:1.55}
+}
+/* ventanas horizontales angostas y bajas (mitad de un portatil de 1366x768):
+   columna de texto mas compacta para que la demo quepa */
+@media (min-width:640px) and (max-width:899px) and (min-aspect-ratio:9/10) and (min-height:501px) and (max-height:760px){
+  .al-demo__body{font-size:13px;line-height:1.45}
+  .al-demo__title{font-size:16.5px;margin-bottom:.3rem}
+  .al-demo__kicker{margin-bottom:.3rem}
+  .al-demo__stats{display:none}
+  #product .prod-h1{font-size:19px}
+  #product .prod-cab .alert-box{font-size:12.5px;padding:.8rem 1rem}
 }
 /* Encabezado de Herramientas: en pantallas anchas, texto a la izquierda y la
    tarjeta "¿Que es conciliar?" a la derecha */
-@media (min-width:1000px){
+/* 2026-09-28: tambien en ventanas casi cuadradas desde 640px (computador con la
+   ventana a la mitad), donde la demo va en dos columnas */
+@media (min-width:1000px), (min-width:640px) and (min-aspect-ratio:9/10) and (min-height:501px){
   .prod-cab{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:center;margin-bottom:2rem}
   .prod-cab .prod-tagline{margin-bottom:0}
   .prod-cab .alert-box{margin:0;font-size:13.5px;padding:1.1rem 1.2rem}
@@ -1287,7 +1381,7 @@ footer{margin-top:auto}
 /* 3) texto arriba a la izquierda, cifras a la derecha */
 .al-demo__copy{max-width:none;margin:0;justify-content:flex-start}
 /* VERTICAL (tablet): bajo la escena, texto a la izquierda y cifras a la derecha */
-@media (orientation:portrait) and (min-width:640px){
+@media (orientation:portrait) and (min-width:640px) and (max-aspect-ratio:9/10){
   .al-demo__copy{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);column-gap:36px;align-content:start;min-height:11.5rem}
   .al-demo__copy>*{grid-column:1}
   .al-demo__copy>.al-demo__extra{grid-column:2;grid-row:1 / span 3;align-self:start;padding-top:1.4rem}
@@ -1301,12 +1395,13 @@ footer{margin-top:auto}
   #product .prod-cab{margin-bottom:1.4rem}
   #product .demo-label{margin-bottom:.5rem}
   #ver-en-accion{--resto:700px}
+  #ver-en-accion .al-demo__stage{height:max(150px, min(100cqw, calc(100svh - var(--resto))))}
 }
 /* desde 1000px el encabezado va en dos columnas y es mas bajo */
-@media (orientation:portrait) and (min-width:1000px){ #ver-en-accion{--resto:664px} }
+@media (orientation:portrait) and (min-width:1000px) and (max-aspect-ratio:9/10){ #ver-en-accion{--resto:664px} }
 @media (max-width:639px){
   .al-demo{--resto:355px}
-  #como-se-instala{--resto:420px}
+  #como-se-instala{--resto:430px}
   .al-demo__copy{min-height:12rem}
   #como-se-instala .al-demo__copy{min-height:16rem}
 }
@@ -1557,7 +1652,7 @@ body>section:not(#home)>.container{padding-top:1.6rem}
             <rect x="188" y="96" width="18" height="40" rx="3"/><rect x="214" y="70" width="18" height="66" rx="3"/>
             <rect x="240" y="82" width="18" height="54" rx="3"/><rect x="266" y="46" width="18" height="90" rx="3"/>
           </g>
-          <path class="hx-art-trend" d="M197 92 L223 66 L249 78 L275 40"/>
+          <path class="hx-art-trend" pathLength="1" d="M197 92 L223 66 L249 78 L275 40"/>
           <text class="hx-art-cap" x="160" y="158">actualizado solo</text>
         </svg>
         <h3 class="hx-panel-t">Números que se vuelven gráficos solos</h3>
@@ -1568,8 +1663,8 @@ body>section:not(#home)>.container{padding-top:1.6rem}
         <svg class="hx-art" viewBox="0 0 320 170" aria-hidden="true">
           <g class="hx-art-manual">
             <text x="18" y="34">Mes 1 · revisar…</text>
-            <text x="18" y="62" opacity=".55">Mes 2 · lo mismo</text>
-            <text x="18" y="90" opacity=".28">Mes 3 · lo mismo</text>
+            <text x="18" y="62" style="--o:.55">Mes 2 · lo mismo</text>
+            <text x="18" y="90" style="--o:.28">Mes 3 · lo mismo</text>
           </g>
           <path class="hx-art-arrow" d="M150 64 L182 64 M174 57 L182 64 L174 71"/>
           <rect class="hx-art-btn" x="200" y="22" width="102" height="34" rx="17"/>
@@ -1596,10 +1691,10 @@ body>section:not(#home)>.container{padding-top:1.6rem}
       <h2 class="hx-h2">Menos copiar y pegar. <br><span>Más tiempo para decidir.</span></h2>
     </div>
     <div class="hx-who">
-      <div class="hx-who-c rv2"><div class="hx-who-n">Para contadores</div><p class="hx-who-a"><span>Antes</span>Revisar la cartola fila por fila, buscando el pago de cada factura, cada cierre.</p><p class="hx-who-b"><span>Ahora</span>El sistema empareja cada movimiento en minutos: tú solo validas lo que no cuadra.</p></div>
-      <div class="hx-who-c rv2"><div class="hx-who-n">Para PyMEs</div><p class="hx-who-a"><span>Antes</span>Pagar software especializado que no siempre necesitas ni entiendes.</p><p class="hx-who-b"><span>Ahora</span>Lo mismo con Google Sheets o Excel, que ya usas y ya pagas.</p></div>
-      <div class="hx-who-c rv2"><div class="hx-who-n">Para equipos financieros</div><p class="hx-who-a"><span>Antes</span>Armar el informe de cierre copiando y pegando, todos los meses.</p><p class="hx-who-b"><span>Ahora</span>El informe se actualiza solo cuando cambian los datos base.</p></div>
-      <div class="hx-who-c rv2"><div class="hx-who-n">Productos listos para usar</div><p class="hx-who-a"><span>Antes</span>Esperar semanas a que alguien desarrolle lo que necesitas.</p><p class="hx-who-b"><span>Pronto</span>Herramientas listas que instalas en 5 minutos, sin esperar desarrollos.</p></div>
+      <div class="hx-who-c rv2"><div class="hx-who-n">Para contadores</div><p class="hx-who-a"><span>Antes</span><em class="hx-who-x"><s>Revisar la cartola fila por fila, buscando el pago de cada factura, cada cierre.</s></em></p><p class="hx-who-b"><span>Ahora</span>El sistema empareja cada movimiento en minutos: tú solo validas lo que no cuadra.</p></div>
+      <div class="hx-who-c rv2"><div class="hx-who-n">Para PyMEs</div><p class="hx-who-a"><span>Antes</span><em class="hx-who-x"><s>Pagar software especializado que no siempre necesitas ni entiendes.</s></em></p><p class="hx-who-b"><span>Ahora</span>Lo mismo con Google Sheets o Excel, que ya usas y ya pagas.</p></div>
+      <div class="hx-who-c rv2"><div class="hx-who-n">Para equipos financieros</div><p class="hx-who-a"><span>Antes</span><em class="hx-who-x"><s>Armar el informe de cierre copiando y pegando, todos los meses.</s></em></p><p class="hx-who-b"><span>Ahora</span>El informe se actualiza solo cuando cambian los datos base.</p></div>
+      <div class="hx-who-c rv2"><div class="hx-who-n">Productos listos para usar</div><p class="hx-who-a"><span>Antes</span><em class="hx-who-x"><s>Esperar semanas a que alguien desarrolle lo que necesitas.</s></em></p><p class="hx-who-b"><span>Pronto</span>Herramientas listas que instalas en 5 minutos, sin esperar desarrollos.</p></div>
     </div>
   </div>
 
@@ -2551,6 +2646,30 @@ function cfSubmit(e){
     if(i%3===2) el.classList.add('rv-d2');
     obs.observe(el);
   });
+})();
+
+// 2026-09-28: las cifras de Herramientas (3 s, 5.000, ~5 min) cuentan desde 0
+// la primera vez que aparecen en pantalla. Sin esto con movimiento reducido.
+(function(){
+  if(!('IntersectionObserver' in window)) return;
+  if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var nums=[];
+  document.querySelectorAll('.pi-num b').forEach(function(b){
+    var t=b.firstChild; if(!t||t.nodeType!==3) return;
+    var m=t.nodeValue.match(/^(\D*)([\d.]+)$/); if(!m) return;
+    var fin=parseInt(m[2].replace(/\./g,''),10); if(!(fin>1)) return;
+    b._cuenta={t:t,pre:m[1],fin:fin,txt:t.nodeValue}; nums.push(b);
+  });
+  var ob=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(!e.isIntersecting) return; ob.unobserve(e.target);
+    var c=e.target._cuenta, t0=performance.now(), dur=1100;
+    (function paso(now){
+      var u=Math.min(1,Math.max(0,(now-t0)/dur)), v=Math.round(c.fin*(1-Math.pow(1-u,3)));
+      c.t.nodeValue=u<1?c.pre+v.toLocaleString('es-CL'):c.txt;
+      if(u<1) requestAnimationFrame(paso);
+    })(t0);
+  });},{threshold:.6});
+  nums.forEach(function(b){ob.observe(b);});
 })();
 
 // P1 · inclinacion 3D con parallax (marca 4.4).
@@ -4370,7 +4489,9 @@ requestAnimationFrame(frame);
     if(hx.style.minHeight!==mh) hx.style.minHeight=mh;
     var H=parseFloat(getComputedStyle(hx).minHeight)||window.innerHeight;
     var inner=hx.querySelector('.hx-inner'), pb=parseFloat(getComputedStyle(hx).paddingBottom)||24;
-    var P=Math.round(Math.max(210,H-inner.offsetHeight-pb));
+    // piso 170 (antes 210): en pantallas bajas (iPad con Slide Over, iPhone SE)
+    // el cubo se achica para que titular y botones quepan en la primera pantalla
+    var P=Math.round(Math.max(170,H-inner.offsetHeight-pb));
     if(Math.abs((parseFloat(hx.style.paddingTop)||0)-P)>1) hx.style.paddingTop=P+'px';
   }
   function resize(){
@@ -4395,7 +4516,8 @@ requestAnimationFrame(frame);
     root.scale.setScalar(lado*porPx/4.1);
     centro={x:cx,y:cy,r:lado*.62};
     var R=lado*.62; zona.style.left=(cx-R)+'px'; zona.style.top=(cy-R)+'px'; zona.style.width=zona.style.height=(2*R)+'px';
-    if(play){ play.style.left=cx+'px'; play.style.top=Math.max(8,Math.min(cy+lado*.66,h-(play.offsetHeight||84)-10))+'px'; }
+    // 2026-09-28: centrados bajo el cubo, pero sin salirse por el borde (ventana angosta)
+    if(play){ var pw=play.offsetWidth||0; play.style.left=Math.max(pw/2+12,Math.min(cx,w-pw/2-12))+'px'; play.style.top=Math.max(8,Math.min(cy+lado*.66,h-(play.offsetHeight||84)-10))+'px'; }
   }
 
   // ── bucle ──
