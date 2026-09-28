@@ -123,6 +123,7 @@ async function revisar(v){
   if (actual === 'home' && W >= 640 && H >= 500) doc.querySelectorAll('.hx-escena').forEach(e => cabe('Escena "' + (e.querySelector('.hx-eyebrow') || {}).textContent + '"', e.getBoundingClientRect().height));
   if (actual === 'product') doc.querySelectorAll('.al-demo').forEach(d => cabe('Demo "' + d.id + '"', d.getBoundingClientRect().bottom - d.previousElementSibling.getBoundingClientRect().top));
   if (actual === 'guias') { const g = doc.querySelector('.gp-panel.on'); if (g && g.querySelector('.gp-prog')) cabe('Paso de la guía', g.querySelector('.gp-ctrl').getBoundingClientRect().bottom - g.querySelector('.gp-prog').getBoundingClientRect().top); }
+  if (actual === 'guias' && W >= 900 && W > H) { const g = doc.querySelector('.gp-panel.on'); if (g && g.querySelector('.gp-ctrl')) cabe('Guía (pestañas, diagrama y paso)', g.querySelector('.gp-ctrl').getBoundingClientRect().bottom - doc.querySelector('.gp-tabs').getBoundingClientRect().top); }
   win.scrollTo(0, 0);
   v.estado.innerHTML = avisos.length
     ? `<b class="av">⚠ ${avisos.length} aviso${avisos.length > 1 ? 's' : ''}</b><ul>${avisos.map(a => `<li>${a}</li>`).join('')}</ul>`

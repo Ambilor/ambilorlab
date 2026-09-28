@@ -1220,12 +1220,39 @@ footer{margin-top:auto}
 .al-demo__stage,#como-se-instala .al-demo__stage{order:-1;justify-self:stretch;width:100%;max-width:none;margin:0;aspect-ratio:auto;
   height:420px;
   height:max(220px, min(100cqw, calc(100svh - var(--resto))))}
-@media (orientation:landscape){
-  .al-demo__stage,#como-se-instala .al-demo__stage{height:max(260px, min(56.25cqw, calc(100svh - var(--resto))))}
+/* HORIZONTAL (tablet y computador): dos columnas. A la izquierda el texto del
+   paso, sus cifras y la lista de pasos en vertical; a la derecha la escena con
+   todo el alto que deja la pantalla. Apilar escena + texto + controles no cabe
+   en ~690px de alto (iPad horizontal con barras del navegador). */
+@media (orientation:landscape) and (min-width:640px) and (min-height:501px){
+  .al-demo{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);grid-template-rows:min-content 1fr auto;column-gap:clamp(20px,3vw,40px)}
+  .al-demo__grid{display:contents}
+  .al-demo__copy,#como-se-instala .al-demo__copy{grid-column:1;grid-row:1;display:flex;flex-direction:column;min-height:0;padding-top:.3rem}
+  .al-demo__stage,#como-se-instala .al-demo__stage{grid-column:2;grid-row:1 / span 2;order:0;align-self:start;
+    height:max(320px, min(52cqw, calc(100svh - 150px)))}
+  .al-demo__controls{grid-column:1;grid-row:2;align-self:end;flex-wrap:wrap;margin-top:1rem}
+  .al-demo__steps{flex:0 0 100%;order:5;grid-template-columns:1fr;gap:2px;margin:10px 0 0}
+  .al-demo__step{display:flex;align-items:center;gap:10px;padding:3px 0}
+  .al-demo__track{width:30px;flex:none}
+  .al-demo__label{display:block;margin-top:0;font-size:11.5px}
+  .al-demo__count{margin-left:auto}
+  .al-demo__note{grid-column:1 / -1;grid-row:3}
+  .al-demo__title{font-size:clamp(18px,1.6vw,22px)}
+  .al-demo__body{font-size:clamp(14px,1.15vw,15.5px);line-height:1.6}
+  .al-demo__stats strong{font-size:clamp(24px,2.3vw,34px)}
+  .al-demo__extra{padding-top:0}
+}
+/* Encabezado de Herramientas: en pantallas anchas, texto a la izquierda y la
+   tarjeta "¿Que es conciliar?" a la derecha */
+@media (min-width:1000px){
+  .prod-cab{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:center;margin-bottom:2rem}
+  .prod-cab .prod-tagline{margin-bottom:0}
+  .prod-cab .alert-box{margin:0;font-size:13.5px;padding:1.1rem 1.2rem}
 }
 /* 3) texto arriba a la izquierda, cifras a la derecha */
 .al-demo__copy{max-width:none;margin:0;justify-content:flex-start}
-@media (min-width:640px){
+/* VERTICAL (tablet): bajo la escena, texto a la izquierda y cifras a la derecha */
+@media (orientation:portrait) and (min-width:640px){
   .al-demo__copy{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);column-gap:36px;align-content:start;min-height:11.5rem}
   .al-demo__copy>*{grid-column:1}
   .al-demo__copy>.al-demo__extra{grid-column:2;grid-row:1 / span 3;align-self:start;padding-top:1.4rem}
@@ -1267,6 +1294,22 @@ footer{margin-top:auto}
 .hx-escena .hx-who-c{padding:clamp(.9rem,2.4svh,1.5rem)}
 .hx-escena .hx-who-n{margin-bottom:clamp(.4rem,1.4svh,1rem)}
 .hx-escena .hx-who-a,.hx-escena .hx-who-b{padding:clamp(.3rem,.9svh,.55rem) 0}
+/* preguntas frecuentes en dos columnas en pantallas anchas (menos lista, mas vista) */
+@media (min-width:900px){ .pi-faqs{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start} }
+/* Guias en horizontal (tablet y computador): diagrama compacto para que las
+   pestanas, el diagrama y el paso activo quepan juntos en la pantalla */
+@media (orientation:landscape) and (min-width:900px){
+  #guias .container{padding-top:2.2rem}
+  #guias .home-lead{margin-bottom:1.4rem}
+  .gvw{padding:12px 16px;margin-bottom:1rem}
+  .gvw-tc{display:grid;grid-template-columns:auto 1fr;column-gap:12px;align-items:center;text-align:left;padding:12px 16px}
+  .gvw-tc>i{grid-row:span 2;font-size:26px!important}
+  .gvw-tc .gvw-name{margin-top:0}
+  .gvw-tc .gvw-pills{display:none}
+  .gvw-cc svg{height:40px}
+  .gvw-tl{display:none}
+  .gvw-caps{margin-top:10px;padding-top:10px}
+}
 /* 2026-09-28: celular en horizontal (pantalla apaisada y baja). Todo lo
    principal cabe en el alto visible: inicio compacto, demos en dos columnas
    (escena a la izquierda, texto a la derecha) y el paso de Guias mas bajo. */
@@ -1512,10 +1555,14 @@ footer{margin-top:auto}
 
 <section id="product">
   <div class="container">
-    <div class="prod-eyebrow"><span class="prox-badge">Próximamente</span></div>
-    <h2 class="prod-h1">Conciliador Automatico V1 para Google Sheets</h2>
-    <p class="prod-tagline">Si alguna vez has tenido que revisar, pago por pago, si cada uno corresponde a la factura correcta, sabes lo lento que es. Esta herramienta hace esa revision por ti, en segundos, dentro de tu propio Google Sheets — con panel de control web incluido.</p>
-    <div class="alert-box">¿Qué es "conciliar"? Es revisar un listado de movimientos —por ejemplo, tu cartola o tu libro mayor— para confirmar que cada uno tenga su contraparte: la factura con su pago, el cargo con su abono. Si algo no calza o falta, lo sabes al instante, sin revisar fila por fila.</div>
+    <div class="prod-cab">
+      <div class="prod-cab-txt">
+        <div class="prod-eyebrow"><span class="prox-badge">Próximamente</span></div>
+        <h2 class="prod-h1">Conciliador Automatico V1 para Google Sheets</h2>
+        <p class="prod-tagline">Si alguna vez has tenido que revisar, pago por pago, si cada uno corresponde a la factura correcta, sabes lo lento que es. Esta herramienta hace esa revision por ti, en segundos, dentro de tu propio Google Sheets — con panel de control web incluido.</p>
+      </div>
+      <div class="alert-box">¿Qué es "conciliar"? Es revisar un listado de movimientos —por ejemplo, tu cartola o tu libro mayor— para confirmar que cada uno tenga su contraparte: la factura con su pago, el cargo con su abono. Si algo no calza o falta, lo sabes al instante, sin revisar fila por fila.</div>
+    </div>
 
     <div class="demo-section">
       <div class="demo-label">Ver en accion</div>
