@@ -1048,6 +1048,62 @@ nav:focus-within{transform:none}
 [data-theme="dark"] nav{background:rgba(6,8,12,.94)!important}
 nav{background:rgba(255,255,255,.95)!important}
 @media (prefers-reduced-motion: reduce){ nav{transition:none} }
+/* 2026-09-28: Sobre mí, Guías y Contacto en formato visual (Ambilor.Lab) */
+.pi-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.pi-ico i{font-size:24px;line-height:1}
+.pi-ico--s i{font-size:18px}
+.ab-hero{display:flex;align-items:center;gap:1rem;margin-bottom:1.3rem}
+.ab-hero .about-name{margin-bottom:.15rem}
+.ab-hero .about-role{margin-bottom:0}
+.ab-avatar{width:64px;height:64px;flex-shrink:0;border-radius:18px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:600;font-size:20px;letter-spacing:-.02em;color:#fff;background:linear-gradient(135deg,#1F5C99,#4C8DDB);box-shadow:0 12px 30px -14px rgba(31,92,153,.8)}
+.ab-n{position:absolute;top:.9rem;right:1rem;font-family:var(--mono);font-size:11px;color:var(--gris-2)}
+.ab-nota{display:flex;align-items:center;gap:.8rem;margin-top:10px;padding:.8rem 1rem;border:1px dashed var(--azul);border-radius:12px;font-size:13.5px;line-height:1.5;color:var(--gris-1)}
+[data-theme="dark"] .ab-nota{border-color:#2A3A52;background:rgba(76,141,219,.05)}
+.ab-stack{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
+.ab-tool{display:flex;align-items:center;gap:.7rem;padding:.6rem .7rem;border:1px solid var(--borde);border-radius:10px;transition:border-color .2s}
+.ab-tool:hover{border-color:var(--azul)}
+.ab-tool b{display:block;font-size:13px;font-weight:600;color:var(--negro)}
+.ab-tool b+span{display:block;font-size:11.5px;color:var(--gris-2);line-height:1.35}
+.ab-exp{border:1px solid var(--borde);border-radius:12px;padding:1rem}
+[data-theme="dark"] .ab-exp{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,0))}
+.ab-exp-h{display:flex;align-items:center;gap:.8rem;margin-bottom:.9rem}
+.ab-exp-h>div{flex:1;min-width:0}
+.ab-org{font-size:12.5px;color:var(--azul);margin-top:.15rem}
+[data-theme="dark"] .ab-org{color:var(--glow-2)}
+.ab-chip{display:inline-flex;align-items:center;gap:.4rem;align-self:flex-start;flex-shrink:0;font-family:var(--mono);font-size:11px;padding:4px 10px;border:1px solid var(--borde);border-radius:999px;color:var(--gris-1);white-space:nowrap}
+.ab-chip i{font-size:14px;color:var(--azul)}
+.ab-chip a{color:var(--azul);text-decoration:none}
+.ab-chip--sm{margin-top:.4rem;font-size:10.5px;padding:2px 8px}
+[data-theme="dark"] .ab-chip i,[data-theme="dark"] .ab-chip a{color:var(--glow-2)}
+.ct-h{font-size:clamp(22px,4vw,30px);font-weight:600;letter-spacing:-.02em;line-height:1.2;margin-bottom:.6rem;text-wrap:balance}
+.ct-canales{margin-bottom:1.6rem}
+.ct-canal{text-decoration:none;color:inherit}
+.ct-meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:2rem}
+#cfForm{scroll-margin-top:80px}
+/* Guías: cada paso es una tarjeta con su vista arriba */
+.gp-panel.on{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.gp-panel .gvw{grid-column:1/-1;margin-bottom:.4rem}
+.gp-step{grid-template-columns:28px 1fr;grid-template-areas:"vis vis" "n t";gap:10px;margin:0;padding:10px;border:1px solid var(--borde);border-radius:12px;background:var(--blanco);align-content:start;transition:border-color .25s,box-shadow .25s}
+.gp-step:hover{border-color:var(--azul);box-shadow:0 10px 30px -18px rgba(31,92,153,.6)}
+[data-theme="dark"] .gp-step{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,0))}
+[data-theme="dark"] .gp-step:hover{border-color:#2A3A52}
+.gp-step .gp-vis{grid-area:vis;display:block;min-height:88px}
+.gp-step .gp-ncol{grid-area:n;padding-top:0}
+.gp-step>div:nth-child(2){grid-area:t;min-width:0}
+.gp-step .gp-num{width:26px;height:26px;font-size:12px}
+.gp-step .gp-vline{display:none}
+.gp-step .gp-stitle{font-size:13.5px}
+.gp-step .gp-sdesc{font-size:12.5px;line-height:1.45}
+.gp-stip i{font-size:12px;vertical-align:-1px}
+@media (max-width:720px){
+  .pi-grid3{grid-template-columns:1fr;gap:8px}
+  /* en telefono la tarjeta va en horizontal: icono a la izquierda */
+  .pi-grid3 .pi-card{display:grid;grid-template-columns:44px 1fr;column-gap:.85rem;row-gap:.15rem;align-items:center;padding:.8rem .9rem}
+  .pi-grid3 .pi-card .pi-ico{grid-row:span 3;margin:0}
+  .pi-grid3 .ab-n{top:.7rem;right:.8rem}
+  .ab-chip--sm{margin-top:.25rem}
+  .ab-exp-h{flex-wrap:wrap}
+}
 </style>
 </head>
 
@@ -1197,50 +1253,62 @@ nav{background:rgba(255,255,255,.95)!important}
 
 <section id="about">
   <div class="container">
-    <div class="about-name">Jordan.R.</div>
-    <div class="about-role">Contador Publico y Auditor - Analista de Datos</div>
-    <div class="about-quote">"La curiosidad te puede llevar muy lejos. Los cambios, tambien."</div>
-    <p class="about-bio">En simple: construyo programas chicos que hacen, por ti, las tareas repetitivas con numeros — revisar, comparar, ordenar y resumir — para que no tengas que hacerlas a mano cada mes.</p>
-    <p class="about-bio" style="margin-top:-1rem">Me especializo en construir automatizaciones que eliminan trabajo manual repetitivo en procesos financieros usando herramientas accesibles para cualquier equipo contable.</p>
-    <p class="about-bio" style="margin-top:-1rem">Cada herramienta que publico la construi primero para resolver un problema real. El Conciliador Automatico V1 nacio de meses comparando pagos y facturas a mano, fila por fila, hasta decidir que no tenia sentido seguir haciendolo asi.</p>
-    <div class="stack-title">Stack tecnico</div>
-    <div class="stack-grid">
-      <span class="stack-pill" data-tip="Consultas y analisis sobre bases de datos financieras">SQL</span>
-      <span class="stack-pill" data-tip="Automatizacion, procesamiento y limpieza de datos">Python</span>
-      <span class="stack-pill" data-tip="Scripts para automatizar Google Sheets y flujos de trabajo">Google Apps Script</span>
-      <span class="stack-pill" data-tip="Dashboards e informes conectados en tiempo real">Looker Studio</span>
-      <span class="stack-pill" data-tip="Modelos de datos y reporteria para equipos financieros">Power BI</span>
-      <span class="stack-pill" data-tip="Integracion y validacion de datos en ERP">Microsoft Dynamics</span>
-      <span class="stack-pill" data-tip="Validacion entre sistemas bancarios y contabilidad">Bantotal</span>
+    <div class="ab-hero">
+      <div class="ab-avatar" aria-hidden="true">JR</div>
+      <div>
+        <div class="about-name">Jordan.R.</div>
+        <div class="about-role">Contador Público y Auditor · Analista de Datos</div>
+      </div>
     </div>
-    <hr class="divider" />
-    <div class="stack-title">Experiencia</div>
-    <div class="exp-item">
-      <div class="exp-head"><div class="exp-title">Analista de Control Contable y Datos</div><div class="exp-date">Mar 2022 - Jun 2026</div></div>
-      <div class="exp-org">Forum Servicios Financieros - Santiago, Chile</div>
-      <div class="exp-desc">Analista y Control Contable:
-          *Análisis y validación de grandes volúmenes de datos financieros.
-          * Desarrollo de dashboards para monitoreo y control operativo.
-          * Automatización de procesos mediante SQL, Python y Google Apps Script.
-         * Desarrollo de conciliador semiautomático de partidas contables.
-         * Validación de consistencia de datos entre sistemas financieros (Bantotal y Dynamics).
-         * Optimización de flujos de requerimientos de pago en ERP.
-         * Implementación de formularios automatizados y notificaciones para seguimiento de procesos.
-         * Participación en proyectos de mejora continua, control operativo y transformación de procesos.</div>
+    <div class="about-quote">"La curiosidad te puede llevar muy lejos. Los cambios, también."</div>
+
+    <div class="pi-bloque">
+      <div class="pi-eyebrow">Lo que hago</div>
+      <div class="pi-grid3 ab-flujo">
+        <div class="pi-card"><span class="ab-n">01</span><span class="pi-ico"><i class="ti ti-repeat" aria-hidden="true"></i></span><span class="pi-t">Tomo una tarea repetitiva</span><span class="pi-s">Revisar, comparar, ordenar o resumir números cada mes.</span></div>
+        <div class="pi-card"><span class="ab-n">02</span><span class="pi-ico"><i class="ti ti-code" aria-hidden="true"></i></span><span class="pi-t">La convierto en un programa</span><span class="pi-s">Con herramientas que tu equipo ya usa, como Google Sheets.</span></div>
+        <div class="pi-card"><span class="ab-n">03</span><span class="pi-ico"><i class="ti ti-circle-check" aria-hidden="true"></i></span><span class="pi-t">Se hace sola</span><span class="pi-s">En minutos y sin errores de copia, cada vez que la necesitas.</span></div>
+      </div>
+      <div class="ab-nota"><span class="pi-ico pi-ico--s"><i class="ti ti-bulb" aria-hidden="true"></i></span><span>Cada herramienta nació de un problema real: el Conciliador, de meses revisando pagos y facturas a mano.</span></div>
     </div>
-    <hr class="divider" />
-    <div class="stack-title">Formacion</div>
-    <div class="exp-item">
-      <div class="exp-head"><div class="exp-title">Analista de Datos</div><div class="exp-date">En curso</div></div>
-      <div class="exp-org">AIEP / Universidad Andres Bello</div>
+
+    <div class="pi-bloque">
+      <div class="pi-eyebrow">Herramientas</div>
+      <div class="ab-stack">
+        <div class="ab-tool"><span class="pi-ico pi-ico--s"><i class="ti ti-database" aria-hidden="true"></i></span><span><b>SQL</b><span>Consultas y análisis</span></span></div>
+        <div class="ab-tool"><span class="pi-ico pi-ico--s"><i class="ti ti-brand-python" aria-hidden="true"></i></span><span><b>Python</b><span>Automatiza y limpia datos</span></span></div>
+        <div class="ab-tool"><span class="pi-ico pi-ico--s"><i class="ti ti-brand-google" aria-hidden="true"></i></span><span><b>Apps Script</b><span>Automatiza Google Sheets</span></span></div>
+        <div class="ab-tool"><span class="pi-ico pi-ico--s"><i class="ti ti-chart-dots" aria-hidden="true"></i></span><span><b>Looker Studio</b><span>Informes en vivo</span></span></div>
+        <div class="ab-tool"><span class="pi-ico pi-ico--s"><i class="ti ti-chart-bar" aria-hidden="true"></i></span><span><b>Power BI</b><span>Modelos y reportes</span></span></div>
+        <div class="ab-tool"><span class="pi-ico pi-ico--s"><i class="ti ti-building-warehouse" aria-hidden="true"></i></span><span><b>Dynamics</b><span>ERP</span></span></div>
+        <div class="ab-tool"><span class="pi-ico pi-ico--s"><i class="ti ti-building-bank" aria-hidden="true"></i></span><span><b>Bantotal</b><span>Sistema bancario</span></span></div>
+      </div>
     </div>
-    <div class="exp-item">
-      <div class="exp-head"><div class="exp-title">Contador Publico y Auditor</div><div class="exp-date"></div></div>
-      <div class="exp-org">Universidad de Santiago de Chile (Usach)</div>
+
+    <div class="pi-bloque">
+      <div class="pi-eyebrow">Experiencia</div>
+      <div class="ab-exp">
+        <div class="ab-exp-h"><span class="pi-ico"><i class="ti ti-briefcase" aria-hidden="true"></i></span><div><div class="pi-t">Analista de Control Contable y Datos</div><div class="ab-org">Forum Servicios Financieros · Santiago</div></div><span class="ab-chip">2022 – 2026</span></div>
+        <ul class="pi-caps">
+          <li><span class="pi-ico pi-ico--s"><i class="ti ti-database-search" aria-hidden="true"></i></span><span><b>Valida</b> grandes volúmenes de datos</span></li>
+          <li><span class="pi-ico pi-ico--s"><i class="ti ti-layout-dashboard" aria-hidden="true"></i></span><span><b>Dashboards</b> de control operativo</span></li>
+          <li><span class="pi-ico pi-ico--s"><i class="ti ti-bolt" aria-hidden="true"></i></span><span><b>Automatiza</b> con SQL, Python y Apps Script</span></li>
+          <li><span class="pi-ico pi-ico--s"><i class="ti ti-arrows-exchange" aria-hidden="true"></i></span><span><b>Conciliador</b> semiautomático de partidas</span></li>
+          <li><span class="pi-ico pi-ico--s"><i class="ti ti-git-compare" aria-hidden="true"></i></span><span><b>Consistencia</b> entre Bantotal y Dynamics</span></li>
+          <li><span class="pi-ico pi-ico--s"><i class="ti ti-receipt" aria-hidden="true"></i></span><span><b>Pagos</b> flujos optimizados en el ERP</span></li>
+          <li><span class="pi-ico pi-ico--s"><i class="ti ti-forms" aria-hidden="true"></i></span><span><b>Formularios</b> y avisos automáticos</span></li>
+          <li><span class="pi-ico pi-ico--s"><i class="ti ti-trending-up" aria-hidden="true"></i></span><span><b>Mejora continua</b> de procesos</span></li>
+        </ul>
+      </div>
     </div>
-    <div class="exp-item">
-      <div class="exp-head"><div class="exp-title">Aplicaciones del Lenguaje SQL en Gestion de Bases de Datos</div><div class="exp-date">2025</div></div>
-      <div class="exp-org">CAI — Facultad de Ingenieria, Usach · 40 horas</div>
+
+    <div class="pi-bloque">
+      <div class="pi-eyebrow">Formación</div>
+      <div class="pi-grid3">
+        <div class="pi-card"><span class="pi-ico"><i class="ti ti-school" aria-hidden="true"></i></span><span class="pi-t">Analista de Datos</span><span class="pi-s">AIEP / Universidad Andrés Bello</span><span class="ab-chip ab-chip--sm">En curso</span></div>
+        <div class="pi-card"><span class="pi-ico"><i class="ti ti-certificate" aria-hidden="true"></i></span><span class="pi-t">Contador Público y Auditor</span><span class="pi-s">Universidad de Santiago (Usach)</span></div>
+        <div class="pi-card"><span class="pi-ico"><i class="ti ti-code" aria-hidden="true"></i></span><span class="pi-t">SQL en Gestión de Bases de Datos</span><span class="pi-s">CAI Ingeniería Usach · 40 h</span><span class="ab-chip ab-chip--sm">2025</span></div>
+      </div>
     </div>
   </div>
 </section>
@@ -1513,7 +1581,7 @@ nav{background:rgba(255,255,255,.95)!important}
         <div class="gp-ncol"><div class="gp-num">1</div><div class="gp-vline"></div></div>
         <div>
           <div class="gp-stitle">Abre tu planilla en Google Sheets</div>
-          <div class="gp-sdesc">Ve a drive.google.com y abre la planilla donde quieres usar el script. Puede ser una existente o una nueva en blanco.</div>
+          <div class="gp-sdesc">Abre en Drive la planilla donde usarás el script: nueva o existente.</div>
         </div>
         <div class="gp-vis">
           <div class="gp-gs-hdr">
@@ -1534,7 +1602,7 @@ nav{background:rgba(255,255,255,.95)!important}
         <div class="gp-ncol"><div class="gp-num">2</div><div class="gp-vline"></div></div>
         <div>
           <div class="gp-stitle">Extensiones → Apps Script</div>
-          <div class="gp-sdesc">Desde el menú superior de Sheets, haz clic en <strong>Extensiones</strong> y luego en <strong>Apps Script</strong>. Se abre el editor de código en una pestaña nueva del navegador.</div>
+          <div class="gp-sdesc">En el menú de Sheets: <strong>Extensiones → Apps Script</strong>. El editor se abre en otra pestaña.</div>
         </div>
         <div class="gp-vis">
           <div style="padding:5px 9px">
@@ -1550,8 +1618,8 @@ nav{background:rgba(255,255,255,.95)!important}
         <div class="gp-ncol"><div class="gp-num">3</div><div class="gp-vline"></div></div>
         <div>
           <div class="gp-stitle">Escribe tu primera función</div>
-          <div class="gp-sdesc">El editor trae un archivo <code>Código.gs</code> con una función vacía. Bórrala y escribe la tuya. <code>SpreadsheetApp</code> es el punto de entrada para todo lo que tenga que ver con tu planilla.</div>
-          <div class="gp-stip">💡 Cada archivo .gs es un módulo del mismo proyecto</div>
+          <div class="gp-sdesc">Reemplaza la función de ejemplo por la tuya. <code>SpreadsheetApp</code> es la puerta a tu planilla.</div>
+          <div class="gp-stip"><i class="ti ti-bulb" aria-hidden="true"></i> Cada archivo .gs es un módulo del mismo proyecto</div>
         </div>
         <div class="gp-vis">
           <div class="gp-editor">
@@ -1569,8 +1637,8 @@ nav{background:rgba(255,255,255,.95)!important}
       <div class="gp-step">
         <div class="gp-ncol"><div class="gp-num">4</div><div class="gp-vline"></div></div>
         <div>
-          <div class="gp-stitle">Guarda con Ctrl+S y presiona Ejecutar ▶</div>
-          <div class="gp-sdesc">Selecciona la función en el menú desplegable del editor y haz clic en ▶. El registro de ejecución en la parte inferior te muestra si corrió bien o si hubo un error y en qué línea.</div>
+          <div class="gp-stitle">Guarda (Ctrl+S) y ejecuta ▶</div>
+          <div class="gp-sdesc">Elige la función y pulsa ▶. El registro te dice si corrió bien o en qué línea falló.</div>
         </div>
         <div class="gp-vis">
           <div style="padding:7px 9px">
@@ -1592,7 +1660,7 @@ nav{background:rgba(255,255,255,.95)!important}
         <div class="gp-ncol"><div class="gp-num">5</div></div>
         <div>
           <div class="gp-stitle">Acepta los permisos — solo la primera vez</div>
-          <div class="gp-sdesc">Google pide autorización la primera vez que el script quiere acceder a tu planilla. Elige tu cuenta → si ves "aplicación no verificada" haz clic en Configuración avanzada → Ir al script → Permitir. Las próximas ejecuciones no piden nada.</div>
+          <div class="gp-sdesc">Solo la primera vez. Si dice "no verificada": <strong>Configuración avanzada → Ir al script → Permitir</strong>.</div>
         </div>
         <div class="gp-vis">
           <div style="padding:9px 10px">
@@ -1656,9 +1724,9 @@ nav{background:rgba(255,255,255,.95)!important}
       <div class="gp-step">
         <div class="gp-ncol"><div class="gp-num">1</div><div class="gp-vline"></div></div>
         <div>
-          <div class="gp-stitle">Abre Power BI Desktop y haz clic en "Obtener datos"</div>
-          <div class="gp-sdesc">Power BI Desktop es gratuito y se descarga desde powerbi.microsoft.com. Al abrirlo, verás el botón <strong>Obtener datos</strong> en la cinta de opciones de la pestaña Inicio.</div>
-          <div class="gp-stip">💡 Power BI Desktop es distinto a Power BI Service (web)</div>
+          <div class="gp-stitle">Abre Power BI Desktop → "Obtener datos"</div>
+          <div class="gp-sdesc">Es gratis (powerbi.microsoft.com). El botón está en la pestaña <strong>Inicio</strong>.</div>
+          <div class="gp-stip"><i class="ti ti-bulb" aria-hidden="true"></i> Power BI Desktop es distinto a Power BI Service (web)</div>
         </div>
         <div class="gp-vis">
           <div class="gp-pbi-hdr">
@@ -1676,7 +1744,7 @@ nav{background:rgba(255,255,255,.95)!important}
         <div class="gp-ncol"><div class="gp-num">2</div><div class="gp-vline"></div></div>
         <div>
           <div class="gp-stitle">Elige "Libro de Excel" como fuente</div>
-          <div class="gp-sdesc">En el menú desplegable de "Obtener datos" aparecen las fuentes más comunes. Haz clic en <strong>Libro de Excel</strong>. Si no lo ves directamente, elige <strong>Más...</strong> y búscalo en la lista.</div>
+          <div class="gp-sdesc">Haz clic en <strong>Libro de Excel</strong>. Si no aparece, búscalo en <strong>Más...</strong></div>
         </div>
         <div class="gp-vis">
           <div style="padding:5px 9px">
@@ -1692,7 +1760,7 @@ nav{background:rgba(255,255,255,.95)!important}
         <div class="gp-ncol"><div class="gp-num">3</div><div class="gp-vline"></div></div>
         <div>
           <div class="gp-stitle">Navega hasta tu archivo .xlsx y ábrelo</div>
-          <div class="gp-sdesc">Aparece un selector de archivos estándar. Navega hasta tu archivo, selecciónalo y haz clic en <strong>Abrir</strong>. Power BI lo analiza y muestra lo que contiene.</div>
+          <div class="gp-sdesc">Selecciona tu archivo y pulsa <strong>Abrir</strong>.</div>
         </div>
         <div class="gp-vis">
           <div style="padding:7px 9px">
@@ -1709,8 +1777,8 @@ nav{background:rgba(255,255,255,.95)!important}
         <div class="gp-ncol"><div class="gp-num">4</div><div class="gp-vline"></div></div>
         <div>
           <div class="gp-stitle">Marca la hoja o tabla que necesitas y carga</div>
-          <div class="gp-sdesc">El <strong>Navegador</strong> muestra todas las hojas y tablas del archivo. Marca las que necesitas. Si los datos necesitan limpieza elige "Transformar datos"; si están listos, clic en <strong>Cargar</strong>.</div>
-          <div class="gp-stip">💡 Las tablas con nombre (Insertar → Tabla en Excel) se cargan más limpio</div>
+          <div class="gp-sdesc">Marca lo que necesitas y pulsa <strong>Cargar</strong>, o <strong>Transformar</strong> si hay que limpiar.</div>
+          <div class="gp-stip"><i class="ti ti-bulb" aria-hidden="true"></i> Las tablas con nombre (Insertar → Tabla en Excel) se cargan más limpio</div>
         </div>
         <div class="gp-vis">
           <div style="padding:5px 9px">
@@ -1729,8 +1797,8 @@ nav{background:rgba(255,255,255,.95)!important}
       <div class="gp-step">
         <div class="gp-ncol"><div class="gp-num">5</div></div>
         <div>
-          <div class="gp-stitle">Los campos aparecen en el panel derecho — listo para visualizar</div>
-          <div class="gp-sdesc">Power BI carga la tabla y sus columnas aparecen en el panel <strong>Datos</strong> a la derecha. Desde ahí puedes arrastrar campos al lienzo para crear gráficos, tablas y tarjetas de KPI.</div>
+          <div class="gp-stitle">Crea tu primer gráfico</div>
+          <div class="gp-sdesc">Arrastra columnas del panel <strong>Datos</strong> al lienzo para crear gráficos y KPI.</div>
         </div>
         <div class="gp-vis">
           <div style="padding:5px 9px">
@@ -1792,8 +1860,8 @@ nav{background:rgba(255,255,255,.95)!important}
       <div class="gp-step">
         <div class="gp-ncol"><div class="gp-num">1</div><div class="gp-vline"></div></div>
         <div>
-          <div class="gp-stitle">Ve a lookerstudio.google.com y crea un informe</div>
-          <div class="gp-sdesc">Looker Studio (antes Data Studio) es gratuito con cuenta Google. Entra a lookerstudio.google.com, haz clic en el botón <strong>+ Crear</strong> y elige <strong>Informe</strong>.</div>
+          <div class="gp-stitle">Entra a lookerstudio.google.com</div>
+          <div class="gp-sdesc">Gratis con tu cuenta Google: <strong>+ Crear → Informe</strong>.</div>
         </div>
         <div class="gp-vis">
           <div class="gp-ls-hdr">
@@ -1811,8 +1879,8 @@ nav{background:rgba(255,255,255,.95)!important}
         <div class="gp-ncol"><div class="gp-num">2</div><div class="gp-vline"></div></div>
         <div>
           <div class="gp-stitle">Elige "Google Sheets" como conector de datos</div>
-          <div class="gp-sdesc">Al crear un informe, Looker Studio te pide una fuente de datos. En la cuadrícula de conectores, busca y haz clic en <strong>Google Sheets</strong>. No necesitas exportar a CSV.</div>
-          <div class="gp-stip">💡 Puedes conectar directo, sin exportar ni descargar nada</div>
+          <div class="gp-sdesc">Elige <strong>Google Sheets</strong> entre los conectores. Sin exportar a CSV.</div>
+          <div class="gp-stip"><i class="ti ti-bulb" aria-hidden="true"></i> Puedes conectar directo, sin exportar ni descargar nada</div>
         </div>
         <div class="gp-vis">
           <div style="padding:5px 8px">
@@ -1831,7 +1899,7 @@ nav{background:rgba(255,255,255,.95)!important}
         <div class="gp-ncol"><div class="gp-num">3</div><div class="gp-vline"></div></div>
         <div>
           <div class="gp-stitle">Elige tu planilla y la hoja exacta</div>
-          <div class="gp-sdesc">Looker Studio muestra tus planillas recientes de Google Drive. Selecciona la que quieres y luego elige la hoja específica (pestaña) que contiene los datos. También puedes pegar la URL directamente.</div>
+          <div class="gp-sdesc">Selecciona la planilla y la pestaña con los datos, o pega su URL.</div>
         </div>
         <div class="gp-vis">
           <div style="padding:7px 9px">
@@ -1852,7 +1920,7 @@ nav{background:rgba(255,255,255,.95)!important}
         <div class="gp-ncol"><div class="gp-num">4</div><div class="gp-vline"></div></div>
         <div>
           <div class="gp-stitle">Haz clic en "Añadir al informe"</div>
-          <div class="gp-sdesc">Looker Studio detecta automáticamente los campos y sus tipos (fecha, número, texto, dimensión). Haz clic en <strong>Añadir al informe</strong> para confirmar. Si algo quedó mal tipificado lo puedes corregir luego en el panel de campos.</div>
+          <div class="gp-sdesc">Los tipos de campo se detectan solos. Confirma con <strong>Añadir al informe</strong>.</div>
         </div>
         <div class="gp-vis">
           <div style="padding:7px 9px">
@@ -1870,8 +1938,8 @@ nav{background:rgba(255,255,255,.95)!important}
       <div class="gp-step">
         <div class="gp-ncol"><div class="gp-num">5</div></div>
         <div>
-          <div class="gp-stitle">Arrastra campos al lienzo y crea tu primera visualización</div>
-          <div class="gp-sdesc">Usa el menú <strong>Insertar → Gráfico</strong> para agregar visualizaciones y arrastra campos desde el panel derecho. Cualquier cambio en tu Google Sheet se refleja automáticamente en el informe al actualizar la página.</div>
+          <div class="gp-stitle">Crea tu primera visualización</div>
+          <div class="gp-sdesc"><strong>Insertar → Gráfico</strong> y arrastra campos. Se actualiza solo con tu Sheet.</div>
         </div>
         <div class="gp-vis">
           <div style="padding:6px 9px">
@@ -1896,8 +1964,14 @@ nav{background:rgba(255,255,255,.95)!important}
 <section id="contact">
   <div class="container">
     <div class="home-eyebrow">Contacto</div>
-    <h2 style="font-size:20px;font-weight:600;letter-spacing:-.3px;margin-bottom:.75rem">Tienes alguna duda?</h2>
-    <p class="contact-intro">Contactame en mis redes o escribeme un correo directamente.</p>
+    <h2 class="ct-h">¿Qué tarea quieres dejar de hacer a mano?</h2>
+    <p class="contact-intro">Cuéntamela en dos líneas. Creo herramientas a medida para tu negocio, sin que tengas que tocar código.</p>
+
+    <div class="pi-grid3 ct-canales">
+      <a class="pi-card ct-canal" href="#cfForm" onclick="return irA('cfForm')"><span class="pi-ico"><i class="ti ti-mail" aria-hidden="true"></i></span><span class="pi-t">Correo</span><span class="pi-s">Escríbeme con el formulario</span></a>
+      <a class="pi-card ct-canal" href="https://www.instagram.com/ambilor.lab/" target="_blank" rel="me noopener noreferrer"><span class="pi-ico"><i class="ti ti-brand-instagram" aria-hidden="true"></i></span><span class="pi-t">Instagram</span><span class="pi-s">@ambilor.lab</span></a>
+      <a class="pi-card ct-canal" href="https://www.linkedin.com/in/jordan-riquelme" target="_blank" rel="me noopener noreferrer"><span class="pi-ico"><i class="ti ti-brand-linkedin" aria-hidden="true"></i></span><span class="pi-t">LinkedIn</span><span class="pi-s">jordan-riquelme</span></a>
+    </div>
 
     <form class="cf-wrap" id="cfForm"
       action="#"
@@ -1910,20 +1984,10 @@ nav{background:rgba(255,255,255,.95)!important}
       <button type="submit" class="cta-home" style="margin-top:4px">Enviar mensaje</button>
     </form>
 
-    <div class="contact-block">
-      <div class="contact-row"><span class="contact-label">Gumroad</span><span class="contact-val"><a href="https://ambilorlab.gumroad.com" target="_blank" rel="noopener noreferrer">ambilorlab.gumroad.com</a></span></div>
-      <div class="contact-row"><span class="contact-label">Instagram</span><span class="contact-val"><a href="https://www.instagram.com/ambilor.lab/" target="_blank" rel="me noopener noreferrer">@ambilor.lab</a></span></div>
-      <div class="contact-row"><span class="contact-label">LinkedIn</span><span class="contact-val"><a href="https://www.linkedin.com/in/jordan-riquelme" target="_blank" rel="me noopener noreferrer">linkedin.com/in/jordan-riquelme</a></span></div>
-      <div class="contact-row"><span class="contact-label">Ubicacion</span><span class="contact-val">Santiago, Chile</span></div>
-      <div class="contact-row"><span class="contact-label">Idioma</span><span class="contact-val">Espanol</span></div>
-    </div>
-    <div class="specs-block">
-      <table>
-        <thead><tr><th>Tipo de proyecto</th><th>Descripcion</th></tr></thead>
-        <tbody>
-          <tr><td>Plantillas</td><td>Herramientas a medida para tu negocio, sin que tengas que tocar codigo</td></tr>
-        </tbody>
-      </table>
+    <div class="ct-meta">
+      <span class="ab-chip"><i class="ti ti-map-pin" aria-hidden="true"></i>Santiago, Chile</span>
+      <span class="ab-chip"><i class="ti ti-language" aria-hidden="true"></i>Español</span>
+      <span class="ab-chip"><i class="ti ti-shopping-bag" aria-hidden="true"></i><a href="https://ambilorlab.gumroad.com" target="_blank" rel="noopener noreferrer">Tienda en Gumroad</a></span>
     </div>
   </div>
 </section>
