@@ -139,7 +139,7 @@ async function revisarAlto(v, H){
   // escenas del inicio: en tablet y computador cada una debe caber completa en la pantalla
   if (actual === 'home' && W >= 640 && H >= 500) doc.querySelectorAll('.hx-escena').forEach(e => cabe('Escena "' + (e.querySelector('.hx-eyebrow') || {}).textContent + '"', e.getBoundingClientRect().height));
   if (actual === 'product') doc.querySelectorAll('.al-demo').forEach(d => cabe('Demo "' + d.id + '"', d.getBoundingClientRect().bottom - d.previousElementSibling.getBoundingClientRect().top));
-  if (actual === 'product' && ((W >= 900 && W > H) || (W >= 640 && W < H))) { win.scrollTo(0, 0); cabe('Encabezado + demo "Ver en acción"', doc.getElementById('ver-en-accion').getBoundingClientRect().bottom + win.scrollY); }
+  if (actual === 'product' && ((W >= 900 && W > H) || W < H)) { win.scrollTo(0, 0); cabe('Encabezado + demo "Ver en acción"', doc.getElementById('ver-en-accion').getBoundingClientRect().bottom + win.scrollY); }
   if (actual === 'guias') { const g = doc.querySelector('.gp-panel.on'); if (g && g.querySelector('.gp-prog')) cabe('Paso de la guía', g.querySelector('.gp-ctrl').getBoundingClientRect().bottom - g.querySelector('.gp-prog').getBoundingClientRect().top); }
   // Guías: desde el comienzo de la página hasta los botones del paso, en la primera pantalla
   if (actual === 'guias' && H >= 500) {

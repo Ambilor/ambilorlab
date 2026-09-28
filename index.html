@@ -97,6 +97,14 @@ nav{position:-webkit-sticky;position:sticky;top:0;z-index:100;background:var(--b
   .nav-inner{height:auto; min-height:52px; flex-wrap:wrap; row-gap:.35rem; padding-top:.5rem; padding-bottom:.5rem}
   .nav-links{gap:.9rem; flex-wrap:wrap}
 }
+/* 2026-09-28: en celular vertical, logo y boton de tema arriba y los 5 enlaces
+   en una fila propia a todo el ancho. Antes, en 375px (iPhone SE y mini) el
+   boton de tema no cabia junto a los enlaces y bajaba a una tercera fila. */
+@media (max-width:560px){
+  .nav-logo{order:0}
+  .nav-dark-btn{order:1;margin-left:auto}
+  .nav-links{order:2;flex:1 0 100%;flex-wrap:nowrap;justify-content:space-between;gap:.5rem;margin:0!important}
+}
 section{display:none}
 section.visible{display:block}
 .container{max-width:var(--max);margin:0 auto;padding:3.5rem 1.5rem}
@@ -1302,6 +1310,30 @@ footer{margin-top:auto}
   .al-demo__copy{min-height:12rem}
   #como-se-instala .al-demo__copy{min-height:16rem}
 }
+/* 2026-09-28: al abrir Herramientas en celular vertical, la primera pantalla
+   muestra desde "Proximamente" hasta el final de la demo "Ver en accion".
+   La bajada y "¿Que es conciliar?" pasan bajo la demo (.prod-cel), el
+   encabezado y el texto de la demo se compactan y la escena toma el alto que
+   sobra (--resto = barra + encabezado + texto + controles). */
+.prod-cel{display:none}
+@media (max-width:639px){
+  .prod-cab .prod-tagline,.prod-cab .alert-box{display:none}
+  .prod-cel{display:block;margin:-.6rem 0 2.5rem}
+  .prod-cel .prod-tagline{margin-bottom:1rem}
+  .prod-cel .alert-box{margin-bottom:0}
+  #product .prod-eyebrow{margin-bottom:.45rem}
+  #product .prod-h1{font-size:19.5px;line-height:1.28;margin-bottom:0}
+  #product .prod-cab{margin-bottom:1rem}
+  #product .demo-label{margin-bottom:.45rem}
+  #ver-en-accion{--resto:492px;padding-top:12px;padding-bottom:12px}
+  #ver-en-accion .al-demo__stage{height:max(118px, min(100cqw, calc(100svh - var(--resto))))}
+  #ver-en-accion .al-demo__kicker{margin-bottom:.35rem}
+  #ver-en-accion .al-demo__title{margin-bottom:.3rem}
+  #ver-en-accion .al-demo__body{font-size:13px;line-height:1.45}
+  #ver-en-accion .al-demo__copy{min-height:178px}   /* el paso mas largo: sin saltos al avanzar */
+  #ver-en-accion .al-demo__controls{margin-top:8px}
+  #ver-en-accion .al-demo__note{display:none}
+}
 /* 3) inicio: cada bloque es una escena del alto de la pantalla */
 .hx-escena{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding-top:clamp(3rem,8vh,5rem)!important;padding-bottom:clamp(3rem,8vh,5rem)}
 .hx-escena .hx-panels,.hx-escena .hx-who{margin-bottom:0}
@@ -1719,6 +1751,13 @@ body>section:not(#home)>.container{padding-top:1.6rem}
           <a class="al-demo__cta al-demo__cta--fb" href="#incluye">Ver qué incluye</a>
         </div>
       </div>
+    </div>
+
+    <!-- Solo en celular: la bajada y "¿Que es conciliar?" van despues de la
+         demo, para que la primera pantalla muestre la demo completa -->
+    <div class="prod-cel">
+      <p class="prod-tagline">Tu conciliación mensual, hecha en segundos dentro de tu propio Google Sheets.</p>
+      <div class="alert-box"><b>¿Qué es conciliar?</b> Confirmar que cada movimiento de tu cartola o libro mayor tenga su contraparte: la factura con su pago, el cargo con su abono.</div>
     </div>
 
         <!-- ── INSTALACION 3D (Three.js) ── -->
