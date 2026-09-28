@@ -1198,6 +1198,69 @@ nav{background:rgba(255,255,255,.95)!important}
    el brillo azul del cierre ya separa los bloques */
 .hx-end{border-top:none}
 footer,[data-theme="dark"] footer{border-top:none}
+/* 2026-09-28 revision global:
+   1) pie de pagina siempre al fondo: en pestanas cortas (Guias, Contacto) ya no
+      queda flotando a media pantalla con un vacio debajo */
+body{display:flex;flex-direction:column;min-height:100vh;min-height:100svh}
+body>section,body>nav,body>footer{min-width:0}
+footer{margin-top:auto}
+/* 2) Guias (tablet y escritorio): el paso activo con su vista mas grande y el
+      numero alineado con el titulo */
+@media (min-width:721px){
+  .gp-modo-pasos .gp-step.act{grid-template-columns:minmax(0,1.35fr) 30px minmax(0,1fr);padding:20px;gap:18px}
+  .gp-modo-pasos .gp-vis{min-height:190px}
+  .gp-modo-pasos .gp-vis>*{zoom:1.75}
+  .gp-modo-pasos .gp-ncol{align-self:center}
+}
+/* 2026-09-28: celular en horizontal (pantalla apaisada y baja). Todo lo
+   principal cabe en el alto visible: inicio compacto, demos en dos columnas
+   (escena a la izquierda, texto a la derecha) y el paso de Guias mas bajo. */
+@media (orientation:landscape) and (max-height:500px){
+  /* Inicio */
+  .hx{padding-top:3.2rem;padding-bottom:1.6rem}
+  .hx-title{font-size:clamp(1.7rem,4.2vw,2.3rem);margin-bottom:.9rem}
+  .hx-bottom{gap:.9rem}
+  .hx-lead{font-size:13.5px;line-height:1.5}
+  .hx-hud--tl,.hx-hud--tr{top:.8rem}
+  .hx-hud--br{bottom:.8rem}
+  /* Demos: dos columnas */
+  .demo-label{margin-bottom:.4rem}
+  .al-demo{padding:12px 16px}
+  .al-demo__grid{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:18px;align-items:center}
+  .al-demo__stage,#como-se-instala .al-demo__stage{order:0;justify-self:stretch;width:100%;max-width:none;aspect-ratio:auto;margin:0;
+    height:clamp(170px, calc(100vh - 130px), 420px);
+    height:clamp(170px, calc(100svh - 130px), 420px)}
+  .al-demo__copy,#como-se-instala .al-demo__copy{min-height:0;max-width:none;margin:0}
+  .al-demo__kicker{margin-bottom:.3rem}
+  .al-demo__title{font-size:15.5px;margin-bottom:.35rem}
+  .al-demo__body{font-size:13px;line-height:1.5}
+  .al-demo__stats,.al-demo__map{display:none}
+  .al-demo__controls{margin-top:8px}
+  .al-demo__note{display:none}
+  /* Guias: el paso activo mas bajo */
+  .gp-modo-pasos .gp-step.act{grid-template-columns:minmax(0,1.1fr) 30px minmax(0,1fr);grid-template-areas:"vis n t";padding:12px;gap:12px;align-items:center}
+  .gp-modo-pasos .gp-vis{min-height:0}
+  .gp-modo-pasos .gp-vis>*{zoom:1.3}
+  .gp-prog{margin-bottom:8px}
+  .gp-ctrl{margin-top:8px}
+}
+/* 2026-09-28: desde 900px (iPad horizontal y computador) las demos salen del
+   ancho del texto (hasta 1120px) y la escena llena el alto visible: el bloque
+   "Ver en accion" / "Como se instala" ocupa la pantalla como en celular */
+@media (min-width:900px) and (min-height:501px){
+  .demo-section{width:min(1120px, calc(100vw - 48px));margin-left:calc(50% - min(560px, 50vw - 24px))}
+  .al-demo__stage{aspect-ratio:auto;width:100%;
+    height:clamp(360px, calc(100vh - 200px), 600px);
+    height:clamp(360px, calc(100svh - 200px), 600px)}
+}
+/* pantallas grandes en vertical (monitor girado): como el iPad vertical,
+   escena a todo el ancho arriba y texto debajo */
+@media (min-width:900px) and (orientation:portrait){
+  .al-demo__grid{grid-template-columns:1fr}
+  .al-demo__stage{order:-1;height:clamp(360px, calc(100vh - 470px), 900px);height:clamp(360px, calc(100svh - 470px), 900px)}
+  .al-demo__copy{min-height:14.5rem;max-width:none;margin-inline:0}
+  .al-demo__body{max-width:680px}
+}
 </style>
 </head>
 
