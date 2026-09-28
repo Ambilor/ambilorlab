@@ -1230,7 +1230,6 @@ footer{margin-top:auto}
   .al-demo__copy,#como-se-instala .al-demo__copy{grid-column:1;grid-row:1;display:flex;flex-direction:column;min-height:0;padding-top:.3rem}
   .al-demo__stage,#como-se-instala .al-demo__stage{grid-column:2;grid-row:1 / span 2;order:0;align-self:start;
     height:max(280px, min(52cqw, calc(100svh - 356px)))}   /* cabe junto al encabezado de Herramientas */
-  #product>.container{padding-top:1.6rem}
   #product .prod-cab{margin-bottom:1.2rem}
   #product .demo-label{margin-bottom:.5rem}
   .al-demo__controls{grid-column:1;grid-row:2;align-self:start;flex-wrap:wrap;margin-top:1.4rem}   /* junto al texto: sin hueco */
@@ -1314,7 +1313,6 @@ footer{margin-top:auto}
 /* Guias en horizontal (tablet y computador): diagrama compacto para que las
    pestanas, el diagrama y el paso activo quepan juntos en la pantalla */
 @media (orientation:landscape) and (min-width:900px){
-  #guias .container{padding-top:2.2rem}
   #guias .home-lead{margin-bottom:1.4rem}
   .gvw{padding:12px 16px;margin-bottom:1rem}
   .gvw-tc{display:grid;grid-template-columns:auto 1fr;column-gap:12px;align-items:center;text-align:left;padding:12px 16px}
@@ -1338,6 +1336,9 @@ footer{margin-top:auto}
 }
 .demo-section{scroll-margin-top:60px}   /* deja ver la barra de pestanas si reaparece */
 @media (prefers-reduced-motion:reduce){ html{scroll-snap-type:none} }
+/* mismo margen sobre el primer contenido en todas las pestanas (Sobre mi,
+   Herramientas, Guias, Contacto), en cualquier dispositivo y orientacion */
+body>section:not(#home)>.container{padding-top:1.6rem}
 /* 2026-09-28: celular en horizontal (pantalla apaisada y baja). Todo lo
    principal cabe en el alto visible: inicio compacto, demos en dos columnas
    (escena a la izquierda, texto a la derecha) y el paso de Guias mas bajo. */
