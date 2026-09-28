@@ -1598,6 +1598,13 @@ body>section:not(#home)>.container{padding-top:1.6rem}
   .gp-prog{margin-bottom:8px}
   .gp-ctrl{margin-top:8px}
 }
+/* 2026-09-28: las escenas del inicio ya no miden obligatoriamente el alto de la
+   pantalla (venia del encaje al desplazar, que se quito). Con la ventana a la
+   mitad o en tablet vertical el contenido es mas bajo que la pantalla y sobraban
+   300-450px de vacio por bloque; ahora el aire es proporcional al alto visible
+   (~150px por bloque en pantalla completa, igual que antes). */
+.hx-escena{min-height:0!important;padding-top:clamp(1.6rem,7svh,5rem)!important;padding-bottom:clamp(1.6rem,7svh,5rem)!important}
+.hx-end{min-height:0}
 </style>
 </head>
 
