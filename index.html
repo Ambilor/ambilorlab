@@ -1285,7 +1285,17 @@ footer{margin-top:auto}
   .al-demo__copy>.al-demo__extra{grid-column:2;grid-row:1 / span 3;align-self:start;padding-top:1.4rem}
   .al-demo__stats{margin-top:0}
   .al-demo__body{max-width:620px}
+  /* 2026-09-28: al abrir Herramientas en tablet vertical, la primera pantalla
+     muestra desde "Proximamente" hasta el final de la demo "Ver en accion".
+     El encabezado se compacta y la escena toma solo el alto que sobra
+     (--resto = todo lo que no es escena: barra, encabezado, texto y controles) */
+  #product .prod-tagline{margin-bottom:1.1rem}
+  #product .prod-cab{margin-bottom:1.4rem}
+  #product .demo-label{margin-bottom:.5rem}
+  #ver-en-accion{--resto:700px}
 }
+/* desde 1000px el encabezado va en dos columnas y es mas bajo */
+@media (orientation:portrait) and (min-width:1000px){ #ver-en-accion{--resto:664px} }
 @media (max-width:639px){
   .al-demo{--resto:355px}
   #como-se-instala{--resto:420px}
