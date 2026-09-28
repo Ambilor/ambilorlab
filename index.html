@@ -1324,8 +1324,8 @@ footer{margin-top:auto}
    en ~690px de alto (iPad horizontal con barras del navegador). */
 /* 2026-09-28: una ventana casi cuadrada (computador con la ventana a la mitad)
    usa tambien la disposicion horizontal: apilada no cabe */
-@media (orientation:landscape) and (min-width:640px) and (min-height:501px),
-       (min-aspect-ratio:9/10) and (min-width:640px) and (min-height:501px){
+@media (orientation:landscape) and (min-width:640px) and (min-height:561px),
+       (min-aspect-ratio:9/10) and (min-width:640px) and (min-height:561px){
   .al-demo{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);grid-template-rows:min-content 1fr auto;column-gap:clamp(20px,3vw,40px)}
   .al-demo__grid{display:contents}
   .al-demo__copy,#como-se-instala .al-demo__copy{grid-column:1;grid-row:1;display:flex;flex-direction:column;min-height:0;padding-top:.3rem}
@@ -1347,8 +1347,8 @@ footer{margin-top:auto}
 }
 /* horizontal y bajo (iPad, portatil): la lista de pasos vuelve a una fila
    compacta para que la columna del texto no sea mas alta que la escena */
-@media (orientation:landscape) and (min-width:640px) and (min-height:501px) and (max-height:860px),
-       (min-aspect-ratio:9/10) and (min-width:640px) and (min-height:501px) and (max-height:860px){
+@media (orientation:landscape) and (min-width:640px) and (min-height:561px) and (max-height:860px),
+       (min-aspect-ratio:9/10) and (min-width:640px) and (min-height:561px) and (max-height:860px){
   .al-demo__steps{grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;margin-top:8px}
   .al-demo__step{display:block;padding:3px 0}
   .al-demo__track{width:auto}
@@ -1359,9 +1359,11 @@ footer{margin-top:auto}
   .al-demo__stats{gap:10px 12px}   /* las dos cifras lado a lado en columnas angostas */
   .al-demo__body{font-size:14px;line-height:1.55}
 }
-/* ventanas horizontales angostas y bajas (mitad de un portatil de 1366x768):
+/* ventanas horizontales angostas y bajas (mitad de un portatil de 1366x768,
+   ventanas de iPad):
    columna de texto mas compacta para que la demo quepa */
-@media (min-width:640px) and (max-width:899px) and (min-aspect-ratio:9/10) and (min-height:501px) and (max-height:760px){
+@media (min-width:640px) and (max-width:1099px) and (min-aspect-ratio:9/10) and (min-height:561px) and (max-height:760px),
+       (min-width:1100px) and (max-width:1439px) and (orientation:landscape) and (min-height:561px) and (max-height:640px){
   .al-demo__body{font-size:13px;line-height:1.45}
   .al-demo__title{font-size:16.5px;margin-bottom:.3rem}
   .al-demo__kicker{margin-bottom:.3rem}
@@ -1373,7 +1375,7 @@ footer{margin-top:auto}
    tarjeta "¿Que es conciliar?" a la derecha */
 /* 2026-09-28: tambien en ventanas casi cuadradas desde 640px (computador con la
    ventana a la mitad), donde la demo va en dos columnas */
-@media (min-width:1000px), (min-width:640px) and (min-aspect-ratio:9/10) and (min-height:501px){
+@media (min-width:1000px), (min-width:640px) and (min-aspect-ratio:9/10) and (min-height:561px){
   .prod-cab{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:center;margin-bottom:2rem}
   .prod-cab .prod-tagline{margin-bottom:0}
   .prod-cab .alert-box{margin:0;font-size:13.5px;padding:1.1rem 1.2rem}
@@ -1503,6 +1505,36 @@ footer{margin-top:auto}
   .gp-modo-pasos .gp-vis>*{zoom:1}
   .gp-modo-pasos .gp-step.act{min-height:300px}
 }
+/* 2026-09-28 modo ventana de iPad: la ventana puede ser chica en ancho y en
+   alto a la vez. Ademas del ancho, el diseno se ajusta por el alto visible. */
+/* Inicio en ventana chica y casi cuadrada (disposicion de celular, poco alto) */
+@media (max-width:639px) and (max-height:560px) and (orientation:portrait){
+  .hx-title{font-size:clamp(1.35rem,6.2vw,1.8rem);margin-bottom:.7rem}
+  .hx-lead{font-size:13px;line-height:1.5}
+  .hx-bottom{gap:.8rem}
+  .hx-btn{padding-top:.55rem;padding-bottom:.55rem}
+  .hx-hud{display:none}
+}
+/* "Para quien" en ventanas bajas: tarjetas mas compactas */
+@media (min-width:640px) and (max-height:640px){
+  .hx-escena .hx-who-a,.hx-escena .hx-who-b{font-size:13px;line-height:1.45}
+  .hx-escena .hx-who-n{font-size:16px}
+  .hx-escena .hx-head{margin-bottom:clamp(.8rem,2.4svh,1.6rem)}
+}
+@media (min-width:640px) and (max-height:560px){
+  .hx-escena .hx-who{gap:10px}
+  .hx-escena .hx-who-c{padding:.75rem 1rem}
+  .hx-escena .hx-who-n{margin-bottom:.3rem}
+}
+/* Guias en ventanas bajas: sin la bajada (las pestanas ya dicen de que trata
+   cada guia) y el paso ocupa menos alto */
+@media (min-width:640px) and (max-height:640px){
+  #guias .home-lead{display:none}
+  #guias .gp-tab-ey{display:none}
+  #guias .gp-tab{padding-top:8px;padding-bottom:8px}
+  .gp-modo-pasos .gp-vis>*{zoom:1.2}
+  .gp-modo-pasos .gp-step.act{min-height:0;padding:12px}
+}
 /* Sin encaje al desplazar (2026-09-28): el desplazamiento es libre en todos los
    dispositivos y navegadores; la demo cabe entera por su tamano, no por encaje. */
 html{scroll-snap-type:none}
@@ -1531,7 +1563,9 @@ body>section:not(#home)>.container{padding-top:1.6rem}
 /* 2026-09-28: celular en horizontal (pantalla apaisada y baja). Todo lo
    principal cabe en el alto visible: inicio compacto, demos en dos columnas
    (escena a la izquierda, texto a la derecha) y el paso de Guias mas bajo. */
-@media (orientation:landscape) and (max-height:500px){
+/* 2026-09-28: hasta 560px de alto (antes 500): tambien ventanas bajas de iPad
+   en modo ventana y de computador, no solo el iPhone en horizontal */
+@media (orientation:landscape) and (max-height:560px){
   /* Inicio */
   .nav-inner{height:44px}
   .hx{padding-top:1rem;padding-bottom:1rem}
@@ -1564,6 +1598,13 @@ body>section:not(#home)>.container{padding-top:1.6rem}
   .gp-prog{margin-bottom:8px}
   .gp-ctrl{margin-top:8px}
 }
+/* 2026-09-28: las escenas del inicio ya no miden obligatoriamente el alto de la
+   pantalla (venia del encaje al desplazar, que se quito). Con la ventana a la
+   mitad o en tablet vertical el contenido es mas bajo que la pantalla y sobraban
+   300-450px de vacio por bloque; ahora el aire es proporcional al alto visible
+   (~150px por bloque en pantalla completa, igual que antes). */
+.hx-escena{min-height:0!important;padding-top:clamp(1.6rem,7svh,5rem)!important;padding-bottom:clamp(1.6rem,7svh,5rem)!important}
+.hx-end{min-height:0}
 </style>
 </head>
 
@@ -4350,9 +4391,9 @@ requestAnimationFrame(frame);
   var play=document.getElementById('hxPlay'), msg=document.getElementById('hxMsg');
   // Interacción: el panel (texto + botones) solo se ve mientras se interactúa
   // con el cubo, y en ese momento se pausa la animación automática.
-  var interactuando=false, ultimoToque=0, ocultarT=0, avisoT=0;
+  var interactuando=false, ultimoToque=0, ocultarT=0, avisoT=0, yInter=0;
   function mostrarPanel(msHasta){
-    clearTimeout(ocultarT); interactuando=true; hx.classList.add('cerca');
+    clearTimeout(ocultarT); interactuando=true; yInter=window.scrollY; hx.classList.add('cerca');
     if(modo==='demo') mensaje('Arrastra una cara para girarla · resuélvelo','');
     if(msHasta) ocultarT=setTimeout(ocultarPanel,msHasta);
   }
@@ -4424,12 +4465,12 @@ requestAnimationFrame(frame);
     if(!h&&!cerca) return;                       // fuera del cubo: la página sigue normal
     e.preventDefault(); mostrarPanel(e.pointerType==='mouse'?0:4000);
     try{canvas.setPointerCapture(e.pointerId);}catch(_){}
-    if(!h){ entrarJuego(); arr={x:e.clientX,y:e.clientY,orbita:true,ox:orbX,oy:orbY}; hx.classList.add('rotando'); return; }
+    if(!h){ entrarJuego(); arr={id:e.pointerId,x:e.clientX,y:e.clientY,orbita:true,ox:orbX,oy:orbY}; hx.classList.add('rotando'); return; }
     cube.updateMatrixWorld(true); inv.copy(cube.matrixWorld).invert();
     var nL=h.face.normal.clone().transformDirection(h.object.matrixWorld).transformDirection(inv);
     var ax=Math.abs(nL.x),ay=Math.abs(nL.y),az=Math.abs(nL.z);
     var ejeN=ax>=ay&&ax>=az?'x':(ay>=az?'y':'z');
-    arr={x:e.clientX,y:e.clientY,orbita:false,ejeN:ejeN,p:h.point.clone().applyMatrix4(inv),listo:false};
+    arr={id:e.pointerId,x:e.clientX,y:e.clientY,orbita:false,ejeN:ejeN,p:h.point.clone().applyMatrix4(inv),listo:false};
   }
   canvas.addEventListener('pointerdown',alBajar);
   zona.addEventListener('pointerdown',alBajar);
@@ -4441,6 +4482,7 @@ requestAnimationFrame(frame);
       if(e.pointerType==='mouse'){ if(sobre){ if(!interactuando||ocultarT) mostrarPanel(); } else if(interactuando) ocultarLuego(700); }
       return;
     }
+    if(e.pointerId!==arr.id) return;      // solo el dedo que esta girando el cubo
     var dx=e.clientX-arr.x, dy=e.clientY-arr.y;
     if(arr.orbita){ orbY=arr.oy+dx*.008; orbX=Math.max(-1.2,Math.min(1.2,arr.ox+dy*.008)); return; }
     if(arr.listo||Math.hypot(dx,dy)<10||ocupado()) return;
@@ -4462,6 +4504,17 @@ requestAnimationFrame(frame);
   });
   function soltar(e){ arr=null; hx.classList.remove('rotando'); if(e&&e.pointerType&&e.pointerType!=='mouse') ocultarLuego(4000); }
   canvas.addEventListener('pointerup',soltar); canvas.addEventListener('pointercancel',soltar);
+  // 2026-09-28 iPhone/iPad: el dedo puede soltarse fuera del lienzo (sobre la zona
+  // tactil); se escucha en toda la pagina para que el cubo nunca quede "agarrado"
+  ['pointerup','pointercancel'].forEach(function(t){ window.addEventListener(t,function(e){ if(arr&&e.pointerId===arr.id) soltar(e); }); });
+  // Al desplazar la pagina el cubo deja de estar activo: en iPhone/iPad el
+  // titular seguia atenuado y el panel visible mientras se bajaba por la pagina
+  // (Safari pausa el temporizador de 4 s durante el desplazamiento).
+  window.addEventListener('scroll',function(){
+    if((!interactuando&&!arr)||Math.abs(window.scrollY-yInter)<24) return;
+    if(arr){ arr=null; hx.classList.remove('rotando'); }
+    ocultarPanel();
+  },{passive:true});
   canvas.addEventListener('pointerleave',function(e){ if(!arr&&e.pointerType==='mouse'&&interactuando) ocultarLuego(700); });
   // Chrome inicia la selección de texto (y el autodesplazamiento) con el
   // mousedown aunque se cancele el pointerdown: se cancela también aquí.
@@ -4491,7 +4544,8 @@ requestAnimationFrame(frame);
     var inner=hx.querySelector('.hx-inner'), pb=parseFloat(getComputedStyle(hx).paddingBottom)||24;
     // piso 170 (antes 210): en pantallas bajas (iPad con Slide Over, iPhone SE)
     // el cubo se achica para que titular y botones quepan en la primera pantalla
-    var P=Math.round(Math.max(170,H-inner.offsetHeight-pb));
+    // en ventanas bajas (modo ventana de iPad) la franja del cubo baja hasta 110
+    var P=Math.round(Math.max(H<560?110:170,H-inner.offsetHeight-pb));
     if(Math.abs((parseFloat(hx.style.paddingTop)||0)-P)>1) hx.style.paddingTop=P+'px';
   }
   function resize(){
@@ -4509,8 +4563,10 @@ requestAnimationFrame(frame);
       // (2026-09-28) centrado en todo el espacio entre el rotulo superior
       // (40 px) y el titular (12 px de aire). Los controles del juego se
       // superponen al titular, que se atenua mientras se juega (CSS .cerca).
-      var arriba=40, abajo=(parseFloat(hx.style.paddingTop)||300)-12, franja=abajo-arriba;
-      lado=Math.max(110,Math.min(210,franja*.74)); cx=w/2; cy=arriba+franja/2;
+      // En ventanas bajas (modo ventana de iPad) el rotulo superior se oculta y la
+      // franja es chica: el cubo se ajusta a ella en vez de montarse sobre el titular
+      var bajo=h<560, arriba=bajo?12:40, abajo=(parseFloat(hx.style.paddingTop)||300)-12, franja=abajo-arriba;
+      lado=Math.max(bajo?Math.min(110,franja*.72):110,Math.min(210,franja*.74)); cx=w/2; cy=arriba+franja/2;
     }
     root.position.set((cx-w/2)*porPx,(h/2-cy)*porPx,0);
     root.scale.setScalar(lado*porPx/4.1);
