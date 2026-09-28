@@ -40,7 +40,9 @@
   <h1>Revisar encuadre</h1>
   <div class="tabs" id="tabs"></div>
   <button id="rehacer">Volver a revisar</button>
-  <button id="modo">Pantalla dividida</button>
+  <button data-grupo="">Pantalla completa</button>
+  <button data-grupo="dividida">Pantalla dividida</button>
+  <button data-grupo="ventana">Ventana iPad</button>
   <span id="resumen">Revisando…</span>
 </header>
 <main id="main"></main>
@@ -60,8 +62,21 @@ const DIVIDIDA = [
   ['iPad vert. ⅔', 504, [1050, 980]], ['Computador ½', 720, [860, 740]],
   ['Monitor ½', 960, [1000, 900]]
 ];
-const MODO_DIVIDIDA = new URLSearchParams(location.search).has('dividida');
-const DISPOSITIVOS = MODO_DIVIDIDA ? DIVIDIDA : COMPLETA;
+// Ventana libre de iPad (Stage Manager / ventanas redimensionables): cualquier
+// tamano intermedio, incluidas ventanas chicas en ancho y en alto a la vez.
+const VENTANA = [
+  ['Ventana mínima', 400, [400]], ['Ventana 480 × 360', 480, [360]],
+  ['Ventana 560 × 440', 560, [440]], ['Ventana 640 × 480', 640, [480]],
+  ['Ventana 720 × 560', 720, [560]], ['Ventana 860 × 620', 860, [620]],
+  ['Ventana alta 380 × 640', 380, [640]], ['Ventana alta 520 × 760', 520, [760]]
+];
+const PARAMS = new URLSearchParams(location.search);
+// ?tam=500x450,700x520 revisa tamanos a medida
+const A_MEDIDA = (PARAMS.get('tam') || '').split(',').map(t => t.split('x').map(Number)).filter(([w, h]) => w > 0 && h > 0).map(([w, h]) => [w + ' × ' + h, w, [h]]);
+const GRUPO = A_MEDIDA.length ? 'medida' : PARAMS.has('ventana') ? 'ventana' : PARAMS.has('dividida') ? 'dividida' : 'completa';
+const MODO_DIVIDIDA = GRUPO === 'dividida';
+const DISPOSITIVOS = { completa: COMPLETA, dividida: DIVIDIDA, ventana: VENTANA, medida: A_MEDIDA }[GRUPO];
+const NOMBRE_GRUPO = { completa: '', dividida: ' de pantalla dividida', ventana: ' de ventana iPad', medida: ' a medida' }[GRUPO];
 const PESTANAS = [['home','Inicio'],['about','Sobre mí'],['product','Herramientas'],['guias','Guías'],['contact','Contacto']];
 const ALTO_VISTA = 330;   // alto en pantalla de cada vista previa
 let actual = 'home';
@@ -149,7 +164,9 @@ async function revisarAlto(v, H){
   if (actual === 'home') cabe('Inicio (hasta los botones)', doc.querySelector('.hx-ctas').getBoundingClientRect().bottom + win.scrollY);
   // escenas del inicio: en tablet y computador cada una debe caber completa en la pantalla
   if (actual === 'home' && W >= 640 && H >= 500) doc.querySelectorAll('.hx-escena').forEach(e => cabe('Escena "' + (e.querySelector('.hx-eyebrow') || {}).textContent + '"', e.getBoundingClientRect().height));
-  if (actual === 'product') doc.querySelectorAll('.al-demo').forEach(d => cabe('Demo "' + d.id + '"', d.getBoundingClientRect().bottom - d.previousElementSibling.getBoundingClientRect().top));
+  // En ventanas de ancho de celular y menos de 500px de alto (ventana minima de
+  // iPad) la demo no cabe entera: se revisa que no se salga ni se corte, no el alto.
+  if (actual === 'product' && !(W < 640 && H < 500)) doc.querySelectorAll('.al-demo').forEach(d => cabe('Demo "' + d.id + '"', d.getBoundingClientRect().bottom - d.previousElementSibling.getBoundingClientRect().top));
   if (actual === 'product' && ((W >= 900 && W > H) || W < H)) { win.scrollTo(0, 0); cabe('Encabezado + demo "Ver en acción"', doc.getElementById('ver-en-accion').getBoundingClientRect().bottom + win.scrollY); }
   if (actual === 'guias') { const g = doc.querySelector('.gp-panel.on'); if (g && g.querySelector('.gp-prog')) cabe('Paso de la guía', g.querySelector('.gp-ctrl').getBoundingClientRect().bottom - g.querySelector('.gp-prog').getBoundingClientRect().top); }
   // Guías: desde el comienzo de la página hasta los botones del paso, en la primera pantalla
@@ -183,12 +200,14 @@ async function revisarTodo(){
   catch (e) { res.textContent = '⚠ La revisión falló: ' + e.message; return; }
   finally { bloquear(false); }
   const total = n.reduce((a, b) => a + b, 0);
-  res.textContent = total ? `⚠ ${total} aviso${total > 1 ? 's' : ''} en ${PESTANAS.find(p => p[0] === actual)[1]}` : `✓ ${PESTANAS.find(p => p[0] === actual)[1]}: todo encuadrado en los ${DISPOSITIVOS.length} tamaños${MODO_DIVIDIDA ? " de pantalla dividida" : ""} (altos de Safari, Chrome y Edge)`;
+  res.textContent = total ? `⚠ ${total} aviso${total > 1 ? 's' : ''} en ${PESTANAS.find(p => p[0] === actual)[1]}` : `✓ ${PESTANAS.find(p => p[0] === actual)[1]}: todo encuadrado en los ${DISPOSITIVOS.length} tamaños${NOMBRE_GRUPO} (altos de Safari, Chrome y Edge)`;
 }
 document.getElementById('rehacer').onclick = revisarTodo;
-const modo = document.getElementById('modo');
-modo.textContent = MODO_DIVIDIDA ? 'Pantalla completa' : 'Pantalla dividida';
-modo.onclick = () => { location.search = MODO_DIVIDIDA ? '' : '?dividida'; };
+document.querySelectorAll('header [data-grupo]').forEach(b => {
+  const g = b.dataset.grupo || 'completa';
+  b.classList.toggle('on', g === GRUPO);
+  b.onclick = () => { location.search = b.dataset.grupo ? '?' + b.dataset.grupo : ''; };
+});
 revisarTodo();
 </script>
 </body>
