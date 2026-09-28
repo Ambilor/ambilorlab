@@ -1179,6 +1179,13 @@ nav{background:rgba(255,255,255,.95)!important}
 }
 /* 2026-09-28: tablet (una columna) — la escena de las demos crece de 340 a 480px */
 @media (min-width:640px) and (max-width:899px){ .al-demo__stage{max-width:min(480px,100%)} }
+/* 2026-09-28 celular: cierre del inicio mas compacto y pie sin quedar bajo el boton subir */
+@media (max-width:560px){
+  .hx-end{padding:3.2rem 0 3.6rem}
+  .hx-who{margin-bottom:3rem}
+  .hx-end-t{font-size:clamp(2rem,9.5vw,2.6rem);margin-bottom:1.6rem}
+  footer{padding:1.4rem 4.2rem 1.6rem 1.25rem;text-align:left;line-height:1.7}
+}
 </style>
 </head>
 
@@ -1245,7 +1252,7 @@ nav{background:rgba(255,255,255,.95)!important}
   <div class="hx-wrap" id="hx-capacidades">
     <div class="hx-head rv2" id="hx-cap-titulo">
       <div class="hx-eyebrow">Qué automatizo</div>
-      <h2 class="hx-h2">Tres tareas que tu equipo<br>repite cada mes. <span>Resueltas.</span></h2>
+      <h2 class="hx-h2">Tres tareas que tu equipo <br>repite cada mes. <span>Resueltas.</span></h2>
     </div>
     <div class="hx-panels">
       <article class="hx-panel rv2">
@@ -1303,7 +1310,7 @@ nav{background:rgba(255,255,255,.95)!important}
   <div class="hx-wrap">
     <div class="hx-head rv2">
       <div class="hx-eyebrow">Para quién</div>
-      <h2 class="hx-h2">Menos copiar y pegar.<br><span>Más tiempo para decidir.</span></h2>
+      <h2 class="hx-h2">Menos copiar y pegar. <br><span>Más tiempo para decidir.</span></h2>
     </div>
     <div class="hx-who">
       <div class="hx-who-c rv2"><div class="hx-who-n">Para contadores</div><p class="hx-who-a"><span>Antes</span>Revisar la cartola fila por fila, buscando el pago de cada factura, cada cierre.</p><p class="hx-who-b"><span>Ahora</span>El sistema empareja cada movimiento en minutos: tú solo validas lo que no cuadra.</p></div>
@@ -1317,7 +1324,7 @@ nav{background:rgba(255,255,255,.95)!important}
   <div class="hx-end">
     <div class="hx-wrap">
       <div class="hx-eyebrow">Siguiente paso</div>
-      <h2 class="hx-end-t">Deja de revisar planillas<br>a mano.</h2>
+      <h2 class="hx-end-t">Deja de revisar planillas <br>a mano.</h2>
       <div class="hx-ctas hx-ctas--c">
         <button class="hx-btn hx-btn--pri" onclick="show('product')">Ver herramientas <span aria-hidden="true">→</span></button>
         <button class="hx-btn hx-btn--sec" onclick="show('contact')">Conversemos</button>
