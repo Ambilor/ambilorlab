@@ -40,17 +40,28 @@
   <h1>Revisar encuadre</h1>
   <div class="tabs" id="tabs"></div>
   <button id="rehacer">Volver a revisar</button>
+  <button id="modo">Pantalla dividida</button>
   <span id="resumen">Revisando…</span>
 </header>
 <main id="main"></main>
 <script>
 // Cada dispositivo se prueba con varios altos visibles: el de Safari y el de
 // Chrome / Edge (sus barras ocupan mas alto), del mayor al menor.
-const DISPOSITIVOS = [
+const COMPLETA = [
   ['iPhone vertical', 402, [700, 640]], ['iPhone horizontal', 874, [290, 260]],
   ['iPad vertical', 834, [1050, 980]], ['iPad horizontal', 1194, [738, 660]],
   ['Computador', 1440, [860, 740]], ['Monitor vertical', 1080, [1700, 1600]]
 ];
+// Pantalla dividida (revisar.html?dividida): iPad con Split View y Slide Over,
+// y computador con la ventana a la mitad de la pantalla.
+const DIVIDIDA = [
+  ['iPad horiz. ⅓ / Slide Over', 375, [738, 660]], ['iPad horiz. ½', 590, [738, 660]],
+  ['iPad horiz. ⅔', 809, [738, 660]], ['iPad vert. ⅓', 320, [1050, 980]],
+  ['iPad vert. ⅔', 504, [1050, 980]], ['Computador ½', 720, [860, 740]],
+  ['Monitor ½', 960, [1000, 900]]
+];
+const MODO_DIVIDIDA = new URLSearchParams(location.search).has('dividida');
+const DISPOSITIVOS = MODO_DIVIDIDA ? DIVIDIDA : COMPLETA;
 const PESTANAS = [['home','Inicio'],['about','Sobre mí'],['product','Herramientas'],['guias','Guías'],['contact','Contacto']];
 const ALTO_VISTA = 330;   // alto en pantalla de cada vista previa
 let actual = 'home';
@@ -172,9 +183,12 @@ async function revisarTodo(){
   catch (e) { res.textContent = '⚠ La revisión falló: ' + e.message; return; }
   finally { bloquear(false); }
   const total = n.reduce((a, b) => a + b, 0);
-  res.textContent = total ? `⚠ ${total} aviso${total > 1 ? 's' : ''} en ${PESTANAS.find(p => p[0] === actual)[1]}` : `✓ ${PESTANAS.find(p => p[0] === actual)[1]}: todo encuadrado en los 6 tamaños (altos de Safari, Chrome y Edge)`;
+  res.textContent = total ? `⚠ ${total} aviso${total > 1 ? 's' : ''} en ${PESTANAS.find(p => p[0] === actual)[1]}` : `✓ ${PESTANAS.find(p => p[0] === actual)[1]}: todo encuadrado en los ${DISPOSITIVOS.length} tamaños${MODO_DIVIDIDA ? " de pantalla dividida" : ""} (altos de Safari, Chrome y Edge)`;
 }
 document.getElementById('rehacer').onclick = revisarTodo;
+const modo = document.getElementById('modo');
+modo.textContent = MODO_DIVIDIDA ? 'Pantalla completa' : 'Pantalla dividida';
+modo.onclick = () => { location.search = MODO_DIVIDIDA ? '' : '?dividida'; };
 revisarTodo();
 </script>
 </body>

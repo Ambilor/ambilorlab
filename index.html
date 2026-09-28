@@ -104,7 +104,10 @@ nav{position:-webkit-sticky;position:sticky;top:0;z-index:100;background:var(--b
   .nav-logo{order:0}
   .nav-dark-btn{order:1;margin-left:auto}
   .nav-links{order:2;flex:1 0 100%;flex-wrap:nowrap;justify-content:space-between;gap:.5rem;margin:0!important}
+  .nav-links a{white-space:nowrap}
 }
+/* 320px (iPad con Slide Over o en un tercio): los 5 enlaces en una fila */
+@media (max-width:360px){ .nav-links a{font-size:12px} .nav-links{gap:.25rem} }
 section{display:none}
 section.visible{display:block}
 .container{max-width:var(--max);margin:0 auto;padding:3.5rem 1.5rem}
@@ -914,6 +917,13 @@ nav.scrolled .nav-links a{font-size:12px}
   .hx-mock-kpis{grid-template-columns:repeat(2,1fr)}
   .hx-who{grid-template-columns:1fr}
 }
+/* 2026-09-28 pantalla dividida: "Para quien" mantiene dos columnas desde 640px
+   (en una sola no cabia en la pantalla en ventanas de 700 a 900px) y las
+   coordenadas del rotulo superior se ocultan si no caben junto a el */
+@media (min-width:640px){ .hx-who{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:679px){ .hx-hud--tr,.hx-hud--br{display:none} }
+.hx-hud--tl{white-space:nowrap}
+@media (max-width:360px){ .hx-hud--tl{letter-spacing:.08em;font-size:10px} }
 @media (max-width:560px){
   .hx{padding-top:290px}
   .hx-line--r{padding-left:0}
@@ -1245,12 +1255,15 @@ footer{margin-top:auto}
    paso, sus cifras y la lista de pasos en vertical; a la derecha la escena con
    todo el alto que deja la pantalla. Apilar escena + texto + controles no cabe
    en ~690px de alto (iPad horizontal con barras del navegador). */
-@media (orientation:landscape) and (min-width:640px) and (min-height:501px){
+/* 2026-09-28: una ventana casi cuadrada (computador con la ventana a la mitad)
+   usa tambien la disposicion horizontal: apilada no cabe */
+@media (orientation:landscape) and (min-width:640px) and (min-height:501px),
+       (min-aspect-ratio:9/10) and (min-width:640px) and (min-height:501px){
   .al-demo{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);grid-template-rows:min-content 1fr auto;column-gap:clamp(20px,3vw,40px)}
   .al-demo__grid{display:contents}
   .al-demo__copy,#como-se-instala .al-demo__copy{grid-column:1;grid-row:1;display:flex;flex-direction:column;min-height:0;padding-top:.3rem}
   .al-demo__stage,#como-se-instala .al-demo__stage{grid-column:2;grid-row:1 / span 2;order:0;align-self:start;
-    height:max(280px, min(52cqw, calc(100svh - 356px)))}   /* cabe junto al encabezado de Herramientas */
+    height:max(240px, min(52cqw, calc(100svh - 356px)))}   /* cabe junto al encabezado de Herramientas */
   #product .prod-cab{margin-bottom:1.2rem}
   #product .demo-label{margin-bottom:.5rem}
   .al-demo__controls{grid-column:1;grid-row:2;align-self:start;flex-wrap:wrap;margin-top:1.4rem}   /* junto al texto: sin hueco */
@@ -1267,7 +1280,8 @@ footer{margin-top:auto}
 }
 /* horizontal y bajo (iPad, portatil): la lista de pasos vuelve a una fila
    compacta para que la columna del texto no sea mas alta que la escena */
-@media (orientation:landscape) and (min-width:640px) and (min-height:501px) and (max-height:860px){
+@media (orientation:landscape) and (min-width:640px) and (min-height:501px) and (max-height:860px),
+       (min-aspect-ratio:9/10) and (min-width:640px) and (min-height:501px) and (max-height:860px){
   .al-demo__steps{grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;margin-top:8px}
   .al-demo__step{display:block;padding:3px 0}
   .al-demo__track{width:auto}
@@ -1275,11 +1289,24 @@ footer{margin-top:auto}
   .al-demo__controls{margin-top:1rem}
   .al-demo__cta{margin-top:.7rem;padding:7px 16px}
   .al-demo__stats strong{font-size:clamp(22px,2vw,28px)}
+  .al-demo__stats{gap:10px 12px}   /* las dos cifras lado a lado en columnas angostas */
   .al-demo__body{font-size:14px;line-height:1.55}
+}
+/* ventanas horizontales angostas y bajas (mitad de un portatil de 1366x768):
+   columna de texto mas compacta para que la demo quepa */
+@media (min-width:640px) and (max-width:899px) and (min-aspect-ratio:9/10) and (min-height:501px) and (max-height:760px){
+  .al-demo__body{font-size:13px;line-height:1.45}
+  .al-demo__title{font-size:16.5px;margin-bottom:.3rem}
+  .al-demo__kicker{margin-bottom:.3rem}
+  .al-demo__stats{display:none}
+  #product .prod-h1{font-size:19px}
+  #product .prod-cab .alert-box{font-size:12.5px;padding:.8rem 1rem}
 }
 /* Encabezado de Herramientas: en pantallas anchas, texto a la izquierda y la
    tarjeta "¿Que es conciliar?" a la derecha */
-@media (min-width:1000px){
+/* 2026-09-28: tambien en ventanas casi cuadradas desde 640px (computador con la
+   ventana a la mitad), donde la demo va en dos columnas */
+@media (min-width:1000px), (min-width:640px) and (min-aspect-ratio:9/10) and (min-height:501px){
   .prod-cab{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:center;margin-bottom:2rem}
   .prod-cab .prod-tagline{margin-bottom:0}
   .prod-cab .alert-box{margin:0;font-size:13.5px;padding:1.1rem 1.2rem}
@@ -1287,7 +1314,7 @@ footer{margin-top:auto}
 /* 3) texto arriba a la izquierda, cifras a la derecha */
 .al-demo__copy{max-width:none;margin:0;justify-content:flex-start}
 /* VERTICAL (tablet): bajo la escena, texto a la izquierda y cifras a la derecha */
-@media (orientation:portrait) and (min-width:640px){
+@media (orientation:portrait) and (min-width:640px) and (max-aspect-ratio:9/10){
   .al-demo__copy{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);column-gap:36px;align-content:start;min-height:11.5rem}
   .al-demo__copy>*{grid-column:1}
   .al-demo__copy>.al-demo__extra{grid-column:2;grid-row:1 / span 3;align-self:start;padding-top:1.4rem}
@@ -1301,12 +1328,13 @@ footer{margin-top:auto}
   #product .prod-cab{margin-bottom:1.4rem}
   #product .demo-label{margin-bottom:.5rem}
   #ver-en-accion{--resto:700px}
+  #ver-en-accion .al-demo__stage{height:max(150px, min(100cqw, calc(100svh - var(--resto))))}
 }
 /* desde 1000px el encabezado va en dos columnas y es mas bajo */
-@media (orientation:portrait) and (min-width:1000px){ #ver-en-accion{--resto:664px} }
+@media (orientation:portrait) and (min-width:1000px) and (max-aspect-ratio:9/10){ #ver-en-accion{--resto:664px} }
 @media (max-width:639px){
   .al-demo{--resto:355px}
-  #como-se-instala{--resto:420px}
+  #como-se-instala{--resto:430px}
   .al-demo__copy{min-height:12rem}
   #como-se-instala .al-demo__copy{min-height:16rem}
 }
@@ -4370,7 +4398,9 @@ requestAnimationFrame(frame);
     if(hx.style.minHeight!==mh) hx.style.minHeight=mh;
     var H=parseFloat(getComputedStyle(hx).minHeight)||window.innerHeight;
     var inner=hx.querySelector('.hx-inner'), pb=parseFloat(getComputedStyle(hx).paddingBottom)||24;
-    var P=Math.round(Math.max(210,H-inner.offsetHeight-pb));
+    // piso 170 (antes 210): en pantallas bajas (iPad con Slide Over, iPhone SE)
+    // el cubo se achica para que titular y botones quepan en la primera pantalla
+    var P=Math.round(Math.max(170,H-inner.offsetHeight-pb));
     if(Math.abs((parseFloat(hx.style.paddingTop)||0)-P)>1) hx.style.paddingTop=P+'px';
   }
   function resize(){
@@ -4395,7 +4425,8 @@ requestAnimationFrame(frame);
     root.scale.setScalar(lado*porPx/4.1);
     centro={x:cx,y:cy,r:lado*.62};
     var R=lado*.62; zona.style.left=(cx-R)+'px'; zona.style.top=(cy-R)+'px'; zona.style.width=zona.style.height=(2*R)+'px';
-    if(play){ play.style.left=cx+'px'; play.style.top=Math.max(8,Math.min(cy+lado*.66,h-(play.offsetHeight||84)-10))+'px'; }
+    // 2026-09-28: centrados bajo el cubo, pero sin salirse por el borde (ventana angosta)
+    if(play){ var pw=play.offsetWidth||0; play.style.left=Math.max(pw/2+12,Math.min(cx,w-pw/2-12))+'px'; play.style.top=Math.max(8,Math.min(cy+lado*.66,h-(play.offsetHeight||84)-10))+'px'; }
   }
 
   // ── bucle ──
