@@ -2011,6 +2011,9 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
 #home .i3-giro[hidden]{display:none}
 #home .i3-giro i{font-size:15px}
 [data-theme="light"] #home .i3-giro{color:var(--azul);background:rgba(31,92,153,.07);border-color:rgba(31,92,153,.3)}
+
+/* ── Giroscopio: el contenido se inclina con el aparato (celular y tablet) ── */
+html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) rotateX(var(--gx,0deg)) rotateY(var(--gy,0deg));transform-origin:50% var(--goy,50%)}
 </style>
 </head>
 
@@ -3478,7 +3481,7 @@ window.AL3D = (function(){
       op = Math.max(0, Math.min(1, op));
       e.style.opacity = op.toFixed(3);
       e.style.visibility = op > 0.01 ? 'visible' : 'hidden';
-      e.style.transform = 'translate(-50%,-50%) translate3d(0,0,' + z.toFixed(1) + 'px)';
+      e.style.transform = 'translate(-50%,-50%) translate3d(0,0,' + z.toFixed(1) + 'px) rotateX(var(--gx,0deg)) rotateY(var(--gy,0deg))';
       e.classList.toggle('i3-activa', a < PAUSA + 0.1);
       var k = u > 0 ? u * u * 0.55 + u * 0.45 : 0;                         // se abre cada vez mas rapido
       piezas[i].forEach(function(p){
@@ -3809,6 +3812,25 @@ window.AL3D = (function(){
   }
   var hadaVel = new THREE.Vector3(), hadaObj = new THREE.Vector3(), zPrev = null, visitaAnt = null, tamSuave = 70;
   var giroActivo = false, inclX = 0, inclY = 0, inclVx = 0, inclVy = 0;   // inclinacion del cubo con giroscopio (con inercia)
+  // con giroscopio el contenido tambien se ve desde el angulo del aparato, igual
+  // que la escena: se inclina como la camara (se ve desde el lado hacia donde se
+  // ladea). En las pestanas gira alrededor del centro de la pantalla, no del
+  // contenido entero (que puede ser muy alto).
+  var raiz = document.documentElement, gxAnt = 99, gyAnt = 99;
+  function inclinarContenido(home){
+    var gx = my * 11, gy = -mx * 13;
+    if (Math.abs(gx - gxAnt) + Math.abs(gy - gyAnt) < 0.03) return;
+    gxAnt = gx; gyAnt = gy;
+    raiz.style.setProperty('--gx', gx.toFixed(2) + 'deg'); raiz.style.setProperty('--gy', gy.toFixed(2) + 'deg');
+    if (!home) origenGiro();
+    if (!raiz.classList.contains('al-giro')) raiz.classList.add('al-giro');
+  }
+  function origenGiro(){
+    var c = document.querySelector('body>section.visible>.container');
+    if (c) raiz.style.setProperty('--goy', Math.round(innerHeight / 2 - c.getBoundingClientRect().top) + 'px');
+  }
+  addEventListener('scroll', function(){ if (giroActivo) origenGiro(); }, { passive:true });
+  document.addEventListener('pestana', function(){ if (giroActivo) setTimeout(origenGiro, 0); });
   function moverHada(dt, t, zc){
     // lugar junto a la camara: a la derecha del contenido (arriba a la derecha en celular vertical)
     var W = innerWidth, H = innerHeight, vertical = W / H < 0.8, DIST = 3.6;
@@ -3950,6 +3972,7 @@ window.AL3D = (function(){
     var home = enInicio();
     if (home) { P += (Pobj - P) * Math.min(1, dt * 7); if (Math.abs(Pobj - P) < 0.0005) P = Pobj; }
     var dmx = (tx - mx) * .05, dmy = (ty - my) * .05; mx += dmx; my += dmy;
+    if (giroActivo) inclinarContenido(home);
     var viajando = tViaje < 1;
     if (viajando) tViaje = Math.min(1, tViaje + dt / 0.7);
     var ev = tViaje < .5 ? 4 * tViaje * tViaje * tViaje : 1 - Math.pow(-2 * tViaje + 2, 3) / 2;
