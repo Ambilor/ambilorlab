@@ -78,6 +78,10 @@ try{if("scrollRestoration" in history)history.scrollRestoration="manual";if(loca
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
+/* 2026-09-28 Safari iPhone: al girar a horizontal agranda solo el texto si no
+   se le indica lo contrario, y el encuadre horizontal deja de calzar. */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+a,button{-webkit-tap-highlight-color:transparent}
 body{font-family:var(--sans);font-size:15px;line-height:1.65;color:var(--negro);background:var(--blanco);-webkit-font-smoothing:antialiased;min-height:100vh}
 nav{position:-webkit-sticky;position:sticky;top:0;z-index:100;background:var(--blanco);border-bottom:1px solid var(--borde)}
 .nav-inner{max-width:var(--max);margin:0 auto;padding:0 1.5rem;height:52px;display:flex;align-items:center;justify-content:space-between}
@@ -92,6 +96,14 @@ nav{position:-webkit-sticky;position:sticky;top:0;z-index:100;background:var(--b
 @media (max-width:560px){
   .nav-inner{height:auto; min-height:52px; flex-wrap:wrap; row-gap:.35rem; padding-top:.5rem; padding-bottom:.5rem}
   .nav-links{gap:.9rem; flex-wrap:wrap}
+}
+/* 2026-09-28: en celular vertical, logo y boton de tema arriba y los 5 enlaces
+   en una fila propia a todo el ancho. Antes, en 375px (iPhone SE y mini) el
+   boton de tema no cabia junto a los enlaces y bajaba a una tercera fila. */
+@media (max-width:560px){
+  .nav-logo{order:0}
+  .nav-dark-btn{order:1;margin-left:auto}
+  .nav-links{order:2;flex:1 0 100%;flex-wrap:nowrap;justify-content:space-between;gap:.5rem;margin:0!important}
 }
 section{display:none}
 section.visible{display:block}
@@ -113,6 +125,9 @@ section.visible{display:block}
 .area-card p{font-size:13px;color:var(--gris-1);line-height:1.5}
 .cta-home{display:inline-block;background:var(--azul);color:var(--blanco);font-size:13px;font-weight:500;padding:10px 22px;border-radius:5px;text-decoration:none;transition:background .15s;cursor:pointer;border:none}
 .cta-home:hover{background:var(--azul-dark)}
+/* 2026-09-28: sobre el azul el texto va siempre blanco (--blanco es casi negro
+   en el tema oscuro) y el boton usa la fuente del sitio (Safari no la hereda) */
+.cta-home{color:#fff;font-family:inherit}
 .about-name{font-size:22px;font-weight:600;letter-spacing:-.3px;margin-bottom:.35rem}
 .about-role{font-family:var(--mono);font-size:12px;color:var(--azul);font-weight:500;margin-bottom:1.5rem}
 .about-bio{font-size:14px;color:var(--gris-1);line-height:1.75;margin-bottom:2rem;max-width:540px}
@@ -413,6 +428,11 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
 .cf-field{width:100%;font-family:var(--sans);font-size:13px;padding:10px 13px;border:1px solid var(--borde);border-radius:6px;outline:none;color:var(--negro);background:var(--blanco);transition:border-color .15s}
 .cf-field:focus{border-color:var(--azul)}
 .cf-area{height:110px;resize:vertical;line-height:1.6}
+/* 2026-09-28 Safari iPhone/iPad: sin apariencia nativa (sombra y esquinas de
+   iOS) y, en pantallas tactiles, letra de 16px: con menos, Safari hace zoom
+   al tocar el campo y la pagina queda ampliada y corrida. */
+.cf-field{-webkit-appearance:none;appearance:none}
+@media (hover:none) and (pointer:coarse){ .cf-field{font-size:16px} }
 .cf-ok{display:none;padding:12px 14px;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:6px;font-size:13px;color:#2e7d32;margin-bottom:1rem}
 @media(max-width:480px){.cf-row{grid-template-columns:1fr}}
 .about-quote{font-size:17px;font-style:italic;color:var(--azul);border-left:3px solid var(--azul);padding:8px 14px;margin-bottom:1.5rem;line-height:1.55;letter-spacing:-.01em;max-width:480px}
@@ -1273,12 +1293,46 @@ footer{margin-top:auto}
   .al-demo__copy>.al-demo__extra{grid-column:2;grid-row:1 / span 3;align-self:start;padding-top:1.4rem}
   .al-demo__stats{margin-top:0}
   .al-demo__body{max-width:620px}
+  /* 2026-09-28: al abrir Herramientas en tablet vertical, la primera pantalla
+     muestra desde "Proximamente" hasta el final de la demo "Ver en accion".
+     El encabezado se compacta y la escena toma solo el alto que sobra
+     (--resto = todo lo que no es escena: barra, encabezado, texto y controles) */
+  #product .prod-tagline{margin-bottom:1.1rem}
+  #product .prod-cab{margin-bottom:1.4rem}
+  #product .demo-label{margin-bottom:.5rem}
+  #ver-en-accion{--resto:700px}
 }
+/* desde 1000px el encabezado va en dos columnas y es mas bajo */
+@media (orientation:portrait) and (min-width:1000px){ #ver-en-accion{--resto:664px} }
 @media (max-width:639px){
   .al-demo{--resto:355px}
   #como-se-instala{--resto:420px}
   .al-demo__copy{min-height:12rem}
   #como-se-instala .al-demo__copy{min-height:16rem}
+}
+/* 2026-09-28: al abrir Herramientas en celular vertical, la primera pantalla
+   muestra desde "Proximamente" hasta el final de la demo "Ver en accion".
+   La bajada y "¿Que es conciliar?" pasan bajo la demo (.prod-cel), el
+   encabezado y el texto de la demo se compactan y la escena toma el alto que
+   sobra (--resto = barra + encabezado + texto + controles). */
+.prod-cel{display:none}
+@media (max-width:639px){
+  .prod-cab .prod-tagline,.prod-cab .alert-box{display:none}
+  .prod-cel{display:block;margin:-.6rem 0 2.5rem}
+  .prod-cel .prod-tagline{margin-bottom:1rem}
+  .prod-cel .alert-box{margin-bottom:0}
+  #product .prod-eyebrow{margin-bottom:.45rem}
+  #product .prod-h1{font-size:19.5px;line-height:1.28;margin-bottom:0}
+  #product .prod-cab{margin-bottom:1rem}
+  #product .demo-label{margin-bottom:.45rem}
+  #ver-en-accion{--resto:492px;padding-top:12px;padding-bottom:12px}
+  #ver-en-accion .al-demo__stage{height:max(118px, min(100cqw, calc(100svh - var(--resto))))}
+  #ver-en-accion .al-demo__kicker{margin-bottom:.35rem}
+  #ver-en-accion .al-demo__title{margin-bottom:.3rem}
+  #ver-en-accion .al-demo__body{font-size:13px;line-height:1.45}
+  #ver-en-accion .al-demo__copy{min-height:178px}   /* el paso mas largo: sin saltos al avanzar */
+  #ver-en-accion .al-demo__controls{margin-top:8px}
+  #ver-en-accion .al-demo__note{display:none}
 }
 /* 3) inicio: cada bloque es una escena del alto de la pantalla */
 .hx-escena{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding-top:clamp(3rem,8vh,5rem)!important;padding-bottom:clamp(3rem,8vh,5rem)}
@@ -1697,6 +1751,13 @@ body>section:not(#home)>.container{padding-top:1.6rem}
           <a class="al-demo__cta al-demo__cta--fb" href="#incluye">Ver qué incluye</a>
         </div>
       </div>
+    </div>
+
+    <!-- Solo en celular: la bajada y "¿Que es conciliar?" van despues de la
+         demo, para que la primera pantalla muestre la demo completa -->
+    <div class="prod-cel">
+      <p class="prod-tagline">Tu conciliación mensual, hecha en segundos dentro de tu propio Google Sheets.</p>
+      <div class="alert-box"><b>¿Qué es conciliar?</b> Confirmar que cada movimiento de tu cartola o libro mayor tenga su contraparte: la factura con su pago, el cargo con su abono.</div>
     </div>
 
         <!-- ── INSTALACION 3D (Three.js) ── -->
