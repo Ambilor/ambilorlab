@@ -2050,6 +2050,13 @@ html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) ro
   #home .i3-b{font-size:11.5px;line-height:1.35}
   #home .i3-h2{margin-bottom:.35rem}
 }
+
+/* ── Rueda del mouse en Inicio (2026-09-28): #home con overflow:hidden es un
+   contenedor de scroll, y todo el recorrido 3D (fijo en pantalla) vive dentro.
+   En Edge/Chrome con aceleracion grafica la rueda podia quedar asociada a ese
+   contenedor, que no se desplaza, y la pagina no bajaba (la barra lateral si).
+   overflow:clip recorta igual pero no es contenedor de scroll. ── */
+#home{overflow:hidden;overflow:clip}
 </style>
 </head>
 
@@ -2935,6 +2942,27 @@ html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) ro
     ring.style.left=rx+'px';ring.style.top=ry+'px';
     raf=requestAnimationFrame(animRing);
   })();
+})();
+
+// ── rueda del mouse en Inicio: respaldo (2026-09-28) ──
+// Si una vuelta de rueda no movio la pagina (algun navegador asocio la rueda al
+// contenido fijo del inicio), la pagina se desplaza por codigo. Si el navegador
+// ya la movio, no se hace nada (no hay doble desplazamiento).
+(function(){
+  var pend = 0, t = null, y0 = 0;
+  addEventListener('wheel', function(e){
+    if (e.ctrlKey || e.defaultPrevented || !document.body.classList.contains('i3-inicio')) return;
+    if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+    var dy = e.deltaY * (e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? innerHeight : 1);
+    if (!t) { y0 = window.scrollY; pend = 0; }
+    pend += dy;
+    clearTimeout(t);
+    t = setTimeout(function(){
+      t = null;
+      var max = document.documentElement.scrollHeight - innerHeight;
+      if (Math.abs(window.scrollY - y0) < 1 && ((pend > 0 && y0 < max - 1) || (pend < 0 && y0 > 0))) window.scrollBy({ top: pend, behavior: 'smooth' });
+    }, 140);
+  }, { passive:true });
 })();
 
 // ── barra de progreso ──
