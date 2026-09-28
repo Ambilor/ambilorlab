@@ -952,7 +952,11 @@ nav.scrolled .nav-links a{font-size:12px}
 /* tarjeta que acompaña el cubo: resaltada en ambos temas (antes el tema claro la tapaba) */
 #home .i3-tarjeta.i3-guiada{border-color:rgba(143,193,255,.5);box-shadow:0 0 0 1px rgba(76,141,219,.3),0 0 42px -8px rgba(76,141,219,.5),0 30px 80px -30px rgba(0,0,0,.8)}
 [data-theme="light"] #home .i3-tarjeta.i3-guiada{border-color:rgba(31,92,153,.55);box-shadow:0 0 0 1px rgba(31,92,153,.25),0 0 36px -6px rgba(31,92,153,.35),0 20px 60px -30px rgba(18,48,77,.35)}
-[data-theme="light"] #home .i3-tarjeta::after{background:radial-gradient(500px circle at var(--px,50%) var(--py,0%),rgba(31,92,153,.1),transparent 45%)}
+/* la luz va detras del contenido: ilumina el fondo de la tarjeta sin tapar el texto */
+#home .i3-tarjeta::after{z-index:0}
+#home .i3-tarjeta>*{position:relative;z-index:1}
+/* tema claro: celeste suave que aclara (el azul oscuro sobre el texto lo apagaba) */
+[data-theme="light"] #home .i3-tarjeta::after{background:radial-gradient(420px circle at var(--px,50%) var(--py,0%),rgba(143,193,255,.28),rgba(143,193,255,.08) 35%,transparent 60%)}
 /* 2026-09-28: pie de pagina legible (antes casi no se leia en tema oscuro) */
 footer{color:#6B7280}
 [data-theme="dark"] footer{color:#7C8698}
