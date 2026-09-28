@@ -1230,7 +1230,7 @@ footer{margin-top:auto}
   .al-demo__copy,#como-se-instala .al-demo__copy{grid-column:1;grid-row:1;display:flex;flex-direction:column;min-height:0;padding-top:.3rem}
   .al-demo__stage,#como-se-instala .al-demo__stage{grid-column:2;grid-row:1 / span 2;order:0;align-self:start;
     height:max(320px, min(52cqw, calc(100svh - 150px)))}
-  .al-demo__controls{grid-column:1;grid-row:2;align-self:end;flex-wrap:wrap;margin-top:1rem}
+  .al-demo__controls{grid-column:1;grid-row:2;align-self:start;flex-wrap:wrap;margin-top:1.4rem}   /* junto al texto: sin hueco */
   .al-demo__steps{flex:0 0 100%;order:5;grid-template-columns:1fr;gap:2px;margin:10px 0 0}
   .al-demo__step{display:flex;align-items:center;gap:10px;padding:3px 0}
   .al-demo__track{width:30px;flex:none}
@@ -1310,6 +1310,13 @@ footer{margin-top:auto}
   .gvw-tl{display:none}
   .gvw-caps{margin-top:10px;padding-top:10px}
 }
+/* Encaje al desplazar (2026-09-28): al acercarse a una demo o a una escena del
+   inicio, la pagina se detiene con el bloque completo en pantalla. "proximity"
+   solo actua cerca del bloque; el resto se desplaza libre. */
+html{scroll-snap-type:y proximity}
+.demo-section,.hx-escena,.hx-end{scroll-snap-align:start}
+.demo-section{scroll-margin-top:60px}   /* deja ver la barra de pestanas si reaparece */
+@media (prefers-reduced-motion:reduce){ html{scroll-snap-type:none} }
 /* 2026-09-28: celular en horizontal (pantalla apaisada y baja). Todo lo
    principal cabe en el alto visible: inicio compacto, demos en dos columnas
    (escena a la izquierda, texto a la derecha) y el paso de Guias mas bajo. */
