@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="theme-color" content="#1F5C99" />
+<script>try{var t=localStorage.getItem("al-theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+<meta name="theme-color" content="#06080C" />
 <title>Ambilor.Lab — Automatizacion contable y financiera</title>
-<meta name="description" content="Herramientas de automatizacion para contadores, equipos financieros y PyMEs. Conciliador Automatico V1 disponible en Google Sheets." />
+<meta name="description" content="Herramientas de automatizacion para contadores, equipos financieros y PyMEs. Conciliador Automático V1 próximamente en Google Sheets." />
 <link rel="canonical" href="https://ambilor.github.io/ambilorlab/" />
 
 <!-- Preconnect -->
@@ -14,6 +15,7 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 <link rel="preconnect" href="https://www.googletagmanager.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
 <!-- Favicon -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%231F5C99'/><text x='16' y='23' font-size='17' font-weight='700' text-anchor='middle' fill='white' font-family='monospace'>A</text></svg>">
@@ -22,7 +24,7 @@
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Ambilor.Lab" />
 <meta property="og:title" content="Ambilor.Lab — Automatizacion contable y financiera" />
-<meta property="og:description" content="Herramientas de automatizacion para contadores, equipos financieros y PyMEs. Conciliador Automatico V1 disponible en Google Sheets." />
+<meta property="og:description" content="Herramientas de automatizacion para contadores, equipos financieros y PyMEs. Conciliador Automático V1 próximamente en Google Sheets." />
 <meta property="og:url" content="https://ambilor.github.io/ambilorlab/" />
 <meta property="og:image" content="https://ambilor.github.io/ambilorlab/og-image.png" />
 <meta name="twitter:card" content="summary_large_image" />
@@ -542,8 +544,10 @@ nav.scrolled .nav-links a{font-size:12px}
   order:-1; position:relative; width:100%; max-width:340px; margin:0 auto; aspect-ratio:1/1;
   border-radius:14px; overflow:hidden;
   background-color:var(--al-paper);
-  background-image:linear-gradient(rgba(31,92,153,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(31,92,153,.08) 1px,transparent 1px);
-  background-size:32px 32px; box-shadow:inset 0 0 0 1px var(--al-line);
+  /* 2026-09-27: la cuadrícula plana se reemplazó por una pared 3D (AL3D) que
+     se mueve con el parallax; aquí queda solo una viñeta suave de profundidad */
+  background-image:radial-gradient(ellipse 75% 70% at 50% 42%,#ffffff 0%,var(--al-paper) 62%,#d9e2ec 100%);
+  box-shadow:inset 0 0 0 1px var(--al-line), inset 0 -40px 60px -30px rgba(18,48,77,.12);
 }
 .al-demo__stage canvas{display:block; width:100%; height:100%}
 .al-demo__controls{display:flex; align-items:center; gap:8px; margin-top:1.2rem}
@@ -655,6 +659,284 @@ nav.scrolled .nav-links a{font-size:12px}
 .al-demo__contact{display:inline-block; margin-top:.85rem; font-size:12.5px; color:var(--azul); font-weight:500; text-decoration:none}
 .al-demo__contact:hover{text-decoration:underline}
 [data-theme="dark"] .al-demo__tip{background:#101a26; color:#95c0ea}
+
+/* ═════════════════════════════════════════════════════════════════════
+   REDISEÑO INMERSIVO 2026-09-27 — Ambilor.Lab
+   Tema oscuro por defecto (azul-negro neutro, sin el tinte violeta del
+   dark anterior), tipografías de marca Inter + JetBrains Mono, Inicio como
+   landing inmersiva. Referencias: Vexel (resplandor + producto flotando),
+   WorldQuant Foundry (titular partido, puntos, 01/04), Radius Motion (HUD).
+   Regla del Director: nada de transform 3D ni escalado sobre textos (se
+   veían borrosos); los reveals solo usan opacidad + translateY y terminan
+   en transform:none.
+   ═════════════════════════════════════════════════════════════════════ */
+:root{
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+  --glow:#4C8DDB; --glow-2:#8FC1FF; --ok-n:#34C27A; --warn-n:#F0A63A;
+  --hx-max:1180px;
+}
+[data-theme="dark"]{
+  --negro:#E8EDF5;--gris-1:#98A2B3;--gris-2:#667085;--gris-4:#0E131B;--blanco:#06080C;
+  --borde:#1B2330;--azul-bg:#0B1624;
+}
+[data-theme="dark"] body{background:#06080C}
+[data-theme="dark"] nav{background:rgba(6,8,12,.72)!important;border-color:rgba(255,255,255,.06);backdrop-filter:saturate(140%) blur(14px);-webkit-backdrop-filter:saturate(140%) blur(14px)}
+[data-theme="dark"] .hs-card,[data-theme="dark"] .ha-card,[data-theme="dark"] .mc,
+[data-theme="dark"] .stack-pill,[data-theme="dark"] .cf-field,[data-theme="dark"] .gp-tab,[data-theme="dark"] .gp-vis,
+[data-theme="dark"] .specs-block th,[data-theme="dark"] .contact-row:hover{background:#0E131B}
+[data-theme="dark"] .hs-body,[data-theme="dark"] .stack-pill,[data-theme="dark"] .cf-field,[data-theme="dark"] .gp-tab,[data-theme="dark"] .gp-vis,
+[data-theme="dark"] .specs-block table,[data-theme="dark"] .includes-list,[data-theme="dark"] .contact-block,[data-theme="dark"] .faq-list,
+[data-theme="dark"] .proc-wrap,[data-theme="dark"] .gvw,[data-theme="dark"] .specs-block th,[data-theme="dark"] .specs-block td,
+[data-theme="dark"] .includes-list li,[data-theme="dark"] .contact-row,[data-theme="dark"] .faq-item{border-color:#1B2330}
+[data-theme="dark"] .stack-pill{color:#98A2B3}
+[data-theme="dark"] .includes-list li,[data-theme="dark"] .faq-q{color:#E8EDF5}
+[data-theme="dark"] .nav-links a{color:#98A2B3}
+[data-theme="dark"] .nav-links a:hover,[data-theme="dark"] .nav-links a.active{color:#E8EDF5}
+[data-theme="dark"] .nav-links a::after,[data-theme="dark"] .nav-links a.active::after,[data-theme="dark"] .nav-ind{background:var(--glow)}
+[data-theme="dark"] .nav-logo{color:#E8EDF5}
+[data-theme="dark"] .c-dot{background:var(--glow-2)}
+[data-theme="dark"] .c-ring{border-color:rgba(143,193,255,.45)}
+[data-theme="dark"] .prog{background:linear-gradient(90deg,var(--azul),var(--glow-2))}
+
+/* ── Inicio: la sección ocupa todo el ancho (las demás siguen en --max) ── */
+#home{position:relative;overflow:hidden}
+.hx-wrap{max-width:var(--hx-max);margin:0 auto;padding:0 clamp(1.25rem,4vw,3rem)}
+
+/* HERO */
+.hx{position:relative;min-height:calc(100vh - 52px);min-height:calc(100svh - 52px);display:flex;flex-direction:column;justify-content:center;padding:clamp(5rem,12vh,8rem) clamp(1.25rem,4vw,3rem) clamp(4.5rem,10vh,6rem);isolation:isolate}
+.hx-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:-1;display:block}
+.hx-glow{position:absolute;inset:0;z-index:-2;pointer-events:none;background:
+  radial-gradient(ellipse 60% 55% at 62% 48%,rgba(76,141,219,.26),transparent 70%),
+  radial-gradient(ellipse 40% 40% at 70% 52%,rgba(31,92,153,.35),transparent 70%)}
+[data-theme="light"] .hx-glow{background:radial-gradient(ellipse 60% 55% at 62% 48%,rgba(31,92,153,.14),transparent 70%)}
+.hx-inner{max-width:var(--hx-max);width:100%;margin:0 auto}
+.hx-title{font-family:var(--sans);font-weight:600;text-transform:uppercase;letter-spacing:-.035em;line-height:.92;font-size:clamp(2.3rem,4.5vw,4rem);color:var(--negro);margin:0 0 clamp(2rem,5vh,3.5rem)}
+.hx-line{display:block}
+.hx-line--r{padding-left:.9em}   /* escalón: el cubo ocupa la derecha */
+.hx-accent{color:var(--glow)}
+[data-theme="light"] .hx-accent{color:var(--azul)}
+.hx-bottom{display:grid;grid-template-columns:1fr;gap:1.6rem;max-width:600px}
+.hx-lead{font-size:clamp(15px,1.25vw,17px);line-height:1.7;color:var(--gris-1);max-width:560px}
+.hx-ctas{display:flex;gap:10px;flex-wrap:wrap}
+.hx-ctas--c{justify-content:center}
+.hx-btn{display:inline-flex;align-items:center;gap:.55rem;font-family:var(--sans);font-size:14px;font-weight:500;padding:12px 22px;border-radius:100px;cursor:pointer;text-decoration:none;border:1px solid transparent;transition:background .2s,border-color .2s,color .2s,box-shadow .2s}
+.hx-btn--pri{background:#fff;color:#06080C}
+.hx-btn--pri:hover{background:var(--glow-2);box-shadow:0 0 0 6px rgba(143,193,255,.14)}
+.hx-btn--sec{background:transparent;color:var(--negro);border-color:rgba(255,255,255,.18)}
+.hx-btn--sec:hover{border-color:var(--glow);color:var(--glow-2)}
+[data-theme="light"] .hx-btn--pri{background:var(--azul);color:#fff}
+[data-theme="light"] .hx-btn--pri:hover{background:var(--azul-dark);box-shadow:none}
+[data-theme="light"] .hx-btn--sec{border-color:var(--borde);color:var(--negro)}
+[data-theme="light"] .hx-btn--sec:hover{border-color:var(--azul);color:var(--azul)}
+
+/* HUD (microtipografía de las esquinas) */
+.hx-hud{position:absolute;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--gris-2);display:flex;align-items:center;gap:.6rem;text-decoration:none;z-index:1}
+.hx-hud b{font-weight:500;color:var(--gris-1)}
+.hx-hud--tl{top:1.6rem;left:clamp(1.25rem,4vw,3rem)}
+.hx-hud--tr{top:1.6rem;right:clamp(1.25rem,4vw,3rem)}
+.hx-hud--bl{bottom:1.6rem;left:clamp(1.25rem,4vw,3rem)}
+.hx-hud--br{bottom:1.6rem;right:clamp(1.25rem,4vw,3rem)}
+.hx-scroll:hover{color:var(--negro)}
+.hx-dot{width:6px;height:6px;border-radius:1px;background:var(--glow)}
+.hx-live{width:7px;height:7px;border-radius:50%;background:var(--ok-n);box-shadow:0 0 0 0 rgba(52,194,122,.6);animation:hx-pulse 2.4s infinite}
+@keyframes hx-pulse{0%{box-shadow:0 0 0 0 rgba(52,194,122,.55)}70%{box-shadow:0 0 0 9px rgba(52,194,122,0)}100%{box-shadow:0 0 0 0 rgba(52,194,122,0)}}
+
+/* CIFRAS */
+.hx-stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--borde);border-bottom:1px solid var(--borde);margin:0 0 clamp(5rem,12vh,8rem)}
+.hx-stat{padding:2rem 1.25rem 1.8rem;border-left:1px solid var(--borde)}
+.hx-stat:first-child{border-left:none;padding-left:0}
+.hx-stat-n{font-family:var(--mono);font-weight:500;font-size:clamp(2rem,3.6vw,3rem);letter-spacing:-.04em;color:var(--negro);line-height:1}
+.hx-stat-n small{font-size:.42em;letter-spacing:0;color:var(--glow);margin:0 .12em}
+[data-theme="light"] .hx-stat-n small{color:var(--azul)}
+.hx-stat-l{margin-top:.8rem;font-size:13px;line-height:1.5;color:var(--gris-1);max-width:220px}
+
+/* ENCABEZADOS DE BLOQUE */
+.hx-head{margin-bottom:clamp(2rem,5vh,3rem);max-width:760px}
+.hx-head--c{margin-left:auto;margin-right:auto;text-align:center}
+.hx-eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--glow);margin-bottom:1rem;display:flex;align-items:center;gap:.6rem}
+.hx-head--c .hx-eyebrow,.hx-end .hx-eyebrow{justify-content:center}
+.hx-eyebrow::before{content:'';width:18px;height:1px;background:currentColor}
+[data-theme="light"] .hx-eyebrow{color:var(--azul)}
+.hx-h2{font-size:clamp(1.9rem,4vw,3.3rem);font-weight:600;letter-spacing:-.035em;line-height:1.02;color:var(--negro)}
+.hx-h2 span{color:var(--gris-2)}
+.hx-sub{margin-top:1rem;font-size:16px;line-height:1.7;color:var(--gris-1)}
+
+/* PANELES 01/03 */
+.hx-panels{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:clamp(5rem,12vh,8rem)}
+.hx-panel{position:relative;border:1px solid var(--borde);border-radius:14px;padding:1.4rem 1.4rem 1.6rem;background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,0));overflow:hidden;transition:border-color .3s}
+.hx-panel::after{content:'';position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;background:radial-gradient(500px circle at var(--px,50%) var(--py,0%),rgba(76,141,219,.16),transparent 45%);opacity:0;transition:opacity .3s}
+.hx-panel:hover{border-color:#2A3A52}
+.hx-panel:hover::after{opacity:1}
+[data-theme="light"] .hx-panel{background:#fff}
+.hx-panel-top{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gris-2);margin-bottom:1rem}
+.hx-panel-top span:first-child{color:var(--glow)}
+[data-theme="light"] .hx-panel-top span:first-child{color:var(--azul)}
+.hx-art{width:100%;height:auto;display:block;margin:0 0 1.2rem;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04)}
+[data-theme="light"] .hx-art{background:#F6F8FB;border-color:var(--borde)}
+.hx-art text{font-family:var(--mono);font-size:11px;fill:var(--gris-1)}
+.hx-art-rows rect{fill:none;stroke:rgba(143,193,255,.45);stroke-width:1}
+.hx-art-rows .off rect{stroke:var(--warn-n);stroke-dasharray:3 3}
+.hx-art-rows .off text{fill:var(--warn-n)}
+.hx-art-links path{fill:none;stroke:var(--glow);stroke-width:1.2;stroke-dasharray:4 4;animation:hx-flow 1.6s linear infinite}
+.hx-art-links .off{stroke:var(--warn-n);animation:none;opacity:.7}
+@keyframes hx-flow{to{stroke-dashoffset:-16}}
+.hx-art-cap{text-anchor:middle;fill:var(--gris-2)!important;letter-spacing:.06em}
+.hx-art-grid text{fill:var(--gris-1)}
+.hx-art-arrow{fill:none;stroke:var(--gris-2);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.hx-art-bars rect{fill:rgba(76,141,219,.22);stroke:var(--glow);stroke-width:1}
+.hx-art-trend{fill:none;stroke:var(--glow-2);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.hx-art-btn{fill:#fff}
+[data-theme="light"] .hx-art-btn{fill:var(--azul)}
+.hx-art-btnt{text-anchor:middle;font-family:var(--sans)!important;font-size:13px!important;font-weight:600;fill:#06080C!important}
+[data-theme="light"] .hx-art-btnt{fill:#fff!important}
+.hx-art-ok text{fill:var(--ok-n)}
+.hx-panel-t{font-size:18px;font-weight:600;letter-spacing:-.02em;color:var(--negro);margin-bottom:.45rem}
+.hx-panel-d{font-size:14px;line-height:1.6;color:var(--gris-1)}
+
+/* PRODUCTO FLOTANDO */
+.hx-show{position:relative;padding:clamp(3rem,8vh,5rem) 0 clamp(5rem,12vh,8rem);isolation:isolate}
+.hx-show-glow{position:absolute;left:50%;top:58%;width:min(1100px,120vw);height:620px;transform:translate(-50%,-50%);z-index:-1;pointer-events:none;background:
+  radial-gradient(ellipse at center,rgba(76,141,219,.34),rgba(31,92,153,.12) 40%,transparent 68%);filter:blur(10px)}
+[data-theme="light"] .hx-show-glow{background:radial-gradient(ellipse at center,rgba(31,92,153,.16),transparent 65%)}
+.hx-mock{max-width:960px;margin:0 auto;border-radius:14px;overflow:hidden;background:#F4F4F4;border:1px solid rgba(255,255,255,.14);box-shadow:0 40px 120px -20px rgba(0,0,0,.7),0 0 0 1px rgba(143,193,255,.08);color:#111;font-family:var(--sans)}
+.hx-mock-bar{display:flex;align-items:center;gap:14px;background:#fff;padding:12px 18px;border-bottom:1px solid #E2E2E2;font-size:12px}
+.hx-mock-logo{font-family:var(--mono);color:#1F5C99;font-weight:500}
+.hx-mock-app{font-weight:600;font-size:13px}
+.hx-mock-src{margin-left:auto;font-family:var(--mono);font-size:10px;color:#888}
+.hx-mock-run{background:#1F5C99;color:#fff;border-radius:5px;padding:7px 12px;font-weight:500}
+.hx-mock-tabs{display:flex;gap:22px;background:#fff;padding:0 18px;border-bottom:1px solid #E2E2E2;font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#888}
+.hx-mock-tabs span{padding:10px 0}
+.hx-mock-tabs .on{color:#1F5C99;border-bottom:2px solid #1F5C99}
+.hx-mock-body{padding:16px 18px 18px;display:grid;grid-template-columns:1.2fr 1fr;gap:12px}
+.hx-mock-kpis{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.hx-mock-kpis div{background:#fff;border:1px solid #E2E2E2;border-radius:8px;padding:12px;text-align:center}
+.hx-mock-kpis b{display:block;font-family:var(--mono);font-size:20px;font-weight:500;color:#1F5C99}
+.hx-mock-kpis .ok b{color:#16A34A}.hx-mock-kpis .warn b{color:#D97706}
+.hx-mock-kpis i{font-style:normal;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888}
+.hx-mock-chart,.hx-mock-rows{background:#fff;border:1px solid #E2E2E2;border-radius:8px;padding:12px}
+.hx-mock-lbl{font-size:12px;font-weight:600;color:#163F6B;margin-bottom:8px}
+.hx-mock-bars{display:flex;align-items:flex-end;gap:10px;height:96px}
+.hx-mock-bars span{flex:1;background:#16A34A;border-radius:3px 3px 0 0}
+.hx-mock-bars span.w{background:#D97706}
+.hx-mock-rows{display:flex;flex-direction:column;justify-content:center;gap:8px;font-size:11.5px}
+.hx-mock-rows div{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;padding-bottom:8px;border-bottom:1px solid #F0F0F0}
+.hx-mock-rows div:last-child{border-bottom:none;padding-bottom:0}
+.hx-mock-rows em{font-style:normal;font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 6px;border-radius:3px}
+.hx-mock-rows em.ok{background:#EAF3DE;color:#3B6D11}.hx-mock-rows em.warn{background:#FEF3E2;color:#B45309}
+.hx-mock-rows span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#444}
+.hx-mock-rows b{font-family:var(--mono);font-weight:500}
+.hx-show-cta{text-align:center;margin-top:2.5rem}
+
+/* PARA QUIÉN */
+.hx-who{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:clamp(5rem,12vh,8rem)}
+.hx-who-c{border:1px solid var(--borde);border-radius:14px;padding:1.5rem}
+[data-theme="light"] .hx-who-c{background:#fff}
+.hx-who-n{font-size:17px;font-weight:600;letter-spacing:-.02em;color:var(--negro);margin-bottom:1rem}
+.hx-who-a,.hx-who-b{display:grid;grid-template-columns:62px 1fr;gap:10px;font-size:14px;line-height:1.55;padding:.55rem 0}
+.hx-who-a{color:var(--gris-2);text-decoration:line-through;text-decoration-color:rgba(152,162,179,.35)}
+.hx-who-b{color:var(--negro);border-top:1px dashed var(--borde)}
+.hx-who-a span,.hx-who-b span{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding-top:3px;text-decoration:none;display:inline-block}
+.hx-who-b span{color:var(--ok-n)}
+
+/* CIERRE */
+.hx-end{text-align:center;padding:clamp(5rem,14vh,9rem) 0;border-top:1px solid var(--borde);background:radial-gradient(ellipse 50% 60% at 50% 100%,rgba(76,141,219,.16),transparent 70%)}
+.hx-end-t{font-size:clamp(2.2rem,6vw,5rem);font-weight:600;letter-spacing:-.04em;line-height:.98;text-transform:uppercase;color:var(--negro);margin-bottom:2.2rem}
+
+/* Reveal (solo opacidad + desplazamiento; termina sin transform) */
+.rv2{opacity:0;transform:translateY(18px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.rv2.in{opacity:1;transform:none}
+.hx-title .hx-line{opacity:0;transform:translateY(22px);transition:opacity 1s var(--ease),transform 1s var(--ease)}
+.hx-title .hx-line--r{transition-delay:.12s}
+.hx.on .hx-title .hx-line{opacity:1;transform:none}
+.hx .hx-bottom,.hx .hx-hud{opacity:0;transition:opacity 1s var(--ease) .35s}
+.hx.on .hx-bottom,.hx.on .hx-hud{opacity:1}
+@media (prefers-reduced-motion:reduce){
+  .rv2,.hx-title .hx-line,.hx .hx-bottom,.hx .hx-hud{opacity:1!important;transform:none!important;transition:none!important}
+  .hx-art-links path,.hx-live{animation:none}
+}
+
+/* RESPONSIVO */
+@media (max-width:639px){
+  .hx{justify-content:flex-start;padding-top:300px}   /* celular: el cubo va arriba */
+}
+@media (min-width:640px) and (max-width:1100px){
+  .hx-title,.hx-bottom{max-width:60%}   /* deja libre el tercio derecho para el cubo */
+  .hx-title{font-size:clamp(2rem,4.6vw,3.4rem)}
+}
+@media (max-width:900px){
+  .hx-bottom{grid-template-columns:1fr}
+  .hx-stats{grid-template-columns:repeat(2,1fr)}
+  .hx-stat:nth-child(3){border-left:none;padding-left:0}
+  .hx-stat:nth-child(n+3){border-top:1px solid var(--borde)}
+  .hx-panels{grid-template-columns:1fr}
+  .hx-mock-body{grid-template-columns:1fr}
+  .hx-mock-kpis{grid-template-columns:repeat(2,1fr)}
+  .hx-who{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  .hx{padding-top:290px}
+  .hx-line--r{padding-left:0}
+  .hx-hud--tr,.hx-hud--br{display:none}
+  .hx-hud--tl{top:1.2rem}
+  .hx-mock-src,.hx-mock-tabs span:nth-child(n+4){display:none}
+  .hx-stat{padding-left:0!important;border-left:none!important}
+  .hx-h2 br,.hx-end-t br{display:none}
+}
+
+.nav-inner{max-width:var(--hx-max)!important;padding-left:clamp(1.25rem,4vw,3rem)!important;padding-right:clamp(1.25rem,4vw,3rem)!important}
+.nav-links{margin:0 auto}
+.nav-cta{margin-right:10px;font-family:var(--sans);font-size:12px;font-weight:500;padding:7px 14px;border-radius:100px;border:1px solid transparent;background:#fff;color:#06080C;cursor:pointer;transition:background .2s}
+.nav-cta:hover{background:var(--glow-2)}
+[data-theme="light"] .nav-cta{background:var(--azul);color:#fff}
+[data-theme="light"] .nav-cta:hover{background:var(--azul-dark)}
+@media (max-width:760px){.nav-cta{display:none}}
+
+/* Tema oscuro: el azul de marca (#1F5C99) no se lee como texto sobre fondo
+   casi negro; los textos y acentos azules pasan al azul luminoso. */
+[data-theme="dark"] .about-quote,[data-theme="dark"] .about-role,[data-theme="dark"] .area-card-label,[data-theme="dark"] .exp-org,
+[data-theme="dark"] .gp-stip,[data-theme="dark"] .hl,[data-theme="dark"] .home-eyebrow,[data-theme="dark"] .prod-eyebrow,
+[data-theme="dark"] .tag,[data-theme="dark"] .section-label{color:var(--glow-2)}
+[data-theme="dark"] .about-quote{border-left-color:var(--glow)}
+[data-theme="dark"] .tag{background:rgba(76,141,219,.12)}
+[data-theme="dark"] .alert-box{background:rgba(76,141,219,.08);border-left-color:var(--glow);color:#C9DCF5}
+[data-theme="dark"] .alert-box b,[data-theme="dark"] .alert-box strong{color:#fff}
+[data-theme="dark"] .contact-val a{color:var(--glow-2)}
+/* El subrayado de la pestaña activa ya lo dibuja .nav-links a.active::after;
+   el indicador móvil quedaba desalineado al centrar el menú (duplicado). */
+.nav-ind{display:none!important}
+.hx-go{text-align:center;margin:-2rem 0 clamp(5rem,12vh,8rem)}
+
+/* ── Cubo jugable ── */
+.hx-inner{pointer-events:none}                 /* los clics llegan al cubo… */
+.hx-title,.hx-bottom{pointer-events:auto}      /* …salvo sobre el texto y los botones */
+.hx-title{width:fit-content;max-width:100%}
+.hx-canvas{touch-action:pan-y}                 /* en celular se puede seguir desplazando */
+.hx.juego .hx-canvas{touch-action:none}        /* jugando, el dedo gira el cubo */
+.hx.rotando,.hx.rotando .hx-canvas{cursor:grabbing!important}
+.hx-play{position:absolute;left:78%;top:75%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:.65rem;text-align:center;width:max-content;max-width:92vw;opacity:0;pointer-events:none;transition:opacity .3s var(--ease)}
+/* solo al interactuar con el cubo (o al mostrar el logro) */
+.hx.cerca .hx-play,.hx.aviso .hx-play{opacity:1;pointer-events:auto}
+.hx-play-msg{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--gris-2)}
+.hx-play-msg.ok{color:var(--ok-n)}
+.hx-play-btns{display:none;gap:6px;flex-wrap:wrap;justify-content:center}
+.hx.cerca .hx-play-btns{display:flex}
+.hx-play-btns button{font-family:var(--sans);font-size:12px;font-weight:500;padding:7px 14px;border-radius:100px;border:1px solid rgba(255,255,255,.16);background:rgba(6,8,12,.55);color:var(--negro);cursor:pointer;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:border-color .2s,color .2s}
+.hx-play-btns button:hover{border-color:var(--glow);color:var(--glow-2)}
+[data-theme="light"] .hx-play-btns button{background:#fff;border-color:var(--borde)}
+[data-theme="light"] .hx-play-btns button:hover{border-color:var(--azul);color:var(--azul)}
+@media (max-width:639px){ .hx{padding-top:370px!important} }
+.hx.juego,.hx.rotando{-webkit-user-select:none;user-select:none}
+#hx-capacidades{padding-top:clamp(4rem,10vh,6.5rem)}
+
+/* Conciliador en "Próximamente" (2026-09-27) */
+.prox-badge{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:100px;background:rgba(240,166,58,.12);color:#F0A63A;border:1px solid rgba(240,166,58,.35)}
+.prox-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:#F0A63A}
+[data-theme="light"] .prox-badge{background:#FEF3E2;color:#B45309;border-color:#F5D3A1}
+[data-theme="light"] .prox-badge::before{background:#D97706}
+.buy-btn--prox{background:transparent!important;color:var(--gris-1)!important;border:1px dashed var(--borde);cursor:not-allowed;pointer-events:none}
+.guarantee-note a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+[data-theme="dark"] .guarantee-note a{color:var(--glow-2)}
 </style>
 </head>
 
@@ -681,135 +963,140 @@ nav.scrolled .nav-links a{font-size:12px}
 </nav>
 
 <section id="home" class="visible">
-  <div class="container">
-    <div class="home-eyebrow">Automatizacion contable - Santiago, Chile</div>
-    <h1 class="home-h1">Procesos financieros que funcionan solos.</h1>
-    <p class="home-lead">Hay tareas que en una empresa se siguen haciendo a mano: revisar que cada pago coincida con su factura, armar un resumen de ventas, comparar dos listas larguisimas linea por linea. Yo construyo pequenos programas que hacen ese trabajo solos, con un clic, y funcionan directamente dentro de Google Sheets, Excel u otras herramientas que tu equipo ya usa todos los dias — sin instalar nada nuevo.</p>
-
-    <div class="hs-grid">
-      <div class="hs-card">
-        <div class="hs-vis" style="background:#EAF3DE">
-          <svg width="186" height="104" style="max-width:100%;height:auto" viewBox="0 0 186 104">
-            <text x="38" y="11" font-size="11" fill="#27500A" text-anchor="middle" font-family="-apple-system,sans-serif" font-weight="500">Facturas</text>
-            <rect x="4" y="15" width="68" height="15" rx="3" fill="#EAF3DE" stroke="#3B6D11" stroke-width="0.5"/>
-            <text x="38" y="26" font-size="11" fill="#27500A" text-anchor="middle" font-family="monospace">F-001</text>
-            <rect x="4" y="34" width="68" height="15" rx="3" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.5"/>
-            <text x="38" y="45" font-size="11" fill="#633806" text-anchor="middle" font-family="monospace">F-002</text>
-            <rect x="4" y="53" width="68" height="15" rx="3" fill="#EAF3DE" stroke="#3B6D11" stroke-width="0.5"/>
-            <text x="38" y="64" font-size="11" fill="#27500A" text-anchor="middle" font-family="monospace">F-003</text>
-            <rect x="4" y="72" width="68" height="15" rx="3" fill="#EAF3DE" stroke="#3B6D11" stroke-width="0.5"/>
-            <text x="38" y="83" font-size="11" fill="#27500A" text-anchor="middle" font-family="monospace">F-004</text>
-            <line x1="72" y1="22" x2="114" y2="22" stroke="#3B6D11" stroke-width="0.5" stroke-dasharray="3 2"/>
-            <text x="93" y="43" font-size="11" fill="#854F0B" text-anchor="middle" font-family="-apple-system,sans-serif">sin par</text>
-            <line x1="72" y1="60" x2="114" y2="60" stroke="#3B6D11" stroke-width="0.5" stroke-dasharray="3 2"/>
-            <line x1="72" y1="79" x2="114" y2="79" stroke="#3B6D11" stroke-width="0.5" stroke-dasharray="3 2"/>
-            <text x="148" y="11" font-size="11" fill="#27500A" text-anchor="middle" font-family="-apple-system,sans-serif" font-weight="500">Pagos</text>
-            <rect x="114" y="15" width="68" height="15" rx="3" fill="#EAF3DE" stroke="#3B6D11" stroke-width="0.5"/>
-            <text x="148" y="26" font-size="11" fill="#27500A" text-anchor="middle" font-family="monospace">P-001 ✓</text>
-            <rect x="114" y="34" width="68" height="15" rx="3" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.5" stroke-dasharray="3 2"/>
-            <text x="148" y="45" font-size="11" fill="#633806" text-anchor="middle" font-family="-apple-system,sans-serif">pendiente</text>
-            <rect x="114" y="53" width="68" height="15" rx="3" fill="#EAF3DE" stroke="#3B6D11" stroke-width="0.5"/>
-            <text x="148" y="64" font-size="11" fill="#27500A" text-anchor="middle" font-family="monospace">P-003 ✓</text>
-            <rect x="114" y="72" width="68" height="15" rx="3" fill="#EAF3DE" stroke="#3B6D11" stroke-width="0.5"/>
-            <text x="148" y="83" font-size="11" fill="#27500A" text-anchor="middle" font-family="monospace">P-004 ✓</text>
-            <text x="93" y="100" font-size="11" fill="#3B6D11" text-anchor="middle" font-family="-apple-system,sans-serif">3 conciliadas · 1 pendiente</text>
-          </svg>
-        </div>
-        <div class="hs-body">
-          <div class="hs-lbl">Conciliacion</div>
-          <div class="hs-title">Dos listas que se cruzan solas</div>
-          <div class="hs-desc">Pegas facturas y pagos. El sistema dice cuales coinciden y cuales no tienen par — sin revisar fila por fila.</div>
-        </div>
-      </div>
-      <div class="hs-card">
-        <div class="hs-vis" style="background:#E6F1FB">
-          <svg width="186" height="104" style="max-width:100%;height:auto" viewBox="0 0 186 104">
-            <text x="40" y="11" font-size="11" fill="#0C447C" text-anchor="middle" font-family="-apple-system,sans-serif" font-weight="500">En bruto</text>
-            <rect x="4" y="16" width="34" height="14" rx="2" fill="#fff" stroke="#B5D4F4" stroke-width="0.5"/>
-            <text x="21" y="27" font-size="11" fill="#0C447C" text-anchor="middle" font-family="monospace">450K</text>
-            <rect x="42" y="16" width="34" height="14" rx="2" fill="#fff" stroke="#B5D4F4" stroke-width="0.5"/>
-            <text x="59" y="27" font-size="11" fill="#0C447C" text-anchor="middle" font-family="monospace">320K</text>
-            <rect x="4" y="34" width="34" height="14" rx="2" fill="#fff" stroke="#B5D4F4" stroke-width="0.5"/>
-            <text x="21" y="45" font-size="11" fill="#0C447C" text-anchor="middle" font-family="monospace">610K</text>
-            <rect x="42" y="34" width="34" height="14" rx="2" fill="#fff" stroke="#B5D4F4" stroke-width="0.5"/>
-            <text x="59" y="45" font-size="11" fill="#0C447C" text-anchor="middle" font-family="monospace">280K</text>
-            <rect x="4" y="52" width="34" height="14" rx="2" fill="#fff" stroke="#B5D4F4" stroke-width="0.5"/>
-            <text x="21" y="63" font-size="11" fill="#0C447C" text-anchor="middle" font-family="monospace">190K</text>
-            <rect x="42" y="52" width="34" height="14" rx="2" fill="#fff" stroke="#B5D4F4" stroke-width="0.5"/>
-            <text x="59" y="63" font-size="11" fill="#0C447C" text-anchor="middle" font-family="monospace">540K</text>
-            <text x="88" y="48" font-size="18" fill="#185FA5" text-anchor="middle" font-family="-apple-system,sans-serif">→</text>
-            <text x="148" y="11" font-size="11" fill="#0C447C" text-anchor="middle" font-family="-apple-system,sans-serif" font-weight="500">Dashboard</text>
-            <rect x="114" y="46" width="14" height="30" rx="2" fill="#85B7EB"/>
-            <rect x="132" y="32" width="14" height="44" rx="2" fill="#378ADD"/>
-            <rect x="150" y="40" width="14" height="36" rx="2" fill="#378ADD"/>
-            <rect x="168" y="22" width="14" height="54" rx="2" fill="#185FA5"/>
-            <line x1="112" y1="76" x2="184" y2="76" stroke="#B5D4F4" stroke-width="0.5"/>
-            <rect x="112" y="82" width="74" height="14" rx="6" fill="#B5D4F4"/>
-            <text x="149" y="92" font-size="11" fill="#042C53" text-anchor="middle" font-family="-apple-system,sans-serif">actualizado solo</text>
-          </svg>
-        </div>
-        <div class="hs-body">
-          <div class="hs-lbl">Reporteria</div>
-          <div class="hs-title">Numeros que se vuelven graficos solos</div>
-          <div class="hs-desc">Tus datos pasan a un panel visual que se actualiza solo. Sin armar tablas de cero cada mes.</div>
-        </div>
-      </div>
-      <div class="hs-card">
-        <div class="hs-vis" style="background:#E1F5EE">
-          <svg width="186" height="104" style="max-width:100%;height:auto" viewBox="0 0 186 104">
-            <text x="38" y="11" font-size="11" fill="#085041" text-anchor="middle" font-family="-apple-system,sans-serif" font-weight="500">Manual</text>
-            <rect x="4" y="15" width="70" height="17" rx="3" fill="#fff" stroke="#5DCAA5" stroke-width="0.5"/>
-            <text x="39" y="27" font-size="11" fill="#085041" text-anchor="middle" font-family="-apple-system,sans-serif">Mes 1: revisar...</text>
-            <rect x="4" y="36" width="70" height="17" rx="3" fill="#fff" stroke="#9FE1CB" stroke-width="0.5" opacity="0.65"/>
-            <text x="39" y="48" font-size="11" fill="#0F6E56" text-anchor="middle" font-family="-apple-system,sans-serif" opacity="0.65">Mes 2: lo mismo</text>
-            <rect x="4" y="57" width="70" height="17" rx="3" fill="#fff" stroke="#9FE1CB" stroke-width="0.5" opacity="0.3"/>
-            <text x="39" y="69" font-size="11" fill="#0F6E56" text-anchor="middle" font-family="-apple-system,sans-serif" opacity="0.3">Mes 3: lo mismo</text>
-            <text x="39" y="88" font-size="14" fill="#9FE1CB" text-anchor="middle" font-family="-apple-system,sans-serif">· · ·</text>
-            <text x="93" y="50" font-size="18" fill="#0F6E56" text-anchor="middle" font-family="-apple-system,sans-serif">→</text>
-            <text x="148" y="11" font-size="11" fill="#085041" text-anchor="middle" font-family="-apple-system,sans-serif" font-weight="500">Automatizado</text>
-            <rect x="112" y="16" width="70" height="26" rx="6" fill="#1D9E75"/>
-            <text x="147" y="32" font-size="14" fill="#fff" text-anchor="middle" font-family="-apple-system,sans-serif" font-weight="500">1 clic</text>
-            <text x="115" y="58" font-size="11" fill="#085041" font-family="-apple-system,sans-serif">Mes 1 ✓</text>
-            <text x="115" y="72" font-size="11" fill="#085041" font-family="-apple-system,sans-serif">Mes 2 ✓</text>
-            <text x="115" y="86" font-size="11" fill="#085041" font-family="-apple-system,sans-serif">Mes 3 ✓</text>
-          </svg>
-        </div>
-        <div class="hs-body">
-          <div class="hs-lbl">Automatizacion</div>
-          <div class="hs-title">Lo que repites cada mes, que pase solo</div>
-          <div class="hs-desc">Reportes, alertas, limpiezas de datos — cualquier tarea repetida puede ocurrir sola, siempre igual.</div>
+  <!-- ═══ HERO INMERSIVO (2026-09-27): cubo Rubik 3D + titular partido.
+       Referencias: resplandor (Vexel), titular en dos bloques (WorldQuant
+       Foundry), microtipografía HUD (Radius Motion). Concepto (Director): un
+       cubo Rubik en colores de marca que se desordena y se resuelve solo; al
+       quedar resuelto brilla = todo conciliado. Sin WebGL o con movimiento
+       reducido queda un resplandor/cuadro estático; el texto nunca depende del canvas. ═══ -->
+  <div class="hx">
+    <canvas class="hx-canvas" id="hxCanvas" aria-hidden="true"></canvas>
+    <div class="hx-glow" aria-hidden="true"></div>
+    <div class="hx-hud hx-hud--tl"><span class="hx-dot"></span>Ambilor.Lab <b>/</b> Automatización contable</div>
+    <div class="hx-hud hx-hud--tr">Santiago, CL <b>—</b> 33.45°S 70.66°W</div>
+    <div class="hx-inner">
+      <h1 class="hx-title">
+        <span class="hx-line hx-line--l">Procesos financieros</span>
+        <span class="hx-line hx-line--r">que funcionan solos<span class="hx-accent">.</span></span>
+      </h1>
+      <div class="hx-bottom">
+        <p class="hx-lead">Revisar que cada pago coincida con su factura, armar el resumen de ventas, comparar dos listas larguísimas línea por línea. Construyo programas que hacen ese trabajo solos, con un clic, dentro de Google Sheets, Excel y las herramientas que tu equipo ya usa.</p>
+        <div class="hx-ctas">
+          <button class="hx-btn hx-btn--pri" onclick="show('product')">Ver herramientas <span aria-hidden="true">→</span></button>
+          <a class="hx-btn hx-btn--sec" href="#hx-capacidades">Qué automatizo</a>
         </div>
       </div>
     </div>
-
-    <div class="ha-grid">
-      <div class="ha-card">
-        <div class="ha-icon"><i class="ti ti-calculator" aria-hidden="true"></i></div>
-        <div class="ha-name">Para contadores</div>
-        <div class="ha-row"><span class="ha-dot" style="background:#888"></span><span style="color:var(--gris-1)">Cruzar el banco con la contabilidad, fila por fila, cada cierre</span></div>
-        <div class="ha-row"><span class="ha-dot" style="background:#0f9d58"></span><span style="color:#0f9d58">El sistema lo cruza en minutos — tu solo validas lo que no cuadra</span></div>
-      </div>
-      <div class="ha-card">
-        <div class="ha-icon"><i class="ti ti-building-store" aria-hidden="true"></i></div>
-        <div class="ha-name">Para PyMEs</div>
-        <div class="ha-row"><span class="ha-dot" style="background:#888"></span><span style="color:var(--gris-1)">Pagar software especializado que no siempre necesito ni entiendo</span></div>
-        <div class="ha-row"><span class="ha-dot" style="background:#0f9d58"></span><span style="color:#0f9d58">Lo mismo con Google Sheets o Excel — que ya usas y ya pagas</span></div>
-      </div>
-      <div class="ha-card">
-        <div class="ha-icon"><i class="ti ti-chart-line" aria-hidden="true"></i></div>
-        <div class="ha-name">Para equipos financieros</div>
-        <div class="ha-row"><span class="ha-dot" style="background:#888"></span><span style="color:var(--gris-1)">Armar el informe de cierre copiando y pegando, todos los meses</span></div>
-        <div class="ha-row"><span class="ha-dot" style="background:#0f9d58"></span><span style="color:#0f9d58">El informe se actualiza solo cuando actualizan los datos base</span></div>
-      </div>
-      <div class="ha-card">
-        <div class="ha-icon"><i class="ti ti-package" aria-hidden="true"></i></div>
-        <div class="ha-name">Productos listos para usar</div>
-        <div class="ha-row"><span class="ha-dot" style="background:#888"></span><span style="color:var(--gris-1)">Esperar semanas a que alguien desarrolle lo que necesito</span></div>
-        <div class="ha-row"><span class="ha-dot" style="background:#0f9d58"></span><span style="color:#0f9d58">Descarga, instala en 5 minutos y lo usas hoy mismo</span></div>
+    <a class="hx-hud hx-hud--br hx-scroll" href="#hx-capacidades">Desplaza <span aria-hidden="true">↓</span></a>
+    <!-- Cubo jugable: mensaje + controles (se ubican bajo el cubo desde el JS) -->
+    <div class="hx-play" id="hxPlay">
+      <div class="hx-play-msg" id="hxMsg" aria-live="polite">Arrastra una cara para girarla · resuélvelo</div>
+      <div class="hx-play-btns">
+        <button type="button" id="hxMezclar">Mezclar</button>
+        <button type="button" id="hxResolver">Resolver</button>
+        <button type="button" id="hxDemo">Ver demo</button>
       </div>
     </div>
+  </div>
 
-    <button class="cta-home" onclick="show('product')">Ver herramientas disponibles</button>
+  <!-- ═══ CAPACIDADES 01 / 03 ═══ -->
+  <div class="hx-wrap" id="hx-capacidades">
+    <div class="hx-head rv2">
+      <div class="hx-eyebrow">Qué automatizo</div>
+      <h2 class="hx-h2">Tres tareas que tu equipo<br>repite cada mes. <span>Resueltas.</span></h2>
+    </div>
+    <div class="hx-panels">
+      <article class="hx-panel rv2">
+        <div class="hx-panel-top"><span>Conciliación</span><span>01 / 03</span></div>
+        <svg class="hx-art" viewBox="0 0 320 170" aria-hidden="true">
+          <g class="hx-art-rows">
+            <g><rect x="18" y="22" width="92" height="20" rx="4"/><text x="30" y="36">F-001</text></g>
+            <g><rect x="18" y="52" width="92" height="20" rx="4"/><text x="30" y="66">F-002</text></g>
+            <g class="off"><rect x="18" y="82" width="92" height="20" rx="4"/><text x="30" y="96">F-003</text></g>
+            <g><rect x="18" y="112" width="92" height="20" rx="4"/><text x="30" y="126">F-004</text></g>
+            <g><rect x="210" y="22" width="92" height="20" rx="4"/><text x="222" y="36">P-001 ✓</text></g>
+            <g><rect x="210" y="52" width="92" height="20" rx="4"/><text x="222" y="66">P-002 ✓</text></g>
+            <g class="off"><rect x="210" y="82" width="92" height="20" rx="4"/><text x="222" y="96">pendiente</text></g>
+            <g><rect x="210" y="112" width="92" height="20" rx="4"/><text x="222" y="126">P-004 ✓</text></g>
+          </g>
+          <g class="hx-art-links">
+            <path d="M110 32 C160 32 160 32 210 32"/><path d="M110 62 C160 62 160 62 210 62"/>
+            <path class="off" d="M110 92 C140 92 150 100 160 100"/><path d="M110 122 C160 122 160 122 210 122"/>
+          </g>
+          <text class="hx-art-cap" x="160" y="158">3 conciliadas · 1 pendiente</text>
+        </svg>
+        <h3 class="hx-panel-t">Dos listas que se cruzan solas</h3>
+        <p class="hx-panel-d">Pegas facturas y pagos. El sistema dice cuáles coinciden y cuáles no tienen par, sin revisar fila por fila.</p>
+      </article>
+      <article class="hx-panel rv2">
+        <div class="hx-panel-top"><span>Reportería</span><span>02 / 03</span></div>
+        <svg class="hx-art" viewBox="0 0 320 170" aria-hidden="true">
+          <g class="hx-art-grid">
+            <text x="18" y="30">450K</text><text x="72" y="30">320K</text>
+            <text x="18" y="56">610K</text><text x="72" y="56">280K</text>
+            <text x="18" y="82">190K</text><text x="72" y="82">540K</text>
+          </g>
+          <path class="hx-art-arrow" d="M128 64 L168 64 M160 57 L168 64 L160 71"/>
+          <g class="hx-art-bars">
+            <rect x="188" y="96" width="18" height="40" rx="3"/><rect x="214" y="70" width="18" height="66" rx="3"/>
+            <rect x="240" y="82" width="18" height="54" rx="3"/><rect x="266" y="46" width="18" height="90" rx="3"/>
+          </g>
+          <path class="hx-art-trend" d="M197 92 L223 66 L249 78 L275 40"/>
+          <text class="hx-art-cap" x="160" y="158">actualizado solo</text>
+        </svg>
+        <h3 class="hx-panel-t">Números que se vuelven gráficos solos</h3>
+        <p class="hx-panel-d">Tus datos pasan a un panel visual que se actualiza solo. Sin armar tablas de cero cada mes.</p>
+      </article>
+      <article class="hx-panel rv2">
+        <div class="hx-panel-top"><span>Automatización</span><span>03 / 03</span></div>
+        <svg class="hx-art" viewBox="0 0 320 170" aria-hidden="true">
+          <g class="hx-art-manual">
+            <text x="18" y="34">Mes 1 · revisar…</text>
+            <text x="18" y="62" opacity=".55">Mes 2 · lo mismo</text>
+            <text x="18" y="90" opacity=".28">Mes 3 · lo mismo</text>
+          </g>
+          <path class="hx-art-arrow" d="M150 64 L182 64 M174 57 L182 64 L174 71"/>
+          <rect class="hx-art-btn" x="200" y="22" width="102" height="34" rx="17"/>
+          <text class="hx-art-btnt" x="251" y="44">1 clic</text>
+          <g class="hx-art-ok"><text x="212" y="84">Mes 1 ✓</text><text x="212" y="106">Mes 2 ✓</text><text x="212" y="128">Mes 3 ✓</text></g>
+          <text class="hx-art-cap" x="160" y="158">siempre igual</text>
+        </svg>
+        <h3 class="hx-panel-t">Lo que repites cada mes, que pase solo</h3>
+        <p class="hx-panel-d">Reportes, alertas, limpiezas de datos: cualquier tarea repetida puede ocurrir sola, siempre igual.</p>
+      </article>
+    </div>
+  </div>
+
+  <!-- ═══ ACCESO A HERRAMIENTAS (Director 2026-09-27: sin el bloque del
+       Conciliador en Inicio; solo el botón "Ver herramientas") ═══ -->
+  <div class="hx-go rv2">
+    <button class="hx-btn hx-btn--pri" onclick="show('product')">Ver herramientas <span aria-hidden="true">→</span></button>
+  </div>
+
+  <!-- ═══ PARA QUIÉN: antes / ahora ═══ -->
+  <div class="hx-wrap">
+    <div class="hx-head rv2">
+      <div class="hx-eyebrow">Para quién</div>
+      <h2 class="hx-h2">Menos copiar y pegar.<br><span>Más tiempo para decidir.</span></h2>
+    </div>
+    <div class="hx-who">
+      <div class="hx-who-c rv2"><div class="hx-who-n">Para contadores</div><p class="hx-who-a"><span>Antes</span>Cruzar el banco con la contabilidad, fila por fila, cada cierre.</p><p class="hx-who-b"><span>Ahora</span>El sistema lo cruza en minutos: tú solo validas lo que no cuadra.</p></div>
+      <div class="hx-who-c rv2"><div class="hx-who-n">Para PyMEs</div><p class="hx-who-a"><span>Antes</span>Pagar software especializado que no siempre necesitas ni entiendes.</p><p class="hx-who-b"><span>Ahora</span>Lo mismo con Google Sheets o Excel, que ya usas y ya pagas.</p></div>
+      <div class="hx-who-c rv2"><div class="hx-who-n">Para equipos financieros</div><p class="hx-who-a"><span>Antes</span>Armar el informe de cierre copiando y pegando, todos los meses.</p><p class="hx-who-b"><span>Ahora</span>El informe se actualiza solo cuando cambian los datos base.</p></div>
+      <div class="hx-who-c rv2"><div class="hx-who-n">Productos listos para usar</div><p class="hx-who-a"><span>Antes</span>Esperar semanas a que alguien desarrolle lo que necesitas.</p><p class="hx-who-b"><span>Ahora</span>Descargas, instalas en 5 minutos y lo usas hoy mismo.</p></div>
+    </div>
+  </div>
+
+  <!-- ═══ CIERRE ═══ -->
+  <div class="hx-end">
+    <div class="hx-wrap">
+      <div class="hx-eyebrow">Siguiente paso</div>
+      <h2 class="hx-end-t">Deja de cruzar planillas<br>a mano.</h2>
+      <div class="hx-ctas hx-ctas--c">
+        <button class="hx-btn hx-btn--pri" onclick="show('product')">Ver herramientas <span aria-hidden="true">→</span></button>
+        <button class="hx-btn hx-btn--sec" onclick="show('contact')">Conversemos</button>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -865,7 +1152,7 @@ nav.scrolled .nav-links a{font-size:12px}
 
 <section id="product">
   <div class="container">
-    <div class="prod-eyebrow">Herramienta disponible</div>
+    <div class="prod-eyebrow"><span class="prox-badge">Próximamente</span></div>
     <h2 class="prod-h1">Conciliador Automatico V1 para Google Sheets</h2>
     <p class="prod-tagline">Si alguna vez has tenido que revisar, pago por pago, si cada uno corresponde a la factura correcta, sabes lo lento que es. Esta herramienta hace esa revision por ti, en segundos, dentro de tu propio Google Sheets — con panel de control web incluido.</p>
     <div class="alert-box">¿Que es "conciliar"? Es comparar dos listas — por ejemplo, las facturas que emitiste y los pagos que llegaron a tu cuenta — para asegurarte de que cada una tenga su pareja. Si algo no coincide o falta, lo sabes al instante, sin revisar fila por fila.</div>
@@ -995,12 +1282,10 @@ nav.scrolled .nav-links a{font-size:12px}
       </div>
     </div>
 
-    <div class="price-row">
-      <span class="price-num">$9.990</span>
-      <span class="price-label">CLP - pago unico - sin suscripcion</span>
-    </div>
-    <a class="buy-btn" href="https://ambilorlab.gumroad.com/l/gbtemx" target="_blank" rel="noopener noreferrer">Comprar en Gumroad</a>
-    <span class="guarantee-note">Garantia de devolucion de 7 dias si no funciona</span>
+    <!-- 2026-09-27 (Director): el Conciliador pasa a "Próximamente"; la compra
+         en Gumroad queda desactivada hasta el lanzamiento. -->
+    <span class="buy-btn buy-btn--prox" aria-disabled="true">Próximamente</span>
+    <span class="guarantee-note">Muy pronto disponible. <a href="#" onclick="return show('contact')">Escríbeme</a> y te aviso cuando esté listo.</span>
     <div class="alert-box">Pensado para cualquier persona que revise pagos, facturas o movimientos de dinero a mano cada mes — seas contador, dueño de una PyME, o la persona encargada de las cuentas en tu empresa.</div>
     <div class="section-label" id="incluye">Que incluye</div>
     <ul class="includes-list">
@@ -1037,8 +1322,8 @@ nav.scrolled .nav-links a{font-size:12px}
       <div class="faq-item"><div class="faq-q">¿Puedo corregir el resultado manualmente?</div><div class="faq-a">Si. Puedes forzar un emparejamiento que el sistema no detecto o deshacer uno que consideres incorrecto. Los ajustes quedan guardados entre ejecuciones.</div></div>
       <div class="faq-item"><div class="faq-q">Funciona en Excel?</div><div class="faq-a">No directamente. Esta construido sobre Google Apps Script y requiere Google Sheets, pero puedes subir tu archivo .xlsx a Google Drive, importarlo como Google Sheet y usarlo como fuente de datos.</div></div>
     </div>
-    <a class="buy-btn" href="https://ambilorlab.gumroad.com/l/gbtemx" target="_blank" rel="noopener noreferrer">Comprar por $9.990 CLP</a>
-    <span class="guarantee-note">Pago seguro via Gumroad - Descarga inmediata</span>
+    <span class="buy-btn buy-btn--prox" aria-disabled="true">Próximamente</span>
+    <span class="guarantee-note">Muy pronto disponible. <a href="#" onclick="return show('contact')">Escríbeme</a> y te aviso cuando esté listo.</span>
 
     </div>
 </section>
@@ -1578,7 +1863,7 @@ function setDarkIcon(dark){
     ?'<svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"/></svg>'
     :'<svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>';
 }
-(function(){var t=localStorage.getItem('al-theme');if(t){document.documentElement.setAttribute('data-theme',t);setDarkIcon(t==='dark');}})();
+(function(){var t='dark';try{t=localStorage.getItem('al-theme')||'dark';}catch(e){}document.documentElement.setAttribute('data-theme',t);setDarkIcon(t==='dark');})();
 
 // ── indicador de nav ──
 function moveNavInd(el){
@@ -1682,40 +1967,6 @@ function cfSubmit(e){
   window.location.href = 'mailto:zejordanja17@gmail.com?subject=' + asunto + '&body=' + cuerpo;
 }
 
-// Animated blobs in hero
-(function(){
-  var home=document.getElementById('home');
-  if(!home) return;
-  [{w:380,h:380,c:'#1F5C99',t:'-90px',r:'-60px',cls:'h-blob h-blob-1'},
-   {w:270,h:270,c:'#2a80e1',b:'20px',l:'-70px',cls:'h-blob h-blob-2'}].forEach(function(d){
-    var b=document.createElement('div');
-    b.className=d.cls;
-    Object.assign(b.style,{width:d.w+'px',height:d.h+'px',background:d.c});
-    if(d.t) b.style.top=d.t;
-    if(d.r) b.style.right=d.r;
-    if(d.b) b.style.bottom=d.b;
-    if(d.l) b.style.left=d.l;
-    home.insertBefore(b,home.firstChild);
-  });
-  // Mouse parallax on blobs
-  home.addEventListener('mousemove',function(e){
-    var r=home.getBoundingClientRect();
-    var x=(e.clientX-r.left)/r.width-.5;
-    var y=(e.clientY-r.top)/r.height-.5;
-    home.querySelectorAll('.h-blob').forEach(function(b,i){
-      var s=(i+1)*18;
-      b.style.transition='none';
-      b.style.transform='translate('+(x*s)+'px,'+(y*s)+'px)';
-    });
-  });
-  home.addEventListener('mouseleave',function(){
-    home.querySelectorAll('.h-blob').forEach(function(b){
-      b.style.transition='transform 1.2s ease';
-      b.style.transform='';
-    });
-  });
-})();
-
 // Scroll reveal with IntersectionObserver
 (function(){
   if(!('IntersectionObserver' in window)) return;
@@ -1785,6 +2036,84 @@ function showGP(id, btn) {
   document.getElementById('gp-'+id).classList.add('on');
 }
 
+</script>
+
+<script>
+/* ═══ AL3D — profundidad compartida por las demos 3D (2026-09-27, Ambilor.Lab)
+   Director: "mejorar los demos para que den una sensación 3D mejor aún".
+   1. parallax(): la cámara se desplaza con el puntero y orbita alrededor del
+      punto que mira, así las capas a distinta profundidad se separan (el
+      mayor aporte a la sensación 3D). Vuelve suave al centro al salir.
+   2. ambiente(): pared de fondo con cuadrícula en perspectiva (se mueve distinto
+      que las tarjetas con el parallax) + niebla de profundidad.
+   3. grosor(): canto físico detrás de los paneles grandes, con caras más
+      claras arriba y más oscuras abajo (luz cenital). Sigue la opacidad del
+      panel. Las filas finas de la tabla NO llevan canto (no se toca su texto).
+   Nada de esto cambia texturas ni resolución: el texto se ve igual de nítido. */
+window.AL3D = (function(){
+  function parallax(stage, apagado){
+    var st = { x:0, y:0, tx:0, ty:0 };
+    if (!apagado && stage && window.matchMedia && matchMedia('(hover:hover) and (pointer:fine)').matches) {
+      stage.addEventListener('pointermove', function(e){
+        var r = stage.getBoundingClientRect();
+        st.tx = ((e.clientX - r.left) / r.width - .5) * 2;
+        st.ty = -((e.clientY - r.top) / r.height - .5) * 2;
+      }, { passive:true });
+      stage.addEventListener('pointerleave', function(){ st.tx = 0; st.ty = 0; });
+    }
+    // Devuelve true mientras se está moviendo (para pedir otro cuadro)
+    st.update = function(dt){
+      var k = 1 - Math.pow(.0025, Math.min(.05, dt || .016));
+      var dx = st.tx - st.x, dy = st.ty - st.y;
+      st.x += dx * k; st.y += dy * k;
+      return Math.abs(dx) > .0008 || Math.abs(dy) > .0008;
+    };
+    return st;
+  }
+
+  function ambiente(scene, o){
+    o = o || {};
+    var z = o.z == null ? -4 : o.z, W = o.w || 34, H = o.h || 24, paso = o.paso || .6;
+    var px = 1024, c = document.createElement('canvas'); c.width = px; c.height = Math.round(px * H / W);
+    var g = c.getContext('2d'), sx = px / W;
+    g.strokeStyle = o.linea || 'rgba(18,48,77,1)'; g.lineWidth = 1.2;
+    for (var x = 0; x <= W + .001; x += paso) { g.globalAlpha = (Math.round(x / paso) % 5 === 0) ? .16 : .07; g.beginPath(); g.moveTo(x * sx, 0); g.lineTo(x * sx, c.height); g.stroke(); }
+    for (var y = 0; y <= H + .001; y += paso) { g.globalAlpha = (Math.round(y / paso) % 5 === 0) ? .16 : .07; g.beginPath(); g.moveTo(0, y * sx); g.lineTo(px, y * sx); g.stroke(); }
+    // se desvanece hacia los bordes
+    g.globalAlpha = 1; g.globalCompositeOperation = 'destination-in';
+    var rg = g.createRadialGradient(px / 2, c.height / 2, 0, px / 2, c.height / 2, px * .42);
+    rg.addColorStop(0, 'rgba(0,0,0,1)'); rg.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = rg; g.fillRect(0, 0, px, c.height);
+    var t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding;
+    var pared = new THREE.Mesh(new THREE.PlaneGeometry(W, H),
+      new THREE.MeshBasicMaterial({ map:t, transparent:true, depthWrite:false }));
+    pared.position.set(o.x || 0, o.y || 0, z); pared.renderOrder = -10;
+    scene.add(pared);
+    if (o.niebla !== false) scene.fog = new THREE.Fog(o.color || 0xeef2f7, o.cerca || 13, o.lejos || 24);
+    return pared;
+  }
+
+  function grosor(mallas, prof, colores){
+    colores = colores || { lado:'#bfcddc', arriba:'#e3eaf2', abajo:'#9fb1c5', atras:'#8fa3ba' };
+    var col = function(h){ return new THREE.Color(h).convertSRGBToLinear(); };
+    mallas.forEach(function(m){
+      if (!m || !m.geometry || !m.geometry.parameters) return;
+      var p = m.geometry.parameters, d = prof || .07;
+      var mk = function(h){ return new THREE.MeshBasicMaterial({ color:col(h), transparent:true, depthWrite:false }); };
+      // orden de caras de BoxGeometry: +x, -x, +y, -y, +z, -z
+      var mats = [mk(colores.lado), mk(colores.lado), mk(colores.arriba), mk(colores.abajo), mk(colores.atras), mk(colores.atras)];
+      var canto = new THREE.Mesh(new THREE.BoxGeometry(p.width * .995, p.height * .995, d), mats);
+      canto.position.z = -d / 2 - .002;
+      canto.renderOrder = (m.renderOrder || 0) - .5;
+      canto.onBeforeRender = function(){
+        var op = m.material && m.material.opacity != null ? m.material.opacity : 1;
+        for (var i = 0; i < mats.length; i++) mats[i].opacity = op;
+      };
+      m.add(canto);
+    });
+  }
+  return { parallax:parallax, ambiente:ambiente, grosor:grosor };
+})();
 </script>
 
 <!-- Demo 3D "Ver en accion" (three.js). Va al final del body y SIN async/defer
@@ -1955,6 +2284,9 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
 scene.add(new THREE.HemisphereLight(0xffffff, 0xaebfd2, 0.9));
 const sun = new THREE.DirectionalLight(0xffffff, 0.6); sun.position.set(3, 5, 6); scene.add(sun);
+// Profundidad (AL3D): pared con cuadrícula + niebla, y parallax con el puntero
+AL3D.ambiente(scene, { z:-4.5, y:-0.85 });
+const PX = AL3D.parallax(stage, reduce);
 const TEX_S = 1.6;
 const ANISO = renderer.capabilities.getMaxAnisotropy();
 function tex(w, h, draw){
@@ -2380,6 +2712,8 @@ function updateCube(t){
   result.material.opacity = a; resultShadow.material.opacity = a * 0.14;
 }
 
+// Canto físico en los paneles grandes (el texto de las filas no se toca)
+AL3D.grosor([panel, result, exportCard], 0.08);
 
 
 function resize(){
@@ -2404,12 +2738,16 @@ document.addEventListener('visibilitychange', () => { visible = !document.hidden
 let last = performance.now();
 function frame(now){
   const dt = Math.min(0.05, (now - last) / 1000); last = now;
+  if (PX.update(dt)) needsRender = true;
   if (visible && !document.hidden && (playing || needsRender)) {
     if (playing) { T += dt; if (T >= DUR) T = 0; }
     setStep(stepOf(T));
     const t = T;
-    camera.position.set(Math.sin(t*0.35)*0.2, -0.85 + Math.cos(t*0.3)*0.12, lerp(11.2, 9.9, easeOut(t/3.5)) - ease((t - T5)/4.6)*0.8);
-    camera.lookAt(camera.position.x*0.4, -0.85, 0);
+    // Parallax: la cámara se mueve con el puntero pero sigue mirando al mismo
+    // punto, así orbita la escena y las capas se separan en profundidad.
+    const bx = Math.sin(t*0.35)*0.2;
+    camera.position.set(bx + PX.x*1.15, -0.85 + Math.cos(t*0.3)*0.12 + PX.y*0.7, lerp(11.2, 9.9, easeOut(t/3.5)) - ease((t - T5)/4.6)*0.8);
+    camera.lookAt(bx*0.4, -0.85, 0);
     const ps = updatePanel(t);
     updateTable(t, ps.pres); updateCube(t); updateExport(t);
     renderer.render(scene, camera);
@@ -2568,6 +2906,9 @@ renderer.outputEncoding = THREE.sRGBEncoding;
 renderer.setClearColor(0x000000, 0);
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
+// Profundidad (AL3D): pared con cuadrícula + niebla, y parallax con el puntero
+AL3D.ambiente(scene, { z:-4.5 });
+const PX = AL3D.parallax(stage, reduce);
 const ANISO = renderer.capabilities.getMaxAnisotropy();
 const basic = (opts) => new THREE.MeshBasicMaterial(Object.assign({ transparent:true, side:THREE.DoubleSide, depthWrite:false }, opts));
 const col = hex => new THREE.Color(hex).convertSRGBToLinear();
@@ -2846,6 +3187,8 @@ const cards = DRAW.map(() => {
   const sh = new THREE.Mesh(new THREE.PlaneGeometry(PW + 0.08, PH + 0.08), basic({ color:col(C.ink) })); sh.renderOrder = 4; scene.add(sh);
   return { m, sh, g, tx };
 });
+// Canto físico en las tarjetas (ventanas de Google Sheets / Apps Script)
+AL3D.grosor(cards.map(c => c.m), 0.09);
 const cursorGeo = new THREE.PlaneGeometry(0.24, 0.31); cursorGeo.translate(0.12, -0.155, 0);
 const ctex = (() => { const c = document.createElement('canvas'); c.width = 104 * TEX_S; c.height = 136 * TEX_S; const g = c.getContext('2d'); g.scale(TEX_S, TEX_S);
   g.beginPath(); g.moveTo(8, 6); g.lineTo(8, 110); g.lineTo(34, 86); g.lineTo(52, 128); g.lineTo(70, 120); g.lineTo(52, 80); g.lineTo(88, 80); g.closePath();
@@ -2919,13 +3262,15 @@ if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible =
 let last = performance.now();
 function frame(now){
   const dt = Math.min(0.05, (now - last) / 1000); last = now;
+  if (PX.update(dt)) needsRender = true;
   if (visible && (playing || needsRender)) {
     if (playing) { T += dt; if (T >= DUR) T = 0; }
     setStep(stepOf(T));
-    camera.position.set(Math.sin(T*0.3)*0.18, Math.cos(T*0.25)*0.1, 8.6);
-    // Misma compensacion de orbita que usa la demo "ver en accion": sin esto la
-    // escena se va de centro horizontalmente a medida que la camara orbita.
-    camera.lookAt(camera.position.x*0.4, camera.position.y, 0);
+    // Parallax con el puntero: la cámara orbita alrededor del punto que mira
+    // (misma compensación de órbita que "ver en acción").
+    const bx = Math.sin(T*0.3)*0.18, by = Math.cos(T*0.25)*0.1;
+    camera.position.set(bx + PX.x*1.05, by + PX.y*0.65, 8.6);
+    camera.lookAt(bx*0.4, by, 0);
     updateCards(T); updateCursor(T);
     renderer.render(scene, camera);
     fills.forEach((f, i) => { const s = STEPS[i]; f.fill.style.width = (clamp((T - s.a) / (s.b - s.a)) * 100) + '%'; });
@@ -2940,6 +3285,348 @@ requestAnimationFrame(frame);
   if (window.console) console.warn('[al-demo instalacion] error al iniciar el 3D:', err);
   fallback();
 }
+})();
+</script>
+
+<script>
+/* ═══ HERO INMERSIVO — cubo Rubik jugable (2026-09-27, Ambilor.Lab) ═══
+   Modo demo: el cubo (colores de marca) se desordena y se resuelve solo; al
+   quedar resuelto brilla ("todo conciliado").
+   Modo juego (al tocar el cubo): arrastrar sobre una cara gira esa capa;
+   arrastrar junto al cubo lo rota. Botones: Mezclar, Resolver (deshace todos
+   los movimientos) y Demo. Al completarlo: brillo + mensaje con movimientos.
+   - Se pausa fuera de pantalla, con la pestaña oculta y cuando Inicio no
+     está visible (cambio de pestaña del sitio).
+   - Con prefers-reduced-motion no hay animación automática (sí se puede jugar).
+   - Sin WebGL o sin three.js queda el resplandor CSS (.hx-glow). */
+(function(){
+  var hx=document.querySelector('.hx');
+  var canvas=document.getElementById('hxCanvas');
+  if(!hx) return;
+
+  // Entrada del titular (opacidad + desplazamiento, sin transform final)
+  requestAnimationFrame(function(){requestAnimationFrame(function(){hx.classList.add('on');});});
+
+  // Reveal de los bloques del Inicio
+  var rvs=document.querySelectorAll('#home .rv2');
+  if('IntersectionObserver' in window){
+    var ob=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');ob.unobserve(e.target);}});},{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+    rvs.forEach(function(el){ob.observe(el);});
+  } else rvs.forEach(function(el){el.classList.add('in');});
+
+  // Luz que sigue al mouse en los paneles 01/03 (solo variables CSS)
+  document.querySelectorAll('.hx-panel').forEach(function(p){
+    p.addEventListener('mousemove',function(e){var r=p.getBoundingClientRect();p.style.setProperty('--px',(e.clientX-r.left)+'px');p.style.setProperty('--py',(e.clientY-r.top)+'px');},{passive:true});
+  });
+
+  if(!canvas||typeof THREE==='undefined') return;
+  var renderer;
+  try{ renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true,alpha:true,powerPreference:'high-performance'}); }
+  catch(e){ return; }
+  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var DPR=Math.min(window.devicePixelRatio||1,2);
+  renderer.setPixelRatio(DPR);
+  renderer.setClearColor(0x000000,0);
+
+  var scene=new THREE.Scene();
+  var camera=new THREE.PerspectiveCamera(32,1,.1,100);
+  camera.position.set(0,0,13);
+  var root=new THREE.Group();          // encuadre (posición/escala)
+  var spin=new THREE.Group();          // giro + parallax + rotación del usuario
+  var cube=new THREE.Group();          // las 27 piezas
+  scene.add(root); root.add(spin); spin.add(cube);
+
+  // ── luces ──
+  scene.add(new THREE.AmbientLight(0xffffff,.55));
+  var key=new THREE.DirectionalLight(0xffffff,.9); key.position.set(4,6,8); scene.add(key);
+  var rim=new THREE.PointLight(0x4C8DDB,2.2,30); rim.position.set(-6,-3,-4); scene.add(rim);
+  var fill=new THREE.PointLight(0x8FC1FF,.8,30); fill.position.set(6,-4,6); scene.add(fill);
+
+  // ── materiales: cada cara resuelta con un color de la marca ──
+  var COLORES={px:'#1F5C99',nx:'#34C27A',py:'#E8EDF5',ny:'#F0A63A',pz:'#4C8DDB',nz:'#8FC1FF'};
+  var matCuerpo=new THREE.MeshStandardMaterial({color:0x0B0F16,roughness:.55,metalness:.25});
+  var matSt={};
+  Object.keys(COLORES).forEach(function(k){
+    matSt[k]=new THREE.MeshStandardMaterial({color:new THREE.Color(COLORES[k]),roughness:.32,metalness:.05,emissive:new THREE.Color(COLORES[k]),emissiveIntensity:.08});
+  });
+  function cuadradoRedondeado(s,r){
+    var h=s/2, sh=new THREE.Shape();
+    sh.moveTo(-h+r,-h); sh.lineTo(h-r,-h); sh.quadraticCurveTo(h,-h,h,-h+r);
+    sh.lineTo(h,h-r); sh.quadraticCurveTo(h,h,h-r,h); sh.lineTo(-h+r,h);
+    sh.quadraticCurveTo(-h,h,-h,h-r); sh.lineTo(-h,-h+r); sh.quadraticCurveTo(-h,-h,-h+r,-h);
+    return sh;
+  }
+  var S=.94, geoCuerpo=new THREE.ExtrudeGeometry(cuadradoRedondeado(S-.16,.14),{depth:S-.16,bevelEnabled:true,bevelThickness:.08,bevelSize:.08,bevelSegments:3,curveSegments:6});
+  geoCuerpo.center();
+  var geoSt=new THREE.ShapeGeometry(cuadradoRedondeado(.78,.14),6);
+
+  var piezas=[];
+  var CARAS=[['px',[1,0,0],[0,Math.PI/2,0]],['nx',[-1,0,0],[0,-Math.PI/2,0]],['py',[0,1,0],[-Math.PI/2,0,0]],
+             ['ny',[0,-1,0],[Math.PI/2,0,0]],['pz',[0,0,1],[0,0,0]],['nz',[0,0,-1],[0,Math.PI,0]]];
+  for(var x=-1;x<=1;x++) for(var y=-1;y<=1;y++) for(var z=-1;z<=1;z++){
+    var p=new THREE.Group();
+    p.add(new THREE.Mesh(geoCuerpo,matCuerpo));
+    CARAS.forEach(function(c){
+      var n=c[1];
+      if((n[0]&&n[0]===x)||(n[1]&&n[1]===y)||(n[2]&&n[2]===z)){
+        var st=new THREE.Mesh(geoSt,matSt[c[0]]);
+        st.position.set(n[0]*(S/2+.012),n[1]*(S/2+.012),n[2]*(S/2+.012));
+        st.rotation.set(c[2][0],c[2][1],c[2][2]);
+        st.userData.col=c[0];
+        p.add(st);
+      }
+    });
+    p.position.set(x,y,z);
+    cube.add(p); piezas.push(p);
+  }
+
+  // ── movimientos de capa ──
+  var EJES=['x','y','z'], pivote=new THREE.Group(); cube.add(pivote);
+  var modo='demo', cola=[], actual=null, pausa=0, brillo=0, historial=[], movs=0, autoResuelto=false;
+  function aleatorio(n,extra){
+    var out=[],prev=-1;
+    for(var i=0;i<n;i++){
+      var e; do{e=Math.floor(Math.random()*3);}while(e===prev); prev=e;
+      out.push(Object.assign({eje:EJES[e],capa:Math.floor(Math.random()*3)-1,dir:Math.random()<.5?1:-1},extra||{}));
+    }
+    return out;
+  }
+  function rondaDemo(){
+    var m=aleatorio(14);
+    cola=m.slice();
+    for(var k=m.length-1;k>=0;k--) cola.push({eje:m[k].eje,capa:m[k].capa,dir:-m[k].dir,resolviendo:true});
+    cola.push({fin:true});
+  }
+  function empezar(m){
+    pivote.rotation.set(0,0,0); pivote.updateMatrixWorld();
+    m.piezas=piezas.filter(function(p){return Math.round(p.position[m.eje])===m.capa;});
+    m.piezas.forEach(function(p){pivote.attach(p);});
+    m.t=0; m.dur=m.dur||(m.usuario?.2:(m.resolviendo?.3:.42));
+  }
+  function terminar(m){
+    pivote.rotation.set(0,0,0); pivote.rotation[m.eje]=m.dir*Math.PI/2; pivote.updateMatrixWorld();
+    m.piezas.forEach(function(p){
+      cube.attach(p);
+      p.position.set(Math.round(p.position.x),Math.round(p.position.y),Math.round(p.position.z));
+      var e=new THREE.Euler().setFromQuaternion(p.quaternion);
+      p.rotation.set(Math.round(e.x/(Math.PI/2))*Math.PI/2,Math.round(e.y/(Math.PI/2))*Math.PI/2,Math.round(e.z/(Math.PI/2))*Math.PI/2);
+    });
+    pivote.rotation.set(0,0,0);
+    if(m.resolviendo) historial.pop(); else historial.push({eje:m.eje,capa:m.capa,dir:m.dir});
+    if(m.usuario){ movs++; }
+    if(modo==='juego'&&!cola.length){
+      if(estaResuelto()&&(movs>0||autoResuelto)) celebrar();
+      else if(m.usuario||m.mezcla) mensaje('Movimientos: '+movs,'');
+    }
+  }
+  function suave(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;}
+  function avanzar(dt){
+    if(pausa>0){pausa-=dt;return;}
+    if(!actual){
+      if(!cola.length){ if(modo==='demo'&&!reduce&&!interactuando) rondaDemo(); else return; }
+      if(modo==='demo'&&interactuando) return;   // pausa mientras se interactúa
+      actual=cola.shift();
+      if(actual.fin){actual=null;pausa=2.4;brillo=1;return;}
+      empezar(actual);
+    }
+    actual.t+=dt/actual.dur;
+    var t=Math.min(1,actual.t);
+    pivote.rotation.set(0,0,0); pivote.rotation[actual.eje]=actual.dir*Math.PI/2*suave(t);
+    if(t>=1){var m=actual;actual=null;terminar(m);}
+  }
+  // ¿Cada cara del cubo tiene un solo color?
+  function estaResuelto(){
+    var caras={}, v=new THREE.Vector3();
+    piezas.forEach(function(p){ p.children.forEach(function(ch){
+      if(!ch.userData.col) return;
+      v.set(0,0,1).applyQuaternion(ch.quaternion).applyQuaternion(p.quaternion);
+      var k=Math.round(v.x)+','+Math.round(v.y)+','+Math.round(v.z);
+      (caras[k]=caras[k]||{})[ch.userData.col]=1;
+    });});
+    return Object.keys(caras).every(function(k){return Object.keys(caras[k]).length===1;});
+  }
+
+  // ── panel del juego ──
+  var play=document.getElementById('hxPlay'), msg=document.getElementById('hxMsg');
+  // Interacción: el panel (texto + botones) solo se ve mientras se interactúa
+  // con el cubo, y en ese momento se pausa la animación automática.
+  var interactuando=false, ultimoToque=0, ocultarT=0, avisoT=0;
+  function mostrarPanel(msHasta){
+    clearTimeout(ocultarT); interactuando=true; hx.classList.add('cerca');
+    if(modo==='demo') mensaje('Arrastra una cara para girarla · resuélvelo','');
+    if(msHasta) ocultarT=setTimeout(ocultarPanel,msHasta);
+  }
+  function ocultarPanel(){ interactuando=false; ultimoToque=performance.now(); hx.classList.remove('cerca'); }
+  function ocultarLuego(ms){ clearTimeout(ocultarT); ocultarT=setTimeout(ocultarPanel,ms); }
+  function volverDemo(){
+    modo='demo'; hx.classList.remove('juego'); orbX=orbY=0;
+    if(!ocupado()&&historial.length){ for(var k=historial.length-1;k>=0;k--) cola.push({eje:historial[k].eje,capa:historial[k].capa,dir:-historial[k].dir,resolviendo:true,dur:.16}); cola.push({fin:true}); }
+  }
+  function mensaje(t,cls){ if(msg){msg.textContent=t;msg.className='hx-play-msg'+(cls?' '+cls:'');} }
+  function celebrar(){
+    brillo=1.4;
+    // el logro se muestra aunque el mouse ya no esté sobre el cubo
+    hx.classList.add('aviso'); clearTimeout(avisoT); avisoT=setTimeout(function(){hx.classList.remove('aviso');},4500);
+    mensaje(autoResuelto?'Resuelto. Todo conciliado.':'¡Todo conciliado! Lo resolviste en '+movs+' movimiento'+(movs===1?'':'s')+'.','ok');
+    autoResuelto=false; movs=0;
+  }
+  function entrarJuego(){
+    if(modo==='juego') return;
+    modo='juego'; hx.classList.add('juego');
+    cola=cola.filter(function(m){return false;});      // se corta la demo donde va
+    pausa=0; movs=0;
+    mensaje('Movimientos: 0','');
+  }
+  function ocupado(){ return cola.some(function(m){return m.resolviendo||m.mezcla;})||(actual&&(actual.resolviendo||actual.mezcla)); }
+  var bMez=document.getElementById('hxMezclar'), bRes=document.getElementById('hxResolver'), bDemo=document.getElementById('hxDemo');
+  if(bMez) bMez.addEventListener('click',function(){
+    entrarJuego(); if(ocupado()) return;
+    cola=cola.concat(aleatorio(22,{mezcla:true,dur:.11})); movs=0; mensaje('Mezclando…','');
+  });
+  if(bRes) bRes.addEventListener('click',function(){
+    entrarJuego(); if(ocupado()) return;
+    if(!historial.length){ mensaje(estaResuelto()?'Ya está resuelto.':'Movimientos: '+movs,''); return; }
+    // deshacer todo lo que se movió desde el último estado resuelto
+    for(var k=historial.length-1;k>=0;k--) cola.push({eje:historial[k].eje,capa:historial[k].capa,dir:-historial[k].dir,resolviendo:true,dur:.16});
+    autoResuelto=true; mensaje('Resolviendo…','');
+  });
+  if(bDemo) bDemo.addEventListener('click',function(){ volverDemo(); ocultarPanel(); });
+  // El panel también cuenta como "interactuando" (para alcanzar los botones)
+  if(play){
+    play.addEventListener('pointerenter',function(e){ if(e.pointerType==='mouse') mostrarPanel(); });
+    play.addEventListener('pointerleave',function(e){ if(e.pointerType==='mouse') ocultarLuego(700); });
+    play.addEventListener('pointerdown',function(e){ if(e.pointerType!=='mouse') mostrarPanel(4000); });
+  }
+
+  // ── interacción con el mouse / dedo ──
+  var ray=new THREE.Raycaster(), ndc=new THREE.Vector2(), inv=new THREE.Matrix4();
+  var arr=null, orbX=0, orbY=0, centro={x:0,y:0,r:0};
+  function aPantalla(vLocal){
+    var v=vLocal.clone(); cube.localToWorld(v); v.project(camera);
+    var r=canvas.getBoundingClientRect();
+    return {x:(v.x+1)/2*r.width,y:(1-v.y)/2*r.height};
+  }
+  function tocar(e){
+    var r=canvas.getBoundingClientRect();
+    ndc.set(((e.clientX-r.left)/r.width)*2-1,-((e.clientY-r.top)/r.height)*2+1);
+    ray.setFromCamera(ndc,camera);
+    return ray.intersectObjects(piezas,true)[0]||null;
+  }
+  canvas.addEventListener('pointerdown',function(e){
+    var h=tocar(e), r=canvas.getBoundingClientRect(), px=e.clientX-r.left, py=e.clientY-r.top;
+    var cerca=Math.hypot(px-centro.x,py-centro.y)<centro.r*1.35;
+    if(!h&&!cerca) return;                       // fuera del cubo: la página sigue normal
+    e.preventDefault(); mostrarPanel(e.pointerType==='mouse'?0:4000);
+    try{canvas.setPointerCapture(e.pointerId);}catch(_){}
+    if(!h){ entrarJuego(); arr={x:e.clientX,y:e.clientY,orbita:true,ox:orbX,oy:orbY}; hx.classList.add('rotando'); return; }
+    cube.updateMatrixWorld(true); inv.copy(cube.matrixWorld).invert();
+    var nL=h.face.normal.clone().transformDirection(h.object.matrixWorld).transformDirection(inv);
+    var ax=Math.abs(nL.x),ay=Math.abs(nL.y),az=Math.abs(nL.z);
+    var ejeN=ax>=ay&&ax>=az?'x':(ay>=az?'y':'z');
+    arr={x:e.clientX,y:e.clientY,orbita:false,ejeN:ejeN,p:h.point.clone().applyMatrix4(inv),listo:false};
+  });
+  canvas.addEventListener('pointermove',function(e){
+    if(!arr){
+      // El texto de ayuda aparece solo al pasar sobre el cubo (o jugando)
+      var r=canvas.getBoundingClientRect(), sobre=!!tocar(e)||Math.hypot(e.clientX-r.left-centro.x,e.clientY-r.top-centro.y)<centro.r*1.35;
+      canvas.style.cursor=sobre?'grab':'';
+      if(e.pointerType==='mouse'){ if(sobre){ if(!interactuando||ocultarT) mostrarPanel(); } else if(interactuando) ocultarLuego(700); }
+      return;
+    }
+    var dx=e.clientX-arr.x, dy=e.clientY-arr.y;
+    if(arr.orbita){ orbY=arr.oy+dx*.008; orbX=Math.max(-1.2,Math.min(1.2,arr.ox+dy*.008)); return; }
+    if(arr.listo||Math.hypot(dx,dy)<10||ocupado()) return;
+    // El giro que mejor sigue al arrastre: se prueban los 2 ejes perpendiculares
+    // a la cara tocada y se compara el movimiento en pantalla de ese punto.
+    var mejor=null, d=Math.hypot(dx,dy), p0=aPantalla(arr.p);
+    EJES.forEach(function(eje){
+      if(eje===arr.ejeN) return;
+      var a=new THREE.Vector3(eje==='x'?1:0,eje==='y'?1:0,eje==='z'?1:0);
+      var v=a.clone().cross(arr.p).multiplyScalar(.25), p1=aPantalla(arr.p.clone().add(v));
+      var sx=p1.x-p0.x, sy=p1.y-p0.y, sl=Math.hypot(sx,sy)||1, dot=(sx*dx+sy*dy)/(sl*d);
+      if(!mejor||Math.abs(dot)>Math.abs(mejor.dot)) mejor={eje:eje,dot:dot};
+    });
+    if(!mejor||Math.abs(mejor.dot)<.35) return;
+    var capa=Math.max(-1,Math.min(1,Math.round(arr.p[mejor.eje])));
+    entrarJuego();
+    cola.push({eje:mejor.eje,capa:capa,dir:mejor.dot>0?1:-1,usuario:true});
+    arr.listo=true;
+  });
+  function soltar(e){ arr=null; hx.classList.remove('rotando'); if(e&&e.pointerType&&e.pointerType!=='mouse') ocultarLuego(4000); }
+  canvas.addEventListener('pointerup',soltar); canvas.addEventListener('pointercancel',soltar);
+  canvas.addEventListener('pointerleave',function(e){ if(!arr&&e.pointerType==='mouse'&&interactuando) ocultarLuego(700); });
+  // Chrome inicia la selección de texto (y el autodesplazamiento) con el
+  // mousedown aunque se cancele el pointerdown: se cancela también aquí.
+  canvas.addEventListener('mousedown',function(e){ if(arr) e.preventDefault(); });
+  canvas.addEventListener('dragstart',function(e){ e.preventDefault(); });
+
+  // ── tema claro/oscuro ──
+  function tema(){
+    var light=document.documentElement.getAttribute('data-theme')==='light';
+    matCuerpo.color.set(light?'#1B2330':'#0B0F16');
+    rim.intensity=light?.9:2.2;
+  }
+  new MutationObserver(tema).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+
+  // ── tamaño y encuadre ──
+  function resize(){
+    var w=hx.clientWidth,h=hx.clientHeight; if(!w||!h) return;
+    renderer.setSize(w,h,false);
+    camera.aspect=w/h; camera.updateProjectionMatrix();
+    var halfH=Math.tan(camera.fov*Math.PI/360)*camera.position.z, porPx=2*halfH/h, cx, cy, lado;
+    if(w>=640){
+      // Desde 640 px: el cubo a la derecha, proporcional a la pantalla
+      var ancho=w>1100; lado=ancho?Math.min(w*.2,h*.42,340):Math.min(w*.3,h*.46,430);
+      cx=w*(ancho?.8:.76); cy=h/2;
+    } else {
+      // Celular: el cubo arriba, sobre el titular
+      lado=190; cx=w/2; cy=165;
+    }
+    root.position.set((cx-w/2)*porPx,(h/2-cy)*porPx,0);
+    root.scale.setScalar(lado*porPx/4.1);
+    centro={x:cx,y:cy,r:lado*.62};
+    if(play){ play.style.left=cx+'px'; play.style.top=(cy+lado*.66)+'px'; }
+  }
+
+  // ── bucle ──
+  var mx=0,my=0,tx=0,ty=0,scrollK=0;
+  window.addEventListener('mousemove',function(e){tx=(e.clientX/window.innerWidth-.5);ty=(e.clientY/window.innerHeight-.5);},{passive:true});
+  window.addEventListener('scroll',function(){var h=hx.clientHeight||1;scrollK=Math.min(1,Math.max(0,window.scrollY/h));},{passive:true});
+  var giro=0,running=false,visible=true,raf=0,last=performance.now();
+  function draw(dt){
+    avanzar(dt);
+    var juego=modo==='juego';
+    var quieto=juego||interactuando;
+    mx+=((quieto?0:tx)-mx)*.05; my+=((quieto?0:ty)-my)*.05;
+    if(!reduce&&!juego&&!interactuando) giro+=dt*(.18+scrollK*.6);
+    // 12 s sin interactuar: el cubo vuelve solo a la animación
+    if(juego&&!interactuando&&!arr&&!actual&&!cola.length&&performance.now()-ultimoToque>12000) volverDemo();
+    spin.rotation.set(.52+my*.35+orbX,-.72+giro+mx*.5+orbY,0);
+    brillo=Math.max(0,brillo-dt*.45);
+    for(var k in matSt) matSt[k].emissiveIntensity=.08+Math.min(1,brillo)*.55;
+    canvas.style.opacity=String(1-scrollK*.85);
+    renderer.render(scene,camera);
+  }
+  function loop(now){
+    if(!running) return;
+    var dt=Math.min(.05,(now-last)/1000); last=now;
+    draw(dt); raf=requestAnimationFrame(loop);
+  }
+  function update(){
+    var home=document.getElementById('home');
+    var should=visible&&!document.hidden&&home&&home.classList.contains('visible');
+    if(should&&!running){running=true;last=performance.now();raf=requestAnimationFrame(loop);}
+    else if(!should&&running){running=false;cancelAnimationFrame(raf);}
+  }
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(function(es){visible=es[0].isIntersecting;update();},{threshold:0}).observe(hx);
+  }
+  document.addEventListener('visibilitychange',update);
+  new MutationObserver(function(){update();if(document.getElementById('home').classList.contains('visible'))resize();})
+    .observe(document.getElementById('home'),{attributes:true,attributeFilter:['class']});
+  if('ResizeObserver' in window) new ResizeObserver(resize).observe(hx); else window.addEventListener('resize',resize);
+  spin.rotation.set(.52,-.72,0);
+  tema(); resize(); draw(0); update();
 })();
 </script>
 
