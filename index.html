@@ -2,7 +2,7 @@
 <html lang="es" data-theme="dark">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
 <script>try{var t=localStorage.getItem("al-theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}
 /* 2026-09-27: el sitio siempre abre arriba, en Inicio. Safari (iPad/iPhone)
    restauraba el scroll de la visita anterior o saltaba a un #ancla guardado
@@ -81,6 +81,12 @@ html{scroll-behavior:smooth}
 /* 2026-09-28 Safari iPhone: al girar a horizontal agranda solo el texto si no
    se le indica lo contrario, y el encuadre horizontal deja de calzar. */
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+/* 2026-09-28 Chrome en iPad: pide la version de escritorio y, si algo del
+   documento queda mas ancho que la ventana (aunque sea por pixeles), el iPad
+   ignora el viewport y encoge toda la pagina (en pantalla dividida se veia sin
+   adaptar; Safari cambia solo a modo movil y no le pasa). Nada puede ensanchar
+   el documento; clip (no hidden) para no romper la barra fija (sticky). */
+html,body{overflow-x:clip}
 a,button{-webkit-tap-highlight-color:transparent}
 body{font-family:var(--sans);font-size:15px;line-height:1.65;color:var(--negro);background:var(--blanco);-webkit-font-smoothing:antialiased;min-height:100vh}
 nav{position:-webkit-sticky;position:sticky;top:0;z-index:100;background:var(--blanco);border-bottom:1px solid var(--borde)}
