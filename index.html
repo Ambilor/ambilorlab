@@ -4350,9 +4350,9 @@ requestAnimationFrame(frame);
   var play=document.getElementById('hxPlay'), msg=document.getElementById('hxMsg');
   // Interacción: el panel (texto + botones) solo se ve mientras se interactúa
   // con el cubo, y en ese momento se pausa la animación automática.
-  var interactuando=false, ultimoToque=0, ocultarT=0, avisoT=0;
+  var interactuando=false, ultimoToque=0, ocultarT=0, avisoT=0, yInter=0;
   function mostrarPanel(msHasta){
-    clearTimeout(ocultarT); interactuando=true; hx.classList.add('cerca');
+    clearTimeout(ocultarT); interactuando=true; yInter=window.scrollY; hx.classList.add('cerca');
     if(modo==='demo') mensaje('Arrastra una cara para girarla · resuélvelo','');
     if(msHasta) ocultarT=setTimeout(ocultarPanel,msHasta);
   }
@@ -4424,12 +4424,12 @@ requestAnimationFrame(frame);
     if(!h&&!cerca) return;                       // fuera del cubo: la página sigue normal
     e.preventDefault(); mostrarPanel(e.pointerType==='mouse'?0:4000);
     try{canvas.setPointerCapture(e.pointerId);}catch(_){}
-    if(!h){ entrarJuego(); arr={x:e.clientX,y:e.clientY,orbita:true,ox:orbX,oy:orbY}; hx.classList.add('rotando'); return; }
+    if(!h){ entrarJuego(); arr={id:e.pointerId,x:e.clientX,y:e.clientY,orbita:true,ox:orbX,oy:orbY}; hx.classList.add('rotando'); return; }
     cube.updateMatrixWorld(true); inv.copy(cube.matrixWorld).invert();
     var nL=h.face.normal.clone().transformDirection(h.object.matrixWorld).transformDirection(inv);
     var ax=Math.abs(nL.x),ay=Math.abs(nL.y),az=Math.abs(nL.z);
     var ejeN=ax>=ay&&ax>=az?'x':(ay>=az?'y':'z');
-    arr={x:e.clientX,y:e.clientY,orbita:false,ejeN:ejeN,p:h.point.clone().applyMatrix4(inv),listo:false};
+    arr={id:e.pointerId,x:e.clientX,y:e.clientY,orbita:false,ejeN:ejeN,p:h.point.clone().applyMatrix4(inv),listo:false};
   }
   canvas.addEventListener('pointerdown',alBajar);
   zona.addEventListener('pointerdown',alBajar);
@@ -4441,6 +4441,7 @@ requestAnimationFrame(frame);
       if(e.pointerType==='mouse'){ if(sobre){ if(!interactuando||ocultarT) mostrarPanel(); } else if(interactuando) ocultarLuego(700); }
       return;
     }
+    if(e.pointerId!==arr.id) return;      // solo el dedo que esta girando el cubo
     var dx=e.clientX-arr.x, dy=e.clientY-arr.y;
     if(arr.orbita){ orbY=arr.oy+dx*.008; orbX=Math.max(-1.2,Math.min(1.2,arr.ox+dy*.008)); return; }
     if(arr.listo||Math.hypot(dx,dy)<10||ocupado()) return;
@@ -4462,6 +4463,17 @@ requestAnimationFrame(frame);
   });
   function soltar(e){ arr=null; hx.classList.remove('rotando'); if(e&&e.pointerType&&e.pointerType!=='mouse') ocultarLuego(4000); }
   canvas.addEventListener('pointerup',soltar); canvas.addEventListener('pointercancel',soltar);
+  // 2026-09-28 iPhone/iPad: el dedo puede soltarse fuera del lienzo (sobre la zona
+  // tactil); se escucha en toda la pagina para que el cubo nunca quede "agarrado"
+  ['pointerup','pointercancel'].forEach(function(t){ window.addEventListener(t,function(e){ if(arr&&e.pointerId===arr.id) soltar(e); }); });
+  // Al desplazar la pagina el cubo deja de estar activo: en iPhone/iPad el
+  // titular seguia atenuado y el panel visible mientras se bajaba por la pagina
+  // (Safari pausa el temporizador de 4 s durante el desplazamiento).
+  window.addEventListener('scroll',function(){
+    if((!interactuando&&!arr)||Math.abs(window.scrollY-yInter)<24) return;
+    if(arr){ arr=null; hx.classList.remove('rotando'); }
+    ocultarPanel();
+  },{passive:true});
   canvas.addEventListener('pointerleave',function(e){ if(!arr&&e.pointerType==='mouse'&&interactuando) ocultarLuego(700); });
   // Chrome inicia la selección de texto (y el autodesplazamiento) con el
   // mousedown aunque se cancele el pointerdown: se cancela también aquí.
