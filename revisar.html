@@ -22,6 +22,7 @@
   .tabs{display:flex;flex-wrap:wrap;gap:6px}
   button{font:inherit;font-size:13px;padding:6px 12px;border-radius:999px;border:1px solid var(--borde);background:transparent;color:var(--texto);cursor:pointer}
   button.on{background:var(--azul);border-color:var(--azul);color:#fff}
+  button:disabled{opacity:.55;cursor:progress}
   #resumen{margin-left:auto;font-weight:600}
   main{display:flex;flex-wrap:wrap;gap:18px;padding:16px;align-items:flex-start}
   .disp{background:var(--panel);border:1px solid var(--borde);border-radius:12px;padding:10px}
@@ -58,7 +59,7 @@ const tabs = document.getElementById('tabs');
 PESTANAS.forEach(([id, nombre]) => {
   const b = document.createElement('button'); b.textContent = nombre; b.dataset.id = id;
   if (id === actual) b.classList.add('on');
-  b.onclick = () => { actual = id; [...tabs.children].forEach(x => x.classList.toggle('on', x === b)); revisarTodo(); };
+  b.onclick = () => { if (revisando) return; actual = id; [...tabs.children].forEach(x => x.classList.toggle('on', x === b)); revisarTodo(); };
   tabs.appendChild(b);
 });
 
@@ -157,10 +158,19 @@ async function revisarAlto(v, H){
   win.scrollTo(0, 0);
   return avisos;
 }
+// Una revisión a la vez: si se cambia de pestaña o se pulsa "Volver a revisar"
+// mientras otra corre, las dos usan los mismos iframes y se mezclan los avisos.
+let revisando = false;
+function bloquear(si){ revisando = si; document.querySelectorAll('header button').forEach(b => b.disabled = si); }
 async function revisarTodo(){
+  if (revisando) return;
+  bloquear(true);
   const res = document.getElementById('resumen'); res.textContent = 'Revisando…';
   vistas.forEach(v => v.estado.textContent = 'Revisando…');
-  const n = await Promise.all(vistas.map(revisar));
+  let n;
+  try { n = await Promise.all(vistas.map(revisar)); }
+  catch (e) { res.textContent = '⚠ La revisión falló: ' + e.message; return; }
+  finally { bloquear(false); }
   const total = n.reduce((a, b) => a + b, 0);
   res.textContent = total ? `⚠ ${total} aviso${total > 1 ? 's' : ''} en ${PESTANAS.find(p => p[0] === actual)[1]}` : `✓ ${PESTANAS.find(p => p[0] === actual)[1]}: todo encuadrado en los 6 tamaños (altos de Safari, Chrome y Edge)`;
 }
