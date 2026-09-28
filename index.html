@@ -3808,6 +3808,7 @@ window.AL3D = (function(){
     fijarNivel(nivel);
   }
   var hadaVel = new THREE.Vector3(), hadaObj = new THREE.Vector3(), zPrev = null, visitaAnt = null, tamSuave = 70;
+  var giroActivo = false, inclX = 0, inclY = 0, inclVx = 0, inclVy = 0;   // inclinacion del cubo con giroscopio (con inercia)
   function moverHada(dt, t, zc){
     // lugar junto a la camara: a la derecha del contenido (arriba a la derecha en celular vertical)
     var W = innerWidth, H = innerHeight, vertical = W / H < 0.8, DIST = 3.6;
@@ -3833,13 +3834,21 @@ window.AL3D = (function(){
     var escalaHada = tamSuave / H * 2 * mediaAlto;     // el cubo mide ~1 unidad
     // da vueltas suaves alrededor de su lugar, como un hada
     hadaObj.set(camera.position.x + ox + Math.sin(t * .8) * .04, camera.position.y + oy + Math.sin(t * 1.3) * .05, zc - DIST + Math.cos(t * .6) * .1);   // flota suave donde se posa
-    // resorte: lo sigue con un poco de retraso
-    hadaVel.add(hadaObj.clone().sub(hada.position).multiplyScalar(dt * 9)).multiplyScalar(Math.pow(0.02, dt));
+    // con giroscopio: como suspendido en agua, se corre un poco al lado contrario de la inclinacion
+    if (giroActivo) hadaObj.add(new THREE.Vector3(-mx * 0.55, my * 0.4, 0).multiplyScalar(escalaHada * 1.4));
+    // resorte: lo sigue con un poco de retraso (mas suave y con leve rebote con giroscopio)
+    hadaVel.add(hadaObj.clone().sub(hada.position).multiplyScalar(dt * (giroActivo ? 7 : 9))).multiplyScalar(Math.pow(giroActivo ? 0.09 : 0.02, dt));
     hada.position.add(hadaVel.clone().multiplyScalar(dt * 6));
     // se inclina hacia adelante segun la velocidad del avance
     var vz = zPrev === null ? 0 : (zPrev - zc) / Math.max(dt, 1e-3); zPrev = zc;
     cubo.rotation.y += dt * ((quieto ? 0.18 : 0.4) + Math.min(3, Math.abs(vz)) * 0.25);
     cubo.rotation.x = 0.45 + Math.sin(t * .7) * .15 - Math.max(-0.5, Math.min(0.5, vz * 0.05));
+    if (giroActivo) {
+      // se inclina hacia donde se ladea el aparato, con inercia (resorte amortiguado)
+      inclVx += ((my * 0.9 - inclX) * 26 - inclVx * 5.5) * dt; inclX += inclVx * dt;
+      inclVy += ((mx * 1.1 - inclY) * 26 - inclVy * 5.5) * dt; inclY += inclVy * dt;
+      cubo.rotation.x += inclX; cubo.rotation.z = -inclY * 0.8; cubo.rotation.y += inclY * dt * 2.2;
+    }
     cubo.scale.setScalar(escalaHada);
     aura.scale.setScalar(escalaHada * 3); aura.material.opacity = (quieto ? 0.4 : 0.8) + Math.sin(t * 2.2) * 0.12;
     // al final del inicio (el cierre) el cubo se resuelve
@@ -3918,9 +3927,10 @@ window.AL3D = (function(){
       if (ang === 90) { x = e.beta; y = -e.gamma; } else if (ang === -90 || ang === 270) { x = -e.beta; y = e.gamma; } else { x = e.gamma; y = e.beta; }
       if (!base) base = { x: x, y: y };
       base.x += (x - base.x) * 0.01; base.y += (y - base.y) * 0.01;          // recalibra de a poco
-      tx = Math.max(-.5, Math.min(.5, (x - base.x) / 40)); ty = Math.max(-.5, Math.min(.5, (y - base.y) / 40));
+      var nx = Math.max(-.5, Math.min(.5, (x - base.x) / 34)), ny = Math.max(-.5, Math.min(.5, (y - base.y) / 34));
+      tx += (nx - tx) * 0.22; ty += (ny - ty) * 0.22;                     // filtro: quita los saltitos del sensor
     }
-    function activar(){ if (on) return; on = true; addEventListener('deviceorientation', leer, { passive:true }); }
+    function activar(){ if (on) return; on = true; giroActivo = true; addEventListener('deviceorientation', leer, { passive:true }); }
     var btn = document.querySelector('#home .i3-giro');
     if (typeof DOE.requestPermission === 'function') {
       if (!btn) return;
@@ -3948,8 +3958,9 @@ window.AL3D = (function(){
     zCam = zc;
     if (!home && !viajando && !sucio && Math.abs(dmx) + Math.abs(dmy) < 0.0004) { requestAnimationFrame(bucle); return; }   // fondo quieto: no redibuja
     sucio = false;
-    camera.position.set(mx * 0.9, -my * 0.5, zc);
-    camera.lookAt(mx * 0.4, -my * 0.2, zc - 10);
+    var amp = giroActivo ? 1.5 : 1;                                        // con giroscopio, mas profundidad
+    camera.position.set(mx * 0.9 * amp, -my * 0.5 * amp, zc);
+    camera.lookAt(mx * 0.4 * amp, -my * 0.2 * amp, zc - 10);
     luz.position.set(0, 1.2, zc - 4);
     var t = ahora / 1000;
     if (home) moverHada(dt, t, zc);
