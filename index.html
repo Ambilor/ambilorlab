@@ -2,7 +2,7 @@
 <html lang="es" data-theme="dark">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
 <script>try{var t=localStorage.getItem("al-theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}
 /* 2026-09-27: el sitio siempre abre arriba, en Inicio. Safari (iPad/iPhone)
    restauraba el scroll de la visita anterior o saltaba a un #ancla guardado
@@ -81,6 +81,12 @@ html{scroll-behavior:smooth}
 /* 2026-09-28 Safari iPhone: al girar a horizontal agranda solo el texto si no
    se le indica lo contrario, y el encuadre horizontal deja de calzar. */
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+/* 2026-09-28 Chrome en iPad: pide la version de escritorio y, si algo del
+   documento queda mas ancho que la ventana (aunque sea por pixeles), el iPad
+   ignora el viewport y encoge toda la pagina (en pantalla dividida se veia sin
+   adaptar; Safari cambia solo a modo movil y no le pasa). Nada puede ensanchar
+   el documento; clip (no hidden) para no romper la barra fija (sticky). */
+html,body{overflow-x:clip}
 a,button{-webkit-tap-highlight-color:transparent}
 body{font-family:var(--sans);font-size:15px;line-height:1.65;color:var(--negro);background:var(--blanco);-webkit-font-smoothing:antialiased;min-height:100vh}
 nav{position:-webkit-sticky;position:sticky;top:0;z-index:100;background:var(--blanco);border-bottom:1px solid var(--borde)}
@@ -1333,7 +1339,7 @@ footer{margin-top:auto}
     height:max(240px, min(52cqw, calc(100svh - 356px)))}   /* cabe junto al encabezado de Herramientas */
   #product .prod-cab{margin-bottom:1.2rem}
   #product .demo-label{margin-bottom:.5rem}
-  .al-demo__controls{grid-column:1;grid-row:2;align-self:start;flex-wrap:wrap;margin-top:1.4rem}   /* junto al texto: sin hueco */
+  .al-demo__controls{grid-column:1;grid-row:2;align-self:end;flex-wrap:wrap;margin-top:1.4rem}   /* 2026-09-28: al borde inferior de la escena, igual en todos los pasos y en ambas demos */
   .al-demo__steps{flex:0 0 100%;order:5;grid-template-columns:1fr;gap:2px;margin:10px 0 0}
   .al-demo__step{display:flex;align-items:center;gap:10px;padding:3px 0}
   .al-demo__track{width:30px;flex:none}
@@ -1353,7 +1359,7 @@ footer{margin-top:auto}
   .al-demo__step{display:block;padding:3px 0}
   .al-demo__track{width:auto}
   .al-demo__label{display:none}
-  .al-demo__controls{margin-top:1rem}
+  .al-demo__controls{margin-top:.6rem}
   .al-demo__cta{margin-top:.7rem;padding:7px 16px}
   .al-demo__stats strong{font-size:clamp(22px,2vw,28px)}
   .al-demo__stats{gap:10px 12px}   /* las dos cifras lado a lado en columnas angostas */
@@ -1363,10 +1369,11 @@ footer{margin-top:auto}
    ventanas de iPad):
    columna de texto mas compacta para que la demo quepa */
 @media (min-width:640px) and (max-width:1099px) and (min-aspect-ratio:9/10) and (min-height:561px) and (max-height:760px),
-       (min-width:1100px) and (max-width:1439px) and (orientation:landscape) and (min-height:561px) and (max-height:640px){
-  .al-demo__body{font-size:13px;line-height:1.45}
-  .al-demo__title{font-size:16.5px;margin-bottom:.3rem}
-  .al-demo__kicker{margin-bottom:.3rem}
+       (min-width:1100px) and (max-width:1439px) and (orientation:landscape) and (min-height:561px) and (max-height:680px){
+  .al-demo__body{font-size:12.5px;line-height:1.4}
+  .al-demo__note{display:none}
+  .al-demo__title{font-size:16px;margin-bottom:.25rem}
+  .al-demo__kicker{margin-bottom:.25rem}
   .al-demo__stats{display:none}
   #product .prod-h1{font-size:19px}
   #product .prod-cab .alert-box{font-size:12.5px;padding:.8rem 1rem}
@@ -1403,7 +1410,8 @@ footer{margin-top:auto}
 @media (orientation:portrait) and (min-width:1000px) and (max-aspect-ratio:9/10){ #ver-en-accion{--resto:664px} }
 @media (max-width:639px){
   .al-demo{--resto:355px}
-  #como-se-instala{--resto:430px}
+  #como-se-instala{--resto:460px}
+  #como-se-instala .al-demo__stage{height:max(150px, min(100cqw, calc(100svh - var(--resto))))}
   .al-demo__copy{min-height:12rem}
   #como-se-instala .al-demo__copy{min-height:16rem}
 }
@@ -1423,7 +1431,7 @@ footer{margin-top:auto}
   #product .prod-cab{margin-bottom:1rem}
   #product .demo-label{margin-bottom:.45rem}
   #ver-en-accion{--resto:492px;padding-top:12px;padding-bottom:12px}
-  #ver-en-accion .al-demo__stage{height:max(118px, min(100cqw, calc(100svh - var(--resto))))}
+  #ver-en-accion .al-demo__stage{height:max(104px, min(100cqw, calc(100svh - var(--resto))))}
   #ver-en-accion .al-demo__kicker{margin-bottom:.35rem}
   #ver-en-accion .al-demo__title{margin-bottom:.3rem}
   #ver-en-accion .al-demo__body{font-size:13px;line-height:1.45}
@@ -1505,6 +1513,15 @@ footer{margin-top:auto}
   .gp-modo-pasos .gp-vis>*{zoom:1}
   .gp-modo-pasos .gp-step.act{min-height:300px}
 }
+/* celular bajo (iPhone con la barra de Chrome): el paso de la guia mas compacto */
+@media (max-width:639px) and (max-height:660px){
+  .gp-modo-pasos .gp-step.act{min-height:260px;padding:10px;gap:10px 9px}
+  .gp-modo-pasos .gp-vis>*{zoom:1}
+  .gp-modo-pasos .gp-stitle{font-size:14.5px;margin-bottom:4px}
+  .gp-modo-pasos .gp-sdesc{font-size:12.5px;line-height:1.45}
+  .gp-modo-pasos .gp-stip{margin-top:4px}
+}
+@media (max-width:639px) and (max-height:605px){ .gp-modo-pasos .gp-stip{display:none} }
 /* 2026-09-28 modo ventana de iPad: la ventana puede ser chica en ancho y en
    alto a la vez. Ademas del ancho, el diseno se ajusta por el alto visible. */
 /* Inicio en ventana chica y casi cuadrada (disposicion de celular, poco alto) */
@@ -1528,7 +1545,7 @@ footer{margin-top:auto}
 }
 /* Guias en ventanas bajas: sin la bajada (las pestanas ya dicen de que trata
    cada guia) y el paso ocupa menos alto */
-@media (min-width:640px) and (max-height:640px){
+@media (min-width:640px) and (max-height:680px){
   #guias .home-lead{display:none}
   #guias .gp-tab-ey{display:none}
   #guias .gp-tab{padding-top:8px;padding-bottom:8px}
@@ -1593,6 +1610,13 @@ body>section:not(#home)>.container{padding-top:1.6rem}
   .al-demo__stats,.al-demo__map{display:none}
   .al-demo__controls{margin-top:8px}
   .al-demo__note{display:none}
+  /* 2026-09-28: los controles van justo bajo la escena (columna izquierda) y el
+     texto a la derecha; asi el largo del texto de cada paso no los mueve */
+  .al-demo{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);grid-template-rows:auto 1fr;column-gap:18px;align-items:start}
+  .al-demo__grid{display:contents}
+  .al-demo__stage,#como-se-instala .al-demo__stage{grid-column:1;grid-row:1}
+  .al-demo__controls{grid-column:1;grid-row:2;align-self:start}
+  .al-demo__copy,#como-se-instala .al-demo__copy{grid-column:2;grid-row:1 / span 2;align-self:center}
   /* Guias: el paso activo mas bajo */
   .gp-modo-pasos .gp-step.act{grid-template-columns:minmax(0,1.1fr) 30px minmax(0,1fr);grid-template-areas:"vis n t";padding:12px;gap:12px;align-items:center}
   .gp-modo-pasos .gp-vis{min-height:0}
@@ -1600,6 +1624,62 @@ body>section:not(#home)>.container{padding-top:1.6rem}
   .gp-modo-pasos .gp-step.act{min-height:0}
   .gp-prog{margin-bottom:8px}
   .gp-ctrl{margin-top:8px}
+}
+/* 2026-09-28 Guias en pantallas anchas (computador, iPad horizontal): formato
+   "tutorial" en dos columnas. A la izquierda el indice (las 3 guias y los 5
+   pasos en vertical, con el texto completo); a la derecha el diagrama de la
+   guia en chico, el paso con su vista grande y los botones. Antes eran cinco
+   franjas a todo el ancho y se veia estirado. Solo CSS: la guia activa usa
+   display:contents para que sus partes se ubiquen en la grilla. */
+@media (min-width:900px) and (min-aspect-ratio:9/10){
+  #guias .container{display:grid;grid-template-columns:minmax(240px,290px) minmax(0,1fr);column-gap:clamp(20px,2.6vw,36px);align-items:start}
+  #guias .home-eyebrow{grid-column:1/-1;grid-row:1}
+  #guias .home-h1{grid-column:1/-1;grid-row:2}
+  #guias .home-lead{grid-column:1/-1;grid-row:3;margin-bottom:1.2rem}
+  #guias .gp-panel.on.gp-modo-pasos{display:contents}
+  /* izquierda: guias, pasos en vertical (texto completo) y el diagrama de la
+     guia en version compacta */
+  #guias .gp-tabs{grid-column:1;grid-row:4;display:flex;flex-direction:column;gap:6px;margin:0 0 16px}
+  #guias .gp-tab{flex:none;min-width:0;width:100%;padding:10px 14px}
+  #guias .gp-tab-ey{display:block}
+  #guias .gp-prog{grid-column:1;grid-row:5;flex-direction:column;gap:2px;margin:0;position:relative;align-self:start}
+  #guias .gp-prog::before{content:'';position:absolute;left:14px;top:16px;bottom:16px;width:2px;border-radius:2px;background:var(--borde)}
+  #guias .gp-prog li{flex:none}
+  #guias .gp-prog li::before{display:none}
+  #guias .gp-prog button{flex-direction:row;align-items:center;gap:12px;padding:6px 8px 6px 0;border-radius:10px;text-align:left}
+  #guias .gp-prog button:hover .gp-prog-t{color:var(--negro)}
+  #guias .gp-prog-n{flex:none;position:relative;z-index:1}
+  #guias .gp-prog-t{display:block;text-align:left;font-size:13px;line-height:1.35;padding:0;-webkit-line-clamp:unset}
+  #guias .gvw{grid-column:1;grid-row:6;margin:14px 0 0;padding:10px 12px;align-self:start}
+  #guias .gvw-cg{grid-template-columns:1fr 54px 1fr!important;gap:6px}
+  #guias .gvw-cc .gvw-lbl{display:none}
+  #guias .gvw-cc svg{width:54px;height:30px}
+  #guias .gvw-tc{grid-template-columns:1fr;text-align:center;padding:8px 6px;row-gap:2px}
+  #guias .gvw-tc>i{grid-row:auto;font-size:20px!important}
+  #guias .gvw-tc .gvw-name{font-size:12px}
+  #guias .gvw-tc .gvw-sub{font-size:10.5px}
+  #guias .gvw-caps{display:none}
+  /* derecha: el paso ocupa el alto del indice (su vista crece) y abajo los botones */
+  #guias .gp-modo-pasos .gp-step.act{grid-column:2;grid-row:4 / span 2;min-height:0;margin:0;align-self:stretch;
+    grid-template-columns:30px minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;grid-template-areas:"vis vis" "n t";gap:14px 12px;padding:16px;align-items:start}
+  #guias .gp-modo-pasos .gp-vis{min-height:clamp(170px,28svh,280px);align-self:stretch}
+  #guias .gp-modo-pasos .gp-vis>*{zoom:1.9}
+  #guias .gp-modo-pasos .gp-ncol{align-self:start}
+  #guias .gp-modo-pasos .gp-stitle{font-size:18px}
+  #guias .gp-modo-pasos .gp-sdesc{font-size:14.5px;line-height:1.6}
+  #guias .gp-ctrl{grid-column:2;grid-row:6;margin-top:12px;align-self:start}
+}
+/* ancho y bajo (iPad horizontal con barras, portatiles): indice mas compacto */
+@media (min-width:900px) and (min-aspect-ratio:9/10) and (max-height:760px){
+  #guias .home-lead{display:none}
+  #guias .home-h1{margin-bottom:.9rem}
+  #guias .gp-tab-ey{display:none}
+  #guias .gp-tab{padding:8px 12px}
+  #guias .gp-tabs{gap:5px;margin-bottom:12px}
+  #guias .gp-prog button{padding:3px 8px 3px 0}
+  #guias .gp-prog-n{width:26px;height:26px;font-size:11px}
+  #guias .gp-prog::before{left:12px}
+  #guias .gp-modo-pasos .gp-vis{min-height:150px}
 }
 </style>
 </head>
@@ -3056,6 +3136,21 @@ function setStep(i){
   setTimeout(() => { fillCopy(i); copy.classList.remove('is-changing'); }, 280);
 }
 const stepOf = t => { for (let i = STEPS.length - 1; i >= 0; i--) if (t >= STEPS[i].a) return i; return 0; };
+// 2026-09-28: el texto reserva el alto del paso mas largo (medido para el ancho
+// actual) para que los controles (anterior, pausa, siguiente) no cambien de
+// lugar al avanzar. Se recalcula si cambia el ancho (girar, pantalla dividida).
+let anchoReservado = 0;
+function reservarAlto(){
+  const w = copy.offsetWidth; if (!w || w === anchoReservado) return;
+  anchoReservado = w; copy.style.minHeight = '';
+  if (matchMedia('(orientation:landscape) and (max-height:560px)').matches) return;   // controles bajo la escena
+  let max = 0;
+  STEPS.forEach((s, i) => { fillCopy(i); max = Math.max(max, copy.offsetHeight); });
+  fillCopy(Math.max(0, current));
+  copy.style.minHeight = max + 'px';
+}
+if ('ResizeObserver' in window) new ResizeObserver(reservarAlto).observe(copy);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { anchoReservado = 0; reservarAlto(); });
 function go(i){
   i = (i + STEPS.length) % STEPS.length;
   T = playing ? STEPS[i].a + 0.001 : STEPS[i].b - 0.05;
@@ -3744,6 +3839,21 @@ function setStep(i){
   setTimeout(() => { fillCopy(i); copy.classList.remove('is-changing'); }, 280);
 }
 const stepOf = t => { for (let i = STEPS.length - 1; i >= 0; i--) if (t >= STEPS[i].a) return i; return 0; };
+// 2026-09-28: el texto reserva el alto del paso mas largo (medido para el ancho
+// actual) para que los controles (anterior, pausa, siguiente) no cambien de
+// lugar al avanzar. Se recalcula si cambia el ancho (girar, pantalla dividida).
+let anchoReservado = 0;
+function reservarAlto(){
+  const w = copy.offsetWidth; if (!w || w === anchoReservado) return;
+  anchoReservado = w; copy.style.minHeight = '';
+  if (matchMedia('(orientation:landscape) and (max-height:560px)').matches) return;   // controles bajo la escena
+  let max = 0;
+  STEPS.forEach((s, i) => { fillCopy(i); max = Math.max(max, copy.offsetHeight); });
+  fillCopy(Math.max(0, current));
+  copy.style.minHeight = max + 'px';
+}
+if ('ResizeObserver' in window) new ResizeObserver(reservarAlto).observe(copy);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { anchoReservado = 0; reservarAlto(); });
 function go(i){
   i = (i + STEPS.length) % STEPS.length;
   T = playing ? STEPS[i].a + 0.001 : STEPS[i].b - HOLD;
