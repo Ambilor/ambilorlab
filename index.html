@@ -1251,6 +1251,22 @@ footer{margin-top:auto}
 .hx-play{max-width:calc(100vw - 24px)}
 .hx-play-msg{white-space:normal;text-wrap:balance}
 @media (max-width:639px){ .hx-play-msg{letter-spacing:.06em;font-size:10.5px} }
+/* 2026-09-28: las escenas del inicio escalan con el alto visible para caber
+   completas (titulo, dibujos y espacios en funcion de svh). Ejemplo: iPad
+   horizontal en Chrome deja ~690px y la escena medía ~800 (boton cortado). */
+.hx-escena{padding-top:clamp(1.6rem,5svh,5rem)!important;padding-bottom:clamp(1.6rem,5svh,5rem)}
+.hx-escena .hx-head{margin-bottom:clamp(1rem,3.2svh,3rem)}
+.hx-escena .hx-eyebrow{margin-bottom:clamp(.5rem,1.4svh,1rem)}
+.hx-escena .hx-h2{font-size:clamp(1.6rem,min(4vw,6.4svh),3.3rem)}
+.hx-escena .hx-panel{padding:clamp(.9rem,2.2svh,1.4rem) clamp(.9rem,1.6vw,1.4rem)}
+.hx-escena .hx-panel-top{margin-bottom:clamp(.5rem,1.4svh,1rem)}
+.hx-escena .hx-art{max-height:26svh;margin-bottom:clamp(.6rem,1.8svh,1.2rem)}
+.hx-escena .hx-panel-t{font-size:clamp(15px,2.3svh,18px)}
+.hx-escena .hx-panel-d{font-size:clamp(13px,1.9svh,14px);line-height:1.5}
+.hx-escena .hx-go{margin-top:clamp(1rem,3svh,2.6rem)}
+.hx-escena .hx-who-c{padding:clamp(.9rem,2.4svh,1.5rem)}
+.hx-escena .hx-who-n{margin-bottom:clamp(.4rem,1.4svh,1rem)}
+.hx-escena .hx-who-a,.hx-escena .hx-who-b{padding:clamp(.3rem,.9svh,.55rem) 0}
 /* 2026-09-28: celular en horizontal (pantalla apaisada y baja). Todo lo
    principal cabe en el alto visible: inicio compacto, demos en dos columnas
    (escena a la izquierda, texto a la derecha) y el paso de Guias mas bajo. */

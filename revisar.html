@@ -45,8 +45,8 @@
 <script>
 const DISPOSITIVOS = [
   ['iPhone vertical', 402, 700], ['iPhone horizontal', 874, 290],
-  ['iPad vertical', 834, 1100], ['iPad horizontal', 1194, 760],
-  ['Computador', 1440, 860], ['Monitor vertical', 1080, 1700]
+  ['iPad vertical', 834, 1050], ['iPad horizontal', 1194, 690],
+  ['Computador', 1440, 800], ['Monitor vertical', 1080, 1700]
 ];
 const PESTANAS = [['home','Inicio'],['about','Sobre mí'],['product','Herramientas'],['guias','Guías'],['contact','Contacto']];
 const ALTO_VISTA = 330;   // alto en pantalla de cada vista previa
@@ -119,6 +119,8 @@ async function revisar(v){
   // bloques que deben caber en el alto visible
   const cabe = (nombre, alto) => { if (alto > H + 2) avisos.push(`${nombre} no cabe: ${Math.round(alto)} de ${H} px`); };
   if (actual === 'home') cabe('Inicio (hasta los botones)', doc.querySelector('.hx-ctas').getBoundingClientRect().bottom + win.scrollY);
+  // escenas del inicio: en tablet y computador cada una debe caber completa en la pantalla
+  if (actual === 'home' && W >= 640 && H >= 500) doc.querySelectorAll('.hx-escena').forEach(e => cabe('Escena "' + (e.querySelector('.hx-eyebrow') || {}).textContent + '"', e.getBoundingClientRect().height));
   if (actual === 'product') doc.querySelectorAll('.al-demo').forEach(d => cabe('Demo "' + d.id + '"', d.getBoundingClientRect().bottom - d.previousElementSibling.getBoundingClientRect().top));
   if (actual === 'guias') { const g = doc.querySelector('.gp-panel.on'); if (g && g.querySelector('.gp-prog')) cabe('Paso de la guía', g.querySelector('.gp-ctrl').getBoundingClientRect().bottom - g.querySelector('.gp-prog').getBoundingClientRect().top); }
   win.scrollTo(0, 0);
