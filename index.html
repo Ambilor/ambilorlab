@@ -2945,23 +2945,49 @@ html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) ro
 })();
 
 // ── rueda del mouse en Inicio: respaldo (2026-09-28) ──
-// Si una vuelta de rueda no movio la pagina (algun navegador asocio la rueda al
-// contenido fijo del inicio), la pagina se desplaza por codigo. Si el navegador
-// ya la movio, no se hace nada (no hay doble desplazamiento).
+// En algunos equipos (Edge en Windows) la rueda no movia la pagina en Inicio
+// (la barra lateral si). Con la primera vuelta de rueda se comprueba si el
+// navegador desplazo la pagina; si no lo hizo, desde ahi la rueda la desplaza
+// este codigo, al instante y con un movimiento suave y continuo (cada vuelta
+// suma al destino y la pagina lo alcanza con inercia). Si el navegador si
+// desplaza, no se hace nada. La barra lateral o el teclado cancelan la animacion.
 (function(){
-  var pend = 0, t = null, y0 = 0;
+  var modo = 0;                 // 0: sin comprobar, 1: el navegador desplaza, 2: desplaza este codigo
+  var prueba = null, y0 = 0, pend = 0;
+  var destino = 0, pos = 0, ultimo = -1, anim = 0, tAnt = 0, tRueda = 0;
+  function max(){ return Math.max(0, document.documentElement.scrollHeight - innerHeight); }
+  function ir(y){ ultimo = Math.round(y); window.scrollTo({ top: ultimo, behavior: 'instant' }); }
+  function paso(t){
+    anim = 0;
+    if (ultimo >= 0 && Math.abs(window.scrollY - ultimo) > 2) {             // lo movio otra cosa
+      var dir = window.scrollY - ultimo;                                     // si va hacia donde gira la rueda, es el navegador desplazando:
+      if (performance.now() - tRueda < 400 && dir * (destino - ultimo) > 0 && Math.abs(dir) < 400) modo = 1;   // se lo dejamos a el
+      ultimo = -1; return;
+    }
+    var dt = Math.min(.05, tAnt ? (t - tAnt) / 1000 : .016); tAnt = t;
+    pos += (destino - pos) * (1 - Math.exp(-dt * 11));
+    if (Math.abs(destino - pos) < .5) { ir(destino); tAnt = 0; return; }
+    ir(pos); anim = requestAnimationFrame(paso);
+  }
+  function sumar(dy){
+    if (!anim || ultimo < 0) { pos = window.scrollY; destino = pos; tAnt = 0; }
+    destino = Math.max(0, Math.min(max(), destino + dy));
+    if (!anim) anim = requestAnimationFrame(paso);
+  }
   addEventListener('wheel', function(e){
-    if (e.ctrlKey || e.defaultPrevented || !document.body.classList.contains('i3-inicio')) return;
+    if (modo === 1 || e.ctrlKey || e.defaultPrevented || !document.body.classList.contains('i3-inicio')) return;
     if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
     var dy = e.deltaY * (e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? innerHeight : 1);
-    if (!t) { y0 = window.scrollY; pend = 0; }
+    tRueda = performance.now();
+    if (modo === 2) { sumar(dy); return; }
+    // primera vez: ver si el navegador mueve la pagina
+    if (!prueba) { y0 = window.scrollY; pend = 0; prueba = setTimeout(function(){
+      prueba = null;
+      var m = max(), fijo = Math.abs(window.scrollY - y0) < 1, puede = (pend > 0 && y0 < m - 1) || (pend < 0 && y0 > 0);
+      if (!fijo) modo = 1;
+      else if (puede) { modo = 2; sumar(pend); }
+    }, 220); }
     pend += dy;
-    clearTimeout(t);
-    t = setTimeout(function(){
-      t = null;
-      var max = document.documentElement.scrollHeight - innerHeight;
-      if (Math.abs(window.scrollY - y0) < 1 && ((pend > 0 && y0 < max - 1) || (pend < 0 && y0 > 0))) window.scrollBy({ top: pend, behavior: 'smooth' });
-    }, 140);
   }, { passive:true });
 })();
 
