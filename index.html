@@ -2692,6 +2692,9 @@ function irArriba(){
 // Al volver a la página desde el historial (bfcache de Safari) también arriba
 window.addEventListener('pageshow',function(e){ if(e.persisted) irArriba(); });
 window.addEventListener('load',function(){ if(!location.hash) irArriba(); });
+// ?p=product (u otra pestana) abre esa pestana al cargar (2026-09-28, lo usa la
+// pagina de prueba inicio-3d.html)
+window.addEventListener('load',function(){ var p=new URLSearchParams(location.search).get('p'); if(p&&['about','product','guias','contact'].indexOf(p)>=0&&document.getElementById(p)) show(p); });
 
 function show(id){
   var target=document.getElementById(id);
