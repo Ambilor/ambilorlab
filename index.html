@@ -7,6 +7,7 @@
 /* 2026-09-27: el sitio siempre abre arriba, en Inicio. Safari (iPad/iPhone)
    restauraba el scroll de la visita anterior o saltaba a un #ancla guardado
    en la dirección, y la página aparecía más abajo, sin la portada. */
+window.__errores=[];window.addEventListener("error",function(e){window.__errores.push(String(e.message||e))});
 try{if("scrollRestoration" in history)history.scrollRestoration="manual";if(location.hash)history.replaceState(null,"",location.pathname+location.search);}catch(e){}</script>
 <meta name="theme-color" content="#06080C" />
 <title>Ambilor.Lab — Automatizacion contable y financiera</title>
@@ -931,7 +932,8 @@ nav.scrolled .nav-links a{font-size:12px}
 .hx-title,.hx-bottom{pointer-events:auto}      /* …salvo sobre el texto y los botones */
 .hx-title{width:fit-content;max-width:100%}
 .hx-canvas{touch-action:pan-y}                 /* en celular se puede seguir desplazando */
-.hx.juego .hx-canvas{touch-action:none}        /* jugando, el dedo gira el cubo */
+.hx-cubo-zona{display:none;position:absolute;z-index:1;border-radius:50%;touch-action:none}
+@media (pointer:coarse){.hx-cubo-zona{display:block}}   /* con el dedo solo se juega sobre el cubo */
 .hx.rotando,.hx.rotando .hx-canvas{cursor:grabbing!important}
 .hx-play{position:absolute;left:78%;top:75%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:.65rem;text-align:center;width:max-content;max-width:92vw;opacity:0;pointer-events:none;transition:opacity .3s var(--ease)}
 /* solo al interactuar con el cubo (o al mostrar el logro) */
@@ -1241,17 +1243,26 @@ footer{margin-top:auto}
 .hx-escena .hx-panels,.hx-escena .hx-who{margin-bottom:0}
 .hx-escena .hx-go{margin:clamp(1.8rem,4vh,2.6rem) 0 0}
 .hx-end{min-height:70vh;min-height:70svh;display:flex;flex-direction:column;justify-content:center}
+/* 2026-09-28: tarjetas del inicio en tres columnas desde 640px; en una
+   sola columna (celular vertical) el dibujo no pasa de 420px de ancho */
+@media (min-width:640px){ .hx-panels{grid-template-columns:repeat(3,minmax(0,1fr))} .hx-panel{padding:1.1rem 1.1rem 1.3rem} }
+.hx-art{max-width:420px;margin-left:auto;margin-right:auto}
+/* controles del cubo: nunca mas anchos que la pantalla (el mensaje pasa a dos lineas) */
+.hx-play{max-width:calc(100vw - 24px)}
+.hx-play-msg{white-space:normal;text-wrap:balance}
+@media (max-width:639px){ .hx-play-msg{letter-spacing:.06em;font-size:10.5px} }
 /* 2026-09-28: celular en horizontal (pantalla apaisada y baja). Todo lo
    principal cabe en el alto visible: inicio compacto, demos en dos columnas
    (escena a la izquierda, texto a la derecha) y el paso de Guias mas bajo. */
 @media (orientation:landscape) and (max-height:500px){
   /* Inicio */
-  .hx{padding-top:3.2rem;padding-bottom:1.6rem}
-  .hx-title{font-size:clamp(1.7rem,4.2vw,2.3rem);margin-bottom:.9rem}
-  .hx-bottom{gap:.9rem}
-  .hx-lead{font-size:13.5px;line-height:1.5}
-  .hx-hud--tl,.hx-hud--tr{top:.8rem}
-  .hx-hud--br{bottom:.8rem}
+  .hx{padding-top:1.2rem;padding-bottom:1.2rem}
+  .hx-title{font-size:clamp(1.4rem,3.6vw,1.9rem);margin-bottom:.7rem}
+  .hx-bottom{gap:.75rem}
+  .hx-lead{font-size:12.5px;line-height:1.45}
+  .hx-btn{padding-top:.55rem;padding-bottom:.55rem}
+  .hx-hud{display:none}
+  .hx-play-msg{display:none}
   /* Demos: dos columnas */
   .demo-label{margin-bottom:.4rem}
   .al-demo{padding:12px 16px}
@@ -4095,7 +4106,13 @@ requestAnimationFrame(frame);
     ray.setFromCamera(ndc,camera);
     return ray.intersectObjects(piezas,true)[0]||null;
   }
-  canvas.addEventListener('pointerdown',function(e){
+  // Zona tactil del cubo (2026-09-28): un circulo transparente sobre el cubo
+  // con touch-action:none. Con el dedo solo se juega dentro de ella; en el
+  // resto del inicio el dedo siempre desplaza la pagina.
+  var zona=document.createElement('div'); zona.className='hx-cubo-zona'; zona.setAttribute('aria-hidden','true');
+  hx.appendChild(zona);
+  function alBajar(e){
+    if(e.pointerType!=='mouse'&&e.currentTarget===canvas) return;   // con el dedo, solo desde la zona
     var h=tocar(e), r=canvas.getBoundingClientRect(), px=e.clientX-r.left, py=e.clientY-r.top;
     var cerca=Math.hypot(px-centro.x,py-centro.y)<centro.r*1.35;
     if(!h&&!cerca) return;                       // fuera del cubo: la página sigue normal
@@ -4107,7 +4124,9 @@ requestAnimationFrame(frame);
     var ax=Math.abs(nL.x),ay=Math.abs(nL.y),az=Math.abs(nL.z);
     var ejeN=ax>=ay&&ax>=az?'x':(ay>=az?'y':'z');
     arr={x:e.clientX,y:e.clientY,orbita:false,ejeN:ejeN,p:h.point.clone().applyMatrix4(inv),listo:false};
-  });
+  }
+  canvas.addEventListener('pointerdown',alBajar);
+  zona.addEventListener('pointerdown',alBajar);
   canvas.addEventListener('pointermove',function(e){
     if(!arr){
       // El texto de ayuda aparece solo al pasar sobre el cubo (o jugando)
@@ -4182,13 +4201,14 @@ requestAnimationFrame(frame);
       // (2026-09-28) centrado en todo el espacio entre el rotulo superior
       // (40 px) y el titular (12 px de aire). Los controles del juego se
       // superponen al titular, que se atenua mientras se juega (CSS .cerca).
-      var arriba=40, abajo=(parseFloat(hx.style.paddingTop)||300)-12, zona=abajo-arriba;
-      lado=Math.max(110,Math.min(210,zona*.74)); cx=w/2; cy=arriba+zona/2;
+      var arriba=40, abajo=(parseFloat(hx.style.paddingTop)||300)-12, franja=abajo-arriba;
+      lado=Math.max(110,Math.min(210,franja*.74)); cx=w/2; cy=arriba+franja/2;
     }
     root.position.set((cx-w/2)*porPx,(h/2-cy)*porPx,0);
     root.scale.setScalar(lado*porPx/4.1);
     centro={x:cx,y:cy,r:lado*.62};
-    if(play){ play.style.left=cx+'px'; play.style.top=(cy+lado*.66)+'px'; }
+    var R=lado*.62; zona.style.left=(cx-R)+'px'; zona.style.top=(cy-R)+'px'; zona.style.width=zona.style.height=(2*R)+'px';
+    if(play){ play.style.left=cx+'px'; play.style.top=Math.max(8,Math.min(cy+lado*.66,h-(play.offsetHeight||84)-10))+'px'; }
   }
 
   // ── bucle ──

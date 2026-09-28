@@ -44,7 +44,7 @@
 <main id="main"></main>
 <script>
 const DISPOSITIVOS = [
-  ['iPhone vertical', 402, 700], ['iPhone horizontal', 874, 340],
+  ['iPhone vertical', 402, 700], ['iPhone horizontal', 874, 290],
   ['iPad vertical', 834, 1100], ['iPad horizontal', 1194, 760],
   ['Computador', 1440, 860], ['Monitor vertical', 1080, 1700]
 ];
@@ -64,7 +64,7 @@ const main = document.getElementById('main');
 const vistas = DISPOSITIVOS.map(([nombre, w, h]) => {
   const k = ALTO_VISTA / Math.max(h, 600);
   const caja = document.createElement('div'); caja.className = 'disp';
-  caja.innerHTML = `<h2>${nombre} <span>${w} × ${h}</span></h2><div class="marco" style="width:${Math.round(w*k)}px;height:${Math.round(h*k)}px"><iframe width="${w}" height="${h}" style="transform:scale(${k})" src="index.html?revisar=1"></iframe></div><div class="estado">Cargando…</div>`;
+  caja.innerHTML = `<h2>${nombre} <span>${w} × ${h}</span></h2><div class="marco" style="width:${Math.round(w*k)}px;height:${Math.round(h*k)}px"><iframe width="${w}" height="${h}" style="transform:scale(${k})" src="index.html?revisar=${Date.now()}"></iframe></div><div class="estado">Cargando…</div>`;
   caja.style.width = Math.max(Math.round(w*k) + 22, 200) + 'px';
   main.appendChild(caja);
   const iframe = caja.querySelector('iframe');
@@ -88,6 +88,9 @@ async function revisar(v){
     if (!e.children.length && e.textContent.trim() && e.scrollWidth > e.clientWidth + 2 && (cs.overflow === 'hidden' || cs.overflowX === 'hidden' || cs.textOverflow === 'ellipsis')) cortados.add(e.textContent.trim().slice(0, 28));
   });
   if (fuera.size) avisos.push('Se sale de la pantalla: ' + [...fuera].slice(0, 3).join(', '));
+  // errores de código registrados por la página (sin contar límites de 3D por tener 6 vistas abiertas)
+  const errores = (win.__errores || []).filter(m => !/webgl|context|ResizeObserver/i.test(m));
+  if (errores.length) avisos.push('Error de código: ' + [...new Set(errores)].slice(0, 2).join(' · '));
   // alineación: nada debe salirse de la columna de contenido (regla 1: un solo ancho)
   const desal = new Set();
   sec.querySelectorAll('.container, .hx-wrap').forEach(c => {
@@ -100,6 +103,15 @@ async function revisar(v){
     });
   });
   if (desal.size) avisos.push('Fuera de la columna de contenido: ' + [...desal].slice(0, 3).join(', '));
+  // proporción: ningún dibujo o imagen debe ser más alto que el 60% de la pantalla
+  const grandes = new Set();
+  sec.querySelectorAll('svg, img').forEach(e => {
+    const r = e.getBoundingClientRect();
+    if (r.height > H * 0.6 && r.width > 60) grandes.add((e.getAttribute('class') || e.tagName).split(' ')[0] + ' ' + Math.round(r.height) + 'px');
+  });
+  if (grandes.size) avisos.push('Dibujo demasiado grande: ' + [...grandes].slice(0, 3).join(', '));
+  // controles del cubo dentro del inicio
+  if (actual === 'home') { const p = doc.getElementById('hxPlay'), hxr = doc.querySelector('.hx').getBoundingClientRect(); if (p) { const pr = p.getBoundingClientRect(); if (pr.bottom > hxr.bottom + 1 || pr.right > W + 1) avisos.push('Controles del cubo fuera del inicio'); } }
   if (cortados.size) avisos.push('Texto cortado: ' + [...cortados].slice(0, 2).join(' · '));
   const pie = doc.querySelector('footer').getBoundingClientRect();
   const vacio = Math.round(H - (pie.bottom + win.scrollY));
