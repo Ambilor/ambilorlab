@@ -1905,6 +1905,11 @@ body>section:not(#home)>.container{padding-top:1.6rem}
   #home .i3-a{display:none}
   #home .i3-b{border-top:0;padding:0;font-size:12.5px;line-height:1.4}
   #home .i3-cierre{font-size:clamp(1.8rem,13vh,3.4rem)}
+  /* el cubo vive en una columna propia a la derecha (antes quedaba cortado abajo,
+     sobre las tarjetas o el pie): el contenido se corre un poco a la izquierda */
+}
+@media (orientation:landscape) and (max-height:560px) and (min-width:640px){
+  body:not(.i3-estatico) #home .i3-estacion{width:min(1040px,calc(100vw - 2*clamp(40px,5vw,64px) - 104px));left:calc(50% - 46px)}
 }
 /* ventanas angostas y bajas (modo ventana de iPad, celular pequeno) */
 @media (max-width:700px) and (max-height:640px){
@@ -2018,6 +2023,33 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
 
 /* ── Giroscopio: el contenido se inclina con el aparato (celular y tablet) ── */
 html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) rotateX(var(--gx,0deg)) rotateY(var(--gy,0deg));transform-origin:50% var(--goy,50%)}
+
+/* ── Sobre mi en celular girado: dos columnas (antes el perfil ocupaba todo el
+   ancho y la primera pantalla mostraba solo eso) ── */
+@media (orientation:landscape) and (max-height:560px) and (min-width:640px) and (max-width:899px){
+  .ab2{grid-template-columns:minmax(210px,34%) minmax(0,1fr);gap:18px}
+  .ab2-perfil{position:static;padding:1rem}
+  .ab2-cab{gap:10px;margin-bottom:.7rem}
+  .ab2-cab .ab-avatar{width:44px;height:44px;font-size:15px}
+  .ab2-cab .about-name{font-size:18px}
+  .ab2-cab .about-role{font-size:10.5px}
+  .ab2-cita{font-size:13px;margin-bottom:.7rem}
+  .ab2-form li{grid-template-columns:28px minmax(0,1fr);padding:.5rem 0}
+  .ab2-form li .ab-chip{grid-column:2;justify-self:start}
+  .ab2-flujo{grid-template-columns:1fr;gap:8px}
+  .ab2-flujo li{display:grid;grid-template-columns:auto 1fr;column-gap:10px;padding:.65rem .8rem}
+  .ab2-flujo li:not(:last-child)::after{content:'↓';right:auto;left:26px;top:auto;bottom:-13px;transform:none}
+  .ab2-fn{grid-row:span 2;flex-direction:column;justify-content:flex-start;gap:4px;margin:0}
+}
+
+/* horizontal muy bajo (iPhone girado con las barras de Chrome): "Para quien" cabe entero */
+@media (orientation:landscape) and (max-height:300px){
+  #home .i3-cuatro{gap:6px}
+  #home .i3-cuatro .i3-tarjeta{padding:.35rem .7rem}
+  #home .i3-quien{font-size:13px;margin-bottom:.1rem}
+  #home .i3-b{font-size:11.5px;line-height:1.35}
+  #home .i3-h2{margin-bottom:.35rem}
+}
 </style>
 </head>
 
@@ -3454,8 +3486,13 @@ window.AL3D = (function(){
     for (var k = 0; k < obst.length; k++) { var o = obst[k]; if (x + m > o.left - 6 && x - m < o.right + 6 && y + m > o.top - 6 && y - m < o.bottom + 6) return false; }
     return true;
   }
+  function bajoHorizontal(){ return innerWidth > innerHeight && innerHeight <= 560 && innerWidth >= 640; }
   function puntoGuia(i, w, tam){
     var lista = guia[i], g = lista && lista[w]; if (!g) return { x: innerWidth - tam, y: 90, tam: tam };
+    if (bajoHorizontal()) {                                                  // celular girado: columna derecha, a la altura de lo que se lee
+      var gy = (g.top + g.bottom) / 2;
+      return { x: innerWidth - Math.max(74, innerWidth * 0.09), y: Math.max(76, Math.min(innerHeight - 96, gy)), tam: tam };
+    }
     var cx = (g.left + g.right) / 2, cy = (g.top + g.bottom) / 2, d = tam * 0.95;
     var lados = [{ x: g.right + d, y: cy }, { x: g.left - d, y: cy }];
     var abajo = { x: Math.max(g.left + d * 0.5, Math.min(g.right - d * 0.5, cx)), y: lista.fondo + d }, encima = { x: g.right - d * 0.5, y: g.top - d };
@@ -3843,7 +3880,7 @@ window.AL3D = (function(){
     // de los titulos si hay margen; si no, arriba a la derecha bajo la barra
     // recorre el contenido: en la lectura se posa junto a cada elemento del bloque
     // (segun cuanto se ha bajado); en el viaje vuela al primero del bloque siguiente
-    var tam = vertical ? 44 : (W < 1100 ? 66 : 78), pt, visita = null;
+    var tam = vertical ? 44 : bajoHorizontal() ? Math.min(58, H * 0.14) : (W < 1100 ? 66 : 78), pt, visita = null;
     if (guiaViaje < 0) {
       var n = (guia[guiaI] || []).length || 1, w = Math.min(n - 1, Math.floor(guiaQ * n));
       pt = puntoGuia(guiaI, w, tam); visita = guia[guiaI] && guia[guiaI][w];
