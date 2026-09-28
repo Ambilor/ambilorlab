@@ -1980,6 +1980,14 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
   .ab2-logros{grid-template-columns:1fr}
   .ab2-exp-h{flex-wrap:wrap}
 }
+
+/* 2026-09-28: en todas las pestanas las tarjetas se enmarcan con el borde azul y el
+   brillo del inicio: al pasar el mouse y en un recorrido breve al entrar (.marco-luz) */
+#about .ab2-perfil,#about .ab2-flujo li,#about .ab2-exp,#about .ab2-tools li,#product .pi-card,#product .pi-num,#product .alert-box,#product .al-demo,#product .pi-faq,#guias .gvw,#guias .gp-step,#guias .gp-tab:not(.on),#contact .ct-lista,#contact .cf-wrap{transition:border-color .45s var(--ease),box-shadow .45s var(--ease)}
+#about .ab2-perfil:hover,#about .ab2-flujo li:hover,#about .ab2-exp:hover,#about .ab2-tools li:hover,#product .pi-card:hover,#product .pi-num:hover,#product .alert-box:hover,#product .al-demo:hover,#product .pi-faq:hover,#guias .gvw:hover,#guias .gp-step:hover,#guias .gp-tab:not(.on):hover,#contact .ct-lista:hover,#contact .cf-wrap:hover,.marco-luz{
+  border-color:rgba(31,92,153,.55)!important;box-shadow:0 0 0 1px rgba(31,92,153,.22),0 0 32px -8px rgba(31,92,153,.35),0 20px 50px -30px rgba(18,48,77,.3)!important}
+[data-theme="dark"] #about .ab2-perfil:hover,[data-theme="dark"] #about .ab2-flujo li:hover,[data-theme="dark"] #about .ab2-exp:hover,[data-theme="dark"] #about .ab2-tools li:hover,[data-theme="dark"] #product .pi-card:hover,[data-theme="dark"] #product .pi-num:hover,[data-theme="dark"] #product .alert-box:hover,[data-theme="dark"] #product .al-demo:hover,[data-theme="dark"] #product .pi-faq:hover,[data-theme="dark"] #guias .gvw:hover,[data-theme="dark"] #guias .gp-step:hover,[data-theme="dark"] #guias .gp-tab:not(.on):hover,[data-theme="dark"] #contact .ct-lista:hover,[data-theme="dark"] #contact .cf-wrap:hover,[data-theme="dark"] .marco-luz{
+  border-color:rgba(143,193,255,.5)!important;box-shadow:0 0 0 1px rgba(76,141,219,.3),0 0 42px -8px rgba(76,141,219,.5),0 30px 80px -30px rgba(0,0,0,.8)!important}
 </style>
 </head>
 
@@ -2984,6 +2992,19 @@ function show(id){
   },60);
   if(id==='home') animH1();
   document.body.classList.toggle('i3-inicio', id==='home');
+  // recorrido breve al entrar: enmarca en orden las tarjetas principales de la
+  // primera pantalla (como el cubo en Inicio), una vez por visita
+  (function(){
+    var RECORRIDO={about:'#about .ab2-perfil, #about .ab2-flujo li, #about .ab2-exp',
+      product:'#product .prod-cab .alert-box, #ver-en-accion',
+      guias:'#guias .gp-panel.on .gvw, #guias .gp-panel.on .gp-step.act',
+      contact:'#contact .ct-lista, #contact .cf-wrap'};
+    clearTimeout(window._marcoT);
+    [].forEach.call(document.querySelectorAll('.marco-luz'),function(t){t.classList.remove('marco-luz');});
+    if(!RECORRIDO[id]||(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+    var ts=[].slice.call(document.querySelectorAll(RECORRIDO[id])).filter(function(t){var r=t.getBoundingClientRect();return r.height>0&&r.top<innerHeight;});
+    (function paso(k){ if(k>0) ts[k-1].classList.remove('marco-luz'); if(k>=ts.length) return; ts[k].classList.add('marco-luz'); window._marcoT=setTimeout(function(){paso(k+1);},k===0?800:560); })(0);
+  })();
   try{ document.dispatchEvent(new CustomEvent('pestana',{detail:id})); }catch(e){}
   return false;
 }
