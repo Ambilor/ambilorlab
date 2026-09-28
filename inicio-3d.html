@@ -32,6 +32,9 @@ a,button{-webkit-tap-highlight-color:transparent}
 
 /* escena 3D fija de fondo */
 #escena{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
+/* el cubo acompanante va en su propia capa, sobre el contenido, para posarse en las tarjetas */
+#capaHada{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:5;pointer-events:none}
+.estatico #capaHada{display:none}
 .vineta{position:fixed;inset:0;z-index:1;pointer-events:none;
   background:radial-gradient(ellipse 60% 55% at 50% 50%,rgba(6,8,12,.72),rgba(6,8,12,.35) 60%,transparent 80%)}
 
@@ -55,8 +58,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:cent
 
 /* el recorrido: el alto da el largo del desplazamiento; los bloques van fijos al centro */
 .tunel{position:relative;z-index:2}
-.tramo{height:120vh;height:120svh}
-.tramo:last-child{height:100vh;height:100svh}
 .escenario{position:fixed;inset:0;z-index:3;perspective:1100px;perspective-origin:50% 50%;pointer-events:none}
 .estacion{position:absolute;left:50%;top:50%;width:min(1100px,calc(100vw - 2*clamp(16px,5vw,64px)));
   transform:translate(-50%,-50%);will-change:transform,opacity;pointer-events:none;visibility:hidden}
@@ -148,6 +149,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:cent
 </head>
 <body>
 <canvas id="escena" aria-hidden="true"></canvas>
+<canvas id="capaHada" aria-hidden="true"></canvas>
 <div class="vineta" aria-hidden="true"></div>
 
 <nav>
@@ -233,7 +235,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:cent
   </section>
 </main>
 
-<div class="tunel" aria-hidden="true"><div class="tramo"></div><div class="tramo"></div><div class="tramo"></div><div class="tramo"></div></div>
+<div class="tunel" aria-hidden="true"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
@@ -245,23 +247,37 @@ nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:cent
   var hay3D = typeof THREE !== 'undefined';
   if (reduce || !hay3D) { document.documentElement.classList.add('estatico'); if (!hay3D) canvas.style.display = 'none'; }
 
-  // ── avance: 0..N-1 segun el desplazamiento (suavizado para que el 3D y el texto vayan juntos)
-  var P = 0, Pobj = 0;
-  function objetivo(){
-    var max = document.documentElement.scrollHeight - innerHeight;
-    Pobj = max > 0 ? Math.min(1, Math.max(0, scrollY / max)) * (N - 1) : 0;
+  // ── avance por tramos: en cada bloque hay un tramo de lectura (el bloque queda
+  // quieto y el cubo recorre sus elementos: titulo, tarjetas, botones) y entre
+  // bloques un tramo de viaje. P va de 0 a N-1 (suavizado para que el 3D y el
+  // texto vayan juntos).
+  var LECTURA = [0.6, 1.3, 1.6, 0.5], VIAJE = 0.9;     // en altos de pantalla
+  var tunel = document.querySelector('.tunel'), inicios = [], total = 0;
+  function tramos(){
+    var H = innerHeight, y = 0;
+    for (var i = 0; i < N; i++) { inicios[i] = y; y += LECTURA[i] * H + (i < N - 1 ? VIAJE * H : 0); }
+    total = y; tunel.style.height = (total + H) + 'px';
   }
-  addEventListener('scroll', objetivo, { passive:true }); addEventListener('resize', objetivo); objetivo();
+  var P = 0, Pobj = 0, guiaI = 0, guiaQ = 0, guiaViaje = -1;   // guiaViaje: fraccion del viaje (o -1 si esta leyendo)
+  function objetivo(){
+    var H = innerHeight, y = Math.max(0, Math.min(total, scrollY));
+    for (var i = 0; i < N; i++) {
+      var finLectura = inicios[i] + LECTURA[i] * H;
+      if (y <= finLectura || i === N - 1) { Pobj = i; guiaI = i; guiaQ = Math.min(1, (y - inicios[i]) / (LECTURA[i] * H)); guiaViaje = -1; return; }
+      if (y < inicios[i + 1]) { var f = (y - finLectura) / (VIAJE * H); Pobj = i + f; guiaI = i; guiaViaje = f; return; }
+    }
+  }
+  tramos();
+  addEventListener('scroll', objetivo, { passive:true }); addEventListener('resize', function(){ tramos(); objetivo(); }); objetivo();
 
   // indicador: ir a una estacion = desplazar la pagina hasta ella (sin mover sola la pagina despues)
   var puntos = [].slice.call(document.querySelectorAll('.ruta button'));
   puntos.forEach(function(b){ b.addEventListener('click', function(){
-    var max = document.documentElement.scrollHeight - innerHeight;
-    scrollTo({ top: max * (+b.dataset.i) / (N - 1), behavior: reduce ? 'auto' : 'smooth' });
+    scrollTo({ top: inicios[+b.dataset.i] + 2, behavior: reduce ? 'auto' : 'smooth' });
   }); });
 
   // cada bloque: llega desde el fondo, se queda al frente mientras se lee y pasa hacia atras
-  var PAUSA = 0.32;   // parte del tramo en que el bloque queda quieto al centro
+  var PAUSA = 0;      // la pausa de lectura ahora es un tramo propio del desplazamiento
   // piezas de cada bloque (titulos, tarjetas, botones) y su posicion respecto al
   // centro del bloque: al avanzar se abren hacia los lados y arriba, y la camara
   // pasa por en medio de ellas
@@ -277,6 +293,46 @@ nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:cent
     });
   }
   addEventListener('resize', medirPiezas); medirPiezas();
+  var GUIA = [['h1', '.ctas'], ['.tres .tarjeta'], ['.cuatro .tarjeta'], ['.ctas']];
+  var guia = [];
+  function rectDe(el){
+    if (/^H[12]$/.test(el.tagName)) { var rg = document.createRange(); rg.selectNodeContents(el); return { r: rg.getBoundingClientRect(), tipo: 'titulo' }; }
+    if (el.classList.contains('ctas')) {                    // los botones, no la fila completa
+      var a = el.firstElementChild.getBoundingClientRect(), b = el.lastElementChild.getBoundingClientRect();
+      return { r: { left: Math.min(a.left, b.left), right: Math.max(a.right, b.right), top: Math.min(a.top, b.top), bottom: Math.max(a.bottom, b.bottom) }, tipo: 'ctas' };
+    }
+    return { r: el.getBoundingClientRect(), tipo: 'tarjeta' };
+  }
+  function medirGuia(){
+    guia = estaciones.map(function(e, i){
+      var prev = e.style.transform; e.style.transform = 'translate(-50%,-50%)';
+      piezas[i].forEach(function(p){ p.prev = p.el.style.transform; p.el.style.transform = ''; });
+      var lista = [];
+      GUIA[i].forEach(function(sel){ [].slice.call(e.querySelectorAll(sel)).forEach(function(el){ var m = rectDe(el); lista.push({ left: m.r.left, right: m.r.right, top: m.r.top, bottom: m.r.bottom, tipo: m.tipo }); }); });
+      piezas[i].forEach(function(p){ p.el.style.transform = p.prev; });
+      e.style.transform = prev;
+      return lista;
+    });
+  }
+  addEventListener('resize', medirGuia); medirGuia();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(medirGuia);
+  // punto en pantalla (px) donde se posa el cubo junto a un elemento
+  function puntoGuia(i, w, tam){
+    var g = guia[i] && guia[i][w]; if (!g) return { x: innerWidth - tam, y: 90 };
+    var W = innerWidth, H = innerHeight, x, y;
+    var vert = W / H < 0.8;
+    if (g.tipo === 'tarjeta') {                                                               // posado en la esquina de la tarjeta
+      if (vert) { x = g.right - tam * 0.35; y = g.top - tam * 0.12; }                         // (en celular, sobre el borde: no tapa el texto)
+      else { x = g.right - tam * 0.3; y = g.top + tam * 0.25; }
+    } else {
+      x = g.right + tam * 0.8; y = (g.top + g.bottom) / 2 - tam * 0.1;                       // al lado del titulo o de los botones
+      if (x > W - tam * 0.6) {                                                                // sin espacio al lado:
+        x = Math.min(g.right, W - tam * 0.6);
+        y = g.tipo === 'titulo' ? g.top - tam * 1.05 : g.bottom + tam * 0.9;                  // encima del titulo, bajo los botones
+      }
+    }
+    return { x: Math.max(tam * 0.6, Math.min(W - tam * 0.6, x)), y: Math.max(62 + tam * 0.5, Math.min(H - tam * 0.6, y)) };
+  }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(medirPiezas);
   function colocar(){
     var ancho = innerWidth < 701, W = innerWidth, H = innerHeight;
@@ -415,7 +471,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:cent
 
   // ── el cubo Rubik acompanante: flota junto a la camara, la sigue con un poco de
   // retraso (como un hada guia), gira sus capas de vez en cuando y deja una estela
-  var hada = new THREE.Group(), cubo = new THREE.Group(); hada.add(cubo); scene.add(hada);
+  var escenaHada = new THREE.Scene(), renderHada = null;
+  try {
+    renderHada = new THREE.WebGLRenderer({ canvas: document.getElementById('capaHada'), antialias: true, alpha: true });
+    renderHada.setPixelRatio(Math.min(devicePixelRatio || 1, 2)); renderHada.setClearColor(0x000000, 0);
+    escenaHada.add(new THREE.AmbientLight(0x8fb4e8, 0.6));
+    var dlH = new THREE.DirectionalLight(0xffffff, 0.95); dlH.position.set(3, 5, 6); escenaHada.add(dlH);
+  } catch (e) { renderHada = null; escenaHada = scene; document.getElementById('capaHada').style.display = 'none'; }
+  var hada = new THREE.Group(), cubo = new THREE.Group(); hada.add(cubo); escenaHada.add(hada);
   var CARAS = [0x4C8DDB, 0x34C27A, 0xE8EDF5, 0xF0A63A, 0x8FC1FF, 0x2F6FB8];   // +x -x +y -y +z -z
   var cuerpo = new THREE.MeshStandardMaterial({ color: 0x0B0F16, roughness: .5 });
   var geoPieza = new THREE.BoxGeometry(0.31, 0.31, 0.31), piezasCubo = [];
@@ -435,7 +498,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:cent
   var NE = 46, estelaPos = new Float32Array(NE * 3), estelaAlfa = [];
   var gEst = new THREE.BufferGeometry(); gEst.setAttribute('position', new THREE.BufferAttribute(estelaPos, 3));
   var estela = new THREE.Points(gEst, new THREE.PointsMaterial({ color: 0x8FC1FF, size: movil ? 0.05 : 0.06, transparent: true, opacity: .8, depthWrite: false, blending: THREE.AdditiveBlending }));
-  scene.add(estela);
+  escenaHada.add(estela);
   var historia = [];
   // giro de una capa cada tanto (como el cubo del inicio)
   var giro = null, proximoGiro = 1.5;
@@ -463,13 +526,19 @@ nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:cent
     var mediaAlto = Math.tan(camera.fov * Math.PI / 360) * DIST, mediaAncho = mediaAlto * camera.aspect;
     // su lugar en pantalla segun el espacio libre: en el margen derecho a la altura
     // de los titulos si hay margen; si no, arriba a la derecha bajo la barra
-    var anchoBloque = estaciones[0].offsetWidth || W, margen = (W - anchoBloque) / 2, sx, sy, tam;
-    if (!vertical && margen >= 150) { sx = W - margen / 2; sy = H * 0.3; tam = 110; }
-    else { tam = vertical ? 64 : 80; sx = W - tam * 0.9 - 14; sy = 64 + tam * 0.55; }
+    // recorre el contenido: en la lectura se posa junto a cada elemento del bloque
+    // (segun cuanto se ha bajado); en el viaje vuela al primero del bloque siguiente
+    var tam = vertical ? 46 : (W < 1100 ? 76 : 92), pt;
+    if (guiaViaje < 0) { var n = (guia[guiaI] || []).length || 1; pt = puntoGuia(guiaI, Math.min(n - 1, Math.floor(guiaQ * n)), tam); }
+    else {
+      var a = puntoGuia(guiaI, (guia[guiaI] || [0]).length - 1, tam), b = puntoGuia(guiaI + 1, 0, tam), e = guiaViaje * guiaViaje * (3 - 2 * guiaViaje);
+      pt = { x: a.x + (b.x - a.x) * e, y: a.y + (b.y - a.y) * e - Math.sin(e * Math.PI) * H * 0.12 };   // vuela en arco
+    }
+    var sx = pt.x, sy = pt.y;
     var ox = (sx / W * 2 - 1) * mediaAncho, oy = (1 - sy / H * 2) * mediaAlto;
     var escalaHada = tam / H * 2 * mediaAlto;          // el cubo mide ~1 unidad
     // da vueltas suaves alrededor de su lugar, como un hada
-    hadaObj.set(camera.position.x + ox + Math.sin(t * .8) * .12, camera.position.y + oy + Math.sin(t * 1.3) * .1, zc - DIST + Math.cos(t * .6) * .2);
+    hadaObj.set(camera.position.x + ox + Math.sin(t * .8) * .04, camera.position.y + oy + Math.sin(t * 1.3) * .05, zc - DIST + Math.cos(t * .6) * .1);   // flota suave donde se posa
     // resorte: lo sigue con un poco de retraso
     hadaVel.add(hadaObj.clone().sub(hada.position).multiplyScalar(dt * 9)).multiplyScalar(Math.pow(0.02, dt));
     hada.position.add(hadaVel.clone().multiplyScalar(dt * 6));
@@ -501,7 +570,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:cent
   // tamano
   function medir(){
     var w = innerWidth, h = innerHeight;
-    renderer.setSize(w, h, false); camera.aspect = w / h;
+    renderer.setSize(w, h, false); if (renderHada) renderHada.setSize(w, h, false); camera.aspect = w / h;
     camera.fov = w / h < 0.8 ? 68 : 55;          // en vertical, algo mas de angulo para ver los lados
     camera.updateProjectionMatrix();
   }
@@ -536,6 +605,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:cent
     }
     colocar();
     renderer.render(scene, camera);
+    if (renderHada) renderHada.render(escenaHada, camera);
     requestAnimationFrame(bucle);
   }
   requestAnimationFrame(bucle);
