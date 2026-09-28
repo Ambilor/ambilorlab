@@ -1915,7 +1915,7 @@ body>section:not(#home)>.container{padding-top:1.6rem}
 body.i3-inicio>footer{position:relative;z-index:4;background:linear-gradient(transparent,var(--i3-fondo) 45%)}
 /* fuera de Inicio: sin cubo acompanante y el fondo mas atenuado para leer */
 body:not(.i3-inicio) #i3CapaHada,body:not(.i3-inicio) #i3Aviso{display:none}
-body:not(.i3-inicio) .i3-vineta{background:rgba(6,8,12,.74)}
+body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50% 45%,rgba(6,8,12,.82),rgba(6,8,12,.55) 70%,rgba(6,8,12,.4))}
 [data-theme="light"] body:not(.i3-inicio) .i3-vineta{background:rgba(238,242,247,.8)}
 /* tarjetas de vidrio en todas las pestanas (tema oscuro): el mismo lenguaje del inicio */
 [data-theme="dark"] .pi-card,[data-theme="dark"] .pi-nums,[data-theme="dark"] .alert-box,[data-theme="dark"] .gvw,
@@ -1923,6 +1923,63 @@ body:not(.i3-inicio) .i3-vineta{background:rgba(6,8,12,.74)}
 [data-theme="dark"] .ab-hero,[data-theme="dark"] .ab-flujo,[data-theme="dark"] .ab-org,[data-theme="dark"] .cf-field{
   background:rgba(10,14,20,.72)!important;border-color:rgba(143,193,255,.14)!important;
   -webkit-backdrop-filter:blur(10px) saturate(130%);backdrop-filter:blur(10px) saturate(130%)}
+
+/* ── Sobre mi compacto (2026-09-28) ── */
+.ab2{display:grid;grid-template-columns:minmax(260px,320px) minmax(0,1fr);gap:clamp(18px,3vw,40px);align-items:start}
+.ab2-perfil{position:sticky;top:84px;border:1px solid var(--borde);border-radius:14px;padding:1.25rem;background:#fff}
+.ab2-cab{display:flex;align-items:center;gap:14px;margin-bottom:1rem}
+.ab2-cab .about-name{margin-bottom:2px}
+.ab2-cita{font-style:italic;font-size:14.5px;line-height:1.55;color:var(--azul);border-left:2px solid currentColor;padding:2px 0 2px 12px;margin:0 0 1rem}
+[data-theme="dark"] .ab2-cita{color:var(--glow-2)}
+.ab2-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.2rem}
+.ab2-meta span{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;color:var(--gris-1);border:1px solid var(--borde);border-radius:100px;padding:4px 10px}
+.ab2-sub{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--azul);margin-bottom:.3rem}
+[data-theme="dark"] .ab2-sub{color:var(--glow)}
+.ab2-form{list-style:none;margin:0;padding:0}
+.ab2-form li{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:10px;align-items:center;padding:.65rem 0;border-top:1px solid var(--borde)}
+.ab2-form li:first-child{border-top:none}
+.ab2-form b{display:block;font-size:13.5px;font-weight:600;color:var(--negro);line-height:1.35}
+.ab2-form b+span{display:block;font-size:12px;color:var(--gris-2);margin-top:1px}
+.ab2-main>.pi-eyebrow{margin:0 0 .7rem}
+.ab2-main>.pi-eyebrow:not(:first-child){margin-top:1.6rem}
+.ab2-flujo{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.ab2-flujo li{position:relative;display:flex;flex-direction:column;gap:5px;border:1px solid var(--borde);border-radius:12px;padding:.9rem 1rem;background:#fff}
+.ab2-flujo li:not(:last-child)::after{content:'→';position:absolute;right:-12px;top:50%;transform:translateY(-50%);z-index:1;width:14px;text-align:center;font-size:13px;color:var(--azul)}
+[data-theme="dark"] .ab2-flujo li:not(:last-child)::after{color:var(--glow)}
+.ab2-fn{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--gris-2);margin-bottom:4px}
+.ab2-flujo b{font-size:14.5px;font-weight:600;color:var(--negro);line-height:1.3}
+.ab2-flujo li>span:last-child{font-size:13px;line-height:1.5;color:var(--gris-1)}
+.ab2-nota{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--gris-1);margin:.7rem 0 0}
+.ab2-nota i{color:var(--ok-n);font-size:16px}
+.ab2-exp{border:1px solid var(--borde);border-radius:12px;padding:1rem 1.1rem;background:#fff}
+.ab2-exp-h{display:flex;align-items:center;gap:12px;padding-bottom:.8rem;margin-bottom:.7rem;border-bottom:1px solid var(--borde)}
+.ab2-exp-h>div{flex:1;min-width:0}
+.ab2-exp-h b{display:block;font-size:15px;font-weight:600;color:var(--negro)}
+.ab2-exp-h b+span{display:block;font-size:12.5px;color:var(--azul)}
+[data-theme="dark"] .ab2-exp-h b+span{color:var(--glow-2)}
+.ab2-logros{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 22px}
+.ab2-logros li{display:flex;align-items:flex-start;gap:9px;font-size:13.5px;line-height:1.45;color:var(--gris-1)}
+.ab2-logros i{font-size:16px;color:var(--azul);margin-top:1px}
+[data-theme="dark"] .ab2-logros i{color:var(--glow)}
+.ab2-logros b{color:var(--negro);font-weight:600}
+.ab2-tools{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.ab2-tools li{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--negro);border:1px solid var(--borde);border-radius:100px;padding:6px 13px 6px 10px;background:#fff;cursor:default}
+.ab2-tools i{font-size:16px;color:var(--azul)}
+[data-theme="dark"] .ab2-tools i{color:var(--glow)}
+[data-theme="dark"] .ab2-perfil,[data-theme="dark"] .ab2-flujo li,[data-theme="dark"] .ab2-exp,[data-theme="dark"] .ab2-tools li{
+  background:rgba(10,14,20,.72);border-color:rgba(143,193,255,.14);-webkit-backdrop-filter:blur(10px) saturate(130%);backdrop-filter:blur(10px) saturate(130%)}
+@media (max-width:899px){
+  .ab2{grid-template-columns:1fr}
+  .ab2-perfil{position:static}
+}
+@media (max-width:639px){
+  .ab2-flujo{grid-template-columns:1fr;gap:8px}
+  .ab2-flujo li{display:grid;grid-template-columns:auto 1fr;column-gap:10px;padding:.75rem .85rem}
+  .ab2-flujo li:not(:last-child)::after{content:'↓';right:auto;left:26px;top:auto;bottom:-13px;transform:none}
+  .ab2-fn{grid-row:span 2;flex-direction:column;justify-content:flex-start;gap:4px;margin:0}
+  .ab2-logros{grid-template-columns:1fr}
+  .ab2-exp-h{flex-wrap:wrap}
+}
 </style>
 </head>
 
@@ -2035,63 +2092,68 @@ body:not(.i3-inicio) .i3-vineta{background:rgba(6,8,12,.74)}
 </section>
 
 <section id="about">
-  <div class="container">
-    <div class="ab-hero">
-      <div class="ab-avatar" aria-hidden="true">JR</div>
-      <div>
-        <div class="about-name">Jordan.R.</div>
-        <div class="about-role">Contador Público y Auditor · Analista de Datos</div>
+  <!-- Sobre mi (2026-09-28): compacto. Perfil y formacion a la izquierda; lo que
+       hago, experiencia y herramientas a la derecha. En celular, apilado. -->
+  <div class="container ab2">
+    <aside class="ab2-perfil">
+      <div class="ab2-cab">
+        <div class="ab-avatar" aria-hidden="true">JR</div>
+        <div>
+          <div class="about-name">Jordan.R.</div>
+          <div class="about-role">Contador Público y Auditor · Analista de Datos</div>
+        </div>
       </div>
-    </div>
-    <div class="about-quote">"La curiosidad te puede llevar muy lejos. Los cambios, también."</div>
+      <p class="ab2-cita">"La curiosidad te puede llevar muy lejos. Los cambios, también."</p>
+      <div class="ab2-meta">
+        <span><i class="ti ti-map-pin" aria-hidden="true"></i>Santiago, Chile</span>
+        <span><i class="ti ti-briefcase" aria-hidden="true"></i>2022 – 2026</span>
+      </div>
+      <div class="ab2-sub">Formación</div>
+      <ul class="ab2-form">
+        <li><span class="pi-ico pi-ico--s"><i class="ti ti-school" aria-hidden="true"></i></span><span><b>Analista de Datos</b><span>AIEP / Universidad Andrés Bello</span></span><span class="ab-chip ab-chip--sm">En curso</span></li>
+        <li><span class="pi-ico pi-ico--s"><i class="ti ti-certificate" aria-hidden="true"></i></span><span><b>Contador Público y Auditor</b><span>Universidad de Santiago (Usach)</span></span></li>
+        <li><span class="pi-ico pi-ico--s"><i class="ti ti-code" aria-hidden="true"></i></span><span><b>SQL en Gestión de Bases de Datos</b><span>CAI Ingeniería Usach · 40 h</span></span><span class="ab-chip ab-chip--sm">2025</span></li>
+      </ul>
+    </aside>
 
-    <div class="pi-bloque">
+    <div class="ab2-main">
       <div class="pi-eyebrow">Lo que hago</div>
-      <div class="pi-grid3 ab-flujo">
-        <div class="pi-card"><span class="ab-n">01</span><span class="pi-ico"><i class="ti ti-repeat" aria-hidden="true"></i></span><span class="pi-t">Tomo una tarea repetitiva</span><span class="pi-s">Revisar, comparar, ordenar o resumir números cada mes.</span></div>
-        <div class="pi-card"><span class="ab-n">02</span><span class="pi-ico"><i class="ti ti-code" aria-hidden="true"></i></span><span class="pi-t">La convierto en un programa</span><span class="pi-s">Con herramientas que tu equipo ya usa, como Google Sheets.</span></div>
-        <div class="pi-card"><span class="ab-n">03</span><span class="pi-ico"><i class="ti ti-circle-check" aria-hidden="true"></i></span><span class="pi-t">Se hace sola</span><span class="pi-s">En minutos y sin errores de copia, cada vez que la necesitas.</span></div>
-      </div>
-      <div class="ab-nota"><span class="pi-ico pi-ico--s"><i class="ti ti-bulb" aria-hidden="true"></i></span><span>Cada herramienta nació de un problema real: el Conciliador, de meses revisando pagos y facturas a mano.</span></div>
-    </div>
+      <ol class="ab2-flujo">
+        <li><span class="ab2-fn"><span class="pi-ico pi-ico--s"><i class="ti ti-repeat" aria-hidden="true"></i></span>01</span><b>Tomo una tarea repetitiva</b><span>Revisar, comparar, ordenar o resumir números cada mes.</span></li>
+        <li><span class="ab2-fn"><span class="pi-ico pi-ico--s"><i class="ti ti-code" aria-hidden="true"></i></span>02</span><b>La convierto en un programa</b><span>Con herramientas que tu equipo ya usa, como Google Sheets.</span></li>
+        <li><span class="ab2-fn"><span class="pi-ico pi-ico--s"><i class="ti ti-circle-check" aria-hidden="true"></i></span>03</span><b>Se hace sola</b><span>En minutos y sin errores de copia, cada vez que la necesitas.</span></li>
+      </ol>
+      <p class="ab2-nota"><i class="ti ti-bulb" aria-hidden="true"></i>Cada herramienta nació de un problema real: el Conciliador, de meses revisando pagos y facturas a mano.</p>
 
-    <div class="pi-bloque">
-      <div class="pi-eyebrow">Herramientas</div>
-      <div class="ab-stack">
-        <div class="ab-tool"><span class="pi-ico pi-ico--s"><i class="ti ti-database" aria-hidden="true"></i></span><span><b>SQL</b><span>Consultas y análisis</span></span></div>
-        <div class="ab-tool"><span class="pi-ico pi-ico--s"><i class="ti ti-brand-python" aria-hidden="true"></i></span><span><b>Python</b><span>Automatiza y limpia datos</span></span></div>
-        <div class="ab-tool"><span class="pi-ico pi-ico--s"><i class="ti ti-brand-google" aria-hidden="true"></i></span><span><b>Apps Script</b><span>Automatiza Google Sheets</span></span></div>
-        <div class="ab-tool"><span class="pi-ico pi-ico--s"><i class="ti ti-chart-dots" aria-hidden="true"></i></span><span><b>Looker Studio</b><span>Informes en vivo</span></span></div>
-        <div class="ab-tool"><span class="pi-ico pi-ico--s"><i class="ti ti-chart-bar" aria-hidden="true"></i></span><span><b>Power BI</b><span>Modelos y reportes</span></span></div>
-        <div class="ab-tool"><span class="pi-ico pi-ico--s"><i class="ti ti-building-warehouse" aria-hidden="true"></i></span><span><b>Dynamics</b><span>ERP</span></span></div>
-        <div class="ab-tool"><span class="pi-ico pi-ico--s"><i class="ti ti-building-bank" aria-hidden="true"></i></span><span><b>Bantotal</b><span>Sistema bancario</span></span></div>
-      </div>
-    </div>
-
-    <div class="pi-bloque">
       <div class="pi-eyebrow">Experiencia</div>
-      <div class="ab-exp">
-        <div class="ab-exp-h"><span class="pi-ico"><i class="ti ti-briefcase" aria-hidden="true"></i></span><div><div class="pi-t">Analista de Control Contable y Datos</div><div class="ab-org">Forum Servicios Financieros · Santiago</div></div><span class="ab-chip">2022 – 2026</span></div>
-        <ul class="pi-caps">
-          <li><span class="pi-ico pi-ico--s"><i class="ti ti-database-search" aria-hidden="true"></i></span><span><b>Valida</b> grandes volúmenes de datos</span></li>
-          <li><span class="pi-ico pi-ico--s"><i class="ti ti-layout-dashboard" aria-hidden="true"></i></span><span><b>Dashboards</b> de control operativo</span></li>
-          <li><span class="pi-ico pi-ico--s"><i class="ti ti-bolt" aria-hidden="true"></i></span><span><b>Automatiza</b> con SQL, Python y Apps Script</span></li>
-          <li><span class="pi-ico pi-ico--s"><i class="ti ti-arrows-exchange" aria-hidden="true"></i></span><span><b>Conciliador</b> semiautomático de partidas</span></li>
-          <li><span class="pi-ico pi-ico--s"><i class="ti ti-git-compare" aria-hidden="true"></i></span><span><b>Consistencia</b> entre Bantotal y Dynamics</span></li>
-          <li><span class="pi-ico pi-ico--s"><i class="ti ti-receipt" aria-hidden="true"></i></span><span><b>Pagos</b> flujos optimizados en el ERP</span></li>
-          <li><span class="pi-ico pi-ico--s"><i class="ti ti-forms" aria-hidden="true"></i></span><span><b>Formularios</b> y avisos automáticos</span></li>
-          <li><span class="pi-ico pi-ico--s"><i class="ti ti-trending-up" aria-hidden="true"></i></span><span><b>Mejora continua</b> de procesos</span></li>
+      <div class="ab2-exp">
+        <div class="ab2-exp-h">
+          <span class="pi-ico"><i class="ti ti-briefcase" aria-hidden="true"></i></span>
+          <div><b>Analista de Control Contable y Datos</b><span>Forum Servicios Financieros · Santiago</span></div>
+          <span class="ab-chip">2022 – 2026</span>
+        </div>
+        <ul class="ab2-logros">
+          <li><i class="ti ti-database-search" aria-hidden="true"></i><span><b>Valida</b> grandes volúmenes de datos</span></li>
+          <li><i class="ti ti-layout-dashboard" aria-hidden="true"></i><span><b>Dashboards</b> de control operativo</span></li>
+          <li><i class="ti ti-bolt" aria-hidden="true"></i><span><b>Automatiza</b> con SQL, Python y Apps Script</span></li>
+          <li><i class="ti ti-arrows-exchange" aria-hidden="true"></i><span><b>Conciliador</b> semiautomático de partidas</span></li>
+          <li><i class="ti ti-git-compare" aria-hidden="true"></i><span><b>Consistencia</b> entre Bantotal y Dynamics</span></li>
+          <li><i class="ti ti-receipt" aria-hidden="true"></i><span><b>Pagos</b> flujos optimizados en el ERP</span></li>
+          <li><i class="ti ti-forms" aria-hidden="true"></i><span><b>Formularios</b> y avisos automáticos</span></li>
+          <li><i class="ti ti-trending-up" aria-hidden="true"></i><span><b>Mejora continua</b> de procesos</span></li>
         </ul>
       </div>
-    </div>
 
-    <div class="pi-bloque">
-      <div class="pi-eyebrow">Formación</div>
-      <div class="pi-grid3">
-        <div class="pi-card"><span class="pi-ico"><i class="ti ti-school" aria-hidden="true"></i></span><span class="pi-t">Analista de Datos</span><span class="pi-s">AIEP / Universidad Andrés Bello</span><span class="ab-chip ab-chip--sm">En curso</span></div>
-        <div class="pi-card"><span class="pi-ico"><i class="ti ti-certificate" aria-hidden="true"></i></span><span class="pi-t">Contador Público y Auditor</span><span class="pi-s">Universidad de Santiago (Usach)</span></div>
-        <div class="pi-card"><span class="pi-ico"><i class="ti ti-code" aria-hidden="true"></i></span><span class="pi-t">SQL en Gestión de Bases de Datos</span><span class="pi-s">CAI Ingeniería Usach · 40 h</span><span class="ab-chip ab-chip--sm">2025</span></div>
-      </div>
+      <div class="pi-eyebrow">Herramientas</div>
+      <ul class="ab2-tools">
+        <li title="Consultas y análisis"><i class="ti ti-database" aria-hidden="true"></i>SQL</li>
+        <li title="Automatiza y limpia datos"><i class="ti ti-brand-python" aria-hidden="true"></i>Python</li>
+        <li title="Automatiza Google Sheets"><i class="ti ti-brand-google" aria-hidden="true"></i>Apps Script</li>
+        <li title="Informes en vivo"><i class="ti ti-chart-dots" aria-hidden="true"></i>Looker Studio</li>
+        <li title="Modelos y reportes"><i class="ti ti-chart-bar" aria-hidden="true"></i>Power BI</li>
+        <li title="ERP"><i class="ti ti-building-warehouse" aria-hidden="true"></i>Dynamics</li>
+        <li title="Sistema bancario"><i class="ti ti-building-bank" aria-hidden="true"></i>Bantotal</li>
+      </ul>
     </div>
   </div>
 </section>
@@ -3416,6 +3478,7 @@ window.AL3D = (function(){
   var luz = new THREE.PointLight(0x4c8ddb, 1.4, 14); scene.add(luz);
 
   var PASO = 12;                      // distancia entre bloques
+  var Z_PESTANA = { about: -9, product: -17, guias: -25, contact: -32 };   // punto del pasillo de cada pestana
   var LARGO = (N - 1) * PASO + 16;    // largo del pasillo
   var movil = innerWidth < 701;
 
@@ -3503,6 +3566,111 @@ window.AL3D = (function(){
     var esc = movil ? 0.75 : 1; o.scale.setScalar(esc);
     scene.add(o); objetos.push(o);
   }
+
+
+  // ── fondos propios de cada pestana (2026-09-28): objetos relacionados con su
+  // nombre, que aparecen al llegar a ella (y se ocultan en el recorrido de Inicio)
+  function fichaTex(t1, t2, acento){
+    return lienzo(300, 64, function(g, w, h){
+      rr(g, 1, 1, w-2, h-2, 10); g.fillStyle = 'rgba(14,19,27,.93)'; g.fill();
+      g.strokeStyle = 'rgba(143,193,255,.45)'; g.lineWidth = 1.2; g.stroke();
+      g.fillStyle = acento || '#4C8DDB'; g.fillRect(11, 14, 3, h - 28);
+      g.textBaseline = 'middle'; g.font = '600 17px Inter, system-ui, sans-serif'; g.fillStyle = '#E8EDF5';
+      g.fillText(t1, 24, t2 ? h/2 - 9 : h/2);
+      if (t2) { g.font = '500 12px "JetBrains Mono", ui-monospace, monospace'; g.fillStyle = '#8FC1FF'; g.fillText(t2, 24, h/2 + 12); }
+    });
+  }
+  function plano(tex, ancho, alto){ return new THREE.Mesh(new THREE.PlaneGeometry(ancho, alto), new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide, depthWrite: false })); }
+  var grupos = {};
+  function grupo(id){ var gr = new THREE.Group(); gr.visible = false; gr.userData.mats = []; gr.userData.al = 0; scene.add(gr); grupos[id] = gr; return gr; }
+  function poner(gr, obj, x, y, z, ry){
+    obj.position.set(x, y, z); obj.rotation.y = ry || (x < 0 ? 0.45 : -0.45);
+    obj.traverse(function(n){ if (n.material) { n.material.transparent = true; n.material.userData.op = n.material.opacity; gr.userData.mats.push(n.material); } });
+    gr.add(obj); return obj;
+  }
+  var lx = movil ? 2.3 : (innerWidth / innerHeight > 1.45 ? 5.6 : 4.4);   // distancia a los lados (en los margenes)
+  // Sobre mi: perfil, rol y herramientas
+  (function(){
+    var z0 = Z_PESTANA.about, gr = grupo('about');
+    var jr = plano(lienzo(160, 160, function(g, w, h){
+      var gd = g.createLinearGradient(0, 0, w, h); gd.addColorStop(0, '#2F6FB8'); gd.addColorStop(1, '#4C8DDB');
+      rr(g, 8, 8, w-16, h-16, 30); g.fillStyle = gd; g.fill();
+      g.font = '700 62px Inter, system-ui, sans-serif'; g.fillStyle = '#fff'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('JR', w/2, h/2 + 3);
+    }), 1.2, 1.2);
+    poner(gr, jr, lx + 0.6, 1.1, z0 - 7, -0.35);
+    [['Contador Público y Auditor', 'formación'], ['Analista de Datos', 'en curso'], ['2022 – 2026', 'Forum Servicios Financieros'],
+     ['SQL', 'consultas y análisis'], ['Python', 'automatiza datos'], ['Power BI', 'modelos y reportes'],
+     ['Apps Script', 'Google Sheets'], ['Looker Studio', 'informes en vivo']].forEach(function(f, i){
+      var s = i % 2 ? 1 : -1; poner(gr, plano(fichaTex(f[0], f[1], i < 3 ? '#34C27A' : '#4C8DDB'), 2.4, 0.51), s * (lx + (i % 3) * 0.5), -1.6 + (i % 4) * 1.05, z0 - 4.5 - i * 1.1);
+    });
+  })();
+  // Herramientas: hojas de calculo y el conciliador
+  (function(){
+    var z0 = Z_PESTANA.product, gr = grupo('product');
+    function hoja(marcas){
+      return lienzo(240, 170, function(g, w, h){
+        rr(g, 1, 1, w-2, h-2, 10); g.fillStyle = 'rgba(14,19,27,.94)'; g.fill(); g.strokeStyle = 'rgba(143,193,255,.4)'; g.lineWidth = 1.2; g.stroke();
+        g.fillStyle = '#1a7a4a'; rr(g, 1, 1, w-2, 24, 10); g.fill(); g.fillRect(1, 14, w-2, 11);
+        g.font = '600 12px Inter, system-ui, sans-serif'; g.fillStyle = '#fff'; g.fillText('Conciliación.gsheet', 12, 17);
+        for (var r = 0; r < 6; r++) for (var c = 0; c < 4; c++) {
+          var x = 10 + c * 56, y = 34 + r * 21;
+          g.fillStyle = marcas[r] === c ? (r === 3 ? 'rgba(240,166,58,.35)' : 'rgba(52,194,122,.3)') : 'rgba(255,255,255,.05)';
+          g.fillRect(x, y, 52, 17);
+        }
+      });
+    }
+    poner(gr, plano(hoja([1, 2, 0, 3, 1, 2]), 2.4, 1.7), -lx - 0.3, 0.9, z0 - 5.5);
+    poner(gr, plano(hoja([2, 0, 3, 1, 0, 2]), 2.4, 1.7), lx + 0.4, -0.7, z0 - 8);
+    [['=CONCILIAR(A2:A500)', 'una fórmula, un clic', '#4C8DDB'], ['✓ 498 pares', 'emparejados solos', '#34C27A'], ['⚠ 2 pendientes', 'para revisar', '#F0A63A'],
+     ['3 s', 'por cada 3.000 movimientos', '#8FC1FF'], ['Google Sheets', 'tu propia planilla', '#34C27A']].forEach(function(f, i){
+      var s = i % 2 ? -1 : 1; poner(gr, plano(fichaTex(f[0], f[1], f[2]), 2.4, 0.51), s * (lx + 0.2 + (i % 2) * 0.4), -1.7 + i * 0.85, z0 - 4 - i * 1.3);
+    });
+  })();
+  // Guias: un camino de pasos numerados que se pierde en la profundidad
+  (function(){
+    var z0 = Z_PESTANA.guias, gr = grupo('guias'), pts = [];
+    for (var i = 0; i < 5; i++) {
+      var x = (i % 2 ? 1 : -1) * (lx + 0.3 - i * 0.25), y = -1.3 + i * 0.55, z = z0 - 4.5 - i * 2.4;
+      pts.push(new THREE.Vector3(x, y, z));
+      var n = plano(lienzo(96, 96, (function(k){ return function(g, w, h){
+        g.beginPath(); g.arc(w/2, h/2, w/2 - 6, 0, Math.PI * 2); g.fillStyle = k === 0 ? '#4C8DDB' : 'rgba(14,19,27,.94)'; g.fill();
+        g.lineWidth = 3; g.strokeStyle = '#8FC1FF'; g.stroke();
+        g.font = '700 40px "JetBrains Mono", ui-monospace, monospace'; g.fillStyle = k === 0 ? '#06080C' : '#E8EDF5'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(String(k + 1), w/2, h/2 + 2);
+      }; })(i)), 0.75, 0.75);
+      poner(gr, n, x, y, z, 0);
+    }
+    var curva = new THREE.CatmullRomCurve3(pts), linea = new THREE.Line(new THREE.BufferGeometry().setFromPoints(curva.getPoints(80)), new THREE.LineDashedMaterial({ color: 0x8FC1FF, dashSize: 0.18, gapSize: 0.12, transparent: true, opacity: .8 }));
+    linea.computeLineDistances(); poner(gr, linea, 0, 0, 0, 0);
+    [['Abre tu planilla', 'paso 1'], ['Extensiones → Apps Script', 'paso 2'], ['Excel → Power BI', 'conecta'], ['Sheets → Looker Studio', 'reporta']].forEach(function(f, i){
+      var p0 = pts[i]; poner(gr, plano(fichaTex(f[0], f[1], '#34C27A'), 2.4, 0.51), p0.x + (p0.x < 0 ? -1.5 : 1.5), p0.y + 0.55, p0.z - 0.6);
+    });
+  })();
+  // Contacto: mensajes, sobres y aviones de papel
+  (function(){
+    var z0 = Z_PESTANA.contact, gr = grupo('contact');
+    function burbuja(t, mia){
+      return lienzo(280, 80, function(g, w, h){
+        rr(g, 2, 2, w-4, h-18, 16); g.fillStyle = mia ? '#2F6FB8' : 'rgba(14,19,27,.94)'; g.fill(); g.strokeStyle = 'rgba(143,193,255,.5)'; g.lineWidth = 1.2; g.stroke();
+        g.beginPath(); var x = mia ? w - 40 : 30; g.moveTo(x, h-17); g.lineTo(x + (mia ? 14 : -4), h-2); g.lineTo(x + (mia ? -4 : 14), h-17); g.closePath(); g.fill();
+        g.font = '500 17px Inter, system-ui, sans-serif'; g.fillStyle = '#fff'; g.textBaseline = 'middle'; g.fillText(t, 18, (h - 16) / 2 + 1);
+      });
+    }
+    [['Hola, ¿conversamos?', false], ['Te cuento mi proceso', true], ['¿Se puede automatizar?', false], ['✓ Mensaje enviado', true]].forEach(function(b, i){
+      var s = i % 2 ? 1 : -1; poner(gr, plano(burbuja(b[0], b[1]), 2.2, 0.63), s * (lx + 0.2), -1.2 + i * 0.9, z0 - 4.5 - i * 1.5);
+    });
+    var sobre = lienzo(120, 84, function(g, w, h){
+      rr(g, 3, 3, w-6, h-6, 8); g.fillStyle = 'rgba(14,19,27,.94)'; g.fill(); g.strokeStyle = '#8FC1FF'; g.lineWidth = 3; g.stroke();
+      g.beginPath(); g.moveTo(6, 8); g.lineTo(w/2, h*0.58); g.lineTo(w-6, 8); g.stroke();
+    });
+    [[-1, 1.5, 6], [1, 1.7, 9], [-1, -1.9, 10.5]].forEach(function(v){ poner(gr, plano(sobre, 0.9, 0.63), v[0] * (lx - 0.6), v[1], z0 - v[2]); });
+    // aviones de papel
+    var gAvion = new THREE.BufferGeometry(); gAvion.setAttribute('position', new THREE.BufferAttribute(new Float32Array([0,0,-0.5, -0.35,0,0.3, 0,0.06,0.15,  0,0,-0.5, 0,0.06,0.15, 0.35,0,0.3,  0,0,-0.5, 0,-0.14,0.25, 0,0.06,0.15]), 3)); gAvion.computeVertexNormals();
+    [[lx - 1, 0.4, 5.5, 0.6], [-(lx - 0.8), 0.2, 8.5, -0.4], [lx - 0.4, -1.3, 11, 0.3]].forEach(function(v){
+      var av = new THREE.Mesh(gAvion, new THREE.MeshStandardMaterial({ color: 0xE8EDF5, side: THREE.DoubleSide, roughness: .6, emissive: 0x1F5C99, emissiveIntensity: .25 }));
+      av.scale.setScalar(1.2); poner(gr, av, v[0], v[1], z0 - v[2], v[3]); av.rotation.z = -0.2;
+    });
+  })();
+  var grupoActivo = null;
 
   // ── el cubo Rubik acompanante: flota junto a la camara, la sigue con un poco de
   // retraso (como un hada guia), gira sus capas de vez en cuando y deja una estela
@@ -3673,8 +3841,10 @@ window.AL3D = (function(){
   new MutationObserver(aplicarTema).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   // fuera de Inicio el fondo queda quieto en un punto del pasillo propio de cada pestana;
   // al cambiar de pestana la camara viaja hasta alli (0,7 s). El texto aparece al instante.
-  var Z_PESTANA = { about: -9, product: -17, guias: -25, contact: -32 }, zDesde = 5, zHasta = 5, tViaje = 1, zCam = 5;
-  destinoFondo = function(id){ zDesde = zCam; zHasta = id === 'home' ? 5 - P * PASO : (Z_PESTANA[id] || -9); tViaje = reduce ? 1 : 0; sucio = true; };
+  var zDesde = 5, zHasta = 5, tViaje = 1, zCam = 5;
+  destinoFondo = function(id){ zDesde = zCam; zHasta = id === 'home' ? 5 - P * PASO : (Z_PESTANA[id] || -9); tViaje = reduce ? 1 : 0; sucio = true;
+    for (var k in grupos) if (k !== id) grupos[k].visible = false;
+    grupoActivo = grupos[id] || null; if (grupoActivo) { grupoActivo.visible = true; grupoActivo.userData.al = -1; } };
 
   // tamano
   function medir(){
@@ -3715,10 +3885,12 @@ window.AL3D = (function(){
       if (o.position.z > zc + 2 || o.position.z < zc - 32) continue;   // fuera de vista
       // cerca de la camara se desvanece: pasa sin tapar los titulos
       var d = zc - o.position.z, al = Math.max(0, Math.min(1, (d - 1.2) / 3.2));
+      if (!home) al *= 0.35;   // fuera de Inicio el pasillo queda de fondo y destacan los objetos de la pestana
       if (al !== o.userData.al) { o.userData.al = al; o.visible = al > 0.01; o.userData.mats.forEach(function(m){ m.opacity = m.userData.op * al; }); }
       if (home) { o.position.y = o.userData.base + Math.sin(t * .7 + o.userData.fase) * .12;
       if (o.userData.gira) { o.rotation.x += dt * o.userData.gira; o.rotation.y += dt * o.userData.gira * .7; } }
     }
+    if (grupoActivo) { var ga = tViaje; if (ga !== grupoActivo.userData.al) { grupoActivo.userData.al = ga; grupoActivo.userData.mats.forEach(function(m){ m.opacity = m.userData.op * ga; }); } }
     if (home) colocar();
     renderer.render(scene, camera);
     if (home && renderHada) renderHada.render(escenaHada, camera);
