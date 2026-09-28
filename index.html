@@ -1143,7 +1143,8 @@ nav{background:rgba(255,255,255,.95)!important}
 .gp-cuenta{font-family:var(--mono);font-size:11px;color:var(--gris-2);white-space:nowrap}
 @media (max-width:720px){
   .gp-modo-pasos .gp-step.act{grid-template-columns:28px 1fr;grid-template-areas:"vis vis" "n t";padding:12px;gap:12px 10px;align-items:start}
-  .gp-modo-pasos .gp-vis>*{zoom:1.3}
+  .gp-modo-pasos .gp-vis>*{zoom:1.2}
+  .gp-modo-pasos .gp-step.act{min-height:0}
   .gp-prog-t{display:none}
   .gp-ctrl button{padding:9px 13px}
 }
@@ -1310,18 +1311,48 @@ footer{margin-top:auto}
 .hx-escena .hx-who-a,.hx-escena .hx-who-b{padding:clamp(.3rem,.9svh,.55rem) 0}
 /* preguntas frecuentes en dos columnas en pantallas anchas (menos lista, mas vista) */
 @media (min-width:900px){ .pi-faqs{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start} }
-/* Guias en horizontal (tablet y computador): diagrama compacto para que las
-   pestanas, el diagrama y el paso activo quepan juntos en la pantalla */
-@media (orientation:landscape) and (min-width:900px){
-  #guias .home-lead{margin-bottom:1.4rem}
-  .gvw{padding:12px 16px;margin-bottom:1rem}
-  .gvw-tc{display:grid;grid-template-columns:auto 1fr;column-gap:12px;align-items:center;text-align:left;padding:12px 16px}
-  .gvw-tc>i{grid-row:span 2;font-size:26px!important}
-  .gvw-tc .gvw-name{margin-top:0}
-  .gvw-tc .gvw-pills{display:none}
-  .gvw-cc svg{height:40px}
-  .gvw-tl{display:none}
-  .gvw-caps{margin-top:10px;padding-top:10px}
+/* Guias compactas en TODOS los dispositivos (2026-09-28): titulo, pestanas,
+   diagrama y paso activo caben en la primera pantalla. Diagrama en formato
+   horizontal compacto, paso sin espacio vacio y "Permite:" solo si hay alto. */
+#guias .home-h1{margin-bottom:.4rem}
+#guias .home-lead{margin-bottom:1rem;max-width:760px}
+.gp-tabs{margin-bottom:12px}
+.gvw{padding:12px 16px;margin-bottom:.8rem}
+.gvw-tc{display:grid;grid-template-columns:auto 1fr;column-gap:12px;align-items:center;text-align:left;padding:10px 14px}
+.gvw-tc>i{grid-row:span 2;font-size:24px!important}
+.gvw-tc .gvw-name{margin-top:0}
+.gvw-tc .gvw-pills{display:none}
+.gvw-cc svg{height:36px}
+.gvw-tl{display:none}
+.gvw-caps{margin-top:10px;padding-top:10px}
+.gp-modo-pasos .gp-vis{min-height:0}
+.gp-modo-pasos .gp-step.act{padding:14px}
+@media (min-width:721px){ .gp-modo-pasos .gp-vis>*{zoom:1.5} }
+@media (max-height:860px){ .gvw-caps{display:none} }
+/* pantallas de menos de 800px de alto: el paso de la guia es lo principal y el
+   diagrama de conexion (las pestanas ya dicen que conecta cada guia) se oculta */
+@media (max-height:800px){ #guias .gvw{display:none} }
+/* alto fijo del paso (el del paso mas alto) para que no salte al avanzar */
+@media (min-width:721px){ .gp-modo-pasos .gp-step.act{min-height:215px} .gp-modo-pasos .gp-vis{align-self:center} }
+/* celular: el diagrama en una fila (Apps Script → flechas → Sheets) */
+@media (max-width:639px){
+  .gvw-cg{grid-template-columns:1fr 54px 1fr!important;gap:6px}
+  .gvw-cc .gvw-lbl{display:none}
+  .gvw-cc svg{width:54px;height:30px}
+  .gvw-tc{grid-template-columns:1fr;text-align:center;padding:8px 6px;row-gap:2px}
+  .gvw-tc>i{grid-row:auto;font-size:20px!important}
+  .gvw-tc .gvw-name{font-size:12px}
+  .gvw-tc .gvw-sub{font-size:10.5px}
+  .gvw-caps{gap:5px}
+  .gvw-cap{font-size:10.5px;padding:2px 8px}
+  #guias .gp-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+  #guias .gp-tab{padding:8px 9px;min-width:0}
+  #guias .gp-tab-ey{display:none}
+  #guias .gp-tab-name{font-size:12px;line-height:1.3}
+  #guias .home-lead{display:none}   /* las pestañas ya dicen de qué trata cada guía */
+  #guias .home-h1{font-size:26px}
+  .gp-modo-pasos .gp-vis>*{zoom:1}
+  .gp-modo-pasos .gp-step.act{min-height:300px}
 }
 /* Sin encaje al desplazar (2026-09-28): el desplazamiento es libre en todos los
    dispositivos y navegadores; la demo cabe entera por su tamano, no por encaje. */
@@ -1379,7 +1410,8 @@ body>section:not(#home)>.container{padding-top:1.6rem}
   /* Guias: el paso activo mas bajo */
   .gp-modo-pasos .gp-step.act{grid-template-columns:minmax(0,1.1fr) 30px minmax(0,1fr);grid-template-areas:"vis n t";padding:12px;gap:12px;align-items:center}
   .gp-modo-pasos .gp-vis{min-height:0}
-  .gp-modo-pasos .gp-vis>*{zoom:1.3}
+  .gp-modo-pasos .gp-vis>*{zoom:1.2}
+  .gp-modo-pasos .gp-step.act{min-height:0}
   .gp-prog{margin-bottom:8px}
   .gp-ctrl{margin-top:8px}
 }
