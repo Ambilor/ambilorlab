@@ -61,6 +61,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:cent
 .estacion{position:absolute;left:50%;top:50%;width:min(1100px,calc(100vw - 2*clamp(16px,5vw,64px)));
   transform:translate(-50%,-50%);will-change:transform,opacity;pointer-events:none;visibility:hidden}
 .estacion.activa{pointer-events:auto}
+.estacion,.estacion .tres,.estacion .cuatro{transform-style:preserve-3d}
 
 /* tipografia (la del inicio actual) */
 .eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--glow);margin-bottom:1rem;display:flex;align-items:center;gap:.6rem}
@@ -261,19 +262,48 @@ nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:cent
 
   // cada bloque: llega desde el fondo, se queda al frente mientras se lee y pasa hacia atras
   var PAUSA = 0.32;   // parte del tramo en que el bloque queda quieto al centro
+  // piezas de cada bloque (titulos, tarjetas, botones) y su posicion respecto al
+  // centro del bloque: al avanzar se abren hacia los lados y arriba, y la camara
+  // pasa por en medio de ellas
+  var piezas = estaciones.map(function(e){
+    return [].slice.call(e.querySelectorAll(':scope > .eyebrow, :scope > h1, :scope > h2, :scope > .lead, :scope > .ctas, :scope > .pista, .tarjeta')).map(function(el){ return { el: el, dx: 0, dy: 0 }; });
+  });
+  function medirPiezas(){
+    estaciones.forEach(function(e, i){
+      piezas[i].forEach(function(p){
+        p.dx = p.el.offsetLeft + p.el.offsetWidth / 2 - e.offsetWidth / 2;
+        p.dy = p.el.offsetTop + p.el.offsetHeight / 2 - e.offsetHeight / 2;
+      });
+    });
+  }
+  addEventListener('resize', medirPiezas); medirPiezas();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(medirPiezas);
   function colocar(){
-    var ancho = innerWidth < 701;
+    var ancho = innerWidth < 701, W = innerWidth, H = innerHeight;
     estaciones.forEach(function(e, i){
       var t = P - i, a = Math.abs(t);
       var u = a < PAUSA ? 0 : Math.sign(t) * (a - PAUSA) / (1 - PAUSA);
       var z, op;
-      if (u <= 0) { z = u * (ancho ? 900 : 1500); op = 1 + u * 2.1; }    // viene desde el fondo
-      else { z = u * 900; op = 1 - u * 3.6; }                               // pasa junto a la camara (se va rapido: no se encima con el siguiente)
+      if (u <= 0) { z = u * (ancho ? 900 : 1500); op = 1 + u * (ancho ? 3.4 : 2.6); }   // viene desde el fondo (aparece cuando el anterior ya se abrio)
+      else { z = u * 380; op = u < 0.95 ? 1 : 0; }                          // se abre y pasa a los lados (cada pieza se desvanece sola)
       op = Math.max(0, Math.min(1, op));
       e.style.opacity = op.toFixed(3);
       e.style.visibility = op > 0.01 ? 'visible' : 'hidden';
       e.style.transform = 'translate(-50%,-50%) translate3d(0,0,' + z.toFixed(1) + 'px)';
       e.classList.toggle('activa', a < PAUSA + 0.1);
+      var k = u > 0 ? u * u * 0.55 + u * 0.45 : 0;                         // se abre cada vez mas rapido
+      piezas[i].forEach(function(p){
+        if (!k) { if (p.el.style.transform) { p.el.style.transform = ''; p.el.style.opacity = ''; } return; }
+        var tx, ty, ry = 0, rx = 0, o;
+        if (Math.abs(p.dx) < W * 0.08) {                                      // al centro: sube y se desvanece rapido
+          tx = 0; ty = -k * H * 0.6; rx = k * 30; o = 1 - k * (ancho ? 6.5 : 4.2);
+        } else {                                                               // a los lados, girando como paneles
+          var sx = p.dx < 0 ? -1 : 1; tx = p.dx * k * 1.6 + sx * k * W * 0.45; ty = p.dy * k * 0.6; ry = -sx * k * 42;
+          o = 1 - Math.max(0, k - 0.3) * 1.8;
+        }
+        p.el.style.transform = 'translate(' + tx.toFixed(1) + 'px,' + ty.toFixed(1) + 'px) rotateX(' + rx.toFixed(1) + 'deg) rotateY(' + ry.toFixed(1) + 'deg)';
+        p.el.style.opacity = Math.max(0, Math.min(1, o)).toFixed(3);
+      });
     });
     var cerca = Math.round(P);
     puntos.forEach(function(b, i){ b.classList.toggle('act', i === cerca); });
@@ -383,6 +413,82 @@ nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:cent
     scene.add(o); objetos.push(o);
   }
 
+  // ── el cubo Rubik acompanante: flota junto a la camara, la sigue con un poco de
+  // retraso (como un hada guia), gira sus capas de vez en cuando y deja una estela
+  var hada = new THREE.Group(), cubo = new THREE.Group(); hada.add(cubo); scene.add(hada);
+  var CARAS = [0x4C8DDB, 0x34C27A, 0xE8EDF5, 0xF0A63A, 0x8FC1FF, 0x2F6FB8];   // +x -x +y -y +z -z
+  var cuerpo = new THREE.MeshStandardMaterial({ color: 0x0B0F16, roughness: .5 });
+  var geoPieza = new THREE.BoxGeometry(0.31, 0.31, 0.31), piezasCubo = [];
+  for (var a = -1; a <= 1; a++) for (var b = -1; b <= 1; b++) for (var c = -1; c <= 1; c++) {
+    var mats = [a === 1, a === -1, b === 1, b === -1, c === 1, c === -1].map(function(ext, f){
+      return ext ? new THREE.MeshStandardMaterial({ color: CARAS[f], roughness: .3, metalness: .1, emissive: CARAS[f], emissiveIntensity: .18 }) : cuerpo;
+    });
+    var pz = new THREE.Mesh(geoPieza, mats); pz.position.set(a * 0.33, b * 0.33, c * 0.33); cubo.add(pz); piezasCubo.push(pz);
+  }
+  var brilloHada = new THREE.PointLight(0x8FC1FF, 1.1, 3.2); hada.add(brilloHada);
+  // aura suave detras del cubo
+  var aura = new THREE.Sprite(new THREE.SpriteMaterial({ map: lienzo(128, 128, function(g, w, h){
+    var gr = g.createRadialGradient(w/2, h/2, 0, w/2, h/2, w/2); gr.addColorStop(0, 'rgba(143,193,255,.55)'); gr.addColorStop(.4, 'rgba(76,141,219,.18)'); gr.addColorStop(1, 'rgba(76,141,219,0)');
+    g.fillStyle = gr; g.fillRect(0, 0, w, h); }), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+  aura.scale.set(1.3, 1.3, 1); hada.add(aura);   // (se ajusta con el cubo en moverHada)
+  // estela de destellos
+  var NE = 46, estelaPos = new Float32Array(NE * 3), estelaAlfa = [];
+  var gEst = new THREE.BufferGeometry(); gEst.setAttribute('position', new THREE.BufferAttribute(estelaPos, 3));
+  var estela = new THREE.Points(gEst, new THREE.PointsMaterial({ color: 0x8FC1FF, size: movil ? 0.05 : 0.06, transparent: true, opacity: .8, depthWrite: false, blending: THREE.AdditiveBlending }));
+  scene.add(estela);
+  var historia = [];
+  // giro de una capa cada tanto (como el cubo del inicio)
+  var giro = null, proximoGiro = 1.5;
+  function girarCapa(){
+    var ejes = ['x', 'y', 'z'], eje = ejes[Math.floor(Math.random() * 3)], capa = Math.floor(Math.random() * 3) - 1;
+    var pivote = new THREE.Group(); cubo.add(pivote);
+    piezasCubo.forEach(function(pz){ if (Math.round(pz.position[eje] / 0.33) === capa) pivote.attach(pz); });
+    giro = { pivote: pivote, eje: eje, fin: (Math.random() < .5 ? -1 : 1) * Math.PI / 2, t: 0 };
+  }
+  function avanzarGiro(dt){
+    if (!giro) { proximoGiro -= dt; if (proximoGiro <= 0) girarCapa(); return; }
+    giro.t = Math.min(1, giro.t + dt / 0.45);
+    var e = giro.t < .5 ? 2 * giro.t * giro.t : 1 - Math.pow(-2 * giro.t + 2, 2) / 2;
+    giro.pivote.rotation[giro.eje] = giro.fin * e;
+    if (giro.t >= 1) {
+      giro.pivote.updateMatrixWorld(true);
+      [].slice.call(giro.pivote.children).forEach(function(pz){ cubo.attach(pz); pz.position.set(Math.round(pz.position.x / .33) * .33, Math.round(pz.position.y / .33) * .33, Math.round(pz.position.z / .33) * .33); });
+      cubo.remove(giro.pivote); giro = null; proximoGiro = 1.6 + Math.random() * 2.2;
+    }
+  }
+  var hadaVel = new THREE.Vector3(), hadaObj = new THREE.Vector3(), zPrev = null;
+  function moverHada(dt, t, zc){
+    // lugar junto a la camara: a la derecha del contenido (arriba a la derecha en celular vertical)
+    var W = innerWidth, H = innerHeight, vertical = W / H < 0.8, DIST = 3.6;
+    var mediaAlto = Math.tan(camera.fov * Math.PI / 360) * DIST, mediaAncho = mediaAlto * camera.aspect;
+    // su lugar en pantalla segun el espacio libre: en el margen derecho a la altura
+    // de los titulos si hay margen; si no, arriba a la derecha bajo la barra
+    var anchoBloque = estaciones[0].offsetWidth || W, margen = (W - anchoBloque) / 2, sx, sy, tam;
+    if (!vertical && margen >= 150) { sx = W - margen / 2; sy = H * 0.3; tam = 110; }
+    else { tam = vertical ? 64 : 80; sx = W - tam * 0.9 - 14; sy = 64 + tam * 0.55; }
+    var ox = (sx / W * 2 - 1) * mediaAncho, oy = (1 - sy / H * 2) * mediaAlto;
+    var escalaHada = tam / H * 2 * mediaAlto;          // el cubo mide ~1 unidad
+    // da vueltas suaves alrededor de su lugar, como un hada
+    hadaObj.set(camera.position.x + ox + Math.sin(t * .8) * .12, camera.position.y + oy + Math.sin(t * 1.3) * .1, zc - DIST + Math.cos(t * .6) * .2);
+    // resorte: lo sigue con un poco de retraso
+    hadaVel.add(hadaObj.clone().sub(hada.position).multiplyScalar(dt * 9)).multiplyScalar(Math.pow(0.02, dt));
+    hada.position.add(hadaVel.clone().multiplyScalar(dt * 6));
+    // se inclina hacia adelante segun la velocidad del avance
+    var vz = zPrev === null ? 0 : (zPrev - zc) / Math.max(dt, 1e-3); zPrev = zc;
+    cubo.rotation.y += dt * (0.35 + Math.min(3, Math.abs(vz)) * 0.25);
+    cubo.rotation.x = 0.45 + Math.sin(t * .7) * .15 - Math.max(-0.5, Math.min(0.5, vz * 0.05));
+    cubo.scale.setScalar(escalaHada);
+    aura.scale.setScalar(escalaHada * 3); aura.material.opacity = 0.75 + Math.sin(t * 2.2) * 0.2;
+    avanzarGiro(dt);
+    // estela: las ultimas posiciones, con un poco de dispersion
+    historia.unshift(hada.position.clone()); if (historia.length > NE) historia.pop();
+    for (var i = 0; i < NE; i++) {
+      var q = historia[Math.min(i, historia.length - 1)], jit = i * 0.004;
+      estelaPos[i*3] = q.x + Math.sin(t * 3 + i) * jit; estelaPos[i*3+1] = q.y - i * 0.004 + Math.cos(t * 2 + i) * jit; estelaPos[i*3+2] = q.z + i * 0.02;
+    }
+    gEst.attributes.position.needsUpdate = true;
+  }
+
   // polvo de datos: da la sensacion de profundidad al avanzar
   var nP = movil ? 500 : 1100, pos = new Float32Array(nP * 3);
   for (var i = 0; i < nP; i++) {
@@ -418,6 +524,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:cent
     camera.lookAt(mx * 0.4, -my * 0.2, zc - 10);
     luz.position.set(0, 1.2, zc - 4);
     var t = ahora / 1000;
+    moverHada(dt, t, zc);
     for (var i = 0; i < objetos.length; i++) {
       var o = objetos[i];
       if (o.position.z > zc + 2 || o.position.z < zc - 32) continue;   // fuera de vista
