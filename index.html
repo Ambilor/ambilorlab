@@ -1178,7 +1178,15 @@ nav{background:rgba(255,255,255,.95)!important}
   #contact .contact-intro{margin-bottom:1.1rem}
 }
 /* 2026-09-28: tablet (una columna) — la escena de las demos crece de 340 a 480px */
-@media (min-width:640px) and (max-width:899px){ .al-demo__stage{max-width:min(480px,100%)} }
+@media (min-width:640px) and (max-width:899px){
+  /* tablet vertical: la escena usa todo el ancho de la tarjeta (formato
+     horizontal) y su alto se adapta a la pantalla visible */
+  .al-demo__stage{max-width:none;width:100%;aspect-ratio:auto;
+    height:clamp(300px, calc(100vh - 505px), 480px);
+    height:clamp(300px, calc(100svh - 505px), 480px)}
+  .al-demo__copy{max-width:none;margin-inline:0;min-height:14.5rem}   /* texto mas alto medido en tablet: 227px */
+  .al-demo__body{max-width:620px}
+}
 /* 2026-09-28 celular: cierre del inicio mas compacto y pie sin quedar bajo el boton subir */
 @media (max-width:560px){
   .hx-end{padding:3.2rem 0 3.6rem}
