@@ -33,6 +33,9 @@ a,button{-webkit-tap-highlight-color:transparent}
 /* escena 3D fija de fondo */
 #escena{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
 /* el cubo acompanante va en su propia capa, sobre el contenido, para posarse en las tarjetas */
+#avisoCubo{position:fixed;z-index:6;transform:translate(-50%,6px);opacity:0;pointer-events:none;white-space:nowrap;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ok);transition:opacity .5s var(--ease),transform .5s var(--ease)}
+#avisoCubo.ver{opacity:1;transform:translate(-50%,0)}
+.estatico #avisoCubo{display:none}
 #capaHada{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:5;pointer-events:none}
 .estatico #capaHada{display:none}
 .vineta{position:fixed;inset:0;z-index:1;pointer-events:none;
@@ -85,6 +88,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:cent
 /* tarjetas (vidrio oscuro, para leerse sobre la escena) */
 .tarjeta{border:1px solid rgba(143,193,255,.14);border-radius:14px;background:rgba(10,14,20,.72);
   -webkit-backdrop-filter:blur(10px) saturate(130%);backdrop-filter:blur(10px) saturate(130%);box-shadow:0 30px 80px -30px rgba(0,0,0,.8)}
+.tarjeta{transition:border-color .45s var(--ease),box-shadow .45s var(--ease)}
+.tarjeta.guiada{border-color:rgba(143,193,255,.5);box-shadow:0 0 0 1px rgba(76,141,219,.3),0 0 42px -8px rgba(76,141,219,.5),0 30px 80px -30px rgba(0,0,0,.8)}
 .tres{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;text-align:left}
 .tres .tarjeta{padding:clamp(1rem,2.2vh,1.5rem)}
 .top{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gris-2);margin-bottom:.9rem}
@@ -150,6 +155,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:cent
 <body>
 <canvas id="escena" aria-hidden="true"></canvas>
 <canvas id="capaHada" aria-hidden="true"></canvas>
+<div id="avisoCubo" aria-hidden="true">✓ Todo conciliado</div>
 <div class="vineta" aria-hidden="true"></div>
 
 <nav>
@@ -308,7 +314,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:cent
       var prev = e.style.transform; e.style.transform = 'translate(-50%,-50%)';
       piezas[i].forEach(function(p){ p.prev = p.el.style.transform; p.el.style.transform = ''; });
       var lista = [];
-      GUIA[i].forEach(function(sel){ [].slice.call(e.querySelectorAll(sel)).forEach(function(el){ var m = rectDe(el); lista.push({ left: m.r.left, right: m.r.right, top: m.r.top, bottom: m.r.bottom, tipo: m.tipo }); }); });
+      GUIA[i].forEach(function(sel){ [].slice.call(e.querySelectorAll(sel)).forEach(function(el){ var m = rectDe(el); lista.push({ el: el, left: m.r.left, right: m.r.right, top: m.r.top, bottom: m.r.bottom, tipo: m.tipo }); }); });
+      // obstaculos: todo lo que el cubo no debe tapar
+      lista.obst = piezas[i].map(function(p){ var r = rectDe(p.el).r; return { left: r.left, right: r.right, top: r.top, bottom: r.bottom }; });
+      lista.fondo = Math.max.apply(null, lista.obst.map(function(o){ return o.bottom; }));
+      lista.tres = !!e.querySelector('.tres');
       piezas[i].forEach(function(p){ p.el.style.transform = p.prev; });
       e.style.transform = prev;
       return lista;
@@ -317,21 +327,27 @@ nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:cent
   addEventListener('resize', medirGuia); medirGuia();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(medirGuia);
   // punto en pantalla (px) donde se posa el cubo junto a un elemento
+  // lugar libre junto al elemento: prueba varias posiciones (al lado, abajo,
+  // encima) y elige la primera que no toque ningun texto ni tarjeta del bloque
+  function libre(x, y, tam, obst){
+    var W = innerWidth, H = innerHeight, m = tam * 0.62;
+    if (x - m < 4 || x + m > W - 4 || y - m < 62 || y + m > H - 4) return false;
+    for (var k = 0; k < obst.length; k++) { var o = obst[k]; if (x + m > o.left - 6 && x - m < o.right + 6 && y + m > o.top - 6 && y - m < o.bottom + 6) return false; }
+    return true;
+  }
   function puntoGuia(i, w, tam){
-    var g = guia[i] && guia[i][w]; if (!g) return { x: innerWidth - tam, y: 90 };
-    var W = innerWidth, H = innerHeight, x, y;
-    var vert = W / H < 0.8;
-    if (g.tipo === 'tarjeta') {                                                               // posado en la esquina de la tarjeta
-      if (vert) { x = g.right - tam * 0.35; y = g.top - tam * 0.12; }                         // (en celular, sobre el borde: no tapa el texto)
-      else { x = g.right - tam * 0.3; y = g.top + tam * 0.25; }
-    } else {
-      x = g.right + tam * 0.8; y = (g.top + g.bottom) / 2 - tam * 0.1;                       // al lado del titulo o de los botones
-      if (x > W - tam * 0.6) {                                                                // sin espacio al lado:
-        x = Math.min(g.right, W - tam * 0.6);
-        y = g.tipo === 'titulo' ? g.top - tam * 1.05 : g.bottom + tam * 0.9;                  // encima del titulo, bajo los botones
-      }
-    }
-    return { x: Math.max(tam * 0.6, Math.min(W - tam * 0.6, x)), y: Math.max(62 + tam * 0.5, Math.min(H - tam * 0.6, y)) };
+    var lista = guia[i], g = lista && lista[w]; if (!g) return { x: innerWidth - tam, y: 90, tam: tam };
+    var cx = (g.left + g.right) / 2, cy = (g.top + g.bottom) / 2, d = tam * 0.95;
+    var lados = [{ x: g.right + d, y: cy }, { x: g.left - d, y: cy }];
+    var abajo = { x: Math.max(g.left + d * 0.5, Math.min(g.right - d * 0.5, cx)), y: lista.fondo + d }, encima = { x: g.right - d * 0.5, y: g.top - d };
+    var orden = g.tipo !== 'tarjeta' ? [lados[0], encima, abajo, lados[1]]
+              : lista.tres ? [abajo, lados[0], lados[1], encima]            // tres columnas: por debajo de las tarjetas
+              : [lados[0], lados[1], abajo, encima];                        // dos columnas: por los margenes
+    for (var k = 0; k < orden.length; k++) if (libre(orden[k].x, orden[k].y, tam, lista.obst)) return { x: orden[k].x, y: orden[k].y, tam: tam };
+    // sin lugar libre: mas chico, bajo el bloque o arriba a la derecha
+    var t2 = tam * 0.7, bajo = { x: innerWidth - t2 - 10, y: Math.min(innerHeight - t2, lista.fondo + t2) };
+    if (libre(bajo.x, bajo.y, t2, lista.obst)) return { x: bajo.x, y: bajo.y, tam: t2 };
+    return { x: innerWidth - t2 * 0.8 - 8, y: 62 + t2 * 0.7, tam: t2 };
   }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(medirPiezas);
   function colocar(){
@@ -481,10 +497,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:cent
   var hada = new THREE.Group(), cubo = new THREE.Group(); hada.add(cubo); escenaHada.add(hada);
   var CARAS = [0x4C8DDB, 0x34C27A, 0xE8EDF5, 0xF0A63A, 0x8FC1FF, 0x2F6FB8];   // +x -x +y -y +z -z
   var cuerpo = new THREE.MeshStandardMaterial({ color: 0x0B0F16, roughness: .5 });
-  var geoPieza = new THREE.BoxGeometry(0.31, 0.31, 0.31), piezasCubo = [];
+  var geoPieza = new THREE.BoxGeometry(0.31, 0.31, 0.31), piezasCubo = [], matsCaras = [];
+  var avisoCubo = document.getElementById('avisoCubo');
   for (var a = -1; a <= 1; a++) for (var b = -1; b <= 1; b++) for (var c = -1; c <= 1; c++) {
     var mats = [a === 1, a === -1, b === 1, b === -1, c === 1, c === -1].map(function(ext, f){
-      return ext ? new THREE.MeshStandardMaterial({ color: CARAS[f], roughness: .3, metalness: .1, emissive: CARAS[f], emissiveIntensity: .18 }) : cuerpo;
+      if (!ext) return cuerpo;
+      var mc = new THREE.MeshStandardMaterial({ color: CARAS[f], roughness: .3, metalness: .1, emissive: CARAS[f], emissiveIntensity: .18 }); matsCaras.push(mc); return mc;
     });
     var pz = new THREE.Mesh(geoPieza, mats); pz.position.set(a * 0.33, b * 0.33, c * 0.33); cubo.add(pz); piezasCubo.push(pz);
   }
@@ -501,25 +519,40 @@ nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:cent
   escenaHada.add(estela);
   var historia = [];
   // giro de una capa cada tanto (como el cubo del inicio)
-  var giro = null, proximoGiro = 1.5;
-  function girarCapa(){
-    var ejes = ['x', 'y', 'z'], eje = ejes[Math.floor(Math.random() * 3)], capa = Math.floor(Math.random() * 3) - 1;
+  // giros de capa. El cubo empieza desordenado y cada giro se anota; al llegar
+  // al final del inicio deshace sus giros hasta quedar resuelto (y lo celebra).
+  // Si se vuelve hacia arriba, sigue desordenandose.
+  var giro = null, proximoGiro = 1.5, historial = [], resuelto = false, fiesta = 0;
+  function empezarGiro(eje, capa, dir, dur, anotar){
     var pivote = new THREE.Group(); cubo.add(pivote);
     piezasCubo.forEach(function(pz){ if (Math.round(pz.position[eje] / 0.33) === capa) pivote.attach(pz); });
-    giro = { pivote: pivote, eje: eje, fin: (Math.random() < .5 ? -1 : 1) * Math.PI / 2, t: 0 };
+    giro = { pivote: pivote, eje: eje, fin: dir * Math.PI / 2, t: 0, dur: dur };
+    if (anotar) historial.push({ eje: eje, capa: capa, dir: dir });
   }
-  function avanzarGiro(dt){
-    if (!giro) { proximoGiro -= dt; if (proximoGiro <= 0) girarCapa(); return; }
-    giro.t = Math.min(1, giro.t + dt / 0.45);
+  function terminarGiro(){
+    giro.pivote.rotation[giro.eje] = giro.fin; giro.pivote.updateMatrixWorld(true);
+    [].slice.call(giro.pivote.children).forEach(function(pz){ cubo.attach(pz); pz.position.set(Math.round(pz.position.x / .33) * .33, Math.round(pz.position.y / .33) * .33, Math.round(pz.position.z / .33) * .33); });
+    cubo.remove(giro.pivote); giro = null;
+  }
+  function giroAzar(dur){ var ejes = ['x', 'y', 'z']; empezarGiro(ejes[Math.floor(Math.random() * 3)], Math.floor(Math.random() * 3) - 1, Math.random() < .5 ? -1 : 1, dur, true); }
+  for (var m = 0; m < 9; m++) { giroAzar(0); terminarGiro(); }        // empieza desordenado
+  function avanzarGiro(dt, alFinal){
+    if (!giro) {
+      if (alFinal) {
+        if (historial.length) { var h = historial.pop(); empezarGiro(h.eje, h.capa, -h.dir, 0.2, false); resuelto = false; }
+        else if (!resuelto) { resuelto = true; fiesta = 1; }             // ¡resuelto!
+        return;
+      }
+      resuelto = false;
+      proximoGiro -= dt; if (proximoGiro <= 0) { giroAzar(0.45); proximoGiro = 1.6 + Math.random() * 2.2; }
+      return;
+    }
+    giro.t = Math.min(1, giro.t + dt / giro.dur);
     var e = giro.t < .5 ? 2 * giro.t * giro.t : 1 - Math.pow(-2 * giro.t + 2, 2) / 2;
     giro.pivote.rotation[giro.eje] = giro.fin * e;
-    if (giro.t >= 1) {
-      giro.pivote.updateMatrixWorld(true);
-      [].slice.call(giro.pivote.children).forEach(function(pz){ cubo.attach(pz); pz.position.set(Math.round(pz.position.x / .33) * .33, Math.round(pz.position.y / .33) * .33, Math.round(pz.position.z / .33) * .33); });
-      cubo.remove(giro.pivote); giro = null; proximoGiro = 1.6 + Math.random() * 2.2;
-    }
+    if (giro.t >= 1) terminarGiro();
   }
-  var hadaVel = new THREE.Vector3(), hadaObj = new THREE.Vector3(), zPrev = null;
+  var hadaVel = new THREE.Vector3(), hadaObj = new THREE.Vector3(), zPrev = null, visitaAnt = null, tamSuave = 70;
   function moverHada(dt, t, zc){
     // lugar junto a la camara: a la derecha del contenido (arriba a la derecha en celular vertical)
     var W = innerWidth, H = innerHeight, vertical = W / H < 0.8, DIST = 3.6;
@@ -528,15 +561,21 @@ nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:cent
     // de los titulos si hay margen; si no, arriba a la derecha bajo la barra
     // recorre el contenido: en la lectura se posa junto a cada elemento del bloque
     // (segun cuanto se ha bajado); en el viaje vuela al primero del bloque siguiente
-    var tam = vertical ? 46 : (W < 1100 ? 76 : 92), pt;
-    if (guiaViaje < 0) { var n = (guia[guiaI] || []).length || 1; pt = puntoGuia(guiaI, Math.min(n - 1, Math.floor(guiaQ * n)), tam); }
-    else {
+    var tam = vertical ? 44 : (W < 1100 ? 66 : 78), pt, visita = null;
+    if (guiaViaje < 0) {
+      var n = (guia[guiaI] || []).length || 1, w = Math.min(n - 1, Math.floor(guiaQ * n));
+      pt = puntoGuia(guiaI, w, tam); visita = guia[guiaI] && guia[guiaI][w];
+    } else {
       var a = puntoGuia(guiaI, (guia[guiaI] || [0]).length - 1, tam), b = puntoGuia(guiaI + 1, 0, tam), e = guiaViaje * guiaViaje * (3 - 2 * guiaViaje);
-      pt = { x: a.x + (b.x - a.x) * e, y: a.y + (b.y - a.y) * e - Math.sin(e * Math.PI) * H * 0.12 };   // vuela en arco
+      pt = { x: a.x + (b.x - a.x) * e, y: a.y + (b.y - a.y) * e - Math.sin(e * Math.PI) * H * 0.12, tam: a.tam + (b.tam - a.tam) * e };   // vuela en arco
     }
-    var sx = pt.x, sy = pt.y;
+    // la tarjeta que visita se ilumina (el cubo indica donde estas sin taparla)
+    if (visita !== visitaAnt) { if (visitaAnt && visitaAnt.el) visitaAnt.el.classList.remove('guiada'); if (visita && visita.el && visita.tipo === 'tarjeta') visita.el.classList.add('guiada'); visitaAnt = visita; }
+    tam = pt.tam || tam; tamSuave += (tam - tamSuave) * Math.min(1, dt * 5);
+    var quieto = guiaViaje < 0;
+    var sx = pt.x, sy = pt.y; hada.userData.sx = sx; hada.userData.sy = sy;
     var ox = (sx / W * 2 - 1) * mediaAncho, oy = (1 - sy / H * 2) * mediaAlto;
-    var escalaHada = tam / H * 2 * mediaAlto;          // el cubo mide ~1 unidad
+    var escalaHada = tamSuave / H * 2 * mediaAlto;     // el cubo mide ~1 unidad
     // da vueltas suaves alrededor de su lugar, como un hada
     hadaObj.set(camera.position.x + ox + Math.sin(t * .8) * .04, camera.position.y + oy + Math.sin(t * 1.3) * .05, zc - DIST + Math.cos(t * .6) * .1);   // flota suave donde se posa
     // resorte: lo sigue con un poco de retraso
@@ -544,11 +583,22 @@ nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:cent
     hada.position.add(hadaVel.clone().multiplyScalar(dt * 6));
     // se inclina hacia adelante segun la velocidad del avance
     var vz = zPrev === null ? 0 : (zPrev - zc) / Math.max(dt, 1e-3); zPrev = zc;
-    cubo.rotation.y += dt * (0.35 + Math.min(3, Math.abs(vz)) * 0.25);
+    cubo.rotation.y += dt * ((quieto ? 0.18 : 0.4) + Math.min(3, Math.abs(vz)) * 0.25);
     cubo.rotation.x = 0.45 + Math.sin(t * .7) * .15 - Math.max(-0.5, Math.min(0.5, vz * 0.05));
     cubo.scale.setScalar(escalaHada);
-    aura.scale.setScalar(escalaHada * 3); aura.material.opacity = 0.75 + Math.sin(t * 2.2) * 0.2;
-    avanzarGiro(dt);
+    aura.scale.setScalar(escalaHada * 3); aura.material.opacity = (quieto ? 0.4 : 0.8) + Math.sin(t * 2.2) * 0.12;
+    // al final del inicio (el cierre) el cubo se resuelve
+    var alFinal = guiaI === estaciones.length - 1 && guiaViaje < 0;
+    avanzarGiro(dt, alFinal);
+    fiesta = Math.max(0, fiesta - dt * 0.5);
+    if (fiesta > 0) { aura.material.opacity = Math.min(1, aura.material.opacity + fiesta); aura.scale.setScalar(escalaHada * (3 + fiesta * 2.5)); }
+    for (var mi = 0; mi < matsCaras.length; mi++) matsCaras[mi].emissiveIntensity = 0.18 + fiesta * 0.8;
+    // aviso "Todo conciliado" junto al cubo
+    if (avisoCubo) {
+      var ver = resuelto && alFinal;
+      avisoCubo.classList.toggle('ver', ver);
+      if (ver) { avisoCubo.style.left = hada.userData.sx + 'px'; avisoCubo.style.top = (hada.userData.sy + tamSuave * 1.05) + "px"; }
+    }
     // estela: las ultimas posiciones, con un poco de dispersion
     historia.unshift(hada.position.clone()); if (historia.length > NE) historia.pop();
     for (var i = 0; i < NE; i++) {
