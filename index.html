@@ -960,6 +960,9 @@ nav.scrolled .nav-links a{font-size:12px}
   .hx-bottom{gap:1.1rem}
   .hx-lead{font-size:14.5px;line-height:1.6}
   .hx-hud--tl{top:.9rem}
+  /* jugando con el cubo, el titular y el texto ceden su lugar a los controles */
+  .hx-title,.hx-bottom{transition:opacity .3s var(--ease)}
+  .hx.cerca .hx-title,.hx.cerca .hx-bottom{opacity:.12;pointer-events:none}
 }
 .hx.juego,.hx.rotando{-webkit-user-select:none;user-select:none}
 #hx-capacidades{padding-top:clamp(4rem,10vh,6.5rem)}
@@ -4076,9 +4079,11 @@ requestAnimationFrame(frame);
       cx=w*(ancho?.8:.76); cy=h/2;
     } else {
       // Celular: el cubo arriba, en la franja libre sobre el titular
-      // (40 px del rotulo superior y 78 px para el mensaje y botones del juego)
-      var zona=(parseFloat(hx.style.paddingTop)||300)-40-78;
-      lado=Math.max(105,Math.min(190,zona/1.2)); cx=w/2; cy=40+zona/2+4;
+      // (2026-09-28) centrado en todo el espacio entre el rotulo superior
+      // (40 px) y el titular (12 px de aire). Los controles del juego se
+      // superponen al titular, que se atenua mientras se juega (CSS .cerca).
+      var arriba=40, abajo=(parseFloat(hx.style.paddingTop)||300)-12, zona=abajo-arriba;
+      lado=Math.max(110,Math.min(210,zona*.74)); cx=w/2; cy=arriba+zona/2;
     }
     root.position.set((cx-w/2)*porPx,(h/2-cy)*porPx,0);
     root.scale.setScalar(lado*porPx/4.1);
