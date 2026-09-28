@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Inicio 3D (prueba) — Ambilor.Lab</title>
+<!--
+  Prototipo (Ambilor.Lab, 2026-09-28): el inicio como un recorrido en 3D.
+  Al desplazar, la camara avanza por un pasillo; los bloques del inicio
+  llegan desde el fondo al centro y a los lados pasan fichas de movimientos,
+  piezas del cubo y graficos. El texto es HTML real (nitido, accesible).
+  El desplazamiento es el normal del navegador: la pagina nunca se mueve sola.
+  Con "reducir movimiento" o sin 3D se muestra como pagina normal.
+  No esta enlazado desde el sitio; es para comparar con el inicio actual.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --fondo:#06080C; --texto:#E8EDF5; --gris-1:#98A2B3; --gris-2:#667085; --borde:#1B2330;
+  --glow:#4C8DDB; --glow-2:#8FC1FF; --ok:#34C27A; --warn:#F0A63A; --azul:#1F5C99;
+  --sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;overflow-x:clip}
+body{background:var(--fondo);color:var(--texto);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:clip}
+a,button{-webkit-tap-highlight-color:transparent}
+
+/* escena 3D fija de fondo */
+#escena{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
+.vineta{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse 60% 55% at 50% 50%,rgba(6,8,12,.72),rgba(6,8,12,.35) 60%,transparent 80%)}
+
+/* barra superior */
+nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:14px clamp(16px,4vw,48px);background:linear-gradient(rgba(6,8,12,.85),rgba(6,8,12,0))}
+.logo{font-family:var(--mono);font-size:14px;font-weight:500;color:var(--texto);text-decoration:none;letter-spacing:-.3px}
+.prueba{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--warn);border:1px solid rgba(240,166,58,.4);border-radius:100px;padding:4px 10px}
+.volver{font-size:13px;color:var(--gris-1);text-decoration:none}
+.volver:hover{color:var(--texto)}
+
+/* indicador de avance (derecha) */
+.ruta{position:fixed;right:clamp(12px,2.4vw,32px);top:50%;transform:translateY(-50%);z-index:20;display:flex;flex-direction:column;gap:14px;list-style:none}
+.ruta button{display:flex;align-items:center;justify-content:flex-end;gap:10px;background:none;border:0;cursor:pointer;color:var(--gris-2);font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase}
+.ruta i{width:8px;height:8px;border-radius:50%;border:1px solid var(--gris-2);transition:all .3s var(--ease)}
+.ruta span{opacity:0;transform:translateX(6px);transition:all .3s var(--ease)}
+.ruta button:hover span,.ruta button:focus-visible span{opacity:1;transform:none}
+.ruta span{background:rgba(6,8,12,.8);padding:2px 6px;border-radius:4px}
+.ruta .act{color:var(--glow-2)}
+.ruta .act i{background:var(--glow);border-color:var(--glow);box-shadow:0 0 0 4px rgba(76,141,219,.22)}
+
+/* el recorrido: el alto da el largo del desplazamiento; los bloques van fijos al centro */
+.tunel{position:relative;z-index:2}
+.tramo{height:120vh;height:120svh}
+.tramo:last-child{height:100vh;height:100svh}
+.escenario{position:fixed;inset:0;z-index:3;perspective:1100px;perspective-origin:50% 50%;pointer-events:none}
+.estacion{position:absolute;left:50%;top:50%;width:min(1100px,calc(100vw - 2*clamp(16px,5vw,64px)));
+  transform:translate(-50%,-50%);will-change:transform,opacity;pointer-events:none;visibility:hidden}
+.estacion.activa{pointer-events:auto}
+
+/* tipografia (la del inicio actual) */
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--glow);margin-bottom:1rem;display:flex;align-items:center;gap:.6rem}
+.eyebrow::before{content:'';width:18px;height:1px;background:currentColor}
+.centro{text-align:center}.centro .eyebrow{justify-content:center}
+.titulo{font-weight:600;text-transform:uppercase;letter-spacing:-.035em;line-height:.92;font-size:clamp(2.2rem,5.6vw,5rem);margin-bottom:clamp(1.2rem,3vh,2rem)}
+.titulo .p{color:var(--glow)}
+.lead{font-size:clamp(15px,1.3vw,17px);line-height:1.7;color:var(--gris-1);max-width:600px;margin:0 auto}
+.h2{font-size:clamp(1.8rem,4vw,3.3rem);font-weight:600;letter-spacing:-.035em;line-height:1.02;margin-bottom:clamp(1.2rem,3.5vh,2.4rem)}
+.h2 span{color:var(--gris-2)}
+.ctas{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:clamp(1.4rem,3.5vh,2.2rem)}
+.btn{display:inline-flex;align-items:center;gap:.55rem;font-family:var(--sans);font-size:14px;font-weight:500;padding:12px 22px;border-radius:100px;text-decoration:none;border:1px solid transparent;transition:transform .2s,border-color .2s,color .2s}
+.btn--pri{background:#fff;color:#06080C}
+.btn--sec{color:var(--texto);border-color:rgba(255,255,255,.18);background:rgba(6,8,12,.4)}
+.btn:hover{transform:translateY(-1px)}.btn--sec:hover{border-color:var(--glow);color:var(--glow-2)}
+.pista{margin-top:clamp(1.6rem,5vh,3rem);font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--gris-2)}
+.pista b{display:inline-block;animation:baja 1.8s var(--ease) infinite}
+@keyframes baja{0%,100%{transform:none;opacity:.5}50%{transform:translateY(4px);opacity:1}}
+
+/* tarjetas (vidrio oscuro, para leerse sobre la escena) */
+.tarjeta{border:1px solid rgba(143,193,255,.14);border-radius:14px;background:rgba(10,14,20,.72);
+  -webkit-backdrop-filter:blur(10px) saturate(130%);backdrop-filter:blur(10px) saturate(130%);box-shadow:0 30px 80px -30px rgba(0,0,0,.8)}
+.tres{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;text-align:left}
+.tres .tarjeta{padding:clamp(1rem,2.2vh,1.5rem)}
+.top{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gris-2);margin-bottom:.9rem}
+.top span:first-child{color:var(--glow)}
+.arte{width:100%;height:auto;display:block;margin:0 0 1rem;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);max-height:26vh}
+.arte text{font-family:var(--mono);font-size:11px;fill:var(--gris-1)}
+.hx-art-rows rect{fill:none;stroke:rgba(143,193,255,.45);stroke-width:1}
+.hx-art-rows .off rect{stroke:var(--warn);stroke-dasharray:3 3}
+.hx-art-rows .off text{fill:var(--warn)}
+.hx-art-links path{fill:none;stroke:var(--glow);stroke-width:1.2;stroke-dasharray:4 4;animation:flujo 1.6s linear infinite}
+.hx-art-links .off{stroke:var(--warn);animation:none;opacity:.7}
+@keyframes flujo{to{stroke-dashoffset:-16}}
+.hx-art-sinpar{fill:var(--warn)!important}
+.hx-art-cap{text-anchor:middle;fill:var(--gris-2)!important;letter-spacing:.06em}
+.hx-art-arrow{fill:none;stroke:var(--gris-2);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.hx-art-bars rect{fill:rgba(76,141,219,.22);stroke:var(--glow);stroke-width:1}
+.hx-art-trend{fill:none;stroke:var(--glow-2);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.hx-art-btn{fill:#fff}
+.hx-art-btnt{text-anchor:middle;font-family:var(--sans)!important;font-size:13px!important;font-weight:600;fill:#06080C!important}
+.hx-art-ok text{fill:var(--ok)}
+.hx-art-manual text{opacity:var(--o,1)}
+.tt{font-size:clamp(16px,1.4vw,19px);font-weight:600;letter-spacing:-.02em;margin-bottom:.4rem}
+.td{font-size:14px;line-height:1.6;color:var(--gris-1)}
+.cuatro{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;text-align:left}
+.cuatro .tarjeta{padding:clamp(.9rem,2.2vh,1.4rem) clamp(1rem,2vw,1.5rem)}
+.quien{font-size:17px;font-weight:600;letter-spacing:-.02em;margin-bottom:.7rem}
+.ab{display:grid;grid-template-columns:58px 1fr;gap:10px;font-size:14px;line-height:1.5;padding:.45rem 0}
+.ab span{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding-top:3px}
+.a{color:var(--gris-2)}.a s{text-decoration-color:rgba(152,162,179,.5)}
+.b{border-top:1px dashed var(--borde)}.b span{color:var(--ok)}
+.cierre{font-weight:600;text-transform:uppercase;letter-spacing:-.04em;line-height:.95;font-size:clamp(2.3rem,6.4vw,5.6rem)}
+
+/* celular: tarjetas compactas para que cada bloque quepa en la pantalla */
+/* con el indicador de avance a la derecha, el contenido deja libre ese borde */
+@media (min-width:701px){ .estacion{width:min(1100px,calc(100vw - 2*clamp(52px,6vw,72px)))} }
+@media (max-width:700px){
+  .ruta{display:none}
+  .tres{grid-template-columns:1fr;gap:8px}
+  .tres .tarjeta{display:grid;grid-template-columns:118px 1fr;gap:12px;align-items:center;padding:10px}
+  .tres .top,.tres .td{display:none}
+  .tres .arte{margin:0;max-height:none}
+  .tres .tt{font-size:15px;margin:0}
+  .cuatro{grid-template-columns:1fr;gap:8px}
+  .cuatro .tarjeta{padding:.75rem .9rem}
+  .quien{font-size:15px;margin-bottom:.3rem}
+  .a{display:none}
+  .b{border-top:0;padding:0;font-size:13.5px}
+  .h2{margin-bottom:1rem}
+}
+@media (max-height:700px) and (min-width:701px){
+  .arte{max-height:20vh}.td{font-size:13px;line-height:1.5}
+  .ab{padding:.3rem 0;font-size:13px}
+}
+
+/* sin 3D o con movimiento reducido: pagina normal, un bloque bajo otro */
+.estatico .escenario{position:static;perspective:none}
+.estatico .estacion{position:relative;left:auto;top:auto;transform:none!important;opacity:1!important;visibility:visible!important;pointer-events:auto;margin:0 auto;padding:22vh 0 8vh}
+.estatico .tunel{display:none}
+.estatico #escena{opacity:.35}
+.estatico .ruta{display:none}
+</style>
+</head>
+<body>
+<canvas id="escena" aria-hidden="true"></canvas>
+<div class="vineta" aria-hidden="true"></div>
+
+<nav>
+  <a class="logo" href="index.html">Ambilor.Lab</a>
+  <span class="prueba">Prueba · inicio 3D</span>
+  <a class="volver" href="index.html">Volver al sitio →</a>
+</nav>
+
+<ol class="ruta" aria-label="Avance">
+  <li><button type="button" data-i="0"><span>Inicio</span><i></i></button></li>
+  <li><button type="button" data-i="1"><span>Qué automatizo</span><i></i></button></li>
+  <li><button type="button" data-i="2"><span>Para quién</span><i></i></button></li>
+  <li><button type="button" data-i="3"><span>Siguiente paso</span><i></i></button></li>
+</ol>
+
+<main class="escenario">
+  <section class="estacion centro" aria-label="Inicio">
+    <div class="eyebrow">Ambilor.Lab / Automatización contable</div>
+    <h1 class="titulo">Procesos financieros<br>que funcionan solos<span class="p">.</span></h1>
+    <p class="lead">Revisar que cada pago tenga su factura, armar el resumen de ventas, recorrer listados larguísimos línea por línea. Construyo programas que hacen ese trabajo solos, con un clic, dentro de Google Sheets, Excel y las herramientas que tu equipo ya usa.</p>
+    <div class="ctas">
+      <a class="btn btn--pri" href="index.html?p=product">Ver herramientas <span aria-hidden="true">→</span></a>
+      <a class="btn btn--sec" href="index.html?p=contact">Conversemos</a>
+    </div>
+    <p class="pista">Desplaza para avanzar <b aria-hidden="true">↓</b></p>
+  </section>
+
+  <section class="estacion" aria-label="Qué automatizo">
+    <div class="eyebrow">Qué automatizo</div>
+    <h2 class="h2">Tres tareas que tu equipo repite cada mes. <span>Resueltas.</span></h2>
+    <div class="tres">
+      <article class="tarjeta"><div class="top"><span>Conciliación</span><span>01 / 03</span></div><svg class="arte" viewBox="0 0 320 170" aria-hidden="true"><g class="hx-art-rows"><g><rect x="18" y="12" width="196" height="20" rx="4"/><text x="28" y="26">Factura 1001</text><text x="206" y="26" text-anchor="end">+500.000</text></g><g><rect x="18" y="38" width="196" height="20" rx="4"/><text x="28" y="52">Pago fact. 1001</text><text x="206" y="52" text-anchor="end">−500.000</text></g><g><rect x="18" y="64" width="196" height="20" rx="4"/><text x="28" y="78">Factura 1002</text><text x="206" y="78" text-anchor="end">+250.000</text></g><g class="off"><rect x="18" y="90" width="196" height="20" rx="4"/><text x="28" y="104">Depósito s/ref.</text><text x="206" y="104" text-anchor="end">+80.000</text></g><g><rect x="18" y="116" width="196" height="20" rx="4"/><text x="28" y="130">Pago fact. 1002</text><text x="206" y="130" text-anchor="end">−250.000</text></g></g><g class="hx-art-links"><path d="M214 22 C244 22 244 48 214 48"/><path d="M214 74 C262 74 262 126 214 126"/><path class="off" d="M214 100 L236 100"/></g><text class="hx-art-sinpar" x="242" y="104">sin par</text><text class="hx-art-cap" x="160" y="158">2 pares · 1 pendiente</text></svg>
+        <h3 class="tt">Cada movimiento encuentra su par</h3><p class="td">Pegas tu listado de movimientos. El sistema empareja cada uno con su contraparte y te muestra lo que quedó sin par.</p></article>
+      <article class="tarjeta"><div class="top"><span>Reportería</span><span>02 / 03</span></div><svg class="arte" viewBox="0 0 320 170" aria-hidden="true">
+          <g class="hx-art-grid">
+            <text x="18" y="30">450K</text><text x="72" y="30">320K</text>
+            <text x="18" y="56">610K</text><text x="72" y="56">280K</text>
+            <text x="18" y="82">190K</text><text x="72" y="82">540K</text>
+          </g>
+          <path class="hx-art-arrow" d="M128 64 L168 64 M160 57 L168 64 L160 71"/>
+          <g class="hx-art-bars">
+            <rect x="188" y="96" width="18" height="40" rx="3"/><rect x="214" y="70" width="18" height="66" rx="3"/>
+            <rect x="240" y="82" width="18" height="54" rx="3"/><rect x="266" y="46" width="18" height="90" rx="3"/>
+          </g>
+          <path class="hx-art-trend" pathLength="1" d="M197 92 L223 66 L249 78 L275 40"/>
+          <text class="hx-art-cap" x="160" y="158">actualizado solo</text>
+        </svg>
+        <h3 class="tt">Números que se vuelven gráficos solos</h3><p class="td">Tus datos pasan a un panel visual que se actualiza solo. Sin armar tablas de cero cada mes.</p></article>
+      <article class="tarjeta"><div class="top"><span>Automatización</span><span>03 / 03</span></div><svg class="arte" viewBox="0 0 320 170" aria-hidden="true">
+          <g class="hx-art-manual">
+            <text x="18" y="34">Mes 1 · revisar…</text>
+            <text x="18" y="62" style="--o:.55">Mes 2 · lo mismo</text>
+            <text x="18" y="90" style="--o:.28">Mes 3 · lo mismo</text>
+          </g>
+          <path class="hx-art-arrow" d="M150 64 L182 64 M174 57 L182 64 L174 71"/>
+          <rect class="hx-art-btn" x="200" y="22" width="102" height="34" rx="17"/>
+          <text class="hx-art-btnt" x="251" y="44">1 clic</text>
+          <g class="hx-art-ok"><text x="212" y="84">Mes 1 ✓</text><text x="212" y="106">Mes 2 ✓</text><text x="212" y="128">Mes 3 ✓</text></g>
+          <text class="hx-art-cap" x="160" y="158">siempre igual</text>
+        </svg>
+        <h3 class="tt">Lo que repites cada mes, que pase solo</h3><p class="td">Reportes, alertas, limpiezas de datos: cualquier tarea repetida puede ocurrir sola, siempre igual.</p></article>
+    </div>
+  </section>
+
+  <section class="estacion" aria-label="Para quién">
+    <div class="eyebrow">Para quién</div>
+    <h2 class="h2">Menos copiar y pegar. <span>Más tiempo para decidir.</span></h2>
+    <div class="cuatro">
+      <div class="tarjeta"><div class="quien">Para contadores</div><p class="ab a"><span>Antes</span><s>Revisar la cartola fila por fila, buscando el pago de cada factura, cada cierre.</s></p><p class="ab b"><span>Ahora</span>El sistema empareja cada movimiento en minutos: tú solo validas lo que no cuadra.</p></div>
+      <div class="tarjeta"><div class="quien">Para PyMEs</div><p class="ab a"><span>Antes</span><s>Pagar software especializado que no siempre necesitas ni entiendes.</s></p><p class="ab b"><span>Ahora</span>Lo mismo con Google Sheets o Excel, que ya usas y ya pagas.</p></div>
+      <div class="tarjeta"><div class="quien">Para equipos financieros</div><p class="ab a"><span>Antes</span><s>Armar el informe de cierre copiando y pegando, todos los meses.</s></p><p class="ab b"><span>Ahora</span>El informe se actualiza solo cuando cambian los datos base.</p></div>
+      <div class="tarjeta"><div class="quien">Productos listos para usar</div><p class="ab a"><span>Antes</span><s>Esperar semanas a que alguien desarrolle lo que necesitas.</s></p><p class="ab b"><span>Pronto</span>Herramientas listas que instalas en 5 minutos, sin esperar desarrollos.</p></div>
+    </div>
+  </section>
+
+  <section class="estacion centro" aria-label="Siguiente paso">
+    <div class="eyebrow">Siguiente paso</div>
+    <h2 class="cierre">Deja de revisar<br>planillas a mano<span style="color:var(--glow)">.</span></h2>
+    <div class="ctas">
+      <a class="btn btn--pri" href="index.html?p=product">Ver herramientas <span aria-hidden="true">→</span></a>
+      <a class="btn btn--sec" href="index.html?p=contact">Conversemos</a>
+    </div>
+  </section>
+</main>
+
+<div class="tunel" aria-hidden="true"><div class="tramo"></div><div class="tramo"></div><div class="tramo"></div><div class="tramo"></div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  var estaciones = [].slice.call(document.querySelectorAll('.estacion'));
+  var N = estaciones.length;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var canvas = document.getElementById('escena');
+  var hay3D = typeof THREE !== 'undefined';
+  if (reduce || !hay3D) { document.documentElement.classList.add('estatico'); if (!hay3D) canvas.style.display = 'none'; }
+
+  // ── avance: 0..N-1 segun el desplazamiento (suavizado para que el 3D y el texto vayan juntos)
+  var P = 0, Pobj = 0;
+  function objetivo(){
+    var max = document.documentElement.scrollHeight - innerHeight;
+    Pobj = max > 0 ? Math.min(1, Math.max(0, scrollY / max)) * (N - 1) : 0;
+  }
+  addEventListener('scroll', objetivo, { passive:true }); addEventListener('resize', objetivo); objetivo();
+
+  // indicador: ir a una estacion = desplazar la pagina hasta ella (sin mover sola la pagina despues)
+  var puntos = [].slice.call(document.querySelectorAll('.ruta button'));
+  puntos.forEach(function(b){ b.addEventListener('click', function(){
+    var max = document.documentElement.scrollHeight - innerHeight;
+    scrollTo({ top: max * (+b.dataset.i) / (N - 1), behavior: reduce ? 'auto' : 'smooth' });
+  }); });
+
+  // cada bloque: llega desde el fondo, se queda al frente mientras se lee y pasa hacia atras
+  var PAUSA = 0.32;   // parte del tramo en que el bloque queda quieto al centro
+  function colocar(){
+    var ancho = innerWidth < 701;
+    estaciones.forEach(function(e, i){
+      var t = P - i, a = Math.abs(t);
+      var u = a < PAUSA ? 0 : Math.sign(t) * (a - PAUSA) / (1 - PAUSA);
+      var z, op;
+      if (u <= 0) { z = u * (ancho ? 900 : 1500); op = 1 + u * 2.1; }    // viene desde el fondo
+      else { z = u * 900; op = 1 - u * 3.6; }                               // pasa junto a la camara (se va rapido: no se encima con el siguiente)
+      op = Math.max(0, Math.min(1, op));
+      e.style.opacity = op.toFixed(3);
+      e.style.visibility = op > 0.01 ? 'visible' : 'hidden';
+      e.style.transform = 'translate(-50%,-50%) translate3d(0,0,' + z.toFixed(1) + 'px)';
+      e.classList.toggle('activa', a < PAUSA + 0.1);
+    });
+    var cerca = Math.round(P);
+    puntos.forEach(function(b, i){ b.classList.toggle('act', i === cerca); });
+  }
+
+  if (document.documentElement.classList.contains('estatico')) { estaciones.forEach(function(e){ e.style.visibility='visible'; }); return; }
+
+  // ── escena 3D: pasillo con fichas de movimientos, piezas del cubo y graficos a los lados
+  var renderer;
+  try { renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, powerPreference: 'high-performance' }); }
+  catch (e) { document.documentElement.classList.add('estatico'); canvas.style.display='none'; estaciones.forEach(function(e){ e.style.visibility='visible'; }); return; }
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+  renderer.setClearColor(0x06080C, 1);
+  var scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x06080C, 7, 30);
+  var camera = new THREE.PerspectiveCamera(55, 1, 0.1, 80);
+  scene.add(new THREE.AmbientLight(0x8fb4e8, 0.55));
+  var dl = new THREE.DirectionalLight(0xffffff, 0.9); dl.position.set(3, 5, 6); scene.add(dl);
+  var luz = new THREE.PointLight(0x4c8ddb, 1.4, 14); scene.add(luz);
+
+  var PASO = 12;                      // distancia entre bloques
+  var LARGO = (N - 1) * PASO + 16;    // largo del pasillo
+  var movil = innerWidth < 701;
+
+  function lienzo(w, h, dibujar){
+    var c = document.createElement('canvas'), k = 2; c.width = w * k; c.height = h * k;
+    var g = c.getContext('2d'); g.scale(k, k); dibujar(g, w, h);
+    var tx = new THREE.CanvasTexture(c); tx.anisotropy = 4; return tx;
+  }
+  function rr(g, x, y, w, h, r){ g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }
+  var MONO = '500 15px "JetBrains Mono", ui-monospace, Menlo, monospace';
+
+  // fichas de movimientos (como en la demo "Ver en accion")
+  var FICHAS = [
+    ['Factura 1001','+500.000','n'],['Pago fact. 1001','−500.000','n'],['Factura 1002','+250.000','n'],
+    ['Depósito s/ref.','+80.000','w'],['Pago fact. 1002','−250.000','n'],['Honorario B-23','+64.000','ok'],
+    ['Comisión mantención','−3.900','n'],['Pago F-102','−245.000','ok'],['Factura F-103','+89.700','n'],
+    ['Transf. sin ref.','+120.000','w'],['Factura F-104','+410.500','ok'],['Pago F-104','−410.500','ok']
+  ];
+  function textoFicha(f){
+    return lienzo(260, 56, function(g, w, h){
+      var col = f[2] === 'w' ? '#F0A63A' : f[2] === 'ok' ? '#34C27A' : '#4C8DDB';
+      rr(g, 1, 1, w-2, h-2, 9); g.fillStyle = 'rgba(14,19,27,.92)'; g.fill();
+      g.strokeStyle = f[2] === 'w' ? 'rgba(240,166,58,.7)' : 'rgba(143,193,255,.45)'; g.lineWidth = 1.2; g.stroke();
+      g.fillStyle = col; g.fillRect(10, 12, 3, h - 24);
+      g.font = MONO; g.textBaseline = 'middle';
+      g.fillStyle = f[2] === 'w' ? '#F0A63A' : '#C9D4E5'; g.fillText(f[0], 22, h/2);
+      g.textAlign = 'right'; g.fillStyle = f[2] === 'ok' ? '#34C27A' : f[2] === 'w' ? '#F0A63A' : '#8FC1FF';
+      g.fillText(f[2] === 'ok' ? '✓ ' + f[1] : f[1], w - 14, h/2);
+    });
+  }
+  // cifras flotantes (reporteria)
+  var CIFRAS = [['3 s','por cada 3.000'],['5.000','movimientos'],['98 %','conciliado'],['~5 min','instalación'],['0','errores de copia']];
+  function textoCifra(c){
+    return lienzo(200, 90, function(g, w, h){
+      g.font = '600 38px "JetBrains Mono", ui-monospace, monospace'; g.fillStyle = '#E8EDF5'; g.textBaseline = 'alphabetic';
+      g.fillText(c[0], 8, 46); g.font = '500 13px "JetBrains Mono", ui-monospace, monospace'; g.fillStyle = '#8FC1FF';
+      g.fillText(c[1].toUpperCase(), 10, 74);
+    });
+  }
+  var COLORES = [0x4C8DDB, 0x8FC1FF, 0x34C27A, 0xF0A63A, 0xE8EDF5, 0x2F6FB8];
+  var geoCubo = new THREE.BoxGeometry(0.46, 0.46, 0.46);
+
+  var objetos = [];
+  function lado(k){ return k % 2 ? 1 : -1; }
+  function azar(a, b){ return a + Math.random() * (b - a); }
+  var espacio = movil ? 2.2 : 1.6, k = 0;
+  for (var z = 2; z > -LARGO; z -= espacio, k++) {
+    var s = lado(k), tipo = k % 3, o;
+    var x = s * (movil ? azar(2.4, 3.3) : azar(3.8, 6.4)), y = movil ? azar(-2.6, 2.8) : azar(-1.9, 2.1);   // en celular, pegados a los bordes
+    if (tipo === 0) {
+      var f = FICHAS[k % FICHAS.length];
+      o = new THREE.Mesh(new THREE.PlaneGeometry(2.3, 0.5), new THREE.MeshBasicMaterial({ map: textoFicha(f), transparent: true, side: THREE.DoubleSide }));
+      o.rotation.y = -s * azar(0.35, 0.7); o.rotation.z = azar(-0.12, 0.12);
+    } else if (tipo === 1) {
+      o = new THREE.Group();
+      var n = 1 + Math.floor(Math.random() * 3);
+      for (var j = 0; j < n; j++) {
+        var m = new THREE.Mesh(geoCubo, new THREE.MeshStandardMaterial({ color: COLORES[(k + j) % COLORES.length], roughness: .35, metalness: .15, emissive: 0x0b1a2e, emissiveIntensity: .4 }));
+        m.position.set(j * 0.5 - (n - 1) * 0.25, (j % 2) * 0.5, 0); o.add(m);
+      }
+      o.rotation.set(azar(0, 1), azar(0, 1), 0);
+      o.userData.gira = azar(0.15, 0.45) * (Math.random() < .5 ? -1 : 1);
+    } else {
+      o = new THREE.Group();
+      if (k % 2) {
+        var alturas = [0.35, 0.7, 0.55, 1.05];
+        alturas.forEach(function(h, j){
+          var b = new THREE.Mesh(new THREE.BoxGeometry(0.2, h, 0.2), new THREE.MeshStandardMaterial({ color: 0x4C8DDB, emissive: 0x1F5C99, emissiveIntensity: .55, transparent: true, opacity: .85 }));
+          b.position.set(j * 0.3, h / 2, 0); o.add(b);
+        });
+        var pts = alturas.map(function(h, j){ return new THREE.Vector3(j * 0.3, h + 0.18, 0.12); });
+        o.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0x8FC1FF })));
+        o.position.y = -0.6;
+      } else {
+        var c = CIFRAS[k % CIFRAS.length];
+        o.add(new THREE.Mesh(new THREE.PlaneGeometry(1.5, 0.68), new THREE.MeshBasicMaterial({ map: textoCifra(c), transparent: true, side: THREE.DoubleSide })));
+      }
+      o.rotation.y = -s * azar(0.3, 0.6);
+    }
+    o.position.set(x, y + (o.position.y || 0), z);
+    o.userData.base = o.position.y; o.userData.fase = Math.random() * 6.28;
+    // materiales del objeto, para desvanecerlo cuando pasa muy cerca de la camara
+    o.userData.mats = [];
+    o.traverse(function(n){ if (n.material) { n.material.transparent = true; n.material.userData.op = n.material.opacity; o.userData.mats.push(n.material); } });
+    var esc = movil ? 0.75 : 1; o.scale.setScalar(esc);
+    scene.add(o); objetos.push(o);
+  }
+
+  // polvo de datos: da la sensacion de profundidad al avanzar
+  var nP = movil ? 500 : 1100, pos = new Float32Array(nP * 3);
+  for (var i = 0; i < nP; i++) {
+    var ang = Math.random() * Math.PI * 2, r = azar(2.2, 9);
+    pos[i*3] = Math.cos(ang) * r; pos[i*3+1] = Math.sin(ang) * r * 0.6; pos[i*3+2] = azar(-LARGO, 4);
+  }
+  var gp = new THREE.BufferGeometry(); gp.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  scene.add(new THREE.Points(gp, new THREE.PointsMaterial({ color: 0x8FC1FF, size: 0.03, transparent: true, opacity: 0.55 })));
+
+  // tamano
+  function medir(){
+    var w = innerWidth, h = innerHeight;
+    renderer.setSize(w, h, false); camera.aspect = w / h;
+    camera.fov = w / h < 0.8 ? 68 : 55;          // en vertical, algo mas de angulo para ver los lados
+    camera.updateProjectionMatrix();
+  }
+  addEventListener('resize', medir); medir();
+
+  // puntero: la camara mira levemente hacia donde esta el mouse
+  var mx = 0, my = 0, tx = 0, ty = 0;
+  addEventListener('pointermove', function(e){ if (e.pointerType !== 'mouse') return; tx = e.clientX / innerWidth - .5; ty = e.clientY / innerHeight - .5; }, { passive:true });
+
+  var ultimo = performance.now(), visible = true;
+  document.addEventListener('visibilitychange', function(){ visible = !document.hidden; if (visible) { ultimo = performance.now(); requestAnimationFrame(bucle); } });
+  function bucle(ahora){
+    if (!visible) return;
+    var dt = Math.min(.05, (ahora - ultimo) / 1000); ultimo = ahora;
+    P += (Pobj - P) * Math.min(1, dt * 7);
+    if (Math.abs(Pobj - P) < 0.0005) P = Pobj;
+    mx += (tx - mx) * .05; my += (ty - my) * .05;
+    var zc = 5 - P * PASO;
+    camera.position.set(mx * 0.9, -my * 0.5, zc);
+    camera.lookAt(mx * 0.4, -my * 0.2, zc - 10);
+    luz.position.set(0, 1.2, zc - 4);
+    var t = ahora / 1000;
+    for (var i = 0; i < objetos.length; i++) {
+      var o = objetos[i];
+      if (o.position.z > zc + 2 || o.position.z < zc - 32) continue;   // fuera de vista
+      // cerca de la camara se desvanece: pasa sin tapar los titulos
+      var d = zc - o.position.z, al = Math.max(0, Math.min(1, (d - 1.2) / 3.2));
+      if (al !== o.userData.al) { o.userData.al = al; o.visible = al > 0.01; o.userData.mats.forEach(function(m){ m.opacity = m.userData.op * al; }); }
+      o.position.y = o.userData.base + Math.sin(t * .7 + o.userData.fase) * .12;
+      if (o.userData.gira) { o.rotation.x += dt * o.userData.gira; o.rotation.y += dt * o.userData.gira * .7; }
+    }
+    colocar();
+    renderer.render(scene, camera);
+    requestAnimationFrame(bucle);
+  }
+  requestAnimationFrame(bucle);
+})();
+</script>
+</body>
+</html>
