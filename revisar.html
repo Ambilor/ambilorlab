@@ -109,7 +109,11 @@ async function revisar(v){
   for (const alto of v.altos) {
     v.iframe.height = alto;
     await new Promise(r => setTimeout(r, 500));
-    (await revisarAlto(v, alto)).forEach(a => todos.push(v.altos.length > 1 ? `[alto ${alto}] ${a}` : a));
+    // Si algo no cuadra se mide otra vez tras una pausa: justo despues de cambiar
+    // el alto de la vista, una transicion en curso puede dar una lectura falsa.
+    let avisos = await revisarAlto(v, alto);
+    if (avisos.length) { await new Promise(r => setTimeout(r, 900)); avisos = await revisarAlto(v, alto); }
+    avisos.forEach(a => todos.push(v.altos.length > 1 ? `[alto ${alto}] ${a}` : a));
   }
   v.iframe.height = v.altos[0];
   v.estado.innerHTML = todos.length

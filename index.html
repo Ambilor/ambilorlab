@@ -1545,11 +1545,14 @@ body>section:not(#home)>.container{padding-top:1.6rem}
    (1180 a 1440px, igual en todas las pestanas) y las escenas del inicio escalan
    con el alto para ocupar ~85% de la pantalla, sin vacio abajo */
 :root{--hx-max:min(1440px, max(1180px, 72vw))}
-@media (min-width:1000px) and (min-height:700px){
+/* 2026-09-28: tambien desde 640px de ancho con alto suficiente (computador con la
+   ventana a la mitad, tablet vertical): antes el contenido quedaba chico y
+   sobraban 300-450px de vacio por escena */
+@media (min-width:640px) and (min-height:700px){
   .hx-escena{padding-top:clamp(1.6rem,4svh,3rem)!important;padding-bottom:clamp(1.6rem,4svh,3rem)}
   .hx-escena .hx-head{margin-bottom:clamp(1.2rem,4svh,3.2rem);max-width:none}
   .hx-escena .hx-h2{font-size:clamp(2rem,min(4.4vw,7.4svh),4.2rem)}
-  .hx-escena .hx-art{max-height:34svh}
+  .hx-escena .hx-art{max-height:34svh;min-height:min(24svh,26vw)}   /* ventanas angostas y altas: el recuadro del dibujo crece con el alto */
   .hx-escena .hx-panel{padding:clamp(1.2rem,2.8svh,2rem) clamp(1.2rem,1.8vw,2rem)}
   .hx-escena .hx-panel-top{margin-bottom:clamp(.8rem,2svh,1.4rem)}
   .hx-escena .hx-panel-t{font-size:clamp(17px,2.5svh,24px)}
@@ -1598,13 +1601,6 @@ body>section:not(#home)>.container{padding-top:1.6rem}
   .gp-prog{margin-bottom:8px}
   .gp-ctrl{margin-top:8px}
 }
-/* 2026-09-28: las escenas del inicio ya no miden obligatoriamente el alto de la
-   pantalla (venia del encaje al desplazar, que se quito). Con la ventana a la
-   mitad o en tablet vertical el contenido es mas bajo que la pantalla y sobraban
-   300-450px de vacio por bloque; ahora el aire es proporcional al alto visible
-   (~150px por bloque en pantalla completa, igual que antes). */
-.hx-escena{min-height:0!important;padding-top:clamp(1.6rem,7svh,5rem)!important;padding-bottom:clamp(1.6rem,7svh,5rem)!important}
-.hx-end{min-height:0}
 </style>
 </head>
 
