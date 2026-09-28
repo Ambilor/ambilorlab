@@ -3384,8 +3384,35 @@ window.AL3D = (function(){
 <!-- Demo 3D "Ver en accion" (three.js). Va al final del body y SIN async/defer
      a proposito: el script inline siguiente necesita window.THREE ya disponible,
      y asi el parser no se bloquea con ~600 KB antes de mostrar el contenido. -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
+/* three.js sin bloquear la pagina (2026-09-28). Antes era un <script src> normal:
+   si cdnjs se quedaba colgado (red lenta, filtros, Edge en algunas redes) nada de
+   lo que venia despues corria y el inicio quedaba de una sola pantalla, sin poder
+   desplazarse. Ahora: cdnjs y, si falla o tarda, jsdelivr; los scripts 3D corren
+   cuando llega (alConTHREE). Si no llega en 8 s, corren sin 3D: el inicio pasa a
+   su version fija (legible y desplazable) y las demos muestran sus pasos en texto. */
+(function(){
+  var cola = [], listo = false, guardado = null, iniciados = {}, fallos = 0;
+  var URLS = ['https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js',
+              'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js'];
+  window.alConTHREE = function(f){ if (listo) f(); else cola.push(f); };
+  function soltar(){
+    if (listo) return; listo = true; guardado = window.THREE || null;
+    cola.splice(0).forEach(function(f){ try { f(); } catch (e) { if (window.console) console.error(e); } });
+  }
+  function intentar(i){
+    if (iniciados[i] || i >= URLS.length) return; iniciados[i] = true;
+    var s = document.createElement('script'); s.src = URLS[i];
+    s.onload = function(){ if (listo) { if (guardado) window.THREE = guardado; return; } if (window.THREE) soltar(); else s.onerror(); };
+    s.onerror = function(){ fallos++; if (i + 1 < URLS.length) intentar(i + 1); else if (fallos >= URLS.length) soltar(); };
+    document.head.appendChild(s);
+  }
+  intentar(0);
+  setTimeout(function(){ if (!listo) intentar(1); }, 3000);                 // cdnjs lento: probar el otro
+  setTimeout(function(){ if (!listo) { window.AL_SIN3D = true; soltar(); } }, 8000);
+})();
+</script>
+<script>alConTHREE(function(){
 /* ── Inicio 3D (2026-09-28): recorrido del inicio + fondo 3D compartido por todas
    las pestanas. Viene de la pagina de prueba inicio-3d.html. ── */
 
@@ -4047,8 +4074,8 @@ window.AL3D = (function(){
   }
   requestAnimationFrame(bucle);
 })();
-</script>
-<script>
+});</script>
+<script>alConTHREE(function(){
 /* Demo 3D del Conciliador Automatico V1.
    Adaptada de ver-en-accion-conciliador.html al sitio (ancho 660px, dark mode).
    El copy de los 6 pasos esta tambien en el HTML, asi que si three.js no carga
@@ -4781,10 +4808,10 @@ requestAnimationFrame(frame);
 }
 })();
 })();
-</script>
+});</script>
 
 <!-- Demo 3D "Como se instala" (three.js). -->
-<script>
+<script>alConTHREE(function(){
 /* Demo 3D de instalacion del Conciliador Automatico V1. */
 (function(){
 const TEX_S = 1.6;
@@ -5354,9 +5381,9 @@ requestAnimationFrame(frame);
   fallback();
 }
 })();
-</script>
+});</script>
 
-<script>
+<script>alConTHREE(function(){
 /* ═══ HERO INMERSIVO — cubo Rubik jugable (2026-09-27, Ambilor.Lab) ═══
    Modo demo: el cubo (colores de marca) se desordena y se resuelve solo; al
    quedar resuelto brilla ("todo conciliado").
@@ -5744,7 +5771,7 @@ requestAnimationFrame(frame);
   tema(); resize(); draw(0); update();
   if(document.fonts&&document.fonts.ready) document.fonts.ready.then(resize);
 })();
-</script>
+});</script>
 
 </body>
 </html>
