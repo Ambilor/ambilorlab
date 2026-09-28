@@ -2085,6 +2085,7 @@ window.AL3D = (function(){
     rg.addColorStop(0, 'rgba(0,0,0,1)'); rg.addColorStop(1, 'rgba(0,0,0,0)');
     g.fillStyle = rg; g.fillRect(0, 0, px, c.height);
     var t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding;
+    t.anisotropy = 16;   // three la limita al máximo del equipo: sin parpadeo en ángulo
     var pared = new THREE.Mesh(new THREE.PlaneGeometry(W, H),
       new THREE.MeshBasicMaterial({ map:t, transparent:true, depthWrite:false }));
     pared.position.set(o.x || 0, o.y || 0, z); pared.renderOrder = -10;
@@ -2093,26 +2094,80 @@ window.AL3D = (function(){
     return pared;
   }
 
-  function grosor(mallas, prof, colores){
-    colores = colores || { lado:'#bfcddc', arriba:'#e3eaf2', abajo:'#9fb1c5', atras:'#8fa3ba' };
+  function redondeado(w, h, r){
+    var x = -w/2, y = -h/2, sh = new THREE.Shape();
+    sh.moveTo(x + r, y); sh.lineTo(x + w - r, y); sh.quadraticCurveTo(x + w, y, x + w, y + r);
+    sh.lineTo(x + w, y + h - r); sh.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    sh.lineTo(x + r, y + h); sh.quadraticCurveTo(x, y + h, x, y + h - r);
+    sh.lineTo(x, y + r); sh.quadraticCurveTo(x, y, x + r, y);
+    return sh;
+  }
+  // Canto físico detrás de un panel: mismas esquinas redondeadas que el
+  // dibujo del panel (o.radio, en unidades 3D), costados iluminados y
+  // oclusión real (escribe profundidad cuando el panel está opaco), así el
+  // borde no deja ver otros elementos a través ni asoma en las esquinas.
+  function grosor(mallas, prof, o){
+    o = o || {};
     var col = function(h){ return new THREE.Color(h).convertSRGBToLinear(); };
     mallas.forEach(function(m){
       if (!m || !m.geometry || !m.geometry.parameters) return;
-      var p = m.geometry.parameters, d = prof || .07;
-      var mk = function(h){ return new THREE.MeshBasicMaterial({ color:col(h), transparent:true, depthWrite:false }); };
-      // orden de caras de BoxGeometry: +x, -x, +y, -y, +z, -z
-      var mats = [mk(colores.lado), mk(colores.lado), mk(colores.arriba), mk(colores.abajo), mk(colores.atras), mk(colores.atras)];
-      var canto = new THREE.Mesh(new THREE.BoxGeometry(p.width * .995, p.height * .995, d), mats);
-      canto.position.z = -d / 2 - .002;
+      var p = m.geometry.parameters, d = prof || .07, r = o.radio || 0;
+      var w = p.width * .994, h = p.height * .994, geo;
+      if (r > 0) { geo = new THREE.ExtrudeGeometry(redondeado(w, h, r), { depth:d, bevelEnabled:false, curveSegments:12 }); geo.translate(0, 0, -d - .002); }
+      else { geo = new THREE.BoxGeometry(w, h, d); geo.translate(0, 0, -d/2 - .002); }
+      var lado = new THREE.MeshStandardMaterial({ color:col(o.lado || '#cbd6e2'), roughness:.55, metalness:.05, transparent:true });
+      var atras = new THREE.MeshBasicMaterial({ color:col(o.atras || '#9fb1c5'), transparent:true });
+      // ExtrudeGeometry: grupo 0 = tapas, 1 = costados. Box: +x,-x,+y,-y,+z,-z
+      var mats = r > 0 ? [atras, lado] : [lado, lado, lado, lado, atras, atras];
+      var canto = new THREE.Mesh(geo, mats);
       canto.renderOrder = (m.renderOrder || 0) - .5;
       canto.onBeforeRender = function(){
         var op = m.material && m.material.opacity != null ? m.material.opacity : 1;
-        for (var i = 0; i < mats.length; i++) mats[i].opacity = op;
+        for (var k = 0; k < mats.length; k++) { mats[k].opacity = op; mats[k].depthWrite = op > .9; }
       };
       m.add(canto);
     });
   }
-  return { parallax:parallax, ambiente:ambiente, grosor:grosor };
+  // Luces suaves para los costados iluminados (si la escena no tiene)
+  function luces(scene){
+    scene.add(new THREE.HemisphereLight(0xffffff, 0xaebfd2, .9));
+    var s = new THREE.DirectionalLight(0xffffff, .55); s.position.set(3, 6, 6); scene.add(s);
+    var r = new THREE.PointLight(0x4c8ddb, 1.1, 22); r.position.set(-4, 2.5, -3); scene.add(r);
+  }
+  // Piso con cuadrícula en perspectiva (misma textura que la pared, acostada)
+  function piso(scene, o){
+    o = o || {};
+    var pared = ambiente(scene, { w:o.w || 26, h:o.h || 22, paso:o.paso || .6, niebla:false, z:0 });
+    pared.rotation.x = -Math.PI / 2;
+    pared.position.set(o.x || 0, o.y == null ? -3.4 : o.y, o.z == null ? -3 : o.z);
+    pared.renderOrder = -9;
+    return pared;
+  }
+  // Sombra de contacto: mancha difusa horizontal bajo un objeto
+  function sombra(scene, w, d){
+    var c = document.createElement('canvas'); c.width = 256; c.height = 256;
+    var g = c.getContext('2d'), rg = g.createRadialGradient(128, 128, 0, 128, 128, 128);
+    rg.addColorStop(0, 'rgba(18,48,77,.55)'); rg.addColorStop(.55, 'rgba(18,48,77,.18)'); rg.addColorStop(1, 'rgba(18,48,77,0)');
+    g.fillStyle = rg; g.fillRect(0, 0, 256, 256);
+    var t = new THREE.CanvasTexture(c);
+    var m = new THREE.Mesh(new THREE.PlaneGeometry(w, d), new THREE.MeshBasicMaterial({ map:t, transparent:true, depthWrite:false }));
+    m.rotation.x = -Math.PI / 2; m.renderOrder = -8; scene.add(m);
+    return m;
+  }
+  // "Encaje": sale hacia adelante y vuelve a su lugar con un rebote amortiguado.
+  // d = segundos desde el inicio. Devuelve { z, r, f } (avance, giro, destello).
+  function encaje(d){
+    if (d < 0 || d > 1.6) return { z:0, r:0, f:0 };
+    if (d < .28) { var k = Math.sin(d / .28 * Math.PI / 2); return { z:.38 * k, r:k, f:0 }; }
+    var e = d - .28, amort = Math.exp(-6.5 * e);
+    return { z:.38 * amort * Math.cos(13 * e), r:amort * Math.cos(11 * e), f:Math.exp(-3.2 * e) };
+  }
+  // Resorte con rebote para entradas (0→1 con un leve sobrepaso)
+  function rebote(x){
+    x = Math.min(1, Math.max(0, x));
+    return 1 - Math.exp(-6 * x) * Math.cos(7.5 * x) * (1 - x);
+  }
+  return { parallax:parallax, ambiente:ambiente, grosor:grosor, luces:luces, piso:piso, sombra:sombra, encaje:encaje, rebote:rebote };
 })();
 </script>
 
@@ -2286,6 +2341,7 @@ scene.add(new THREE.HemisphereLight(0xffffff, 0xaebfd2, 0.9));
 const sun = new THREE.DirectionalLight(0xffffff, 0.6); sun.position.set(3, 5, 6); scene.add(sun);
 // Profundidad (AL3D): pared con cuadrícula + niebla, y parallax con el puntero
 AL3D.ambiente(scene, { z:-4.5, y:-0.85 });
+AL3D.piso(scene, { y:-3.95 });
 const PX = AL3D.parallax(stage, reduce);
 const TEX_S = 1.6;
 const ANISO = renderer.capabilities.getMaxAnisotropy();
@@ -2352,6 +2408,23 @@ const head = new THREE.Mesh(new THREE.PlaneGeometry(TW, RH), basic({ map: tex(TE
 }) }));
 head.renderOrder = 3; table.add(head);
 
+// ── Fichas con volumen (2026-09-27): cada fila es una lámina sólida con canto
+// iluminado (luz real + contraluz azul). El texto sigue en la cara frontal,
+// en su textura de siempre: su nitidez no cambia.
+const FD = 0.07, fichaGeo = new THREE.BoxGeometry(TW, RH, FD);
+function ficha(m, colorCanto){
+  const mat = new THREE.MeshStandardMaterial({ color:col(colorCanto), roughness:.5, metalness:.08, transparent:true, depthWrite:false, emissive:col('#2f8a5b'), emissiveIntensity:0 });
+  const b = new THREE.Mesh(fichaGeo, mat); b.position.z = -FD/2 - 0.003; b.renderOrder = 2.5;
+  b.onBeforeRender = () => { mat.opacity = m.material.opacity; mat.depthWrite = mat.opacity > .9; };   // oclusión real cuando está opaca
+  m.add(b); return mat;
+}
+rows.forEach(r => { r.mat = ficha(r.m, '#e6ecf3'); });
+ficha(head, '#1f5c99');
+const luzRim = new THREE.PointLight(0x4c8ddb, 1.4, 22); luzRim.position.set(-4, 2.5, -3); scene.add(luzRim);
+const luzTop = new THREE.DirectionalLight(0xffffff, 0.35); luzTop.position.set(0, 8, 2); scene.add(luzTop);
+const sombraTabla = AL3D.sombra(scene, TW*1.3, 1.8);
+
+
 // column mapping chips: the tool's field -> the sheet's header
 const MAP = [['Fecha', 110], ['Concepto', 420], ['Monto', 1300]];
 const chips = MAP.map(([name, px]) => {
@@ -2370,6 +2443,7 @@ const arcs = PAIRS.map(([a, b]) => {
     new THREE.Vector3(ARC_X, slotY(a), 0), new THREE.Vector3(ARC_X + d, slotY(a), 0),
     new THREE.Vector3(ARC_X + d, slotY(b), 0), new THREE.Vector3(ARC_X, slotY(b), 0));
   const m = new THREE.Mesh(new THREE.TubeGeometry(curve, TUB, 0.02, RAD, false), basic({ color:col(C.brand) }));
+  m.userData.curve = curve;
   m.renderOrder = 4; table.add(m); return m;
 });
 const hiGeo = new THREE.PlaneGeometry(1, RH + 0.06);
@@ -2499,8 +2573,19 @@ const manualArc = (() => {
     new THREE.Vector3(ARC_X, slotY(M1), 0), new THREE.Vector3(ARC_X + d, slotY(M1), 0),
     new THREE.Vector3(ARC_X + d, slotY(M2), 0), new THREE.Vector3(ARC_X, slotY(M2), 0));
   const m = new THREE.Mesh(new THREE.TubeGeometry(curve, TUB, 0.024, RAD, false), basic({ color:col(C2.ok) }));
+  m.userData.curve = curve;
   m.renderOrder = 4; table.add(m); return m;
 })();
+// Partículas de luz que viajan por los arcos de cada par (2026-09-27)
+const chispaGeo = new THREE.SphereGeometry(0.034, 12, 10);
+const chispas = [...arcs, manualArc].map((a, k) => [0, 1].map(j => {
+  const m = new THREE.Mesh(chispaGeo, basic({ color:col(k === arcs.length ? '#bff0d4' : '#ffffff') }));
+  m.renderOrder = 8; table.add(m); return { m, a, j };
+}));
+// Momento de "encaje" de cada fila: los pares automáticos y el par manual
+const ENCAJE = {}, GIRO = {};
+PAIRS.forEach(([a, b], k) => { ENCAJE[a] = ENCAJE[b] = 11.75 + k*0.35; GIRO[a] = 1; GIRO[b] = -1; });
+MANUAL.forEach((i, k) => { ENCAJE[i] = 18.9; GIRO[i] = k ? -1 : 1; });
 const manualHis = MANUAL.map(i => { const m = new THREE.Mesh(hiGeo, basic({ color:col(C.hi) })); m.renderOrder = 1; m.position.set(0, slotY(i), -0.02); table.add(m); return m; });
 const rings = MANUAL.map(i => { const m = new THREE.Mesh(new THREE.PlaneGeometry(TW + 0.12, RH + 0.1), basic({ color:col(C.brand) })); m.renderOrder = 2; m.position.set(TX, slotY(i), -0.015); table.add(m); return m; });
 const manualChipTex = pillTex('✓ Par manual', C2.ok, '#fff', 400, 90, 38);
@@ -2544,7 +2629,8 @@ function updateManual(t, fade){
 function updateTable(t, pres){
   const ex = ease((t - 21.0) / 0.8);
   table.visible = t < 22.0;
-  if (!table.visible) return;
+  if (!table.visible) { sombraTabla.visible = false; return; }
+  sombraTabla.visible = true;
   table.position.set(0, ex*1.5, -ex*10); table.rotation.x = -ex*0.5;
   const fade = (1 - ex) * (1 - 0.8*pres);
   rows.forEach(r => {
@@ -2554,6 +2640,10 @@ function updateTable(t, pres){
     r.m.position.set(lerp(c.x+dx, TX, a), lerp(c.y+dy, slotY(i), a), lerp(c.z, 0, a));
     r.m.rotation.set(lerp(c.rx + t*0.15*c.s, 0, a), lerp(c.ry + t*0.2*c.s, 0, a), lerp(c.rz, 0, a));
     r.m.material.opacity = fade * easeOut(t/0.6 - i*0.015);
+    // Encaje: la ficha sale hacia adelante, se inclina hacia su par y vuelve
+    // a su lugar con un rebote; el canto destella en verde.
+    const sn = ENCAJE[i] !== undefined ? AL3D.encaje(t - ENCAJE[i]) : null;
+    if (sn) { r.m.position.z += sn.z; r.m.rotation.x += sn.r * 0.24 * GIRO[i]; r.mat.emissiveIntensity = sn.f * 0.9; }
   });
   const ha = ease((t - 4.8) / 0.5);
   head.position.set(TX, HEAD_Y + (1-ha)*0.2, 0); head.material.opacity = ha * fade;
@@ -2586,6 +2676,18 @@ function updateTable(t, pres){
     const gone = MANUAL.includes(PEND[i]) ? ease((t - 18.85) / 0.25) : 0;
     m.scale.setScalar(Math.max(lerp(0.6, 1, a) * (1 - gone*0.4), 1e-4)); m.material.opacity = a * (1 - gone) * fade;
   });
+  chispas.forEach((par, k) => par.forEach(c => {
+    const manual = k === arcs.length;
+    const p = manual ? ease((t - 18.85) / 0.4) : ease((t - 11.3 - k*0.35) / 0.6);
+    const on = p >= 1 && t < (manual ? 20.9 : 15.1);
+    c.m.visible = on; if (!on) return;
+    const u = (t*0.55 + c.j*0.5 + k*0.13) % 1;
+    c.m.position.copy(c.a.userData.curve.getPoint(u)); c.m.position.z += 0.03;
+    c.m.material.opacity = fade * Math.sin(u * Math.PI);
+  }));
+  const ensamble = ease((t - 3.6) / 1.6);
+  sombraTabla.position.set(TX + table.position.x, -3.93, table.position.z);
+  sombraTabla.material.opacity = fade * (0.35 + 0.65*ensamble);
   updateScale(t, fade);
   updateManual(t, fade);
 }
@@ -2602,6 +2704,7 @@ const rg = rcan.getContext('2d'); rg.scale(TEX_S, TEX_S);
 const rtex = new THREE.CanvasTexture(rcan); rtex.encoding = THREE.sRGBEncoding; rtex.anisotropy = ANISO;
 const result = new THREE.Mesh(new THREE.PlaneGeometry(RS, RS), basic({ map:rtex })); result.renderOrder = 10; scene.add(result);
 const resultShadow = new THREE.Mesh(new THREE.PlaneGeometry(RS + 0.1, RS + 0.1), basic({ color:col(C.ink) })); resultShadow.renderOrder = 9; scene.add(resultShadow);
+const sombraRes = AL3D.sombra(scene, RS*1.1, 1.8);
 
 function chip(g, x, y, w, h, label, on, size = 24){
   rr(g, x, y, w, h, h/2);
@@ -2703,8 +2806,9 @@ function updateExport(t){
 }
 function updateCube(t){
   const a = ease((t - T5) / 0.7);
-  result.visible = resultShadow.visible = a > 0.001;
+  result.visible = resultShadow.visible = sombraRes.visible = a > 0.001;
   if (!result.visible) return;
+  sombraRes.position.set(0, -3.93, 0.5); sombraRes.material.opacity = a;
   drawResult(t);
   result.position.set(0, lerp(-3.6, -0.85, a), 0.5);
   result.rotation.set(lerp(-0.7, -0.05, a), Math.sin(t*0.45)*0.05, 0);
@@ -2712,8 +2816,32 @@ function updateCube(t){
   result.material.opacity = a; resultShadow.material.opacity = a * 0.14;
 }
 
-// Canto físico en los paneles grandes (el texto de las filas no se toca)
-AL3D.grosor([panel, result, exportCard], 0.08);
+// Canto físico en los paneles grandes
+AL3D.grosor([panel, result], 0.08, { radio:0.15 });
+AL3D.grosor([exportCard], 0.06, { radio:0.13 });
+
+// ── Cámara por paso (2026-09-27): cada paso tiene su plano y el cambio entre
+// pasos es un movimiento continuo de 1,1 s (desde el final del plano anterior).
+const V3 = (x, y, z) => new THREE.Vector3(x, y, z);
+const TOMAS = [
+  { p0:V3(-2.8, 0.9, 9.6),  p1:V3(2.2, -0.3, 10.2), m0:V3(0, -0.7, -1.2),   m1:V3(0, -0.8, -1.2) },   // El problema: recorre las fichas flotando
+  { p0:V3(1.3, 0.5, 10.4),  p1:V3(0.2, 0.1, 10.1),  m0:V3(-0.2, -0.6, 0),   m1:V3(-0.3, -0.7, 0) },   // Conecta
+  { p0:V3(0, -0.6, 9.7),    p1:V3(0.3, -0.9, 9.3),  m0:V3(0, -0.95, 0),     m1:V3(0, -1.0, 0.4) },    // Ejecuta
+  { p0:V3(4.4, -3.2, 7.8),  p1:V3(3.0, -2.4, 8.8),  m0:V3(-0.3, -1.1, 0),   m1:V3(-0.3, -1.1, 0) },   // Matching: plano bajo lateral
+  { p0:V3(-2.6, 0.7, 9.4),  p1:V3(-1.3, 0.2, 9.1),  m0:V3(0, -1.2, 0),      m1:V3(0, -1.3, 0) },      // Revisa
+  { p0:V3(0, -0.5, 11.3),   p1:V3(0.9, -0.95, 9.9), m0:V3(0, -0.85, 0.5),   m1:V3(0.2, -0.9, 0.5) }   // Resultado
+];
+const _p = V3(0, 0, 0), _m = V3(0, 0, 0), _pp = V3(0, 0, 0), _mp = V3(0, 0, 0);
+function toma(i, u, pos, mira){ const k = TOMAS[i], e = ease(u); pos.lerpVectors(k.p0, k.p1, e); mira.lerpVectors(k.m0, k.m1, e); }
+function camara(t){
+  const i = stepOf(t), s = STEPS[i];
+  toma(i, (t - s.a) / (s.b - s.a), _p, _m);
+  const b = ease((t - s.a) / 1.1);
+  if (b < 1) { toma((i + STEPS.length - 1) % STEPS.length, 1, _pp, _mp); _p.lerpVectors(_pp, _p, b); _m.lerpVectors(_mp, _m, b); }
+  // parallax del puntero + leve respiración
+  camera.position.set(_p.x + PX.x*1.15 + Math.sin(t*0.35)*0.12, _p.y + PX.y*0.7 + Math.cos(t*0.3)*0.08, _p.z);
+  camera.lookAt(_m);
+}
 
 
 function resize(){
@@ -2743,11 +2871,7 @@ function frame(now){
     if (playing) { T += dt; if (T >= DUR) T = 0; }
     setStep(stepOf(T));
     const t = T;
-    // Parallax: la cámara se mueve con el puntero pero sigue mirando al mismo
-    // punto, así orbita la escena y las capas se separan en profundidad.
-    const bx = Math.sin(t*0.35)*0.2;
-    camera.position.set(bx + PX.x*1.15, -0.85 + Math.cos(t*0.3)*0.12 + PX.y*0.7, lerp(11.2, 9.9, easeOut(t/3.5)) - ease((t - T5)/4.6)*0.8);
-    camera.lookAt(bx*0.4, -0.85, 0);
+    camara(t);
     const ps = updatePanel(t);
     updateTable(t, ps.pres); updateCube(t); updateExport(t);
     renderer.render(scene, camera);
@@ -2816,7 +2940,9 @@ const fills = STEPS.map((s, i) => {
 });
 
 const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-const HOLD = 0.05;
+// 2026-09-27: 0,45 s antes del final — el paso se ve completo, antes de
+// que su ventana empiece a alejarse hacia el fondo.
+const HOLD = 0.45;
 let T = 0, playing = !reduce, current = -1, visible = true, needsRender = true;
 
 function fillCopy(i){
@@ -2908,6 +3034,7 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
 // Profundidad (AL3D): pared con cuadrícula + niebla, y parallax con el puntero
 AL3D.ambiente(scene, { z:-4.5 });
+AL3D.piso(scene, { y:-2.35 });
 const PX = AL3D.parallax(stage, reduce);
 const ANISO = renderer.capabilities.getMaxAnisotropy();
 const basic = (opts) => new THREE.MeshBasicMaterial(Object.assign({ transparent:true, side:THREE.DoubleSide, depthWrite:false }, opts));
@@ -2915,7 +3042,8 @@ const col = hex => new THREE.Color(hex).convertSRGBToLinear();
 
 const CW = 1200, CH = 950, PW = 4.8, PH = PW * CH / CW;
 function rr(g,x,y,w,h,r){ g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }
-function txt(g, s, x, y, size, weight, color, align = 'left'){ g.font = `${weight} ${size}px ${FONT}`; g.fillStyle = color; g.textAlign = align; g.textBaseline = 'middle'; g.fillText(s, x, y); }
+// maxW: si el texto no cabe en su espacio, se achica hasta caber (2026-09-27)
+function txt(g, s, x, y, size, weight, color, align = 'left', maxW = 0){ g.font = `${weight} ${size}px ${FONT}`; while (maxW && size > 12 && g.measureText(s).width > maxW) { size -= 1; g.font = `${weight} ${size}px ${FONT}`; } g.fillStyle = color; g.textAlign = align; g.textBaseline = 'middle'; g.fillText(s, x, y); }
 function wrap(g, s, x, y, maxW, size, weight, color, lh = 1.3){
   g.font = `${weight} ${size}px ${FONT}`; g.fillStyle = color; g.textAlign = 'left'; g.textBaseline = 'middle';
   let line = '', yy = y;
@@ -2925,6 +3053,10 @@ function wrap(g, s, x, y, maxW, size, weight, color, lh = 1.3){
 const press = (lt, tc) => clamp(1 - Math.abs(lt - tc) / 0.15);
 function btn(g, x, y, w, h, label, kind, pr = 0, size = 35){
   const i = pr * 4;
+  // El texto siempre cabe en el botón: se reduce hasta el ancho útil
+  const maxW = w - i*2 - h*0.55, peso = kind === 'primary' ? 800 : 700;
+  g.font = `${peso} ${size}px ${FONT}`;
+  while (size > 14 && g.measureText(label).width > maxW) { size -= 1; g.font = `${peso} ${size}px ${FONT}`; }
   rr(g, x + i, y + i, w - i*2, h - i*2, (h - i*2) / 2);
   if (kind === 'primary') { g.fillStyle = pr > 0 ? C.brandDark : C.brand; g.fill(); txt(g, label, x + w/2, y + h/2 + 1, size, 800, '#fff', 'center'); }
   else if (kind === 'disabled') { g.fillStyle = '#e3e9f0'; g.fill(); txt(g, label, x + w/2, y + h/2 + 1, size, 700, C.soft, 'center'); }
@@ -2942,7 +3074,7 @@ function base(g, title){
 }
 function overlay(g, a){ g.save(); rr(g, 0, 0, CW, CH, 34); g.clip(); g.fillStyle = `rgba(18,48,77,${0.32*a})`; g.fillRect(0, 0, CW, CH); g.restore(); }
 function dialog(g, x, y, w, h){ g.save(); g.shadowColor = 'rgba(18,48,77,.25)'; g.shadowBlur = 40; g.shadowOffsetY = 12; g.fillStyle = '#fff'; rr(g, x, y, w, h, 24); g.fill(); g.restore(); }
-function banner(g, x, y, w, h, label, color = C.ok){ g.fillStyle = color; rr(g, x, y, w, h, h/2); g.fill(); txt(g, label, x + w/2, y + h/2 + 1, 35, 800, '#fff', 'center'); }
+function banner(g, x, y, w, h, label, color = C.ok){ g.fillStyle = color; rr(g, x, y, w, h, h/2); g.fill(); txt(g, label, x + w/2, y + h/2 + 1, 35, 800, '#fff', 'center', w - h*0.7); }
 function checkDot(g, x, y, on, pop = 1){
   g.beginPath(); g.arc(x, y, 18 * (on ? pop : 1), 0, Math.PI*2);
   if (on) { g.fillStyle = C.ok; g.fill(); txt(g, '✓', x, y + 1, 32, 800, '#fff', 'center'); }
@@ -3000,22 +3132,22 @@ const DRAW = [
     base(g, 'Google Sheets');
     sheetIcon(g, 30, 98, 30); txt(g, 'Mi herramienta (copia)', 76, 118, 38, 700, C.ink);
     let x = 32;
-    ['Archivo','Editar','Ver','Insertar','Datos','Extensiones'].forEach(m => { txt(g, m, x, 168, 30, 600, C.muted); g.font = `600 21px ${FONT}`; x += g.measureText(m).width + 26; });
+    ['Archivo','Editar','Ver','Insertar','Datos','Extensiones'].forEach(m => { txt(g, m, x, 168, 26, 600, C.muted); x += g.measureText(m).width + 22; });
     const open = lt > 1.05 && lt < 1.95;
-    g.font = `800 21px ${FONT}`; const mw = g.measureText('Tu herramienta — Ambilor.Lab').width;
+    g.font = `800 24px ${FONT}`; const mw = g.measureText('Tu herramienta — Ambilor.Lab').width;
     if (open || (lt > 0.85 && lt < 1.05)) { g.fillStyle = 'rgba(31,92,153,.12)'; rr(g, 770, 148, mw + 20, 40, 10); g.fill(); }
-    txt(g, 'Tu herramienta — Ambilor.Lab', 780, 168, 30, 800, C.brand);
+    txt(g, 'Tu herramienta — Ambilor.Lab', 780, 168, 24, 800, C.brand);
     g.fillStyle = '#f6f8fb'; g.fillRect(0, 196, CW, 38);
     g.strokeStyle = C.line; g.lineWidth = 1.5;
     for (let c = 0; c <= 8; c++) { const cx = 60 + c*150; g.beginPath(); g.moveTo(cx, 196); g.lineTo(cx, CH - 20); g.stroke(); if (c < 8) txt(g, 'ABCDEFGH'[c], cx + 75, 215, 26, 700, C.soft, 'center'); }
     for (let r = 0; r < 18; r++) { const ry = 234 + r*40; g.beginPath(); g.moveTo(0, ry); g.lineTo(CW, ry); g.stroke(); txt(g, String(r + 1), 30, ry + 20, 23, 600, C.soft, 'center'); }
-    [[0,'FECHA'],[1,'DESCRIPCION'],[2,'IMPORTE']].forEach(([c, s]) => txt(g, s, 72 + c*150, 254, 25, 800, C.ink));
+    [[0,'FECHA'],[1,'DESCRIPCION'],[2,'IMPORTE']].forEach(([c, s]) => txt(g, s, 72 + c*150, 254, 25, 800, C.ink, 'left', 136));
     for (let r = 1; r < 8; r++) for (let c = 0; c < 3; c++) { g.fillStyle = '#dde5ee'; rr(g, 72 + c*150, 264 + r*40 - 6, [70, 110, 80][c], 12, 6); g.fill(); }
     if (open) {
       dialog(g, 770, 192, 380, 76);
       const hov = lt > 1.65;
       if (hov) { g.fillStyle = '#eef2f7'; g.fillRect(778, 200, 364, 60); }
-      txt(g, 'Configurar herramienta', 796, 230, 32, 700, C.ink);
+      txt(g, 'Configurar herramienta', 796, 230, 32, 700, C.ink, 'left', 336);
     }
     const sp = ease((lt - 2.0) / 0.5);
     if (sp > 0) {
@@ -3024,7 +3156,7 @@ const DRAW = [
       g.fillStyle = '#fff'; g.fillRect(px, 196, 460, CH - 196);
       g.fillStyle = C.brand; g.fillRect(px, 196, 5, CH - 196);
       g.restore();
-      txt(g, 'Configurar herramienta', px + 36, 250, 38, 800, C.ink);
+      txt(g, 'Configurar herramienta', px + 36, 250, 38, 800, C.ink, 'left', 396);
       txt(g, 'Te guía paso a paso.', px + 36, 290, 29, 600, C.muted);
       ['Autoriza el acceso', 'Publica tu panel', 'Ábrelo y empieza'].forEach((s, k) => {
         const a = easeOut((lt - 2.5 - k*0.2) / 0.3); if (a <= 0) return;
@@ -3033,7 +3165,7 @@ const DRAW = [
         g.strokeStyle = k === 0 ? C.brand : C.line; g.lineWidth = 3; rr(g, px + 30, y, 400, 76, 16); g.stroke();
         g.beginPath(); g.arc(px + 72, y + 38, 20, 0, Math.PI*2); g.fillStyle = k === 0 ? C.brand : '#eef2f7'; g.fill();
         txt(g, String(k + 1), px + 72, y + 39, 20, 800, k === 0 ? '#fff' : C.muted, 'center');
-        txt(g, s, px + 108, y + 38, 32, 700, C.ink);
+        txt(g, s, px + 108, y + 38, 32, 700, C.ink, 'left', 300);
         g.globalAlpha = 1;
       });
     }
@@ -3188,7 +3320,9 @@ const cards = DRAW.map(() => {
   return { m, sh, g, tx };
 });
 // Canto físico en las tarjetas (ventanas de Google Sheets / Apps Script)
-AL3D.grosor(cards.map(c => c.m), 0.09);
+AL3D.luces(scene);
+AL3D.grosor(cards.map(c => c.m), 0.09, { radio:0.136 });
+const sombraCard = AL3D.sombra(scene, PW*1.1, 1.6);
 const cursorGeo = new THREE.PlaneGeometry(0.24, 0.31); cursorGeo.translate(0.12, -0.155, 0);
 const ctex = (() => { const c = document.createElement('canvas'); c.width = 104 * TEX_S; c.height = 136 * TEX_S; const g = c.getContext('2d'); g.scale(TEX_S, TEX_S);
   g.beginPath(); g.moveTo(8, 6); g.lineTo(8, 110); g.lineTo(34, 86); g.lineTo(52, 128); g.lineTo(70, 120); g.lineTo(52, 80); g.lineTo(88, 80); g.closePath();
@@ -3200,17 +3334,28 @@ const tmp = new THREE.Vector3();
 const pxToLocal = (x, y) => tmp.set((x / CW - 0.5) * PW, (0.5 - y / CH) * PH, 0.04);
 
 function updateCards(t){
+  sombraCard.visible = false;
   cards.forEach((c, i) => {
     const s = STEPS[i];
-    const e = i === 0 ? ease((t + 0.3) / 0.7) : ease((t - (s.a - 0.35)) / 0.7);
-    const x = i === STEPS.length - 1 ? 0 : ease((t - (s.b - 0.35)) / 0.7);
-    const vis = e > 0.001 && x < 0.999;
+    const ein = i === 0 ? clamp((t + 0.3) / 0.9) : clamp((t - (s.a - 0.35)) / 0.9);
+    const e = AL3D.rebote(ein);                 // entra con un leve rebote
+    const x = i === STEPS.length - 1 ? 0 : ease((t - (s.b - 0.35)) / 0.8);   // se va al fondo
+    const vis = ein > 0.001 && x < 0.999;
     c.m.visible = c.sh.visible = vis;
     if (!vis) return;
     DRAW[i](c.g, t - s.a); c.tx.needsUpdate = true;
-    c.m.position.set(lerp(5.6, 0, e) - 5.6*x, -0.05, -1.6*(1 - e) - 1.6*x);
-    c.m.rotation.set(-0.04, 0.55*(1 - e) - 0.55*x + Math.sin(t*0.5)*0.04*e*(1 - x), 0);
-    c.m.material.opacity = Math.min(e, 1 - x);
+    // se hunde un poco al recibir cada clic del cursor (y vuelve con resorte)
+    const cfg = CURSOR[i], lt = t - s.a;
+    let hundir = 0;
+    if (cfg) cfg.clicks.forEach(ck => { const d = lt - ck; if (d >= 0 && d < 0.8) hundir = Math.max(hundir, Math.exp(-7*d) * Math.cos(9*d)); });
+    c.m.position.set(lerp(5.6, 0, e) - 3.2*x, -0.05 + 0.7*x, -1.6*(1 - e) - 4.6*x - 0.16*hundir);
+    c.m.rotation.set(-0.04 + 0.14*x, 0.55*(1 - e) - 0.5*x + Math.sin(t*0.5)*0.04*e*(1 - x), 0.05*x);
+    c.m.material.opacity = Math.min(clamp(ein*1.6), 1 - clamp(x*1.8));   // la que sale se desvanece rápido
+    if (i === stepOf(t)) {
+      sombraCard.visible = true;
+      sombraCard.position.set(c.m.position.x, -2.33, c.m.position.z + 0.2);
+      sombraCard.material.opacity = 0.8 * c.m.material.opacity;
+    }
     c.sh.position.set(c.m.position.x + 0.06, c.m.position.y - 0.08, c.m.position.z - 0.05);
     c.sh.rotation.copy(c.m.rotation);
     c.sh.material.opacity = 0.13 * Math.min(e, 1 - x);
@@ -3266,12 +3411,21 @@ function frame(now){
   if (visible && (playing || needsRender)) {
     if (playing) { T += dt; if (T >= DUR) T = 0; }
     setStep(stepOf(T));
-    // Parallax con el puntero: la cámara orbita alrededor del punto que mira
-    // (misma compensación de órbita que "ver en acción").
-    const bx = Math.sin(T*0.3)*0.18, by = Math.cos(T*0.25)*0.1;
-    camera.position.set(bx + PX.x*1.05, by + PX.y*0.65, 8.6);
-    camera.lookAt(bx*0.4, by, 0);
     updateCards(T); updateCursor(T);
+    // Cámara (2026-09-27): cada paso barre de un lado al otro (sentido
+    // alternado y continuo entre pasos) y se acerca a cada clic del cursor.
+    const ip = stepOf(T), sp = STEPS[ip], lt = T - sp.a, lado = ip % 2 ? -1 : 1;
+    const u = ease(clamp(lt / (sp.b - sp.a)));
+    const bx = lerp(-lado*0.75, lado*0.75, u), by = 0.22 + Math.sin(T*0.4)*0.06;
+    let fx = 0, fy = 0, f = 0;
+    const cf = CURSOR[ip];
+    if (cf && cursor.visible) {
+      cf.clicks.forEach(ck => { f = Math.max(f, clamp(1 - Math.abs(lt - ck) / 0.9)); });
+      f = ease(f); fx = (cursor.position.x - bx*0.3)*0.55*f; fy = (cursor.position.y - by*0.4)*0.55*f;
+    }
+    // la cámara mira hacia el clic (sin sacarlo de cuadro) y se acerca un poco
+    camera.position.set(bx + PX.x*1.05 + fx*0.6, by + PX.y*0.65 + fy*0.6, 9.3 - 0.7*f);
+    camera.lookAt(bx*0.3 + fx, by*0.4 + fy, 0);
     renderer.render(scene, camera);
     fills.forEach((f, i) => { const s = STEPS[i]; f.fill.style.width = (clamp((T - s.a) / (s.b - s.a)) * 100) + '%'; });
     needsRender = false;
