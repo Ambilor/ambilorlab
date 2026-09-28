@@ -1323,22 +1323,31 @@ footer{margin-top:auto}
   .gvw-tl{display:none}
   .gvw-caps{margin-top:10px;padding-top:10px}
 }
-/* Encaje al desplazar (2026-09-28): al acercarse a una demo o a una escena del
-   inicio, la pagina se detiene con el bloque completo en pantalla. "proximity"
-   solo actua cerca del bloque; el resto se desplaza libre. */
-/* Solo en horizontal (iPad y computador). El comienzo de cada pestana tambien es
-   punto de encaje: al abrir una pestana la pagina se queda arriba (antes saltaba
-   sola a la demo, ignorando el encabezado). */
-@media (orientation:landscape) and (min-width:640px) and (min-height:501px){
-  html{scroll-snap-type:y proximity}
-  body>section,.demo-section,.hx-escena,.hx-end{scroll-snap-align:start}
-  body>section{scroll-margin-top:80px}   /* el encaje de la pestana queda en 0, con la barra visible */
-}
-.demo-section{scroll-margin-top:60px}   /* deja ver la barra de pestanas si reaparece */
-@media (prefers-reduced-motion:reduce){ html{scroll-snap-type:none} }
+/* Sin encaje al desplazar (2026-09-28): el desplazamiento es libre en todos los
+   dispositivos y navegadores; la demo cabe entera por su tamano, no por encaje. */
+html{scroll-snap-type:none}
 /* mismo margen sobre el primer contenido en todas las pestanas (Sobre mi,
    Herramientas, Guias, Contacto), en cualquier dispositivo y orientacion */
 body>section:not(#home)>.container{padding-top:1.6rem}
+/* Pantallas grandes (2026-09-28): el ancho del contenido crece con la pantalla
+   (1180 a 1440px, igual en todas las pestanas) y las escenas del inicio escalan
+   con el alto para ocupar ~85% de la pantalla, sin vacio abajo */
+:root{--hx-max:min(1440px, max(1180px, 72vw))}
+@media (min-width:1000px) and (min-height:700px){
+  .hx-escena{padding-top:clamp(1.6rem,4svh,3rem)!important;padding-bottom:clamp(1.6rem,4svh,3rem)}
+  .hx-escena .hx-head{margin-bottom:clamp(1.2rem,4svh,3.2rem);max-width:none}
+  .hx-escena .hx-h2{font-size:clamp(2rem,min(4.4vw,7.4svh),4.2rem)}
+  .hx-escena .hx-art{max-height:34svh}
+  .hx-escena .hx-panel{padding:clamp(1.2rem,2.8svh,2rem) clamp(1.2rem,1.8vw,2rem)}
+  .hx-escena .hx-panel-top{margin-bottom:clamp(.8rem,2svh,1.4rem)}
+  .hx-escena .hx-panel-t{font-size:clamp(17px,2.5svh,24px)}
+  .hx-escena .hx-panel-d{font-size:clamp(14px,1.9svh,17px)}
+  .hx-escena .hx-go{margin-top:clamp(1.4rem,4svh,3rem)}
+  .hx-escena .hx-go .hx-btn{font-size:15px;padding:14px 28px}
+  .hx-escena .hx-who-c{padding:clamp(1.2rem,3svh,2.2rem)}
+  .hx-escena .hx-who-n{font-size:clamp(17px,2.5svh,23px);margin-bottom:clamp(.6rem,1.8svh,1.3rem)}
+  .hx-escena .hx-who-a,.hx-escena .hx-who-b{font-size:clamp(14px,1.9svh,17px);padding:clamp(.4rem,1.2svh,.8rem) 0}
+}
 /* 2026-09-28: celular en horizontal (pantalla apaisada y baja). Todo lo
    principal cabe en el alto visible: inicio compacto, demos en dos columnas
    (escena a la izquierda, texto a la derecha) y el paso de Guias mas bajo. */
