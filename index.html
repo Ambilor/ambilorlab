@@ -906,6 +906,53 @@ nav.scrolled .nav-links a{font-size:12px}
   .hx-who-c.in .hx-who-x s{animation:hx-tacha .7s var(--ease) .45s both}
   .hx-who-c.in .hx-who-b{animation:hx-in-arriba .6s var(--ease) 1.05s both}
 }
+/* 2026-09-28: los dibujos de "Que automatizo" del recorrido 3D se animan igual que
+   antes (una vez, al llegar al bloque) */
+@media (prefers-reduced-motion:no-preference){
+  .i3-arte g,.i3-arte rect,.i3-arte text,.i3-arte path{transform-box:fill-box}
+  .i3-tarjeta.in .hx-art-rows>g{animation:hx-in-izq .5s var(--ease) both}
+  .i3-tarjeta.in .hx-art-rows>g:nth-child(1){animation-delay:.2s}
+  .i3-tarjeta.in .hx-art-rows>g:nth-child(2){animation-delay:.32s}
+  .i3-tarjeta.in .hx-art-rows>g:nth-child(3){animation-delay:.44s}
+  .i3-tarjeta.in .hx-art-rows>g:nth-child(4){animation-delay:.56s}
+  .i3-tarjeta.in .hx-art-rows>g:nth-child(5){animation-delay:.68s}
+  .i3-tarjeta.in .hx-art-links path{animation:hx-in .5s ease 1s both,hx-flow 1.6s linear infinite}
+  .i3-tarjeta.in .hx-art-links path:nth-child(2){animation-delay:1.3s,0s}
+  .i3-tarjeta.in .hx-art-links .off{animation:hx-in .4s ease 1.6s both}
+  .i3-tarjeta.in .hx-art-sinpar{transform-origin:left center;animation:hx-pop .5s var(--ease) 1.75s both}
+  .i3-tarjeta.in .hx-art-grid text{animation:hx-in .4s ease both}
+  .i3-tarjeta.in .hx-art-grid text:nth-child(1){animation-delay:.2s}
+  .i3-tarjeta.in .hx-art-grid text:nth-child(2){animation-delay:.28s}
+  .i3-tarjeta.in .hx-art-grid text:nth-child(3){animation-delay:.36s}
+  .i3-tarjeta.in .hx-art-grid text:nth-child(4){animation-delay:.44s}
+  .i3-tarjeta.in .hx-art-grid text:nth-child(5){animation-delay:.52s}
+  .i3-tarjeta.in .hx-art-grid text:nth-child(6){animation-delay:.6s}
+  .i3-tarjeta.in .hx-art-arrow{animation:hx-in .4s ease .8s both}
+  .i3-tarjeta.in .hx-art-bars rect{transform-origin:center bottom;animation:hx-crece .6s var(--ease) both}
+  .i3-tarjeta.in .hx-art-bars rect:nth-child(1){animation-delay:1s}
+  .i3-tarjeta.in .hx-art-bars rect:nth-child(2){animation-delay:1.12s}
+  .i3-tarjeta.in .hx-art-bars rect:nth-child(3){animation-delay:1.24s}
+  .i3-tarjeta.in .hx-art-bars rect:nth-child(4){animation-delay:1.36s}
+  .i3-tarjeta.in .hx-art-trend{stroke-dasharray:1;animation:hx-traza .8s ease 1.65s both}
+  .i3-tarjeta.in .hx-art-manual text{animation:hx-in-izq .5s var(--ease) both}
+  .i3-tarjeta.in .hx-art-manual text:nth-child(1){animation-delay:.2s}
+  .i3-tarjeta.in .hx-art-manual text:nth-child(2){animation-delay:.38s}
+  .i3-tarjeta.in .hx-art-manual text:nth-child(3){animation-delay:.56s}
+  .i3-tarjeta.in .hx-art-btn,.i3-tarjeta.in .hx-art-btnt{transform-origin:251px 39px;transform-box:view-box;animation:hx-in .4s ease 1s both,hx-clic .4s ease 1.55s}
+  .i3-tarjeta.in .hx-art-ok text{transform-origin:left center;animation:hx-pop .45s var(--ease) both}
+  .i3-tarjeta.in .hx-art-ok text:nth-child(1){animation-delay:1.9s}
+  .i3-tarjeta.in .hx-art-ok text:nth-child(2){animation-delay:2.1s}
+  .i3-tarjeta.in .hx-art-ok text:nth-child(3){animation-delay:2.3s}
+  .i3-tarjeta.in .hx-art-cap{animation:hx-in .6s ease 2.2s both}
+}
+/* luz que sigue al mouse sobre las tarjetas del recorrido (como en la portada anterior) */
+#home .i3-tarjeta{position:relative;overflow:hidden}
+#home .i3-tarjeta::after{content:'';position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;background:radial-gradient(500px circle at var(--px,50%) var(--py,0%),rgba(76,141,219,.16),transparent 45%);opacity:0;transition:opacity .3s}
+#home .i3-tarjeta:hover::after{opacity:1}
+/* tarjeta que acompaña el cubo: resaltada en ambos temas (antes el tema claro la tapaba) */
+#home .i3-tarjeta.i3-guiada{border-color:rgba(143,193,255,.5);box-shadow:0 0 0 1px rgba(76,141,219,.3),0 0 42px -8px rgba(76,141,219,.5),0 30px 80px -30px rgba(0,0,0,.8)}
+[data-theme="light"] #home .i3-tarjeta.i3-guiada{border-color:rgba(31,92,153,.55);box-shadow:0 0 0 1px rgba(31,92,153,.25),0 0 36px -6px rgba(31,92,153,.35),0 20px 60px -30px rgba(18,48,77,.35)}
+[data-theme="light"] #home .i3-tarjeta::after{background:radial-gradient(500px circle at var(--px,50%) var(--py,0%),rgba(31,92,153,.1),transparent 45%)}
 /* 2026-09-28: pie de pagina legible (antes casi no se leia en tema oscuro) */
 footer{color:#6B7280}
 [data-theme="dark"] footer{color:#7C8698}
@@ -3299,6 +3346,11 @@ window.AL3D = (function(){
     return { x: innerWidth - t2 * 0.8 - 8, y: 62 + t2 * 0.7, tam: t2 };
   }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(medirPiezas);
+  var animados = [];
+  // luz que sigue al mouse sobre las tarjetas
+  [].forEach.call(document.querySelectorAll('#home .i3-tarjeta'), function(t){
+    t.addEventListener('mousemove', function(e){ var r = t.getBoundingClientRect(); t.style.setProperty('--px', (e.clientX - r.left) + 'px'); t.style.setProperty('--py', (e.clientY - r.top) + 'px'); }, { passive:true });
+  });
   function colocar(){
     var ancho = innerWidth < 701, W = innerWidth, H = innerHeight;
     estaciones.forEach(function(e, i){
@@ -3328,6 +3380,10 @@ window.AL3D = (function(){
     });
     var cerca = Math.round(P);
     puntos.forEach(function(b, i){ b.classList.toggle('i3-act', i === cerca); });
+    // los dibujos de cada bloque se animan una vez, al llegar a el
+    for (var ai = 0; ai < N; ai++) if (!animados[ai] && Math.abs(P - ai) < 0.2) {
+      animados[ai] = true; [].forEach.call(estaciones[ai].querySelectorAll('.i3-tarjeta'), function(t){ t.classList.add('in'); });
+    }
   }
 
   document.addEventListener('pestana', function(ev){
