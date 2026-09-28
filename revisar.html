@@ -43,10 +43,12 @@
 </header>
 <main id="main"></main>
 <script>
+// Cada dispositivo se prueba con varios altos visibles: el de Safari y el de
+// Chrome / Edge (sus barras ocupan mas alto), del mayor al menor.
 const DISPOSITIVOS = [
-  ['iPhone vertical', 402, 700], ['iPhone horizontal', 874, 290],
-  ['iPad vertical', 834, 1050], ['iPad horizontal', 1194, 690],
-  ['Computador', 1440, 800], ['Monitor vertical', 1080, 1700]
+  ['iPhone vertical', 402, [700, 640]], ['iPhone horizontal', 874, [290, 260]],
+  ['iPad vertical', 834, [1050, 980]], ['iPad horizontal', 1194, [738, 660]],
+  ['Computador', 1440, [860, 740]], ['Monitor vertical', 1080, [1700, 1600]]
 ];
 const PESTANAS = [['home','Inicio'],['about','Sobre mí'],['product','Herramientas'],['guias','Guías'],['contact','Contacto']];
 const ALTO_VISTA = 330;   // alto en pantalla de cada vista previa
@@ -61,31 +63,45 @@ PESTANAS.forEach(([id, nombre]) => {
 });
 
 const main = document.getElementById('main');
-const vistas = DISPOSITIVOS.map(([nombre, w, h]) => {
+const vistas = DISPOSITIVOS.map(([nombre, w, altos]) => {
+  const h = altos[0];
   const k = ALTO_VISTA / Math.max(h, 600);
   const caja = document.createElement('div'); caja.className = 'disp';
-  caja.innerHTML = `<h2>${nombre} <span>${w} × ${h}</span></h2><div class="marco" style="width:${Math.round(w*k)}px;height:${Math.round(h*k)}px"><iframe width="${w}" height="${h}" style="transform:scale(${k})" src="index.html?revisar=${Date.now()}"></iframe></div><div class="estado">Cargando…</div>`;
+  caja.innerHTML = `<h2>${nombre} <span>${w} × ${altos.join(' / ')}</span></h2><div class="marco" style="width:${Math.round(w*k)}px;height:${Math.round(h*k)}px"><iframe width="${w}" height="${h}" style="transform:scale(${k})" src="index.html?revisar=${Date.now()}"></iframe></div><div class="estado">Cargando…</div>`;
   caja.style.width = Math.max(Math.round(w*k) + 22, 200) + 'px';
   main.appendChild(caja);
   const iframe = caja.querySelector('iframe');
   const listo = new Promise(r => iframe.addEventListener('load', () => setTimeout(r, 1200), { once:true }));
-  return { nombre, w, h, iframe, estado: caja.querySelector('.estado'), listo };
+  return { nombre, w, h, altos, iframe, estado: caja.querySelector('.estado'), listo };
 });
 
 // Chequeo dentro de cada vista (misma lógica que la revisión manual)
 async function revisar(v){
   await v.listo;
+  const todos = [];
+  for (const alto of v.altos) {
+    v.iframe.height = alto;
+    await new Promise(r => setTimeout(r, 500));
+    (await revisarAlto(v, alto)).forEach(a => todos.push(v.altos.length > 1 ? `[alto ${alto}] ${a}` : a));
+  }
+  v.iframe.height = v.altos[0];
+  v.estado.innerHTML = todos.length
+    ? `<b class="av">⚠ ${todos.length} aviso${todos.length > 1 ? 's' : ''}</b><ul>${todos.map(a => `<li>${a}</li>`).join('')}</ul>`
+    : `<b class="ok">✓ Todo encuadrado (${v.altos.join(' y ')} px de alto)</b>`;
+  return todos.length;
+}
+async function revisarAlto(v, H){
   const win = v.iframe.contentWindow, doc = v.iframe.contentDocument;
   const esperar = ms => new Promise(r => setTimeout(r, ms));
   win.show(actual); await esperar(700);
   doc.querySelectorAll('.rv,.rv2').forEach(e => e.classList.add('in'));
-  const W = v.w, H = v.h, sec = doc.getElementById(actual), avisos = [];
+  const W = v.w, sec = doc.getElementById(actual), avisos = [];
   const fuera = new Set(), cortados = new Set();
   sec.querySelectorAll('*').forEach(e => {
     const r = e.getBoundingClientRect(); if (!r.width || !r.height) return;
     const cs = win.getComputedStyle(e); if (cs.visibility === 'hidden' || cs.position === 'fixed' || cs.display === 'none') return;
     if ((r.right > W + 1 || r.left < -1) && e.tagName !== 'CANVAS' && !e.closest('.hx-canvas')) fuera.add(e.className && typeof e.className === 'string' ? e.className.split(' ')[0] : e.tagName);
-    if (!e.children.length && e.textContent.trim() && e.scrollWidth > e.clientWidth + 2 && (cs.overflow === 'hidden' || cs.overflowX === 'hidden' || cs.textOverflow === 'ellipsis')) cortados.add(e.textContent.trim().slice(0, 28));
+    if (!e.children.length && e.textContent.trim() && (cs.overflow === 'hidden' || cs.overflowX === 'hidden' || cs.textOverflow === 'ellipsis')) { const rg = doc.createRange(); rg.selectNodeContents(e); const tw = rg.getBoundingClientRect().width; if (tw > e.clientWidth + 2) cortados.add(e.textContent.trim().slice(0, 28)); }
   });
   if (fuera.size) avisos.push('Se sale de la pantalla: ' + [...fuera].slice(0, 3).join(', '));
   // errores de código registrados por la página (sin contar límites de 3D por tener 6 vistas abiertas)
@@ -125,17 +141,14 @@ async function revisar(v){
   if (actual === 'guias') { const g = doc.querySelector('.gp-panel.on'); if (g && g.querySelector('.gp-prog')) cabe('Paso de la guía', g.querySelector('.gp-ctrl').getBoundingClientRect().bottom - g.querySelector('.gp-prog').getBoundingClientRect().top); }
   if (actual === 'guias' && W >= 900 && W > H) { const g = doc.querySelector('.gp-panel.on'); if (g && g.querySelector('.gp-ctrl')) cabe('Guía (pestañas, diagrama y paso)', g.querySelector('.gp-ctrl').getBoundingClientRect().bottom - doc.querySelector('.gp-tabs').getBoundingClientRect().top); }
   win.scrollTo(0, 0);
-  v.estado.innerHTML = avisos.length
-    ? `<b class="av">⚠ ${avisos.length} aviso${avisos.length > 1 ? 's' : ''}</b><ul>${avisos.map(a => `<li>${a}</li>`).join('')}</ul>`
-    : '<b class="ok">✓ Todo encuadrado</b>';
-  return avisos.length;
+  return avisos;
 }
 async function revisarTodo(){
   const res = document.getElementById('resumen'); res.textContent = 'Revisando…';
   vistas.forEach(v => v.estado.textContent = 'Revisando…');
   const n = await Promise.all(vistas.map(revisar));
   const total = n.reduce((a, b) => a + b, 0);
-  res.textContent = total ? `⚠ ${total} aviso${total > 1 ? 's' : ''} en ${PESTANAS.find(p => p[0] === actual)[1]}` : `✓ ${PESTANAS.find(p => p[0] === actual)[1]}: todo encuadrado en los 6 tamaños`;
+  res.textContent = total ? `⚠ ${total} aviso${total > 1 ? 's' : ''} en ${PESTANAS.find(p => p[0] === actual)[1]}` : `✓ ${PESTANAS.find(p => p[0] === actual)[1]}: todo encuadrado en los 6 tamaños (altos de Safari, Chrome y Edge)`;
 }
 document.getElementById('rehacer').onclick = revisarTodo;
 revisarTodo();
