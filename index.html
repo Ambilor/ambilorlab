@@ -956,10 +956,9 @@ nav.scrolled .nav-links a{font-size:12px}
 #home .i3-tarjeta::after{z-index:0}
 #home .i3-tarjeta>*{position:relative;z-index:1}
 /* tema claro: celeste suave que aclara (el azul oscuro sobre el texto lo apagaba) */
-/* tema claro: sin relleno de color (los dibujos ya son azules). Solo el borde se
-   ilumina cerca del mouse y la tarjeta se eleva levemente */
-[data-theme="light"] #home .i3-tarjeta::after{inset:0;padding:1.5px;background:radial-gradient(340px circle at var(--px,50%) var(--py,0%),rgba(31,92,153,.8),rgba(31,92,153,.22) 45%,transparent 72%);
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+/* tema claro: sin luz de color bajo el puntero (los dibujos y etiquetas ya son azules
+   y se mezclaban); solo una leve elevacion al pasar el mouse */
+[data-theme="light"] #home .i3-tarjeta::after{display:none}
 [data-theme="light"] #home .i3-tarjeta{transition:border-color .45s var(--ease),box-shadow .35s var(--ease)}
 [data-theme="light"] #home .i3-tarjeta:hover{box-shadow:0 26px 60px -24px rgba(18,48,77,.42),0 4px 14px -6px rgba(18,48,77,.16)}
 /* 2026-09-28: pie de pagina legible (antes casi no se leia en tema oscuro) */
