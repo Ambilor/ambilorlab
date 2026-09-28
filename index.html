@@ -1177,6 +1177,8 @@ nav{background:rgba(255,255,255,.95)!important}
   .ct-grid .cf-area{height:96px}
   #contact .contact-intro{margin-bottom:1.1rem}
 }
+/* 2026-09-28: tablet (una columna) — la escena de las demos crece de 340 a 480px */
+@media (min-width:640px) and (max-width:899px){ .al-demo__stage{max-width:min(480px,100%)} }
 </style>
 </head>
 
@@ -3388,14 +3390,17 @@ function btn(g, x, y, w, h, label, kind, pr = 0, size = 35){
   else { g.strokeStyle = C.line; g.lineWidth = 3; g.stroke(); if (pr > 0) { g.fillStyle = C.paper; g.fill(); } txt(g, label, x + w/2, y + h/2 + 1, size, 700, C.ink, 'center'); }
 }
 function base(g, title){
+  // 2026-09-28: cuerpo blanco y barra de titulo azul suave (antes todo en
+  // C.paper, el mismo tono del fondo de la escena: la ventana se veia lavada)
   g.clearRect(0, 0, CW, CH);
-  g.fillStyle = C.paper; rr(g, 0, 0, CW, CH, 34); g.fill();
+  g.fillStyle = '#ffffff'; rr(g, 0, 0, CW, CH, 34); g.fill();
   g.save(); rr(g, 0, 0, CW, CH, 34); g.clip();
-  g.fillStyle = C.paper; g.fillRect(0, 0, CW, 76);
+  g.fillStyle = C.brand; g.fillRect(0, 0, CW, 76);
   g.fillStyle = C.line; g.fillRect(0, 76, CW, 2);
   g.restore();
-  g.fillStyle = C.brand; rr(g, 30, 22, 32, 32, 8); g.fill();
-  txt(g, title, 78, 39, 38, 700, C.ink);
+  g.strokeStyle = C.line; g.lineWidth = 4; rr(g, 2, 2, CW - 4, CH - 4, 32); g.stroke();
+  g.fillStyle = 'rgba(255,255,255,.9)'; rr(g, 30, 22, 32, 32, 8); g.fill();
+  txt(g, title, 78, 39, 38, 700, '#ffffff');
 }
 function overlay(g, a){ g.save(); rr(g, 0, 0, CW, CH, 34); g.clip(); g.fillStyle = `rgba(18,48,77,${0.32*a})`; g.fillRect(0, 0, CW, CH); g.restore(); }
 function dialog(g, x, y, w, h){ g.save(); g.shadowColor = 'rgba(18,48,77,.25)'; g.shadowBlur = 40; g.shadowOffsetY = 12; g.fillStyle = '#fff'; rr(g, x, y, w, h, 24); g.fill(); g.restore(); }
@@ -3745,7 +3750,7 @@ function frame(now){
     // alternado y continuo entre pasos) y se acerca a cada clic del cursor.
     const ip = stepOf(T), sp = STEPS[ip], lt = T - sp.a, lado = ip % 2 ? -1 : 1;
     const u = ease(clamp(lt / (sp.b - sp.a)));
-    const bx = lerp(-lado*0.75, lado*0.75, u), by = 0.22 + Math.sin(T*0.4)*0.06;
+    const bx = lerp(-lado*0.4, lado*0.4, u), by = 0.22 + Math.sin(T*0.4)*0.06;
     let fx = 0, fy = 0, f = 0;
     const cf = CURSOR[ip];
     if (cf && cursor.visible) {
@@ -3753,7 +3758,7 @@ function frame(now){
       f = ease(f); fx = (cursor.position.x - bx*0.3)*0.55*f; fy = (cursor.position.y - by*0.4)*0.55*f;
     }
     // la cámara mira hacia el clic (sin sacarlo de cuadro) y se acerca un poco
-    camera.position.set(bx + PX.x*1.05 + fx*0.6, by + PX.y*0.65 + fy*0.6, 9.3 - 0.7*f);
+    camera.position.set(bx + PX.x*1.05 + fx*0.6, by + PX.y*0.65 + fy*0.6, 9.55 - 0.7*f);
     camera.lookAt(bx*0.3 + fx, by*0.4 + fy, 0);
     renderer.render(scene, camera);
     fills.forEach((f, i) => { const s = STEPS[i]; f.fill.style.width = (clamp((T - s.a) / (s.b - s.a)) * 100) + '%'; });
