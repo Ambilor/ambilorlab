@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Revisar encuadre — Ambilor.Lab</title>
+<!--
+  Pagina de verificacion (Ambilor.Lab, 2026-09-28). No esta enlazada en el
+  menu. Muestra el sitio al mismo tiempo en 6 tamanos (celular, tablet y
+  computador, en vertical y horizontal) y corre en cada uno un chequeo
+  automatico: contenido que se sale de la pantalla, textos cortados, vacio
+  bajo el pie de pagina y si los bloques principales caben en el alto visible.
+-->
+<style>
+  :root{--fondo:#0B0F16;--panel:#131a24;--borde:#253042;--texto:#dce4ee;--suave:#8a98ab;--ok:#3fbf7f;--aviso:#f0a33a;--azul:#4c8ddb}
+  @media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--fondo:#f3f6fa;--panel:#fff;--borde:#d9e1ea;--texto:#12304d;--suave:#5b6f86}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--fondo);color:var(--texto);font:14px/1.5 Inter,system-ui,sans-serif}
+  header{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:12px 16px;background:var(--panel);border-bottom:1px solid var(--borde)}
+  h1{font-size:15px;margin:0 8px 0 0}
+  .tabs{display:flex;flex-wrap:wrap;gap:6px}
+  button{font:inherit;font-size:13px;padding:6px 12px;border-radius:999px;border:1px solid var(--borde);background:transparent;color:var(--texto);cursor:pointer}
+  button.on{background:var(--azul);border-color:var(--azul);color:#fff}
+  #resumen{margin-left:auto;font-weight:600}
+  main{display:flex;flex-wrap:wrap;gap:18px;padding:16px;align-items:flex-start}
+  .disp{background:var(--panel);border:1px solid var(--borde);border-radius:12px;padding:10px}
+  .disp h2{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;margin:0 0 6px}
+  .disp h2 span{color:var(--suave);font-weight:500}
+  .marco{overflow:hidden;border-radius:6px;border:1px solid var(--borde);background:#fff}
+  iframe{border:0;transform-origin:0 0;display:block}
+  .estado{margin-top:8px;font-size:12px;line-height:1.45;max-width:100%}
+  .estado b.ok{color:var(--ok)} .estado b.av{color:var(--aviso)}
+  .estado ul{margin:4px 0 0;padding-left:16px;color:var(--suave)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Revisar encuadre</h1>
+  <div class="tabs" id="tabs"></div>
+  <button id="rehacer">Volver a revisar</button>
+  <span id="resumen">Revisando…</span>
+</header>
+<main id="main"></main>
+<script>
+const DISPOSITIVOS = [
+  ['iPhone vertical', 402, 700], ['iPhone horizontal', 874, 340],
+  ['iPad vertical', 834, 1100], ['iPad horizontal', 1194, 760],
+  ['Computador', 1440, 860], ['Monitor vertical', 1080, 1700]
+];
+const PESTANAS = [['home','Inicio'],['about','Sobre mí'],['product','Herramientas'],['guias','Guías'],['contact','Contacto']];
+const ALTO_VISTA = 330;   // alto en pantalla de cada vista previa
+let actual = 'home';
+
+const tabs = document.getElementById('tabs');
+PESTANAS.forEach(([id, nombre]) => {
+  const b = document.createElement('button'); b.textContent = nombre; b.dataset.id = id;
+  if (id === actual) b.classList.add('on');
+  b.onclick = () => { actual = id; [...tabs.children].forEach(x => x.classList.toggle('on', x === b)); revisarTodo(); };
+  tabs.appendChild(b);
+});
+
+const main = document.getElementById('main');
+const vistas = DISPOSITIVOS.map(([nombre, w, h]) => {
+  const k = ALTO_VISTA / Math.max(h, 600);
+  const caja = document.createElement('div'); caja.className = 'disp';
+  caja.innerHTML = `<h2>${nombre} <span>${w} × ${h}</span></h2><div class="marco" style="width:${Math.round(w*k)}px;height:${Math.round(h*k)}px"><iframe width="${w}" height="${h}" style="transform:scale(${k})" src="index.html?revisar=1"></iframe></div><div class="estado">Cargando…</div>`;
+  caja.style.width = Math.max(Math.round(w*k) + 22, 200) + 'px';
+  main.appendChild(caja);
+  const iframe = caja.querySelector('iframe');
+  const listo = new Promise(r => iframe.addEventListener('load', () => setTimeout(r, 1200), { once:true }));
+  return { nombre, w, h, iframe, estado: caja.querySelector('.estado'), listo };
+});
+
+// Chequeo dentro de cada vista (misma lógica que la revisión manual)
+async function revisar(v){
+  await v.listo;
+  const win = v.iframe.contentWindow, doc = v.iframe.contentDocument;
+  const esperar = ms => new Promise(r => setTimeout(r, ms));
+  win.show(actual); await esperar(700);
+  doc.querySelectorAll('.rv,.rv2').forEach(e => e.classList.add('in'));
+  const W = v.w, H = v.h, sec = doc.getElementById(actual), avisos = [];
+  const fuera = new Set(), cortados = new Set();
+  sec.querySelectorAll('*').forEach(e => {
+    const r = e.getBoundingClientRect(); if (!r.width || !r.height) return;
+    const cs = win.getComputedStyle(e); if (cs.visibility === 'hidden' || cs.position === 'fixed' || cs.display === 'none') return;
+    if ((r.right > W + 1 || r.left < -1) && e.tagName !== 'CANVAS' && !e.closest('.hx-canvas')) fuera.add(e.className && typeof e.className === 'string' ? e.className.split(' ')[0] : e.tagName);
+    if (!e.children.length && e.textContent.trim() && e.scrollWidth > e.clientWidth + 2 && (cs.overflow === 'hidden' || cs.overflowX === 'hidden' || cs.textOverflow === 'ellipsis')) cortados.add(e.textContent.trim().slice(0, 28));
+  });
+  if (fuera.size) avisos.push('Se sale de la pantalla: ' + [...fuera].slice(0, 3).join(', '));
+  // alineación: nada debe salirse de la columna de contenido (regla 1: un solo ancho)
+  const desal = new Set();
+  sec.querySelectorAll('.container, .hx-wrap').forEach(c => {
+    const cr = c.getBoundingClientRect(), cs = win.getComputedStyle(c);
+    const izq = cr.left + parseFloat(cs.paddingLeft), der = cr.right - parseFloat(cs.paddingRight);
+    c.querySelectorAll(':scope > *, :scope > * > *').forEach(e => {
+      const r = e.getBoundingClientRect(), es = win.getComputedStyle(e);
+      if (!r.width || es.position === 'absolute' || es.position === 'fixed' || es.display === 'none') return;
+      if (r.left < izq - 1 || r.right > der + 1) desal.add(typeof e.className === 'string' && e.className ? e.className.split(' ')[0] : e.tagName);
+    });
+  });
+  if (desal.size) avisos.push('Fuera de la columna de contenido: ' + [...desal].slice(0, 3).join(', '));
+  if (cortados.size) avisos.push('Texto cortado: ' + [...cortados].slice(0, 2).join(' · '));
+  const pie = doc.querySelector('footer').getBoundingClientRect();
+  const vacio = Math.round(H - (pie.bottom + win.scrollY));
+  if (vacio > 4) avisos.push('Vacío bajo el pie: ' + vacio + ' px');
+  // bloques que deben caber en el alto visible
+  const cabe = (nombre, alto) => { if (alto > H + 2) avisos.push(`${nombre} no cabe: ${Math.round(alto)} de ${H} px`); };
+  if (actual === 'home') cabe('Inicio (hasta los botones)', doc.querySelector('.hx-ctas').getBoundingClientRect().bottom + win.scrollY);
+  if (actual === 'product') doc.querySelectorAll('.al-demo').forEach(d => cabe('Demo "' + d.id + '"', d.getBoundingClientRect().bottom - d.previousElementSibling.getBoundingClientRect().top));
+  if (actual === 'guias') { const g = doc.querySelector('.gp-panel.on'); if (g && g.querySelector('.gp-prog')) cabe('Paso de la guía', g.querySelector('.gp-ctrl').getBoundingClientRect().bottom - g.querySelector('.gp-prog').getBoundingClientRect().top); }
+  win.scrollTo(0, 0);
+  v.estado.innerHTML = avisos.length
+    ? `<b class="av">⚠ ${avisos.length} aviso${avisos.length > 1 ? 's' : ''}</b><ul>${avisos.map(a => `<li>${a}</li>`).join('')}</ul>`
+    : '<b class="ok">✓ Todo encuadrado</b>';
+  return avisos.length;
+}
+async function revisarTodo(){
+  const res = document.getElementById('resumen'); res.textContent = 'Revisando…';
+  vistas.forEach(v => v.estado.textContent = 'Revisando…');
+  const n = await Promise.all(vistas.map(revisar));
+  const total = n.reduce((a, b) => a + b, 0);
+  res.textContent = total ? `⚠ ${total} aviso${total > 1 ? 's' : ''} en ${PESTANAS.find(p => p[0] === actual)[1]}` : `✓ ${PESTANAS.find(p => p[0] === actual)[1]}: todo encuadrado en los 6 tamaños`;
+}
+document.getElementById('rehacer').onclick = revisarTodo;
+revisarTodo();
+</script>
+</body>
+</html>
