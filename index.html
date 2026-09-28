@@ -2131,7 +2131,7 @@ html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) ro
           <path class="hx-art-trend" pathLength="1" d="M197 92 L223 66 L249 78 L275 40"/>
           <text class="hx-art-cap" x="160" y="158">actualizado solo</text>
         </svg>
-        <h3 class="i3-tt">Números que se vuelven gráficos solos</h3><p class="i3-td">Tus datos pasan a un panel visual que se actualiza solo. Sin armar tablas de cero cada mes.</p></article>
+        <h3 class="i3-tt">Reportes automatizados y autogestionados</h3><p class="i3-td">Tus datos alimentan reportes y paneles que se actualizan solos. Cada área los consulta cuando los necesita, sin armar tablas de cero cada mes.</p></article>
       <article class="i3-tarjeta"><div class="i3-top"><span>Automatización</span><span>03 / 03</span></div><svg class="i3-arte" viewBox="0 0 320 170" aria-hidden="true">
           <g class="hx-art-manual">
             <text x="18" y="34">Mes 1 · revisar…</text>
@@ -3491,8 +3491,9 @@ window.AL3D = (function(){
   // quieto y el cubo recorre sus elementos: titulo, tarjetas, botones) y entre
   // bloques un tramo de viaje. P va de 0 a N-1 (suavizado para que el 3D y el
   // texto vayan juntos).
-  // 2026-09-28: recorrido ~35 % mas corto (antes habia que girar mucho la rueda)
-  var LECTURA = [0.4, 0.85, 1.05, 0.35], VIAJE = 0.6;     // en altos de pantalla
+  // 2026-09-28: recorrido mas corto (feedback: tomaba 2-3 scrolls pasar de un bloque
+  // a otro). Antes [0.6,1.3,1.6,0.5] y viaje 0.9; ahora ~55 % menos.
+  var LECTURA = [0.3, 0.6, 0.75, 0.3], VIAJE = 0.38;     // en altos de pantalla
   var tunel = document.querySelector('#home .i3-tunel'), inicios = [], total = 0;
   function tramos(){
     var H = innerHeight, y = 0;
