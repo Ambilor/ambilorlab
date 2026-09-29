@@ -1257,9 +1257,11 @@ footer{margin-top:auto}
   .al-demo__stats strong{font-size:clamp(22px,2vw,28px)}
   .al-demo__body{font-size:14px;line-height:1.55}
 }
+/* horizontal muy bajo (iPad con Chrome ~660px): la nota de la demo se oculta */
+@media (orientation:landscape) and (min-width:640px) and (min-height:501px) and (max-height:700px){ .al-demo__note{display:none} }
 /* Encabezado de Herramientas: en pantallas anchas, texto a la izquierda y la
    tarjeta "¿Que es conciliar?" a la derecha */
-@media (min-width:1000px){
+@media (min-width:760px){
   .prod-cab{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:center;margin-bottom:2rem}
   .prod-cab .prod-tagline{margin-bottom:0}
   .prod-cab .alert-box{margin:0;font-size:13.5px;padding:1.1rem 1.2rem}
@@ -2420,6 +2422,37 @@ function irArriba(){
 window.addEventListener('pageshow',function(e){ if(e.persisted) irArriba(); });
 window.addEventListener('load',function(){ if(!location.hash) irArriba(); });
 
+// Demos a la medida de la pantalla (2026-09-28): en tablet y computador, en
+// cualquier orientacion, el encabezado de Herramientas y la demo "Ver en accion"
+// caben juntos en la primera pantalla. Se mide el alto visible real (100svh, sin
+// saltos cuando Safari/Chrome esconden sus barras) y lo que ocupa el encabezado,
+// y la escena toma exactamente el alto que sobra, con tope cuadrado en vertical
+// y apaisado en horizontal. En celular (<640px) mandan las reglas CSS.
+function ajustarDemos(){
+  var demos = document.querySelectorAll('.al-demo'), sec = document.getElementById('product');
+  if (!demos.length || !sec || !sec.classList.contains('visible')) return;
+  var escenas = [].map.call(demos, function(d){ return d.querySelector('.al-demo__stage'); });
+  if (window.innerWidth < 640) { escenas.forEach(function(e){ if (e) e.style.height = ''; }); return; }
+  var sonda = document.createElement('div');
+  sonda.style.cssText = 'position:fixed;top:0;height:100vh;height:100svh;width:0;visibility:hidden;pointer-events:none';
+  document.body.appendChild(sonda);
+  var alto = sonda.offsetHeight; sonda.remove();
+  var d = demos[0], e = escenas[0]; if (!e) return;
+  e.style.height = '';
+  var arriba = d.getBoundingClientRect().top + window.pageYOffset;           // encabezado + rotulo
+  var resto = d.offsetHeight - e.offsetHeight;                              // relleno, texto y controles
+  var vertical = window.innerHeight >= window.innerWidth;
+  var tope = e.offsetWidth * (vertical ? 1 : 0.9);
+  var margen = vertical ? 24 : 36;   /* en horizontal el ultimo paso tiene mas texto a la izquierda */
+  var h = Math.round(Math.max(240, Math.min(tope, alto - arriba - resto - margen)));
+  escenas.forEach(function(x){ if (x) x.style.height = h + 'px'; });
+  // segunda pasada: en horizontal la columna del texto puede crecer
+  var sobra = alto - (d.getBoundingClientRect().top + window.pageYOffset) - d.offsetHeight - margen;
+  if (sobra < 0) { h = Math.max(240, h + sobra); escenas.forEach(function(x){ if (x) x.style.height = h + 'px'; }); }
+}
+window.addEventListener('resize', function(){ clearTimeout(window.__ajT); window.__ajT = setTimeout(ajustarDemos, 120); });
+window.addEventListener('load', ajustarDemos);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajustarDemos);
 function show(id){
   var target=document.getElementById(id);
   document.querySelectorAll('.nav-links a').forEach(function(a){a.classList.remove('active');});
@@ -2432,6 +2465,7 @@ function show(id){
   document.querySelectorAll('section').forEach(function(s){s.classList.remove('visible');s.style.cssText='';});
   target.classList.add('visible');
   irArriba();
+  if(id==='product') requestAnimationFrame(ajustarDemos);
   setTimeout(function(){
     target.querySelectorAll('.rv:not(.in)').forEach(function(el){
       var r=el.getBoundingClientRect();
