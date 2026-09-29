@@ -1783,6 +1783,14 @@ body>section:not(#home)>.container{padding-top:1.6rem}
 
 /* el recorrido: el alto da el largo del desplazamiento; los bloques van fijos al centro */
 .i3-tunel{position:relative;z-index:2}
+/* Paradas en pantallas tactiles (2026-09-29, feedback: en el celular un solo
+   deslizamiento llegaba al final del inicio sin alcanzar a leer los bloques).
+   Solo en el recorrido del Inicio y con puntero tactil: cada deslizamiento avanza
+   a lo mas un bloque (scroll-snap-stop en la llegada de cada bloque); dentro del bloque
+   hay paradas suaves cada ~0,4 pantalla. En computador el desplazamiento sigue libre. */
+.i3-parada{position:absolute;left:0;width:1px;height:1px;pointer-events:none;scroll-snap-align:start}
+.i3-parada--bloque{scroll-snap-stop:always}   /* llegada a cada bloque: un deslizamiento fuerte no se la salta */
+html.i3-encaje{scroll-snap-type:y mandatory}
 .i3-escenario{position:fixed;inset:0;z-index:3;perspective:1100px;perspective-origin:50% 50%;pointer-events:none}
 .i3-estacion{position:absolute;left:50%;top:50%;width:min(1100px,calc(100vw - 2*clamp(16px,5vw,64px)));
   transform:translate(-50%,-50%);will-change:transform,opacity;pointer-events:none;visibility:hidden}
@@ -3513,8 +3521,41 @@ window.AL3D = (function(){
       if (y < inicios[i + 1]) { var f = (y - finLectura) / (VIAJE * H); Pobj = i + f; guiaI = i; guiaViaje = f; return; }
     }
   }
+  // paradas tactiles: en cada bloque y al final (pie de pagina)
+  var tactil = window.matchMedia && matchMedia('(pointer: coarse)').matches;
+  var paradas = [];
+  function ubicarParadas(){
+    var activo = tactil && enInicio() && !document.body.classList.contains('i3-estatico');
+    document.documentElement.classList.toggle('i3-encaje', activo);
+    if (!activo) return;
+    var max = document.documentElement.scrollHeight - innerHeight;
+    var base = tunel.getBoundingClientRect().top + scrollY;
+    // al llegar a cada bloque y dentro de su tramo de lectura, cada ~0,4 pantalla:
+    // asi ningun tramo entre paradas pasa de media pantalla y un deslizamiento corto
+    // no se devuelve (con paradas mas separadas la pagina parecia trabada)
+    var H = innerHeight, marcas = [];
+    for (var i = 0; i < N; i++) {
+      var partes = Math.max(1, Math.ceil(LECTURA[i] / 0.4 - 1e-9));
+      for (var j = 0; j <= partes; j++) marcas.push({ y: inicios[i] + j * LECTURA[i] * H / partes, bloque: j === 0 });
+    }
+    marcas.push({ y: total, bloque: true });                 // final: pie de pagina
+    var lista = [];
+    marcas.forEach(function(m){
+      var y = total > 0 ? m.y / total * max : 0, ult = lista[lista.length - 1];
+      if (!ult || y - ult.y > 2) lista.push({ y: y, bloque: m.bloque }); else ult.bloque = ult.bloque || m.bloque;
+    });
+    paradas.splice(lista.length).forEach(function(d){ d.remove(); });
+    lista.forEach(function(m, i){
+      if (!paradas[i]) { paradas[i] = document.createElement('div'); tunel.appendChild(paradas[i]); }
+      paradas[i].className = 'i3-parada' + (m.bloque ? ' i3-parada--bloque' : '');
+      paradas[i].style.top = Math.round(m.y - base) + 'px';
+    });
+  }
   tramos();
-  addEventListener('scroll', objetivo, { passive:true }); addEventListener('resize', function(){ tramos(); objetivo(); }); objetivo();
+  addEventListener('scroll', objetivo, { passive:true }); addEventListener('resize', function(){ tramos(); objetivo(); ubicarParadas(); }); objetivo();
+  ubicarParadas();
+  // entrar o salir del Inicio (cambio de pestana) enciende o apaga las paradas
+  if (window.MutationObserver) new MutationObserver(ubicarParadas).observe(document.body, { attributes: true, attributeFilter: ['class'] });
 
   // indicador: ir a una estacion = desplazar la pagina hasta ella (sin mover sola la pagina despues)
   var puntos = [].slice.call(document.querySelectorAll('#home .i3-ruta button'));
