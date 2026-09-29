@@ -33,6 +33,9 @@
   .estado{margin-top:8px;font-size:12px;line-height:1.45;max-width:100%}
   .estado b.ok{color:var(--ok)} .estado b.av{color:var(--aviso)}
   .estado ul{margin:4px 0 0;padding-left:16px;color:var(--suave)}
+  /* ventanas bajas o angostas (celular, pantalla dividida): la cabecera no queda fija */
+  @media (max-height:560px),(max-width:640px){header{position:static}}
+  .disp{max-width:100%}
 </style>
 </head>
 <body>
@@ -92,7 +95,8 @@ PESTANAS.forEach(([id, nombre]) => {
 const main = document.getElementById('main');
 const vistas = DISPOSITIVOS.map(([nombre, w, altos]) => {
   const h = altos[0];
-  const k = ALTO_VISTA / Math.max(h, 600);
+  // la vista previa nunca es más ancha que la pantalla (celular o pantalla dividida)
+  const k = Math.min(ALTO_VISTA / Math.max(h, 600), (Math.min(innerWidth, document.documentElement.clientWidth) - 56) / w);
   const caja = document.createElement('div'); caja.className = 'disp';
   caja.innerHTML = `<h2>${nombre} <span>${w} × ${altos.join(' / ')}</span></h2><div class="marco" style="width:${Math.round(w*k)}px;height:${Math.round(h*k)}px"><iframe width="${w}" height="${h}" style="transform:scale(${k})" src="index.html?revisar=${Date.now()}"></iframe></div><div class="estado">Cargando…</div>`;
   caja.style.width = Math.max(Math.round(w*k) + 22, 200) + 'px';
