@@ -2125,7 +2125,10 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
 [data-theme="light"] #home .i3-giro{color:var(--azul);background:rgba(31,92,153,.07);border-color:rgba(31,92,153,.3)}
 
 /* ── Giroscopio: el contenido se inclina con el aparato (celular y tablet) ── */
-html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) rotateX(var(--gx,0deg)) rotateY(var(--gy,0deg));transform-origin:50% var(--goy,50%)}
+/* 2026-09-30: el contenido de las pestañas (Herramientas, Sobre mí, Guías,
+   Contacto) ya no se inclina con el giroscopio: al sostener o tocar el
+   celular todo el recuadro se desplazaba. La inclinación queda en Inicio y en
+   el fondo 3D, que siguen moviéndose con el aparato. */
 
 /* ── Sobre mi en celular girado: dos columnas (antes el perfil ocupaba todo el
    ancho y la primera pantalla mostraba solo eso) ── */
@@ -2181,9 +2184,12 @@ html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) ro
 .demo-par{position:relative}
 #product .demo-par>.demo-section{margin-top:0}
 .demo-par>.demo-section[hidden]{display:none}
-.demo-par .al-demo{transition:opacity .5s var(--ease),transform .5s var(--ease),filter .5s var(--ease)}
-.demo-par .entrando .al-demo{opacity:0;transform:translateY(16px) scale(.985);filter:blur(6px)}
-.demo-par .saliendo .al-demo{opacity:0;transform:translateY(-10px) scale(.985);filter:blur(6px);transition-duration:.24s}
+/* 2026-09-30: el marco queda quieto (recuadro, escena y barra); solo el
+   contenido de adentro (la animación, su panel y el texto) hace el fundido.
+   Antes se desplazaba el recuadro completo y en celular se leía como un salto. */
+.demo-par :is(.al-demo__stage>canvas,.al-sim,.al-demo__copy){transition:opacity .45s var(--ease),filter .45s var(--ease)}
+.demo-par .entrando :is(.al-demo__stage>canvas,.al-sim,.al-demo__copy){opacity:0;filter:blur(4px)}
+.demo-par .saliendo :is(.al-demo__stage>canvas,.al-sim,.al-demo__copy){opacity:0;filter:blur(4px);transition-duration:.22s}
 .demo-cambio{position:relative;display:inline-flex;padding:2px;border:1px solid var(--borde);border-radius:999px;background:var(--gris-4);letter-spacing:0;text-transform:none}
 #product .demo-cambio{margin-bottom:.4rem}
 .demo-cambio button{position:relative;z-index:1;border:0;background:none;cursor:pointer;font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:4px 13px;min-height:24px;border-radius:999px;color:var(--gris-1);transition:color .35s var(--ease);white-space:nowrap}
@@ -2197,7 +2203,7 @@ html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) ro
 [data-theme="dark"] .demo-cambio button:hover{color:#E8EDF5}
 [data-theme="dark"] .demo-cambio button.on{color:#fff}
 [data-theme="dark"] .demo-cambio i{background:var(--glow,#4C8DDB);box-shadow:0 0 22px -4px var(--glow,#4C8DDB)}
-@media (prefers-reduced-motion: reduce){ .demo-par .al-demo,.demo-cambio i{transition:none} }
+@media (prefers-reduced-motion: reduce){ .demo-par :is(.al-demo__stage>canvas,.al-sim,.al-demo__copy),.demo-cambio i{transition:none} }
 /* 2026-09-30: en VERTICAL la demo manda. Antes la escena cedía su alto para
    que el título y la demo entraran juntos en la primera pantalla, y en un
    celular real (402×700 con las barras de Safari) quedaba una franja de
@@ -2224,13 +2230,13 @@ html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) ro
   .prod-cel .prod-tagline{margin-bottom:1rem}
   .prod-cel .alert-box{margin-bottom:0}
   #product .prod-cab{margin-bottom:1rem}
-  .al-demo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);grid-template-rows:auto 1fr;column-gap:clamp(20px,3vw,32px);align-items:start}
+  .al-demo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);grid-template-rows:auto;column-gap:clamp(20px,3vw,32px);align-items:start}
   .al-demo__grid{display:contents}
   .al-demo__copy,:is(#como-se-instala,.al-demo--instala) .al-demo__copy{grid-column:1;grid-row:1;display:flex;flex-direction:column;min-height:0;padding-top:.3rem}
   .al-demo__copy>.al-demo__extra{grid-column:auto;grid-row:auto;padding-top:.6rem}
-  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__stage{grid-column:2;grid-row:1 / span 2;order:0;align-self:start;
+  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__stage{grid-column:2;grid-row:1;order:0;align-self:start;
     height:max(380px, min(calc(100cqw * .8), calc(100svh - 330px - var(--hp-alto, 0px))))}
-  .al-demo__note{grid-column:1;grid-row:2;align-self:end;margin-top:1rem}
+  .al-demo__note{grid-column:1;grid-row:1;align-self:end;margin-top:1rem}   /* misma celda que el texto, abajo: el alto lo da solo la escena (sin saltos al cambiar de demo) */
   .al-demo__title{font-size:clamp(17px,2.3vw,21px)}
   .al-demo__body{font-size:14px;line-height:1.55}
   .al-demo__stats{flex-wrap:wrap;gap:10px 16px}
@@ -2249,14 +2255,18 @@ html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) ro
   .al-demo__body{font-size:12.5px;line-height:1.45}
   .al-demo__cta{margin-top:.55rem;padding:7px 16px;font-size:12.5px}
   .al-demo__grid{gap:10px}
-  /* el texto mide lo que ocupa (sin reserva vacía): los controles ya van en
-     la escena, así que el alto del texto no mueve nada de la demo */
-  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__copy{min-height:0!important}
+  /* alto común del texto = el paso más largo de las 6 demos (medido): el
+     borde de la demo no se mueve al avanzar de paso ni al cambiar entre
+     "Ver en acción" y "Cómo se instala" */
+  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__copy{min-height:158px!important}
   /* proporción natural y fija: escena cuadrada (con su tarjeta vertical) en
      todos los celulares, sin forzarla a llenar la pantalla ni script que la
      estire al cargar; el texto va a su medida debajo */
   :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__stage{
     height:min(calc(100cqw + var(--al-barra)), calc(100svh - 250px))}   /* tope: ventanas anchas y bajas (iPad dividido) */
+}
+@media (orientation:portrait) and (max-width:379px){
+  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__copy{min-height:172px!important}
 }
 </style>
 </head>
