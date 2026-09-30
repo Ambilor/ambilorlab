@@ -20,7 +20,7 @@ La escena 3D de "Ver en acción" del **Conciliador V1** es la referencia más co
 - **Reproducir:** sigue desde el punto actual, sin reiniciar.
 - **Reiniciar:** vuelve al estado inicial (contadores, escena y progreso) y reproduce desde el comienzo.
 - **Movimiento reducido** (`prefers-reduced-motion`): parte en pausa, con la primera etapa completa.
-- **Vertical / horizontal:** la tarjeta vertical es de 800×1000 y la apaisada de 1200×950.
+- **Vertical / horizontal:** con el dispositivo en vertical (o un recuadro más alto que ancho) se usa la tarjeta vertical de 800×1000; en horizontal, la apaisada de 1200×950. En vertical la escena tiene prioridad de espacio: mide hasta 1,25 veces su ancho y solo se ajusta para que la demo completa quepa en la pantalla.
 
 ## Pasos para un aplicativo nuevo
 
