@@ -2086,6 +2086,29 @@ html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) ro
 .hp-panel{display:none}
 .hp-panel.on{display:block}
 @media (max-width:520px){ .hp-tabs .gp-tab{padding:8px 6px} .hp-tabs .gp-tab-name{font-size:12.5px} .hp-prox{display:none} }
+/* Herramientas: "Ver en acción" y "Cómo se instala" comparten un lugar; el
+   selector va donde estaba la etiqueta de cada demo y el cambio hace un fundido
+   con desplazamiento suave, con la curva del sitio (2026-09-30). */
+.demo-par{position:relative}
+#product .demo-par>.demo-section{margin-top:0}
+.demo-par>.demo-section[hidden]{display:none}
+.demo-par .al-demo{transition:opacity .5s var(--ease),transform .5s var(--ease),filter .5s var(--ease)}
+.demo-par .entrando .al-demo{opacity:0;transform:translateY(16px) scale(.985);filter:blur(6px)}
+.demo-par .saliendo .al-demo{opacity:0;transform:translateY(-10px) scale(.985);filter:blur(6px);transition-duration:.24s}
+.demo-cambio{position:relative;display:inline-flex;padding:2px;border:1px solid var(--borde);border-radius:999px;background:var(--gris-4);letter-spacing:0;text-transform:none}
+#product .demo-cambio{margin-bottom:.4rem}
+.demo-cambio button{position:relative;z-index:1;border:0;background:none;cursor:pointer;font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:4px 13px;min-height:24px;border-radius:999px;color:var(--gris-1);transition:color .35s var(--ease);white-space:nowrap}
+.demo-cambio button::after{content:"";position:absolute;inset:-8px -2px}   /* zona de toque más alta que el botón visible */
+.demo-cambio button:hover{color:var(--azul)}
+.demo-cambio button.on{color:#fff}
+.demo-cambio button:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
+.demo-cambio i{position:absolute;z-index:0;top:2px;bottom:2px;left:0;width:0;border-radius:999px;background:var(--azul);box-shadow:0 6px 18px -8px var(--azul);transition:transform .5s var(--ease),width .5s var(--ease)}
+[data-theme="dark"] .demo-cambio{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1)}
+[data-theme="dark"] .demo-cambio button{color:#98A2B3}
+[data-theme="dark"] .demo-cambio button:hover{color:#E8EDF5}
+[data-theme="dark"] .demo-cambio button.on{color:#fff}
+[data-theme="dark"] .demo-cambio i{background:var(--glow,#4C8DDB);box-shadow:0 0 22px -4px var(--glow,#4C8DDB)}
+@media (prefers-reduced-motion: reduce){ .demo-par .al-demo,.demo-cambio i{transition:none} }
 </style>
 </head>
 
@@ -2286,8 +2309,9 @@ html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) ro
       <div class="alert-box"><b>¿Qué es conciliar?</b> Confirmar que cada movimiento de tu cartola o libro mayor tenga su contraparte: la factura con su pago, el cargo con su abono.</div>
     </div>
 
-    <div class="demo-section">
-      <div class="demo-label">Ver en accion</div>
+    <div class="demo-par">
+    <div class="demo-section on" data-d="accion" role="tabpanel">
+      <div class="demo-label demo-cambio" role="tablist" aria-label="Demostraciones"><i aria-hidden="true"></i><button type="button" class="on" role="tab" aria-selected="true" data-d="accion">Ver en acción</button><button type="button" role="tab" aria-selected="false" data-d="instala">Cómo se instala</button></div>
       <div class="al-demo" id="ver-en-accion" aria-label="Conciliador Automatico V1 en accion">
         <div class="al-demo__grid">
           <div class="al-demo__copy">
@@ -2349,17 +2373,8 @@ html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) ro
         </div>
       </div>
     </div>
-
-    <!-- Solo en celular: la bajada y "¿Que es conciliar?" van despues de la
-         demo, para que la primera pantalla muestre la demo completa -->
-    <div class="prod-cel">
-      <p class="prod-tagline">Tu conciliación mensual, hecha en segundos dentro de tu propio Google Sheets.</p>
-      <div class="alert-box"><b>¿Qué es conciliar?</b> Confirmar que cada movimiento de tu cartola o libro mayor tenga su contraparte: la factura con su pago, el cargo con su abono.</div>
-    </div>
-
-        <!-- ── INSTALACION 3D (Three.js) ── -->
-    <div class="demo-section" id="instalacion">
-      <div class="demo-label">Como se instala</div>
+    <div class="demo-section" data-d="instala" role="tabpanel" hidden id="instalacion">
+      <div class="demo-label demo-cambio" role="tablist" aria-label="Demostraciones"><i aria-hidden="true"></i><button type="button" role="tab" aria-selected="false" data-d="accion">Ver en acción</button><button type="button" class="on" role="tab" aria-selected="true" data-d="instala">Cómo se instala</button></div>
       <div class="al-demo" id="como-se-instala" aria-label="Cómo se instala el Conciliador Automático V1">
         <div class="al-demo__grid">
           <div class="al-demo__copy" aria-live="polite">
@@ -2417,6 +2432,17 @@ html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) ro
         </div>
       </div>
     </div>
+    </div>
+
+    <!-- Solo en celular: la bajada y "¿Que es conciliar?" van despues de la
+         demo, para que la primera pantalla muestre la demo completa -->
+    <div class="prod-cel">
+      <p class="prod-tagline">Tu conciliación mensual, hecha en segundos dentro de tu propio Google Sheets.</p>
+      <div class="alert-box"><b>¿Qué es conciliar?</b> Confirmar que cada movimiento de tu cartola o libro mayor tenga su contraparte: la factura con su pago, el cargo con su abono.</div>
+    </div>
+
+        <!-- ── INSTALACION 3D (Three.js) ── -->
+    
 
     <!-- 2026-09-27 (Director): el Conciliador pasa a "Próximamente"; la compra
          en Gumroad queda desactivada hasta el lanzamiento. -->
@@ -2482,8 +2508,9 @@ html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) ro
       <div class="alert-box"><b>¿Qué suma al V1?</b> Dos fuentes a la vez (cartola contra libro mayor), grupos de varias partidas, reglas para explicar pendientes, correos automáticos e IA opcional.</div>
     </div>
 
-    <div class="demo-section">
-      <div class="demo-label">Ver en accion</div>
+    <div class="demo-par">
+    <div class="demo-section on" data-d="accion" role="tabpanel">
+      <div class="demo-label demo-cambio" role="tablist" aria-label="Demostraciones"><i aria-hidden="true"></i><button type="button" class="on" role="tab" aria-selected="true" data-d="accion">Ver en acción</button><button type="button" role="tab" aria-selected="false" data-d="instala">Cómo se instala</button></div>
       <div class="al-demo al-demo--accion" id="v2-accion" aria-label="Conciliador Automático V2 en acción">
         <div class="al-demo__grid">
           <div class="al-demo__copy" aria-live="polite">
@@ -2508,14 +2535,8 @@ html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) ro
         </div>
       </div>
     </div>
-
-    <div class="prod-cel">
-      <p class="prod-tagline">Cruza el banco contra tu contabilidad, en grupos y con avisos automáticos, dentro de tu propio Google Sheets.</p>
-      <div class="alert-box"><b>¿Qué suma al V1?</b> Dos fuentes a la vez (cartola contra libro mayor), grupos de varias partidas, reglas para explicar pendientes, correos automáticos e IA opcional.</div>
-    </div>
-
-    <div class="demo-section" id="instalacion-v2">
-      <div class="demo-label">Como se instala</div>
+    <div class="demo-section" data-d="instala" role="tabpanel" hidden id="instalacion-v2">
+      <div class="demo-label demo-cambio" role="tablist" aria-label="Demostraciones"><i aria-hidden="true"></i><button type="button" role="tab" aria-selected="false" data-d="accion">Ver en acción</button><button type="button" class="on" role="tab" aria-selected="true" data-d="instala">Cómo se instala</button></div>
       <div class="al-demo al-demo--instala" id="v2-instala" aria-label="Cómo se instala el Conciliador Automático V2">
         <div class="al-demo__grid">
           <div class="al-demo__copy" aria-live="polite">
@@ -2540,6 +2561,14 @@ html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) ro
         </div>
       </div>
     </div>
+    </div>
+
+    <div class="prod-cel">
+      <p class="prod-tagline">Cruza el banco contra tu contabilidad, en grupos y con avisos automáticos, dentro de tu propio Google Sheets.</p>
+      <div class="alert-box"><b>¿Qué suma al V1?</b> Dos fuentes a la vez (cartola contra libro mayor), grupos de varias partidas, reglas para explicar pendientes, correos automáticos e IA opcional.</div>
+    </div>
+
+    
 
     <span class="buy-btn buy-btn--prox" aria-disabled="true">Próximamente</span>
     <span class="guarantee-note">Muy pronto disponible. <a href="#" onclick="return show('contact')">Escríbeme</a> y te aviso cuando esté listo.</span>
@@ -2582,8 +2611,9 @@ html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) ro
       <div class="alert-box"><b>¿Para quién?</b> Negocios que hoy reciben pedidos por WhatsApp: almacenes, panaderías, pastelerías, distribuidoras y emprendimientos.</div>
     </div>
 
-    <div class="demo-section">
-      <div class="demo-label">Ver en accion</div>
+    <div class="demo-par">
+    <div class="demo-section on" data-d="accion" role="tabpanel">
+      <div class="demo-label demo-cambio" role="tablist" aria-label="Demostraciones"><i aria-hidden="true"></i><button type="button" class="on" role="tab" aria-selected="true" data-d="accion">Ver en acción</button><button type="button" role="tab" aria-selected="false" data-d="instala">Cómo se instala</button></div>
       <div class="al-demo al-demo--accion" id="ped-accion" aria-label="App de Pedidos en acción">
         <div class="al-demo__grid">
           <div class="al-demo__copy" aria-live="polite">
@@ -2608,14 +2638,8 @@ html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) ro
         </div>
       </div>
     </div>
-
-    <div class="prod-cel">
-      <p class="prod-tagline">Tus clientes piden desde el celular y tú lo gestionas todo desde un panel, sin comisiones por venta.</p>
-      <div class="alert-box"><b>¿Para quién?</b> Negocios que hoy reciben pedidos por WhatsApp: almacenes, panaderías, pastelerías, distribuidoras y emprendimientos.</div>
-    </div>
-
-    <div class="demo-section" id="instalacion-ped">
-      <div class="demo-label">Como se instala</div>
+    <div class="demo-section" data-d="instala" role="tabpanel" hidden id="instalacion-ped">
+      <div class="demo-label demo-cambio" role="tablist" aria-label="Demostraciones"><i aria-hidden="true"></i><button type="button" role="tab" aria-selected="false" data-d="accion">Ver en acción</button><button type="button" class="on" role="tab" aria-selected="true" data-d="instala">Cómo se instala</button></div>
       <div class="al-demo al-demo--instala" id="ped-instala" aria-label="Cómo se instala la App de Pedidos">
         <div class="al-demo__grid">
           <div class="al-demo__copy" aria-live="polite">
@@ -2640,6 +2664,14 @@ html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) ro
         </div>
       </div>
     </div>
+    </div>
+
+    <div class="prod-cel">
+      <p class="prod-tagline">Tus clientes piden desde el celular y tú lo gestionas todo desde un panel, sin comisiones por venta.</p>
+      <div class="alert-box"><b>¿Para quién?</b> Negocios que hoy reciben pedidos por WhatsApp: almacenes, panaderías, pastelerías, distribuidoras y emprendimientos.</div>
+    </div>
+
+    
 
     <span class="buy-btn buy-btn--prox" aria-disabled="true">Próximamente</span>
     <span class="guarantee-note">Muy pronto disponible. <a href="#" onclick="return show('contact')">Escríbeme</a> y te aviso cuando esté listo.</span>
@@ -6891,6 +6923,58 @@ document.querySelectorAll('#product .hp-tabs .gp-tab').forEach(function(b){
 });
 // ?p=product&h=v2 (o ped) abre esa herramienta
 window.addEventListener('load', function(){ var h = new URLSearchParams(location.search).get('h'); if (h && document.getElementById('hp-' + h)) showHP(h); });
+</script>
+<script>
+/* Herramientas: cambiar entre "Ver en acción" y "Cómo se instala" (mismo lugar).
+   El selector queda fijo (su indicador se desliza); el demo que sale se
+   desvanece hacia arriba y el que entra sube desde abajo, desde su paso 1. */
+(function(){
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function indicador(sel, sinAnimar){
+    var b = sel.querySelector('button.on'), i = sel.querySelector('i');
+    if (!b || !i || !b.offsetWidth) return;
+    if (sinAnimar) i.style.transition = 'none';
+    i.style.width = b.offsetWidth + 'px'; i.style.transform = 'translateX(' + b.offsetLeft + 'px)';
+    if (sinAnimar) { i.offsetWidth; i.style.transition = ''; }
+  }
+  function marcar(sel, cual){ sel.querySelectorAll('button').forEach(function(b){ var on = b.getAttribute('data-d') === cual; b.classList.toggle('on', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); }); }
+  function cambiar(par, cual){
+    var act = par.querySelector('.demo-section:not([hidden])'), nue = par.querySelector('.demo-section[data-d="' + cual + '"]');
+    if (!nue || act === nue || par._cambiando) return;
+    var selA = act.querySelector('.demo-cambio'), selN = nue.querySelector('.demo-cambio');
+    marcar(selA, cual); indicador(selA);                          // el indicador se desliza en el selector visible
+    var entrar = function(){
+      var foco = document.activeElement && selA.contains(document.activeElement);
+      act.setAttribute('hidden', ''); act.classList.remove('saliendo');
+      marcar(selN, cual); nue.classList.add('entrando'); nue.removeAttribute('hidden');
+      indicador(selN, true);
+      if (foco) { var bf = selN.querySelector('button.on'); if (bf) bf.focus({ preventScroll:true }); }
+      var primero = nue.querySelector('.al-demo__step'); if (primero) primero.click();   // parte desde el paso 1
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){ nue.classList.remove('entrando'); }); });
+      setTimeout(function(){ par.style.minHeight = ''; par._cambiando = false; }, 520);
+      // devolver el selector del que sale a su estado propio, para la próxima vez
+      marcar(selA, act.getAttribute('data-d'));
+    };
+    if (reduce) { entrar(); par._cambiando = false; return; }
+    par._cambiando = true;
+    par.style.minHeight = par.offsetHeight + 'px';   // sin salto de la página durante el cambio
+    act.classList.add('saliendo');
+    setTimeout(entrar, 300);
+  }
+  document.querySelectorAll('#product .demo-par').forEach(function(par){
+    par.querySelectorAll('.demo-cambio').forEach(function(sel){
+      sel.addEventListener('click', function(e){ var b = e.target.closest('button'); if (b) cambiar(par, b.getAttribute('data-d')); });
+      sel.addEventListener('keydown', function(e){
+        if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+        var bs = [].slice.call(sel.querySelectorAll('button')), k = bs.indexOf(document.activeElement); if (k < 0) return;
+        var n = bs[(k + (e.key === 'ArrowRight' ? 1 : bs.length - 1)) % bs.length]; n.focus(); cambiar(par, n.getAttribute('data-d')); e.preventDefault();
+      });
+      indicador(sel, true);
+      if ('ResizeObserver' in window) new ResizeObserver(function(){ indicador(sel, true); }).observe(sel);
+    });
+  });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ document.querySelectorAll('#product .demo-cambio').forEach(function(s){ indicador(s, true); }); });
+})();
 </script>
 <script>alConTHREE(function(){
 /* ═══ HERO INMERSIVO — cubo Rubik jugable (2026-09-27, Ambilor.Lab) ═══
