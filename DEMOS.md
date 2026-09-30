@@ -31,7 +31,7 @@ La escena 3D de "Ver en acción" del **Conciliador V1** es la referencia más co
    Las demos del panel se inician solas la primera vez que se abre la sub-pestaña (`showHP`).
 2. **Configuración.** Crear `AL_DEMOS['xxx-accion']` y `AL_DEMOS['xxx-instala']` con la plantilla de abajo, en un bloque `<script>` después de los de V2 y PedidoApp.
 3. **Diseño vertical.** Agregar `drawV` y `cursorV`. Los pasos de instalación comunes ya existen en "Diseños verticales" (`I.copia`, `I.menu`, `I.permisos`, `I.publicar`, `I.verificar`, `I.listo`, con sus cursores en `K`), así que una instalación nueva se arma casi solo con ellos.
-4. **Simulación (recomendada).** Agregar `sim(t)` para que la demo muestre la automatización: fase, progreso, avisos de lo que acaba de pasar y contadores. Los valores son de ejemplo y el panel lo dice ("Datos de ejemplo").
+4. **Simulación (recomendada).** Agregar `sim(t)` para que la demo muestre la automatización: barra de progreso, avisos de lo que acaba de pasar y, si la escena no las muestra, cifras. La etiqueta de arriba solo dice el modo (Automático o Manual). Los valores son de ejemplo y el panel lo dice ("Datos de ejemplo").
 5. **Revisar.** Correr `revisar.html`, `?dividida` y `?ventana` en las cinco pestañas: todo en verde. Mirar a ojo celular vertical y horizontal, iPad ⅓ y web a media pantalla.
 
 ## Plantilla de configuración
@@ -59,7 +59,7 @@ AL_DEMOS['xxx-accion'] = {
   cursorV: [ /* … */ ],
   // Simulación: qué está pasando en el segundo t (tiempo total de la demo)
   sim: t => ({
-    fase: 'Procesando pedidos…',            // texto de la fase actual
+    fase: 'Procesando pedidos…',            // descripción interna de la etapa (no se muestra: la etiqueta dice Automático / Manual)
     prog: Math.min(1, t / 4),               // 0..1 muestra la barra; null la oculta
     ok: false,                              // true: fase terminada (punto verde)
     evt: '✓ Pedido #341 → confirmado',      // aviso breve (null = ninguno); cambia el texto para mostrar otro

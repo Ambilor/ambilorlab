@@ -644,7 +644,8 @@ nav.scrolled .nav-links a{font-size:12px}
 .al-demo--manual .al-sim__dot{animation:none;background:#98a2b3}
 @keyframes alLatido{0%,100%{box-shadow:0 0 0 0 rgba(76,141,219,.7)}50%{box-shadow:0 0 0 5px rgba(76,141,219,0)}}
 .al-sim__fase{min-width:0;overflow-wrap:anywhere}   /* si no cabe en una línea usa dos: nunca se corta */
-.al-sim__modo{flex:none;padding:1px 6px;border-radius:999px;background:rgba(255,255,255,.12);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#b8c4d4}
+.al-sim__modo{display:none}
+.al-sim__fase{letter-spacing:.06em;text-transform:uppercase;font-size:10px}
 .al-demo--manual .al-sim__modo{background:rgba(245,200,76,.2);color:#f5d27a}
 .al-sim__demo{position:absolute;right:8px;top:9px;padding:4px 8px;border-radius:999px;background:rgba(245,200,76,.92);color:#3b2a00;font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
 .al-sim__evt{position:absolute;left:50%;top:44px;width:max-content;max-width:calc(100% - 16px);padding:5px 11px;border-radius:9px;background:rgba(36,122,80,.94);color:#fff;font-size:10.5px;text-align:center;opacity:0;transform:translate(-50%,-6px);transition:opacity .25s,transform .25s var(--ease);box-shadow:0 8px 20px -10px rgba(0,0,0,.55)}
@@ -4626,9 +4627,9 @@ window.alDemoLinea = function(root, STEPS, o){
   function pintarSim(){
     if (!S) return;
     const e = o.sim(L.T) || {}, p = S.prev;
-    if (e.fase !== p.fase) S.q.fase.textContent = e.fase || '';
+    // la etiqueta solo dice el modo; lo que ocurre se ve en la escena
     const modo = L.playing ? 'Automático' : 'Manual';
-    if (modo !== p.modo) S.q.modo.textContent = modo;
+    if (modo !== p.modo) S.q.fase.textContent = modo;
     const prog = e.prog == null ? (e.ok ? 1 : 0) : e.prog;
     if (prog !== p.prog) { S.q.bar.style.width = (prog * 100).toFixed(1) + '%'; S.q.bar.parentNode.classList.toggle('on', e.prog != null); }
     S.classList.toggle('al-sim--ok', !!e.ok); S.classList.toggle('al-sim--fin', !!e.fin);
