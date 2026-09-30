@@ -3921,6 +3921,21 @@ window.AL3D = (function(){
   var URLS = ['https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js',
               'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js'];
   window.alConTHREE = function(f){ if (listo) f(); else cola.push(f); };
+  /* 2026-09-30: una sola verificación de WebGL para toda la página, y su
+     contexto de prueba se libera al terminar. Antes cada demo creaba el suyo y
+     nunca lo soltaba: con las tres herramientas abiertas eran ~7 contextos
+     extra, y Safari (iPhone/iPad) limita los contextos 3D por página. */
+  var hayGL = null;
+  window.alHayWebGL = function(){
+    if (hayGL !== null) return hayGL;
+    try {
+      var c = document.createElement('canvas'), g = window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl'));
+      hayGL = !!g;
+      if (g) { var x = g.getExtension('WEBGL_lose_context'); if (x) x.loseContext(); }
+      c.width = c.height = 0;
+    } catch (e) { hayGL = false; }
+    return hayGL;
+  };
   function soltar(){
     if (listo) return; listo = true; guardado = window.THREE || null;
     cola.splice(0).forEach(function(f){ try { f(); } catch (e) { if (window.console) console.error(e); } });
@@ -4842,12 +4857,7 @@ const elCount = root.querySelector('.al-demo__count');
 const playBtn = root.querySelector('[data-act="play"]');
 const list = root.querySelector('.al-demo__steps');
 
-function hasWebGL(){
-  try {
-    const c = document.createElement('canvas');
-    return !!(window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl')));
-  } catch(e){ return false; }
-}
+function hasWebGL(){ return window.alHayWebGL(); }
 function fallback(){
   root.classList.add('al-demo--no3d');
   if (window.console) console.warn('[al-demo] 3D no disponible, se muestra la version en texto.');
@@ -4950,7 +4960,7 @@ const sun = new THREE.DirectionalLight(0xffffff, 0.6); sun.position.set(3, 5, 6)
 AL3D.ambiente(scene, { z:-4.5, y:-0.85 });
 AL3D.piso(scene, { y:-3.95 });
 const PX = AL3D.parallax(stage, reduce);
-const TEX_S = 1.6;
+const TEX_S = Math.min(innerWidth, innerHeight) < 700 ? 1.25 : 1.6;   // celular: suficiente para su pantalla y ~40 % menos memoria
 const ANISO = renderer.capabilities.getMaxAnisotropy();
 function tex(w, h, draw){
   const c = document.createElement('canvas'); c.width = w * TEX_S; c.height = h * TEX_S;
@@ -5576,12 +5586,12 @@ window.alDemoTarjetas = function(root, cfg){
   reservarAlto();
 
   function fallback(){ root.classList.add('al-demo--no3d'); }
-  function hasWebGL(){ try { const c = document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl'))); } catch(e){ return false; } }
+  function hasWebGL(){ return window.alHayWebGL(); }
 
   alConTHREE(function(){
   if (!window.THREE || !hasWebGL()) { fallback(); return; }
   try {
-  const TEX_S = 1.6;
+  const TEX_S = Math.min(innerWidth, innerHeight) < 700 ? 1.25 : 1.6;   // celular: suficiente para su pantalla y ~40 % menos memoria
   const FONT = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
   const C = { paper:'#eef2f7', ink:'#12304d', muted:'#4f6983', brand:'#1f5c99', brandDark:'#164a7d', hi:'#f5c84c', soft:'#8aa2bb', line:'#c9d5e3', ok:'#2f8a5b', warn:'#e08a2c', bad:'#c4453a', wa:'#25d366', expl:'#6b5bd2' };
   const clamp = (x,a=0,b=1) => Math.min(b, Math.max(a, x));
@@ -5697,25 +5707,40 @@ window.alDemoTarjetas = function(root, cfg){
   function juego(vert){
     const CW = vert ? 800 : 1200, CH = vert ? 1000 : 950, PW = vert ? 3.84 : 4.8, PH = PW * CH / CW;
     const DRAW = (vert ? cfg.drawV : cfg.draw)(mkH(CW, CH)), CURSOR = (vert ? cfg.cursorV : cfg.cursor) || [];
+    // 2026-09-30: cada tarjeta dibuja su lienzo solo mientras está en pantalla
+    // (a lo más 2 a la vez) y lo libera al salir. Antes las 6 de cada demo
+    // vivían siempre (~70 MB por demo), también las de demos ocultas; en iPhone
+    // Safari limita la memoria total de lienzos.
     const cards = DRAW.map(() => {
-      const cv = document.createElement('canvas'); cv.width = CW * TEX_S; cv.height = CH * TEX_S;
-      const g = cv.getContext('2d'); g.scale(TEX_S, TEX_S);
-      const tx = new THREE.CanvasTexture(cv); tx.encoding = THREE.sRGBEncoding; tx.anisotropy = ANISO;
-      const m = new THREE.Mesh(new THREE.PlaneGeometry(PW, PH), basic({ map:tx })); m.renderOrder = 5; scene.add(m);
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(PW, PH), basic({ map:null })); m.renderOrder = 5; scene.add(m);
       const sh = new THREE.Mesh(new THREE.PlaneGeometry(PW + 0.08, PH + 0.08), basic({ color:col(C.ink) })); sh.renderOrder = 4; scene.add(sh);
       m.visible = sh.visible = false;
-      return { m, sh, g, tx };
+      return { m, sh, g:null, tx:null, cv:null, CW, CH };
     });
     AL3D.grosor(cards.map(c => c.m), 0.09, { radio:0.136 });
     const sombraCard = AL3D.sombra(scene, PW*1.1, 1.6); sombraCard.visible = false;
     return { vert, CW, CH, PW, PH, DRAW, CURSOR, cards, sombraCard };
   }
+  function tomarLienzo(c){
+    if (c.cv) return;
+    c.cv = document.createElement('canvas'); c.cv.width = c.CW * TEX_S; c.cv.height = c.CH * TEX_S;
+    c.g = c.cv.getContext('2d'); c.g.scale(TEX_S, TEX_S);
+    c.tx = new THREE.CanvasTexture(c.cv); c.tx.encoding = THREE.sRGBEncoding; c.tx.anisotropy = ANISO;
+    c.m.material.map = c.tx; c.m.material.needsUpdate = true;
+  }
+  function soltarLienzo(c){
+    if (!c.cv) return;
+    c.m.material.map = null; c.m.material.needsUpdate = true;
+    c.tx.dispose(); c.cv.width = c.cv.height = 0;
+    c.cv = c.g = c.tx = null;
+  }
+  function soltarTodo(){ [JH, JV].forEach(j => { if (j) j.cards.forEach(soltarLienzo); }); }
   AL3D.luces(scene);
   let JH = null, JV = null, J = null;
   function usar(vert){
     if (vert && !cfg.drawV) vert = false;
     if (J && J.vert === vert) return;
-    if (J) { J.cards.forEach(c => { c.m.visible = c.sh.visible = false; }); J.sombraCard.visible = false; }
+    if (J) { J.cards.forEach(c => { c.m.visible = c.sh.visible = false; soltarLienzo(c); }); J.sombraCard.visible = false; }
     J = vert ? (JV || (JV = juego(true))) : (JH || (JH = juego(false)));
     needsRender = true;
   }
@@ -5739,7 +5764,8 @@ window.alDemoTarjetas = function(root, cfg){
       const x = i === STEPS.length - 1 ? 0 : ease((t - (s.b - 0.35)) / 0.8);
       const vis = ein > 0.001 && x < 0.999;
       c.m.visible = c.sh.visible = vis;
-      if (!vis) return;
+      if (!vis) { soltarLienzo(c); return; }
+      tomarLienzo(c);
       J.DRAW[i](c.g, t - s.a); c.tx.needsUpdate = true;
       const cf = J.CURSOR[i], lt = t - s.a;
       let hundir = 0;
@@ -5796,7 +5822,8 @@ window.alDemoTarjetas = function(root, cfg){
     needsRender = true;
   }
   new ResizeObserver(resize).observe(stage); resize();
-  if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible = es[0].isIntersecting; }, { threshold:0.05 }).observe(stage);
+  // fuera de pantalla (u oculta) la demo no dibuja y suelta sus lienzos; al volver se redibuja
+  if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible = es[0].isIntersecting; if (visible) needsRender = true; else soltarTodo(); }, { threshold:0.05 }).observe(stage);
 
   let last = performance.now();
   function frame(now){
