@@ -2238,9 +2238,8 @@ html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) ro
 /* 2026-09-30: CELULAR en vertical. Al abrir Herramientas, la demo completa
    (escena, barra y texto de la etapa) queda en la primera pantalla: el
    encabezado y el texto se compactan (la etapa ya la dicen el título y la
-   barra, así que la línea pequeña de arriba se oculta) y la escena toma el
-   alto que sobra, medido en la pantalla real (--al-alto-cel, ver
-   "ajustarAltoCel"), con un piso para que no se vuelva una franja. */
+   barra, así que la línea pequeña de arriba se oculta) y la escena guarda
+   una proporción natural (ver abajo). */
 @media (orientation:portrait) and (max-width:639px){
   #product .hp-tabs{margin-bottom:8px}
   #product .hp-panel .prod-cab{margin-bottom:10px}
@@ -2250,14 +2249,14 @@ html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) ro
   .al-demo__body{font-size:12.5px;line-height:1.45}
   .al-demo__cta{margin-top:.55rem;padding:7px 16px;font-size:12.5px}
   .al-demo__grid{gap:10px}
-  /* reserva común del texto = el paso más largo de las 6 demos (medido), así
-     todas las demos miden lo mismo y no saltan al cambiar */
-  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__copy{min-height:158px!important}
+  /* el texto mide lo que ocupa (sin reserva vacía): los controles ya van en
+     la escena, así que el alto del texto no mueve nada de la demo */
+  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__copy{min-height:0!important}
+  /* proporción natural y fija: escena cuadrada (con su tarjeta vertical) en
+     todos los celulares, sin forzarla a llenar la pantalla ni script que la
+     estire al cargar; el texto va a su medida debajo */
   :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__stage{
-    height:var(--al-alto-cel, max(260px, min(calc(125cqw + var(--al-barra)), calc(100svh - 268px))))}
-}
-@media (orientation:portrait) and (max-width:379px){
-  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__copy{min-height:172px!important}
+    height:min(calc(100cqw + var(--al-barra)), calc(100svh - 250px))}   /* tope: ventanas anchas y bajas (iPad dividido) */
 }
 </style>
 </head>
@@ -5746,7 +5745,7 @@ window.alDemoTarjetas = function(root, cfg){
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(w, h, false);
     camera.aspect = w / h; camera.updateProjectionMatrix();
-    usar(w / h < 1.2 || (matchMedia('(orientation: portrait)').matches && w / h < 1.6));   // dispositivo en vertical: diseño vertical
+    usar(w / h < 1.2);   // el diseño sigue la forma del recuadro: así la tarjeta siempre llena su marco
     const tg = Math.tan(camera.fov * Math.PI / 360);
     zV = Math.max(4.8 * 0.6 / tg, 3.84 * 0.62 / (tg * camera.aspect));
     needsRender = true;
@@ -7568,35 +7567,6 @@ function showHP(id){
   panel.querySelectorAll('.al-demo[id]').forEach(function(d){ if (window.AL_DEMOS && AL_DEMOS[d.id] && window.alDemoTarjetas) alDemoTarjetas(d, AL_DEMOS[d.id]); });
   panel.querySelectorAll('.rv:not(.in)').forEach(function(el){ el.classList.add('in'); });
 }
-/* 2026-09-30: celular en vertical. La escena mide lo que queda de la pantalla
-   bajo el encabezado, restando el texto de la etapa y la nota: así la demo
-   completa se ve al abrir Herramientas. Piso de 280 px (250 bajo 700 px de
-   alto y 230 bajo 620) y techo de 1,25 veces el ancho más la barra. */
-(function(){
-  var mq = window.matchMedia && matchMedia('(orientation: portrait) and (max-width: 639px)');
-  var prod = document.getElementById('product');
-  if (!mq || !prod) return;
-  var pend = 0;
-  function ajustarAltoCel(){
-    pend = 0;
-    if (!mq.matches) { prod.style.removeProperty('--al-alto-cel'); return; }
-    var d = [].slice.call(prod.querySelectorAll('.hp-panel.on .demo-section:not([hidden]) .al-demo'))[0];
-    if (!d || !d.offsetHeight) return;
-    var st = d.querySelector('.al-demo__stage'), r = st.getBoundingClientRect(), rd = d.getBoundingClientRect();
-    var arriba = r.top + window.scrollY, abajo = rd.bottom - r.bottom + 10;
-    var barra = parseFloat(getComputedStyle(d).getPropertyValue('--al-barra')) || 44;
-    var piso = window.innerHeight < 620 ? 230 : window.innerHeight < 700 ? 250 : 280, techo = r.width * 1.25 + barra;
-    var alto = Math.round(Math.max(piso, Math.min(techo, window.innerHeight - arriba - abajo)));
-    prod.style.setProperty('--al-alto-cel', alto + 'px');
-  }
-  function pedir(){ if (!pend) pend = requestAnimationFrame(ajustarAltoCel); }
-  window.alAjustarAltoCel = pedir;
-  window.addEventListener('resize', pedir);
-  window.addEventListener('orientationchange', pedir);
-  if ('ResizeObserver' in window) { var ro = new ResizeObserver(pedir); prod.querySelectorAll('.al-demo__copy, .prod-cab').forEach(function(e){ ro.observe(e); }); ro.observe(prod); }
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(pedir);
-  pedir();
-})();
 /* 2026-09-30: los encabezados de las tres herramientas miden lo mismo, así la
    demo queda en el mismo lugar al cambiar de sub-pestaña (antes saltaba ~18 px
    según el largo de la bajada o del recuadro). */
