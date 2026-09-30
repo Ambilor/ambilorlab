@@ -5193,585 +5193,13 @@ requestAnimationFrame(frame);
 })();
 });</script>
 
-<!-- Demo 3D "Como se instala" (three.js). -->
-<script>alConTHREE(function(){
-/* Demo 3D de instalacion del Conciliador Automatico V1. */
-(function(){
-const TEX_S = 1.6;
-const root = document.getElementById('como-se-instala');
-if (!root) return;
-/* El link de contacto lo abre la SPA, no un ancla: la seccion real es
-   id="contact" y show() la muestra. Antes apuntaba a "#contacto", que no
-   existe, asi que el paso 6 llevaba a la nada. Corregido 2026-09-27. */
-const CONTACT_HREF = '#contact';
-
-const STEPS = [
-  { a:0, b:5.2, short:'Copia', kicker:'Paso 1: haz tu copia', title:'Haz tu copia',
-    body:'Abre el enlace que te enviamos y elige “Hacer una copia”. Tu copia se abre en tu Drive y trae la herramienta adentro, con su código ya incluido.' },
-  { a:5.2, b:10.4, short:'Configurar', kicker:'Paso 2: abre “Configurar herramienta”', title:'Abre “Configurar herramienta”',
-    body:'En tu copia, abre el menú de la barra superior y elige “Tu herramienta — Ambilor.Lab”. Se abre un panel llamado “Configurar herramienta”, que te va guiando paso a paso.' },
-  { a:10.4, b:14.8, short:'Autorizar', kicker:'Paso 3: autoriza el acceso', title:'Autoriza el acceso',
-    body:'La primera vez, Google te pide permiso para leer tu planilla y mostrar el panel. Aparece en una pantalla de Google, no dentro de la herramienta. Acepta y sigue.',
-    tip:'El botón puede decir “Continuar” o “Aceptar” según tu navegador.' },
-  { a:14.8, b:21.2, short:'Publicar', kicker:'Paso 4: publica tu panel', title:'Publica tu panel',
-    body:'Desde el editor de Apps Script, publica el panel como aplicación web con acceso “Solo yo”. Así queda privado en tu cuenta: nadie más lo ve.',
-    tip:'“Solo yo” significa privado. No elijas “Cualquiera”.' },
-  { a:21.2, b:26.6, short:'Abrir', kicker:'Paso 5: ábrelo y empieza', title:'Ábrelo y empieza',
-    body:'Vuelve a tu planilla y abre el panel. La herramienta verifica que la instalación quedó correcta y te deja entrar.' },
-  { a:26.6, b:31, short:'Listo', kicker:'Listo', title:'Ya quedó instalado',
-    body:'No queda nada por instalar ni por pagar. Todo funciona dentro de tu propia cuenta de Google.',
-    checks:['Es privado: la herramienta vive en tu cuenta de Google, no en un servidor nuestro.', 'Es tuyo: no dependes de una suscripción ni de una cuota de uso.'],
-    contact:'Si algo no coincide con lo que ves, escríbeme antes de continuar.' }
-];
-const DUR = 31;
-
-const canvas = root.querySelector('canvas');
-const stage = root.querySelector('.al-demo__stage');
-const copy = root.querySelector('.al-demo__copy');
-const elK = root.querySelector('.al-demo__kicker'), elT = root.querySelector('.al-demo__title');
-const elB = root.querySelector('.al-demo__body'), elX = root.querySelector('.al-demo__extra');
-const elCount = root.querySelector('.al-demo__count');
-const playBtn = root.querySelector('[data-act="play"]');
-const list = root.querySelector('.al-demo__steps');
-const fills = STEPS.map((s, i) => {
-  const li = document.createElement('li');
-  li.innerHTML = `<button class="al-demo__step" type="button" aria-label="Ir a: ${s.kicker}"><span class="al-demo__track"><i></i></span><span class="al-demo__label">${s.short}</span></button>`;
-  li.firstChild.addEventListener('click', () => go(i));
-  list.appendChild(li);
-  return { fill: li.querySelector('i'), btn: li.firstChild };
-});
-
-const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-// 2026-09-27: 0,45 s antes del final — el paso se ve completo, antes de
-// que su ventana empiece a alejarse hacia el fondo.
-const HOLD = 0.45;
-let T = 0, playing = !reduce, current = -1, visible = true, needsRender = true;
-
-function fillCopy(i){
-  const s = STEPS[i];
-  elK.textContent = s.kicker; elT.textContent = s.title; elB.textContent = s.body;
-  elX.innerHTML = '';
-  if (s.tip) { const p = document.createElement('p'); p.className = 'al-demo__tip'; p.textContent = s.tip; elX.appendChild(p); }
-  if (s.checks) {
-    const ul = document.createElement('ul'); ul.className = 'al-demo__checks';
-    s.checks.forEach(c => { const li = document.createElement('li'); li.textContent = c; ul.appendChild(li); });
-    elX.appendChild(ul);
-  }
-  if (s.contact) { const a = document.createElement('a'); a.className = 'al-demo__contact'; a.href = CONTACT_HREF; a.textContent = s.contact; a.addEventListener('click', ev => { ev.preventDefault(); if (typeof show === 'function') show('contact'); }); elX.appendChild(a); }
-}
-function setStep(i){
-  if (i === current) return;
-  const first = current === -1;
-  current = i;
-  elCount.textContent = `${i + 1} de ${STEPS.length}`;
-  fills.forEach((f, j) => { if (j === i) f.btn.setAttribute('aria-current', 'step'); else f.btn.removeAttribute('aria-current'); });
-  if (first || reduce) { fillCopy(i); return; }
-  copy.classList.add('is-changing');
-  setTimeout(() => { fillCopy(i); copy.classList.remove('is-changing'); }, 280);
-}
-const stepOf = t => { for (let i = STEPS.length - 1; i >= 0; i--) if (t >= STEPS[i].a) return i; return 0; };
-// 2026-09-28: el texto reserva el alto del paso mas largo (medido para el ancho
-// actual) para que los controles (anterior, pausa, siguiente) no cambien de
-// lugar al avanzar. Se recalcula si cambia el ancho (girar, pantalla dividida).
-let anchoReservado = 0;
-function reservarAlto(){
-  const w = copy.offsetWidth; if (!w || w === anchoReservado) return;
-  anchoReservado = w; copy.style.minHeight = '';
-  if (matchMedia('(orientation:landscape) and (max-height:560px)').matches) return;   // controles bajo la escena
-  let max = 0;
-  STEPS.forEach((s, i) => { fillCopy(i); max = Math.max(max, copy.offsetHeight); });
-  fillCopy(Math.max(0, current));
-  copy.style.minHeight = max + 'px';
-}
-if ('ResizeObserver' in window) new ResizeObserver(reservarAlto).observe(copy);
-if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { anchoReservado = 0; reservarAlto(); });
-function go(i){
-  i = (i + STEPS.length) % STEPS.length;
-  T = playing ? STEPS[i].a + 0.001 : STEPS[i].b - HOLD;
-  setStep(i); needsRender = true;
-}
-function setPlaying(p){
-  playing = p;
-  playBtn.textContent = p ? '▮▮' : '▶';
-  playBtn.setAttribute('aria-label', p ? 'Pausar' : 'Reproducir');
-  if (p && T >= STEPS[current].b - HOLD - 0.01) T = STEPS[current].a + 0.001;
-  needsRender = true;
-}
-root.querySelector('[data-act="prev"]').addEventListener('click', () => go(current - 1));
-root.querySelector('[data-act="next"]').addEventListener('click', () => go(current + 1));
-playBtn.addEventListener('click', () => setPlaying(!playing));
-root.addEventListener('keydown', e => {
-  if (e.key === 'ArrowRight') { go(current + 1); e.preventDefault(); }
-  if (e.key === 'ArrowLeft') { go(current - 1); e.preventDefault(); }
-});
-if (reduce) T = STEPS[0].b - HOLD;
-setStep(stepOf(T));
-
-/* Mismo contrato que "Ver en accion": si three.js no carga o el navegador no
-   tiene WebGL, la seccion cae en .al-demo--no3d y muestra los 6 pasos en
-   texto (el markup esta en el HTML) en vez de una caja vacia con controles
-   muertos. Antes esta seccion solo chequeaba window.THREE. Unificado 2026-09-27. */
-function hasWebGL(){
-  try {
-    const c = document.createElement('canvas');
-    return !!(window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl')));
-  } catch(e){ return false; }
-}
-function fallback(){
-  root.classList.add('al-demo--no3d');
-  if (window.console) console.warn('[al-demo instalacion] 3D no disponible, se muestra la version en texto.');
-}
-
-if (!window.THREE || !hasWebGL()) { fallback(); return; }
-
-/* try/catch plano a proposito: envolve el arranque del 3D sin re-indentar las
-   ~380 lineas siguientes, para que el diff siga siendo revisable. Si algo
-   falla a mitad de armado (textura, contexto WebGL), caemos al modo texto en
-   lugar de dejar la seccion en blanco. Mismo criterio que "Ver en accion". */
-try {
-const FONT = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
-/* Paleta del canvas 3D: FIJA en tema claro, igual que "Ver en accion" (ver el
-   bloque de ese demo mas arriba). Mismo criterio en las dos secciones: el
-   panel 3D es una captura del producto real —Google Drive y Sheets son
-   claros—, no un elemento de la pagina, asi que no sigue al toggle de tema.
-   Antes esta paleta era reactiva y ademas miraba prefers-color-scheme, que
-   el sitio no usa para nada (el tema es manual, via localStorage 'al-theme'):
-   eso dejaba el canvas navy en una pagina clara en cualquier computador con
-   el SO en oscuro. Se unifico con A el 2026-09-27. */
-const C = { paper:'#eef2f7', ink:'#12304d', muted:'#4f6983', brand:'#1f5c99', brandDark:'#164a7d', hi:'#f5c84c', soft:'#8aa2bb', line:'#c9d5e3', ok:'#2f8a5b', warn:'#e08a2c' };
-const clamp = (x,a=0,b=1) => Math.min(b, Math.max(a, x));
-const ease = x => { x = clamp(x); return x < .5 ? 4*x*x*x : 1 - Math.pow(-2*x+2, 3)/2; };
-const easeOut = x => { x = clamp(x); return 1 - Math.pow(1-x, 3); };
-const lerp = (a,b,t) => a + (b-a)*t;
-
-const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
-renderer.outputEncoding = THREE.sRGBEncoding;
-renderer.setClearColor(0x000000, 0);
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
-// Profundidad (AL3D): pared con cuadrícula + niebla, y parallax con el puntero
-AL3D.ambiente(scene, { z:-4.5 });
-AL3D.piso(scene, { y:-2.35 });
-const PX = AL3D.parallax(stage, reduce);
-const ANISO = renderer.capabilities.getMaxAnisotropy();
-const basic = (opts) => new THREE.MeshBasicMaterial(Object.assign({ transparent:true, side:THREE.DoubleSide, depthWrite:false }, opts));
-const col = hex => new THREE.Color(hex).convertSRGBToLinear();
-
-const CW = 1200, CH = 950, PW = 4.8, PH = PW * CH / CW;
-function rr(g,x,y,w,h,r){ g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }
-// maxW: si el texto no cabe en su espacio, se achica hasta caber (2026-09-27)
-function txt(g, s, x, y, size, weight, color, align = 'left', maxW = 0){ g.font = `${weight} ${size}px ${FONT}`; while (maxW && size > 12 && g.measureText(s).width > maxW) { size -= 1; g.font = `${weight} ${size}px ${FONT}`; } g.fillStyle = color; g.textAlign = align; g.textBaseline = 'middle'; g.fillText(s, x, y); }
-function wrap(g, s, x, y, maxW, size, weight, color, lh = 1.3){
-  g.font = `${weight} ${size}px ${FONT}`; g.fillStyle = color; g.textAlign = 'left'; g.textBaseline = 'middle';
-  let line = '', yy = y;
-  s.split(' ').forEach(w => { const t = line ? line + ' ' + w : w; if (g.measureText(t).width > maxW && line) { g.fillText(line, x, yy); line = w; yy += size*lh; } else line = t; });
-  g.fillText(line, x, yy); return yy;
-}
-const press = (lt, tc) => clamp(1 - Math.abs(lt - tc) / 0.15);
-function btn(g, x, y, w, h, label, kind, pr = 0, size = 35){
-  const i = pr * 4;
-  // El texto siempre cabe en el botón: se reduce hasta el ancho útil
-  const maxW = w - i*2 - h*0.55, peso = kind === 'primary' ? 800 : 700;
-  g.font = `${peso} ${size}px ${FONT}`;
-  while (size > 14 && g.measureText(label).width > maxW) { size -= 1; g.font = `${peso} ${size}px ${FONT}`; }
-  rr(g, x + i, y + i, w - i*2, h - i*2, (h - i*2) / 2);
-  if (kind === 'primary') { g.fillStyle = pr > 0 ? C.brandDark : C.brand; g.fill(); txt(g, label, x + w/2, y + h/2 + 1, size, 800, '#fff', 'center'); }
-  else if (kind === 'disabled') { g.fillStyle = '#e3e9f0'; g.fill(); txt(g, label, x + w/2, y + h/2 + 1, size, 700, C.soft, 'center'); }
-  else { g.strokeStyle = C.line; g.lineWidth = 3; g.stroke(); if (pr > 0) { g.fillStyle = C.paper; g.fill(); } txt(g, label, x + w/2, y + h/2 + 1, size, 700, C.ink, 'center'); }
-}
-function base(g, title){
-  // 2026-09-28: cuerpo blanco y barra de titulo azul suave (antes todo en
-  // C.paper, el mismo tono del fondo de la escena: la ventana se veia lavada)
-  g.clearRect(0, 0, CW, CH);
-  g.fillStyle = '#ffffff'; rr(g, 0, 0, CW, CH, 34); g.fill();
-  g.save(); rr(g, 0, 0, CW, CH, 34); g.clip();
-  g.fillStyle = C.brand; g.fillRect(0, 0, CW, 76);
-  g.fillStyle = C.line; g.fillRect(0, 76, CW, 2);
-  g.restore();
-  g.strokeStyle = C.line; g.lineWidth = 4; rr(g, 2, 2, CW - 4, CH - 4, 32); g.stroke();
-  g.fillStyle = 'rgba(255,255,255,.9)'; rr(g, 30, 22, 32, 32, 8); g.fill();
-  txt(g, title, 78, 39, 38, 700, '#ffffff');
-}
-function overlay(g, a){ g.save(); rr(g, 0, 0, CW, CH, 34); g.clip(); g.fillStyle = `rgba(18,48,77,${0.32*a})`; g.fillRect(0, 0, CW, CH); g.restore(); }
-function dialog(g, x, y, w, h){ g.save(); g.shadowColor = 'rgba(18,48,77,.25)'; g.shadowBlur = 40; g.shadowOffsetY = 12; g.fillStyle = '#fff'; rr(g, x, y, w, h, 24); g.fill(); g.restore(); }
-function banner(g, x, y, w, h, label, color = C.ok){ g.fillStyle = color; rr(g, x, y, w, h, h/2); g.fill(); txt(g, label, x + w/2, y + h/2 + 1, 35, 800, '#fff', 'center', w - h*0.7); }
-function checkDot(g, x, y, on, pop = 1){
-  g.beginPath(); g.arc(x, y, 18 * (on ? pop : 1), 0, Math.PI*2);
-  if (on) { g.fillStyle = C.ok; g.fill(); txt(g, '✓', x, y + 1, 32, 800, '#fff', 'center'); }
-  else { g.strokeStyle = C.line; g.lineWidth = 3; g.stroke(); }
-}
-function sheetIcon(g, x, y, s, color = C.ok){
-  g.fillStyle = color; rr(g, x, y, s, s*1.2, s*0.14); g.fill();
-  g.strokeStyle = '#fff'; g.lineWidth = Math.max(2, s*0.06);
-  for (let k = 1; k <= 3; k++) { g.beginPath(); g.moveTo(x + s*0.2, y + s*0.3*k); g.lineTo(x + s*0.8, y + s*0.3*k); g.stroke(); }
-  g.beginPath(); g.moveTo(x + s*0.5, y + s*0.2); g.lineTo(x + s*0.5, y + s); g.stroke();
-}
-
-const DRAW = [
-  (g, lt) => {
-    base(g, 'Google Drive');
-    txt(g, 'Mi Drive', 36, 130, 35, 800, C.ink); txt(g, 'Recientes', 36, 178, 32, 600, C.muted); txt(g, 'Compartidos', 36, 222, 32, 600, C.muted);
-    g.fillStyle = C.line; g.fillRect(230, 96, 2, CH - 130);
-    txt(g, 'Nombre', 270, 128, 29, 700, C.soft);
-    const files = ['Presupuesto 2026', 'Informe mensual', 'Cartolas septiembre', 'Proveedores'];
-    const nIn = easeOut((lt - 2.7) / 0.4);
-    const rowY = k => 190 + k*70;
-    if (nIn > 0) {
-      g.globalAlpha = nIn;
-      const hl = 1 - ease((lt - 3.6) / 1.0);
-      g.fillStyle = `rgba(245,200,76,${0.55*hl})`; g.fillRect(250, rowY(0) - 32, CW - 280, 64);
-      sheetIcon(g, 272, rowY(0) - 22, 36); txt(g, 'Mi herramienta (copia)', 330, rowY(0), 35, 800, C.ink);
-      txt(g, 'ahora', CW - 60, rowY(0), 29, 600, C.soft, 'right');
-      g.globalAlpha = 1;
-    }
-    files.forEach((f, k) => {
-      const y = rowY(k + nIn);
-      g.strokeStyle = C.line; g.lineWidth = 2; g.beginPath(); g.moveTo(250, y + 35); g.lineTo(CW - 30, y + 35); g.stroke();
-      sheetIcon(g, 272, y - 22, 36, C.soft); txt(g, f, 330, y, 35, 600, C.ink);
-    });
-    const d = 1 - ease((lt - 2.4) / 0.35);
-    if (d > 0) {
-      overlay(g, d); g.globalAlpha = d;
-      dialog(g, 200, 190, 800, 540);
-      txt(g, 'Copiar “Mi herramienta” en Mi Drive', 240, 260, 46, 800, C.ink);
-      txt(g, 'Nombre', 240, 330, 32, 700, C.muted);
-      g.strokeStyle = C.brand; g.lineWidth = 3; rr(g, 240, 352, 720, 64, 12); g.stroke();
-      txt(g, 'Mi herramienta (copia)', 262, 385, 35, 600, C.ink);
-      txt(g, 'Carpeta', 240, 450, 32, 700, C.muted);
-      g.strokeStyle = C.line; rr(g, 240, 472, 720, 64, 12); g.stroke();
-      txt(g, 'Mi Drive ▾', 262, 505, 35, 600, C.ink);
-      txt(g, 'Elige el nombre y la carpeta donde la quieres guardar.', 240, 580, 30, 400, C.muted);
-      btn(g, 520, 632, 180, 62, 'Cancelar', 'ghost', 0, 35);
-      btn(g, 716, 632, 244, 62, 'Hacer una copia', 'primary', press(lt, 2.25), 35);
-      g.globalAlpha = 1;
-    }
-    const ts = easeOut((lt - 3.0) / 0.35);
-    if (ts > 0) { g.globalAlpha = ts; g.fillStyle = C.ink; rr(g, 330, 850 + (1-ts)*20, 540, 64, 32); g.fill(); txt(g, '✓ Copia creada en Mi Drive', 600, 883 + (1-ts)*20, 35, 700, '#fff', 'center'); g.globalAlpha = 1; }
-  },
-  (g, lt) => {
-    base(g, 'Google Sheets');
-    sheetIcon(g, 30, 98, 30); txt(g, 'Mi herramienta (copia)', 76, 118, 38, 700, C.ink);
-    let x = 32;
-    ['Archivo','Editar','Ver','Insertar','Datos','Extensiones'].forEach(m => { txt(g, m, x, 168, 26, 600, C.muted); x += g.measureText(m).width + 22; });
-    const open = lt > 1.05 && lt < 1.95;
-    g.font = `800 24px ${FONT}`; const mw = g.measureText('Tu herramienta — Ambilor.Lab').width;
-    if (open || (lt > 0.85 && lt < 1.05)) { g.fillStyle = 'rgba(31,92,153,.12)'; rr(g, 770, 148, mw + 20, 40, 10); g.fill(); }
-    txt(g, 'Tu herramienta — Ambilor.Lab', 780, 168, 24, 800, C.brand);
-    g.fillStyle = '#f6f8fb'; g.fillRect(0, 196, CW, 38);
-    g.strokeStyle = C.line; g.lineWidth = 1.5;
-    for (let c = 0; c <= 8; c++) { const cx = 60 + c*150; g.beginPath(); g.moveTo(cx, 196); g.lineTo(cx, CH - 20); g.stroke(); if (c < 8) txt(g, 'ABCDEFGH'[c], cx + 75, 215, 26, 700, C.soft, 'center'); }
-    for (let r = 0; r < 18; r++) { const ry = 234 + r*40; g.beginPath(); g.moveTo(0, ry); g.lineTo(CW, ry); g.stroke(); txt(g, String(r + 1), 30, ry + 20, 23, 600, C.soft, 'center'); }
-    [[0,'FECHA'],[1,'DESCRIPCION'],[2,'IMPORTE']].forEach(([c, s]) => txt(g, s, 72 + c*150, 254, 25, 800, C.ink, 'left', 136));
-    for (let r = 1; r < 8; r++) for (let c = 0; c < 3; c++) { g.fillStyle = '#dde5ee'; rr(g, 72 + c*150, 264 + r*40 - 6, [70, 110, 80][c], 12, 6); g.fill(); }
-    if (open) {
-      dialog(g, 770, 192, 380, 76);
-      const hov = lt > 1.65;
-      if (hov) { g.fillStyle = '#eef2f7'; g.fillRect(778, 200, 364, 60); }
-      txt(g, 'Configurar herramienta', 796, 230, 32, 700, C.ink, 'left', 336);
-    }
-    const sp = ease((lt - 2.0) / 0.5);
-    if (sp > 0) {
-      const px = CW - 460*sp;
-      g.save(); rr(g, 0, 0, CW, CH, 34); g.clip();
-      g.fillStyle = '#fff'; g.fillRect(px, 196, 460, CH - 196);
-      g.fillStyle = C.brand; g.fillRect(px, 196, 5, CH - 196);
-      g.restore();
-      txt(g, 'Configurar herramienta', px + 36, 250, 38, 800, C.ink, 'left', 396);
-      txt(g, 'Te guía paso a paso.', px + 36, 290, 29, 600, C.muted);
-      ['Autoriza el acceso', 'Publica tu panel', 'Ábrelo y empieza'].forEach((s, k) => {
-        const a = easeOut((lt - 2.5 - k*0.2) / 0.3); if (a <= 0) return;
-        g.globalAlpha = a;
-        const y = 340 + k*96;
-        g.strokeStyle = k === 0 ? C.brand : C.line; g.lineWidth = 3; rr(g, px + 30, y, 400, 76, 16); g.stroke();
-        g.beginPath(); g.arc(px + 72, y + 38, 20, 0, Math.PI*2); g.fillStyle = k === 0 ? C.brand : '#eef2f7'; g.fill();
-        txt(g, String(k + 1), px + 72, y + 39, 20, 800, k === 0 ? '#fff' : C.muted, 'center');
-        txt(g, s, px + 108, y + 38, 32, 700, C.ink, 'left', 300);
-        g.globalAlpha = 1;
-      });
-    }
-  },
-  (g, lt) => {
-    base(g, 'Google');
-    const ok = lt > 1.5;
-    wrap(g, 'La herramienta quiere acceder a tu cuenta de Google', 120, 180, 900, 55, 800, C.ink, 1.2);
-    txt(g, 'La herramienta necesita leer y editar tu planilla.', 120, 300, 36, 400, C.muted);
-    ['Leer y editar tu planilla', 'Mostrar el panel de la herramienta'].forEach((s, k) => {
-      const y = 390 + k*80;
-      g.strokeStyle = C.line; g.lineWidth = 2; g.beginPath(); g.moveTo(120, y + 40); g.lineTo(1080, y + 40); g.stroke();
-      sheetIcon(g, 124, y - 18, 30, k ? C.brand : C.ok); txt(g, s, 180, y, 35, 600, C.ink);
-    });
-    g.globalAlpha = ok ? 0.35 : 1;
-    btn(g, 640, 640, 200, 64, 'Cancelar', 'ghost', 0, 35);
-    btn(g, 860, 640, 220, 64, 'Continuar', 'primary', press(lt, 1.35), 35);
-    g.globalAlpha = 1;
-    const b = easeOut((lt - 1.5) / 0.35);
-    if (b > 0) { g.globalAlpha = b; banner(g, 120, 760 + (1-b)*16, 420, 64, '✓ Acceso autorizado'); g.globalAlpha = 1; }
-    txt(g, 'El botón puede decir Continuar o Aceptar según tu navegador.', 120, 880, 29, 400, C.soft);
-  },
-  (g, lt) => {
-    base(g, 'Google Apps Script');
-    btn(g, 900, 12, 270, 52, 'Implementar ▾', 'primary', press(lt, 0.95), 32);
-    txt(g, 'Archivos', 34, 124, 29, 700, C.soft);
-    g.fillStyle = 'rgba(31,92,153,.1)'; rr(g, 20, 150, 200, 50, 10); g.fill(); txt(g, 'Código.gs', 38, 175, 32, 700, C.ink);
-    g.fillStyle = C.line; g.fillRect(236, 78, 2, CH - 110);
-    [320, 520, 410, 280, 600, 460, 350, 540, 300, 480, 390, 260, 440, 330].forEach((w, k) => {
-      const y = 130 + k*52;
-      txt(g, String(k + 1), 280, y, 26, 600, C.soft, 'right');
-      g.fillStyle = k % 4 === 0 ? '#c9dcef' : '#e3e9f0'; rr(g, 310 + (k % 3 ? 30 : 0), y - 8, w, 16, 8); g.fill();
-    });
-    if (lt > 0.95 && lt < 1.65) {
-      dialog(g, 880, 72, 290, 70);
-      if (lt > 1.4) { g.fillStyle = '#eef2f7'; g.fillRect(888, 80, 274, 54); }
-      txt(g, 'Nueva implementación', 904, 107, 32, 700, C.ink);
-    }
-    const d = ease((lt - 1.6) / 0.3);
-    if (d > 0) {
-      overlay(g, d); g.globalAlpha = d;
-      dialog(g, 180, 140, 840, 740);
-      txt(g, 'Nueva implementación', 224, 205, 46, 800, C.ink);
-      txt(g, 'Tipo', 224, 275, 30, 700, C.muted);
-      g.strokeStyle = C.line; g.lineWidth = 3; rr(g, 224, 296, 752, 64, 12); g.stroke();
-      if (lt > 2.1) txt(g, '✓ Aplicación web', 246, 329, 35, 700, C.ok); else txt(g, 'Seleccionar tipo ▾', 246, 329, 35, 600, C.soft);
-      txt(g, 'Quién tiene acceso', 224, 410, 30, 700, C.muted);
-      const sel = lt > 2.9;
-      [['Solo yo', 470], ['Cualquiera', 540]].forEach(([s, y], k) => {
-        g.beginPath(); g.arc(250, y, 15, 0, Math.PI*2); g.strokeStyle = (sel && !k) ? C.brand : C.soft; g.lineWidth = 3; g.stroke();
-        if (sel && !k) { g.beginPath(); g.arc(250, y, 8, 0, Math.PI*2); g.fillStyle = C.brand; g.fill(); }
-        txt(g, s, 280, y, 35, (sel && !k) ? 800 : 600, C.ink);
-      });
-      const w = easeOut((lt - 3.0) / 0.3);
-      if (w > 0) {
-        g.globalAlpha = d * w; g.fillStyle = '#fff5e6'; rr(g, 224, 596, 752, 76, 14); g.fill();
-        g.fillStyle = C.warn; g.fillRect(224, 596, 6, 76);
-        txt(g, '“Solo yo” significa privado. No elijas “Cualquiera”.', 250, 634, 32, 700, C.ink);
-        g.globalAlpha = d;
-      }
-      if (lt < 4.1) btn(g, 756, 760, 220, 64, 'Implementar', 'primary', press(lt, 3.9), 35);
-      const b = easeOut((lt - 4.1) / 0.35);
-      if (b > 0) { g.globalAlpha = d * b; banner(g, 224, 760, 520, 64, '✓ Panel publicado: solo tú lo ves'); }
-      g.globalAlpha = 1;
-    }
-  },
-  (g, lt) => {
-    base(g, 'Panel de la herramienta');
-    const dash = ease((lt - 3.1) / 0.4);
-    if (dash < 1) {
-      g.globalAlpha = 1 - dash;
-      txt(g, 'Instalación', 64, 150, 49, 800, C.ink);
-      txt(g, 'Comprueba que todo quedó bien antes de empezar.', 64, 198, 32, 400, C.muted);
-      btn(g, 64, 240, 340, 66, 'Verificar instalación', 'ghost', press(lt, 0.8), 35);
-      ['Copia en tu Drive', 'Acceso autorizado', 'Panel publicado (Solo yo)'].forEach((s, k) => {
-        const tc = 1.0 + k*0.5, on = lt > tc, y = 370 + k*80;
-        checkDot(g, 90, y, on, 1 + Math.sin(clamp((lt - tc)/0.25)*Math.PI)*0.25);
-        txt(g, s, 130, y, 36, on ? 700 : 600, on ? C.ink : C.soft);
-      });
-      btn(g, 64, 640, 280, 66, 'Abrir panel', lt > 2.3 ? 'primary' : 'disabled', press(lt, 2.9), 35);
-      g.globalAlpha = 1;
-    }
-    if (dash > 0) {
-      g.globalAlpha = dash;
-      const y0 = 100 + (1 - dash)*20;
-      g.fillStyle = C.brand; rr(g, 40, y0, CW - 80, 84, 20); g.fill();
-      txt(g, 'Ambilor.Lab', 72, y0 + 42, 43, 800, '#fff'); txt(g, 'Conciliador V1', CW - 72, y0 + 42, 38, 600, '#fff', 'right');
-      // Pestañas del panel = V1 actual (2026-09-27); subrayado medido con la misma letra
-      let tabX = 60;
-      [['Resumen', true], ['Resultados', false], ['Ajustes', false], ['Configuración', false], ['Historial', false]].forEach(([s, on]) => {
-        txt(g, s, tabX, y0 + 130, 30, on ? 800 : 600, on ? C.ink : C.soft);
-        const tw2 = g.measureText(s).width;
-        if (on) { g.fillStyle = C.brand; g.fillRect(tabX, y0 + 148, tw2, 4); }
-        tabX += tw2 + 30;
-      });
-      btn(g, 60, y0 + 180, CW - 120, 80, '▶  Ejecutar conciliación', 'primary', 0, 43);
-      txt(g, 'Listo para ejecutar', 60, y0 + 300, 35, 600, C.soft);
-      const tw = (CW - 120 - 3*20) / 4;
-      [['0%', 'conciliación'], ['0', 'pares'], ['0', 'pendientes'], ['$0', 'conciliado']].forEach(([v, l], i) => {
-        const x = 60 + i*(tw + 20);
-        g.fillStyle = '#eef2f7'; rr(g, x, y0 + 340, tw, 200, 20); g.fill();
-        txt(g, v, x + 22, y0 + 420, 80, 800, C.ink); txt(g, l, x + 22, y0 + 495, 32, 600, C.muted);
-      });
-      g.globalAlpha = 1;
-    }
-  },
-  (g, lt) => {
-    g.clearRect(0, 0, CW, CH);
-    g.fillStyle = '#ffffff'; rr(g, 0, 0, CW, CH, 34); g.fill();
-    const p = easeOut((lt - 0.1) / 0.4), pop = 1 + Math.sin(clamp((lt - 0.1)/0.4)*Math.PI)*0.18;
-    if (p > 0) { g.beginPath(); g.arc(600, 150, 64*p*pop, 0, Math.PI*2); g.fillStyle = C.ok; g.fill(); txt(g, '✓', 600, 154, 70*p, 800, '#fff', 'center'); }
-    txt(g, 'Listo. Ya quedó instalado.', 600, 272, 58, 800, C.ink, 'center');
-    const c = easeOut((lt - 0.6) / 0.4);
-    if (c > 0) {
-      g.globalAlpha = c;
-      g.setLineDash([14, 10]); g.strokeStyle = C.brand; g.lineWidth = 3; rr(g, 120, 340, 960, 360, 28); g.stroke(); g.setLineDash([]);
-      g.fillStyle = C.brand; rr(g, 150, 372, 26, 22, 5); g.fill();
-      g.beginPath(); g.arc(163, 372, 9, Math.PI, 0); g.strokeStyle = C.brand; g.lineWidth = 4; g.stroke();
-      txt(g, 'Tu cuenta de Google', 190, 384, 26, 800, C.brand);
-      g.globalAlpha = 1;
-    }
-    [['Planilla', 'tus datos', C.ok], ['Panel', 'solo tú lo ves', C.brand], ['Apps Script', 'el código', C.ink]].forEach(([s, sub, color], k) => {
-      const a = easeOut((lt - 0.9 - k*0.2) / 0.35); if (a <= 0) return;
-      const x = 170 + k*300, y = 440 + (1 - a)*20;
-      g.globalAlpha = a;
-      g.fillStyle = '#f6f8fb'; rr(g, x, y, 260, 210, 20); g.fill();
-      sheetIcon(g, x + 26, y + 30, 48, color);
-      txt(g, s, x + 26, y + 125, 40, 800, C.ink); txt(g, sub, x + 26, y + 168, 30, 600, C.muted);
-      g.globalAlpha = 1;
-    });
-    const l = easeOut((lt - 1.7) / 0.4);
-    if (l > 0) {
-      g.globalAlpha = l;
-      txt(g, '✓ Privado: nada sale de tu cuenta.', 150, 780, 36, 700, C.ink);
-      txt(g, '✓ Tuyo: sin suscripción ni cuota de uso.', 150, 836, 36, 700, C.ink);
-      g.globalAlpha = 1;
-    }
-  }
-];
-
-const CURSOR = [
-  { keys:[[1.4,1100,900],[2.1,860,664],[2.6,860,664],[3.3,1060,860]], clicks:[2.25] },
-  { keys:[[0.2,1100,820],[0.85,880,168],[1.2,880,168],[1.65,920,230],[1.95,920,230],[2.6,640,620]], clicks:[1.05,1.85] },
-  { keys:[[0.3,300,860],[1.15,970,672],[1.6,970,672],[2.3,1080,860]], clicks:[1.35] },
-  { keys:[[0.2,700,700],[0.8,1050,38],[1.05,1050,38],[1.4,1030,107],[1.7,1030,107],[2.7,256,472],[3.05,256,472],[3.7,866,792],[4.15,866,792],[4.8,1100,900]], clicks:[0.95,1.55,2.9,3.9] },
-  { keys:[[0.2,700,820],[0.65,230,273],[0.95,230,273],[2.55,200,673],[3.0,200,673],[3.6,900,880]], clicks:[0.8,2.9] },
-  null
-];
-
-const cards = DRAW.map(() => {
-  const cv = document.createElement('canvas'); cv.width = CW * TEX_S; cv.height = CH * TEX_S;
-  const g = cv.getContext('2d'); g.scale(TEX_S, TEX_S);
-  const tx = new THREE.CanvasTexture(cv); tx.encoding = THREE.sRGBEncoding; tx.anisotropy = ANISO;
-  const m = new THREE.Mesh(new THREE.PlaneGeometry(PW, PH), basic({ map:tx })); m.renderOrder = 5; scene.add(m);
-  const sh = new THREE.Mesh(new THREE.PlaneGeometry(PW + 0.08, PH + 0.08), basic({ color:col(C.ink) })); sh.renderOrder = 4; scene.add(sh);
-  return { m, sh, g, tx };
-});
-// Canto físico en las tarjetas (ventanas de Google Sheets / Apps Script)
-AL3D.luces(scene);
-AL3D.grosor(cards.map(c => c.m), 0.09, { radio:0.136 });
-const sombraCard = AL3D.sombra(scene, PW*1.1, 1.6);
-const cursorGeo = new THREE.PlaneGeometry(0.24, 0.31); cursorGeo.translate(0.12, -0.155, 0);
-const ctex = (() => { const c = document.createElement('canvas'); c.width = 104 * TEX_S; c.height = 136 * TEX_S; const g = c.getContext('2d'); g.scale(TEX_S, TEX_S);
-  g.beginPath(); g.moveTo(8, 6); g.lineTo(8, 110); g.lineTo(34, 86); g.lineTo(52, 128); g.lineTo(70, 120); g.lineTo(52, 80); g.lineTo(88, 80); g.closePath();
-  g.fillStyle = C.ink; g.fill(); g.strokeStyle = '#fff'; g.lineWidth = 7; g.lineJoin = 'round'; g.stroke();
-  const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; return t; })();
-const cursor = new THREE.Mesh(cursorGeo, basic({ map:ctex })); cursor.renderOrder = 20; scene.add(cursor);
-const ring = new THREE.Mesh(new THREE.RingGeometry(0.06, 0.085, 40), basic({ color:col(C.brand) })); ring.renderOrder = 19; scene.add(ring);
-const tmp = new THREE.Vector3();
-const pxToLocal = (x, y) => tmp.set((x / CW - 0.5) * PW, (0.5 - y / CH) * PH, 0.04);
-
-function updateCards(t){
-  sombraCard.visible = false;
-  cards.forEach((c, i) => {
-    const s = STEPS[i];
-    const ein = i === 0 ? clamp((t + 0.3) / 0.9) : clamp((t - (s.a - 0.35)) / 0.9);
-    const e = AL3D.rebote(ein);                 // entra con un leve rebote
-    const x = i === STEPS.length - 1 ? 0 : ease((t - (s.b - 0.35)) / 0.8);   // se va al fondo
-    const vis = ein > 0.001 && x < 0.999;
-    c.m.visible = c.sh.visible = vis;
-    if (!vis) return;
-    DRAW[i](c.g, t - s.a); c.tx.needsUpdate = true;
-    // se hunde un poco al recibir cada clic del cursor (y vuelve con resorte)
-    const cfg = CURSOR[i], lt = t - s.a;
-    let hundir = 0;
-    if (cfg) cfg.clicks.forEach(ck => { const d = lt - ck; if (d >= 0 && d < 0.8) hundir = Math.max(hundir, Math.exp(-7*d) * Math.cos(9*d)); });
-    c.m.position.set(lerp(5.6, 0, e) - 3.2*x, -0.05 + 0.7*x, -1.6*(1 - e) - 4.6*x - 0.16*hundir);
-    c.m.rotation.set(-0.04 + 0.14*x, 0.55*(1 - e) - 0.5*x + Math.sin(t*0.5)*0.04*e*(1 - x), 0.05*x);
-    c.m.material.opacity = Math.min(clamp(ein*1.6), 1 - clamp(x*1.8));   // la que sale se desvanece rápido
-    if (i === stepOf(t)) {
-      sombraCard.visible = true;
-      sombraCard.position.set(c.m.position.x, -2.33, c.m.position.z + 0.2);
-      sombraCard.material.opacity = 0.8 * c.m.material.opacity;
-    }
-    c.sh.position.set(c.m.position.x + 0.06, c.m.position.y - 0.08, c.m.position.z - 0.05);
-    c.sh.rotation.copy(c.m.rotation);
-    c.sh.material.opacity = 0.13 * Math.min(e, 1 - x);
-    c.m.updateMatrixWorld();
-  });
-}
-function updateCursor(t){
-  const i = stepOf(t), cfg = CURSOR[i], lt = t - STEPS[i].a;
-  cursor.visible = ring.visible = false;
-  if (!cfg) return;
-  const k = cfg.keys, first = k[0][0], last = k[k.length - 1][0];
-  const op = easeOut((lt - first + 0.2) / 0.2) * (1 - ease((lt - last) / 0.3));
-  if (op <= 0) return;
-  let px = k[0][1], py = k[0][2];
-  for (let n = 1; n < k.length; n++) {
-    if (lt >= k[n-1][0]) { const p = ease((lt - k[n-1][0]) / (k[n][0] - k[n-1][0])); px = lerp(k[n-1][1], k[n][1], p); py = lerp(k[n-1][2], k[n][2], p); }
-  }
-  const card = cards[i].m;
-  card.localToWorld(pxToLocal(px, py));
-  cursor.position.copy(tmp); cursor.rotation.copy(card.rotation);
-  const click = Math.max(0, ...cfg.clicks.map(c => clamp(1 - Math.abs(lt - c) / 0.1)));
-  cursor.scale.setScalar(1 - click*0.18);
-  cursor.material.opacity = op * card.material.opacity;
-  cursor.visible = true;
-  const rp = Math.max(...cfg.clicks.map(c => (lt >= c && lt < c + 0.45) ? (lt - c) / 0.45 : -1));
-  if (rp >= 0) {
-    ring.visible = true; ring.position.copy(tmp); ring.position.z -= 0.01; ring.rotation.copy(card.rotation);
-    ring.scale.setScalar(0.6 + rp*1.6); ring.material.opacity = (1 - rp) * 0.8 * op;
-  }
-}
-
-function resize(){
-  const w = Math.max(1, stage.clientWidth), h = Math.max(1, stage.clientHeight);
-  // Tope en 3 (no en 2): nativo en DPR 1, 2 y 3, o sea todo escritorio y todo
-  // telefono. Con el tope anterior de 1.5, en una pantalla DPR 2 el buffer
-  // quedaba en 510x510 cuando el nativo es 680x680: el navegador reescala
-  // 1.33x y el texto del canvas se ve borroso. Medido el 2026-09-27 a DPR 1, 2,
-  // 3 y 4: 60.4 fps con tope 1.5, 2, 3 o sin tope (el stage es de 340px y el
-  // upload de textura no satura el hilo), o sea que el tope no compraba
-  // rendimiento, solo bajaba la resolucion.
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-  renderer.setSize(w, h, false);
-  camera.aspect = w / h; camera.updateProjectionMatrix();
-  needsRender = true;
-}
-new ResizeObserver(resize).observe(stage); resize();
-if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible = es[0].isIntersecting; }, { threshold:0.05 }).observe(stage);
-
-let last = performance.now();
-function frame(now){
-  const dt = Math.min(0.05, (now - last) / 1000); last = now;
-  if (PX.update(dt)) needsRender = true;
-  if (visible && (playing || needsRender)) {
-    if (playing) { T += dt; if (T >= DUR) T = 0; }
-    setStep(stepOf(T));
-    updateCards(T); updateCursor(T);
-    // Cámara (2026-09-27): cada paso barre de un lado al otro (sentido
-    // alternado y continuo entre pasos) y se acerca a cada clic del cursor.
-    const ip = stepOf(T), sp = STEPS[ip], lt = T - sp.a, lado = ip % 2 ? -1 : 1;
-    const u = ease(clamp(lt / (sp.b - sp.a)));
-    const bx = lerp(-lado*0.4, lado*0.4, u), by = 0.22 + Math.sin(T*0.4)*0.06;
-    let fx = 0, fy = 0, f = 0;
-    const cf = CURSOR[ip];
-    if (cf && cursor.visible) {
-      cf.clicks.forEach(ck => { f = Math.max(f, clamp(1 - Math.abs(lt - ck) / 0.9)); });
-      f = ease(f); fx = (cursor.position.x - bx*0.3)*0.55*f; fy = (cursor.position.y - by*0.4)*0.55*f;
-    }
-    // la cámara mira hacia el clic (sin sacarlo de cuadro) y se acerca un poco
-    camera.position.set(bx + PX.x*1.05 + fx*0.6, by + PX.y*0.65 + fy*0.6, 9.55 - 0.7*f);
-    camera.lookAt(bx*0.3 + fx, by*0.4 + fy, 0);
-    renderer.render(scene, camera);
-    fills.forEach((f, i) => { const s = STEPS[i]; f.fill.style.width = (clamp((T - s.a) / (s.b - s.a)) * 100) + '%'; });
-    needsRender = false;
-  }
-  requestAnimationFrame(frame);
-}
-requestAnimationFrame(frame);
-} catch (err) {
-  /* Si three.js o WebGL fallan a mitad de la inicializacion, la seccion no
-     puede quedar en blanco: caemos al modo texto con los 6 pasos. */
-  if (window.console) console.warn('[al-demo instalacion] error al iniciar el 3D:', err);
-  fallback();
-}
-})();
-});</script>
 
 <script>
 /* ═══ Motor de demos por tarjetas (2026-09-30, Ambilor.Lab) ═══
    Generaliza el demo "Cómo se instala" del Conciliador V1 (una ventana por
    paso que entra, recibe clics del cursor y se va al fondo) para las demos
-   del Conciliador V2 y de PedidoApp. Los demos del V1 no usan este motor
-   y no cambian.
+   del Conciliador V2, de PedidoApp y la instalación del V1. "Ver en acción"
+   del V1 es una escena 3D propia y no usa este motor.
    alDemoTarjetas(root, cfg): cfg.steps (a, b, short, kicker, title, body y
    opcionales tip, checks, stats, cta, contact), cfg.draw(H) -> [fn(g, lt)],
    cfg.cursor[] ({ keys:[[t,x,y]...], clicks:[t...] } o null) y cfg.titulo
@@ -5849,6 +5277,7 @@ window.alDemoTarjetas = function(root, cfg){
     copy.style.minHeight = max + 'px';
   }
   if ('ResizeObserver' in window) new ResizeObserver(reservarAlto).observe(copy);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { anchoReservado = 0; reservarAlto(); });
   function go(i){
     i = (i + STEPS.length) % STEPS.length;
     T = playing ? STEPS[i].a + 0.001 : STEPS[i].b - HOLD;
@@ -5898,7 +5327,11 @@ window.alDemoTarjetas = function(root, cfg){
   const basic = (opts) => new THREE.MeshBasicMaterial(Object.assign({ transparent:true, side:THREE.DoubleSide, depthWrite:false }, opts));
   const col = hex => new THREE.Color(hex).convertSRGBToLinear();
 
-  const CW = 1200, CH = 950, PW = 4.8, PH = PW * CH / CW;
+  // 2026-09-30: cada demo tiene dos diseños. Apaisado (1200×950, cfg.draw)
+  // para recuadros anchos y vertical (800×1000, tipo pantalla de celular,
+  // cfg.drawV) para recuadros angostos o altos. Los ayudantes se arman para
+  // el tamaño de cada uno.
+  function mkH(CW, CH){
   function rr(g,x,y,w,h,r){ g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }
   function txt(g, s, x, y, size, weight, color, align = 'left', maxW = 0){ g.font = weight + ' ' + size + 'px ' + FONT; while (maxW && size > 12 && g.measureText(s).width > maxW) { size -= 1; g.font = weight + ' ' + size + 'px ' + FONT; } g.fillStyle = color; g.textAlign = align; g.textBaseline = 'middle'; g.fillText(s, x, y); }
   function wrap(g, s, x, y, maxW, size, weight, color, lh = 1.3){
@@ -5955,16 +5388,24 @@ window.alDemoTarjetas = function(root, cfg){
     if (valor) txt(g, valor, x + 20, y + h/2 + 1, 32, 600, C.ink, 'left', w - 40);
   }
   // barra del panel de un producto (marca + pestañas)
+  // (si las pestañas no caben, como en el diseño vertical, la tira se corre
+  // para mostrar la activa y se desvanece en el borde, como en el celular)
   function panelBar(g, producto, tabs, activa){
     g.fillStyle = '#f6f8fb'; g.fillRect(4, 78, CW - 8, 70);
-    txt(g, 'Ambilor.Lab', 36, 113, 30, 800, C.brand); txt(g, producto, CW - 36, 113, 28, 600, C.muted, 'right');
-    let x = 36;
+    txt(g, 'Ambilor.Lab', 36, 113, 30, 800, C.brand); txt(g, producto, CW - 36, 113, 28, 600, C.muted, 'right', CW - 300);
+    const pos = []; let x = 36;
+    tabs.forEach((s, k) => { g.font = (k === activa ? 800 : 600) + ' 27px ' + FONT; const w = g.measureText(s).width; pos.push([x, w]); x += w + 34; });
+    const fin = x - 34, off = Math.max(0, Math.min(fin - (CW - 36), pos[activa][0] + pos[activa][1] / 2 - CW / 2));
+    g.save(); g.beginPath(); g.rect(4, 150, CW - 8, 62); g.clip();
     tabs.forEach((s, k) => {
-      txt(g, s, x, 186, 27, k === activa ? 800 : 600, k === activa ? C.ink : C.soft);
-      const w = g.measureText(s).width;
-      if (k === activa) { g.fillStyle = C.brand; g.fillRect(x, 204, w, 4); }
-      x += w + 34;
+      const [tx, w] = pos[k];
+      txt(g, s, tx - off, 186, 27, k === activa ? 800 : 600, k === activa ? C.ink : C.soft);
+      if (k === activa) { g.fillStyle = C.brand; g.fillRect(tx - off, 204, w, 4); }
     });
+    const borde = (x0, x1) => { const gr = g.createLinearGradient(x0, 0, x1, 0); gr.addColorStop(0, '#ffffff'); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.fillRect(Math.min(x0, x1), 150, Math.abs(x1 - x0), 52); };
+    if (off > 0) borde(4, 70);
+    if (fin - off > CW - 36) borde(CW - 4, CW - 70);
+    g.restore();
     g.fillStyle = C.line; g.fillRect(4, 212, CW - 8, 2);
   }
   // un celular con su pantalla (x, y: esquina; devuelve el área útil)
@@ -5975,20 +5416,35 @@ window.alDemoTarjetas = function(root, cfg){
     g.fillStyle = '#12304d'; rr(g, x + w/2 - 60, y + 24, 120, 22, 11); g.fill();
     return { x: x + 30, y: y + 64, w: w - 60, h: h - 92 };
   }
-  const H = { C, CW, CH, FONT, clamp, ease, easeOut, lerp, rr, txt, wrap, press, btn, base, overlay, dialog, banner, checkDot, sheetIcon, pill, campo, panelBar, celular };
-  const DRAW = cfg.draw(H), CURSOR = cfg.cursor || [];
+  return { C, CW, CH, FONT, clamp, ease, easeOut, lerp, rr, txt, wrap, press, btn, base, overlay, dialog, banner, checkDot, sheetIcon, pill, campo, panelBar, celular, vertical: CH > CW };
+  }
 
-  const cards = DRAW.map(() => {
-    const cv = document.createElement('canvas'); cv.width = CW * TEX_S; cv.height = CH * TEX_S;
-    const g = cv.getContext('2d'); g.scale(TEX_S, TEX_S);
-    const tx = new THREE.CanvasTexture(cv); tx.encoding = THREE.sRGBEncoding; tx.anisotropy = ANISO;
-    const m = new THREE.Mesh(new THREE.PlaneGeometry(PW, PH), basic({ map:tx })); m.renderOrder = 5; scene.add(m);
-    const sh = new THREE.Mesh(new THREE.PlaneGeometry(PW + 0.08, PH + 0.08), basic({ color:col(C.ink) })); sh.renderOrder = 4; scene.add(sh);
-    return { m, sh, g, tx };
-  });
+  // Un juego de tarjetas por diseño; el vertical se arma recién cuando se usa
+  function juego(vert){
+    const CW = vert ? 800 : 1200, CH = vert ? 1000 : 950, PW = vert ? 3.84 : 4.8, PH = PW * CH / CW;
+    const DRAW = (vert ? cfg.drawV : cfg.draw)(mkH(CW, CH)), CURSOR = (vert ? cfg.cursorV : cfg.cursor) || [];
+    const cards = DRAW.map(() => {
+      const cv = document.createElement('canvas'); cv.width = CW * TEX_S; cv.height = CH * TEX_S;
+      const g = cv.getContext('2d'); g.scale(TEX_S, TEX_S);
+      const tx = new THREE.CanvasTexture(cv); tx.encoding = THREE.sRGBEncoding; tx.anisotropy = ANISO;
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(PW, PH), basic({ map:tx })); m.renderOrder = 5; scene.add(m);
+      const sh = new THREE.Mesh(new THREE.PlaneGeometry(PW + 0.08, PH + 0.08), basic({ color:col(C.ink) })); sh.renderOrder = 4; scene.add(sh);
+      m.visible = sh.visible = false;
+      return { m, sh, g, tx };
+    });
+    AL3D.grosor(cards.map(c => c.m), 0.09, { radio:0.136 });
+    const sombraCard = AL3D.sombra(scene, PW*1.1, 1.6); sombraCard.visible = false;
+    return { vert, CW, CH, PW, PH, DRAW, CURSOR, cards, sombraCard };
+  }
   AL3D.luces(scene);
-  AL3D.grosor(cards.map(c => c.m), 0.09, { radio:0.136 });
-  const sombraCard = AL3D.sombra(scene, PW*1.1, 1.6);
+  let JH = null, JV = null, J = null;
+  function usar(vert){
+    if (vert && !cfg.drawV) vert = false;
+    if (J && J.vert === vert) return;
+    if (J) { J.cards.forEach(c => { c.m.visible = c.sh.visible = false; }); J.sombraCard.visible = false; }
+    J = vert ? (JV || (JV = juego(true))) : (JH || (JH = juego(false)));
+    needsRender = true;
+  }
   const cursorGeo = new THREE.PlaneGeometry(0.24, 0.31); cursorGeo.translate(0.12, -0.155, 0);
   const ctex = (() => { const c = document.createElement('canvas'); c.width = 104 * TEX_S; c.height = 136 * TEX_S; const g = c.getContext('2d'); g.scale(TEX_S, TEX_S);
     g.beginPath(); g.moveTo(8, 6); g.lineTo(8, 110); g.lineTo(34, 86); g.lineTo(52, 128); g.lineTo(70, 120); g.lineTo(52, 80); g.lineTo(88, 80); g.closePath();
@@ -5997,11 +5453,12 @@ window.alDemoTarjetas = function(root, cfg){
   const cursor = new THREE.Mesh(cursorGeo, basic({ map:ctex })); cursor.renderOrder = 20; scene.add(cursor);
   const ring = new THREE.Mesh(new THREE.RingGeometry(0.06, 0.085, 40), basic({ color:col(C.brand) })); ring.renderOrder = 19; scene.add(ring);
   const tmp = new THREE.Vector3();
-  const pxToLocal = (x, y) => tmp.set((x / CW - 0.5) * PW, (0.5 - y / CH) * PH, 0.04);
+  const pxToLocal = (x, y) => tmp.set((x / J.CW - 0.5) * J.PW, (0.5 - y / J.CH) * J.PH, 0.04);
 
   function updateCards(t){
+    const sombraCard = J.sombraCard;
     sombraCard.visible = false;
-    cards.forEach((c, i) => {
+    J.cards.forEach((c, i) => {
       const s = STEPS[i];
       const ein = i === 0 ? clamp((t + 0.3) / 0.9) : clamp((t - (s.a - 0.35)) / 0.9);
       const e = AL3D.rebote(ein);
@@ -6009,8 +5466,8 @@ window.alDemoTarjetas = function(root, cfg){
       const vis = ein > 0.001 && x < 0.999;
       c.m.visible = c.sh.visible = vis;
       if (!vis) return;
-      DRAW[i](c.g, t - s.a); c.tx.needsUpdate = true;
-      const cf = CURSOR[i], lt = t - s.a;
+      J.DRAW[i](c.g, t - s.a); c.tx.needsUpdate = true;
+      const cf = J.CURSOR[i], lt = t - s.a;
       let hundir = 0;
       if (cf) cf.clicks.forEach(ck => { const d = lt - ck; if (d >= 0 && d < 0.8) hundir = Math.max(hundir, Math.exp(-7*d) * Math.cos(9*d)); });
       c.m.position.set(lerp(5.6, 0, e) - 3.2*x, -0.05 + 0.7*x, -1.6*(1 - e) - 4.6*x - 0.16*hundir);
@@ -6028,7 +5485,7 @@ window.alDemoTarjetas = function(root, cfg){
     });
   }
   function updateCursor(t){
-    const i = stepOf(t), cf = CURSOR[i], lt = t - STEPS[i].a;
+    const i = stepOf(t), cf = J.CURSOR[i], lt = t - STEPS[i].a;
     cursor.visible = ring.visible = false;
     if (!cf) return;
     const k = cf.keys, first = k[0][0], last = k[k.length - 1][0];
@@ -6038,7 +5495,7 @@ window.alDemoTarjetas = function(root, cfg){
     for (let n = 1; n < k.length; n++) {
       if (lt >= k[n-1][0]) { const p = ease((lt - k[n-1][0]) / (k[n][0] - k[n-1][0])); px = lerp(k[n-1][1], k[n][1], p); py = lerp(k[n-1][2], k[n][2], p); }
     }
-    const card = cards[i].m;
+    const card = J.cards[i].m;
     card.localToWorld(pxToLocal(px, py));
     cursor.position.copy(tmp); cursor.rotation.copy(card.rotation);
     const click = Math.max(0, ...cf.clicks.map(c => clamp(1 - Math.abs(lt - c) / 0.1)));
@@ -6051,11 +5508,17 @@ window.alDemoTarjetas = function(root, cfg){
       ring.scale.setScalar(0.6 + rp*1.6); ring.material.opacity = (1 - rp) * 0.8 * op;
     }
   }
+  // Recuadro angosto o alto (celular vertical, iPad en ⅓): diseño vertical, con
+  // la cámara a la distancia justa para que la tarjeta llene el cuadro.
+  let zV = 9.55;
   function resize(){
     const w = Math.max(1, stage.clientWidth), h = Math.max(1, stage.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(w, h, false);
     camera.aspect = w / h; camera.updateProjectionMatrix();
+    usar(w / h < 1.2);
+    const tg = Math.tan(camera.fov * Math.PI / 360);
+    zV = Math.max(4.8 * 0.6 / tg, 3.84 * 0.62 / (tg * camera.aspect));
     needsRender = true;
   }
   new ResizeObserver(resize).observe(stage); resize();
@@ -6073,12 +5536,12 @@ window.alDemoTarjetas = function(root, cfg){
       const u = ease(clamp(lt / (sp.b - sp.a)));
       const bx = lerp(-lado*0.4, lado*0.4, u), by = 0.22 + Math.sin(T*0.4)*0.06;
       let fx = 0, fy = 0, f = 0;
-      const cf = CURSOR[ip];
+      const cf = J.CURSOR[ip];
       if (cf && cursor.visible) {
         cf.clicks.forEach(ck => { f = Math.max(f, clamp(1 - Math.abs(lt - ck) / 0.9)); });
         f = ease(f); fx = (cursor.position.x - bx*0.3)*0.55*f; fy = (cursor.position.y - by*0.4)*0.55*f;
       }
-      camera.position.set(bx + PX.x*1.05 + fx*0.6, by + PX.y*0.65 + fy*0.6, 9.55 - 0.7*f);
+      camera.position.set(bx + PX.x*1.05 + fx*0.6, by + PX.y*0.65 + fy*0.6, (J.vert ? zV : 9.55) - 0.7*f);
       camera.lookAt(bx*0.3 + fx, by*0.4 + fy, 0);
       renderer.render(scene, camera);
       fills.forEach((f, i) => { const s = STEPS[i]; f.fill.style.width = (clamp((T - s.a) / (s.b - s.a)) * 100) + '%'; });
@@ -6909,6 +6372,962 @@ AL_DEMOS['ped-instala'] = {
     ];
   }
 };
+</script>
+<script>
+/* Demo "Cómo se instala" del Conciliador V1. Desde 2026-09-30 usa el motor de
+   tarjetas (alDemoTarjetas), igual que V2 y PedidoApp, y suma su diseño
+   vertical; antes tenía una copia propia del motor. */
+window.AL_DEMOS = window.AL_DEMOS || {};
+AL_DEMOS['como-se-instala'] = {
+  steps: [
+  { a:0, b:5.2, short:'Copia', kicker:'Paso 1: haz tu copia', title:'Haz tu copia',
+    body:'Abre el enlace que te enviamos y elige “Hacer una copia”. Tu copia se abre en tu Drive y trae la herramienta adentro, con su código ya incluido.' },
+  { a:5.2, b:10.4, short:'Configurar', kicker:'Paso 2: abre “Configurar herramienta”', title:'Abre “Configurar herramienta”',
+    body:'En tu copia, abre el menú de la barra superior y elige “Tu herramienta — Ambilor.Lab”. Se abre un panel llamado “Configurar herramienta”, que te va guiando paso a paso.' },
+  { a:10.4, b:14.8, short:'Autorizar', kicker:'Paso 3: autoriza el acceso', title:'Autoriza el acceso',
+    body:'La primera vez, Google te pide permiso para leer tu planilla y mostrar el panel. Aparece en una pantalla de Google, no dentro de la herramienta. Acepta y sigue.',
+    tip:'El botón puede decir “Continuar” o “Aceptar” según tu navegador.' },
+  { a:14.8, b:21.2, short:'Publicar', kicker:'Paso 4: publica tu panel', title:'Publica tu panel',
+    body:'Desde el editor de Apps Script, publica el panel como aplicación web con acceso “Solo yo”. Así queda privado en tu cuenta: nadie más lo ve.',
+    tip:'“Solo yo” significa privado. No elijas “Cualquiera”.' },
+  { a:21.2, b:26.6, short:'Abrir', kicker:'Paso 5: ábrelo y empieza', title:'Ábrelo y empieza',
+    body:'Vuelve a tu planilla y abre el panel. La herramienta verifica que la instalación quedó correcta y te deja entrar.' },
+  { a:26.6, b:31, short:'Listo', kicker:'Listo', title:'Ya quedó instalado',
+    body:'No queda nada por instalar ni por pagar. Todo funciona dentro de tu propia cuenta de Google.',
+    checks:['Es privado: la herramienta vive en tu cuenta de Google, no en un servidor nuestro.', 'Es tuyo: no dependes de una suscripción ni de una cuota de uso.'],
+    contact:'Si algo no coincide con lo que ves, escríbeme antes de continuar.' }
+],
+  cursor: [
+  { keys:[[1.4,1100,900],[2.1,860,664],[2.6,860,664],[3.3,1060,860]], clicks:[2.25] },
+  { keys:[[0.2,1100,820],[0.85,880,168],[1.2,880,168],[1.65,920,230],[1.95,920,230],[2.6,640,620]], clicks:[1.05,1.85] },
+  { keys:[[0.3,300,860],[1.15,970,672],[1.6,970,672],[2.3,1080,860]], clicks:[1.35] },
+  { keys:[[0.2,700,700],[0.8,1050,38],[1.05,1050,38],[1.4,1030,107],[1.7,1030,107],[2.7,256,472],[3.05,256,472],[3.7,866,792],[4.15,866,792],[4.8,1100,900]], clicks:[0.95,1.55,2.9,3.9] },
+  { keys:[[0.2,700,820],[0.65,230,273],[0.95,230,273],[2.55,200,673],[3.0,200,673],[3.6,900,880]], clicks:[0.8,2.9] },
+  null
+],
+  draw: H => { const { C, CW, CH, FONT, clamp, ease, easeOut, lerp, rr, txt, wrap, press, btn, base, overlay, dialog, banner, checkDot, sheetIcon } = H;
+    return [
+      (g, lt) => {
+        base(g, 'Google Drive');
+        txt(g, 'Mi Drive', 36, 130, 35, 800, C.ink); txt(g, 'Recientes', 36, 178, 32, 600, C.muted); txt(g, 'Compartidos', 36, 222, 32, 600, C.muted);
+        g.fillStyle = C.line; g.fillRect(230, 96, 2, CH - 130);
+        txt(g, 'Nombre', 270, 128, 29, 700, C.soft);
+        const files = ['Presupuesto 2026', 'Informe mensual', 'Cartolas septiembre', 'Proveedores'];
+        const nIn = easeOut((lt - 2.7) / 0.4);
+        const rowY = k => 190 + k*70;
+        if (nIn > 0) {
+          g.globalAlpha = nIn;
+          const hl = 1 - ease((lt - 3.6) / 1.0);
+          g.fillStyle = `rgba(245,200,76,${0.55*hl})`; g.fillRect(250, rowY(0) - 32, CW - 280, 64);
+          sheetIcon(g, 272, rowY(0) - 22, 36); txt(g, 'Mi herramienta (copia)', 330, rowY(0), 35, 800, C.ink);
+          txt(g, 'ahora', CW - 60, rowY(0), 29, 600, C.soft, 'right');
+          g.globalAlpha = 1;
+        }
+        files.forEach((f, k) => {
+          const y = rowY(k + nIn);
+          g.strokeStyle = C.line; g.lineWidth = 2; g.beginPath(); g.moveTo(250, y + 35); g.lineTo(CW - 30, y + 35); g.stroke();
+          sheetIcon(g, 272, y - 22, 36, C.soft); txt(g, f, 330, y, 35, 600, C.ink);
+        });
+        const d = 1 - ease((lt - 2.4) / 0.35);
+        if (d > 0) {
+          overlay(g, d); g.globalAlpha = d;
+          dialog(g, 200, 190, 800, 540);
+          txt(g, 'Copiar “Mi herramienta” en Mi Drive', 240, 260, 46, 800, C.ink);
+          txt(g, 'Nombre', 240, 330, 32, 700, C.muted);
+          g.strokeStyle = C.brand; g.lineWidth = 3; rr(g, 240, 352, 720, 64, 12); g.stroke();
+          txt(g, 'Mi herramienta (copia)', 262, 385, 35, 600, C.ink);
+          txt(g, 'Carpeta', 240, 450, 32, 700, C.muted);
+          g.strokeStyle = C.line; rr(g, 240, 472, 720, 64, 12); g.stroke();
+          txt(g, 'Mi Drive ▾', 262, 505, 35, 600, C.ink);
+          txt(g, 'Elige el nombre y la carpeta donde la quieres guardar.', 240, 580, 30, 400, C.muted);
+          btn(g, 520, 632, 180, 62, 'Cancelar', 'ghost', 0, 35);
+          btn(g, 716, 632, 244, 62, 'Hacer una copia', 'primary', press(lt, 2.25), 35);
+          g.globalAlpha = 1;
+        }
+        const ts = easeOut((lt - 3.0) / 0.35);
+        if (ts > 0) { g.globalAlpha = ts; g.fillStyle = C.ink; rr(g, 330, 850 + (1-ts)*20, 540, 64, 32); g.fill(); txt(g, '✓ Copia creada en Mi Drive', 600, 883 + (1-ts)*20, 35, 700, '#fff', 'center'); g.globalAlpha = 1; }
+      },
+      (g, lt) => {
+        base(g, 'Google Sheets');
+        sheetIcon(g, 30, 98, 30); txt(g, 'Mi herramienta (copia)', 76, 118, 38, 700, C.ink);
+        let x = 32;
+        ['Archivo','Editar','Ver','Insertar','Datos','Extensiones'].forEach(m => { txt(g, m, x, 168, 26, 600, C.muted); x += g.measureText(m).width + 22; });
+        const open = lt > 1.05 && lt < 1.95;
+        g.font = `800 24px ${FONT}`; const mw = g.measureText('Tu herramienta — Ambilor.Lab').width;
+        if (open || (lt > 0.85 && lt < 1.05)) { g.fillStyle = 'rgba(31,92,153,.12)'; rr(g, 770, 148, mw + 20, 40, 10); g.fill(); }
+        txt(g, 'Tu herramienta — Ambilor.Lab', 780, 168, 24, 800, C.brand);
+        g.fillStyle = '#f6f8fb'; g.fillRect(0, 196, CW, 38);
+        g.strokeStyle = C.line; g.lineWidth = 1.5;
+        for (let c = 0; c <= 8; c++) { const cx = 60 + c*150; g.beginPath(); g.moveTo(cx, 196); g.lineTo(cx, CH - 20); g.stroke(); if (c < 8) txt(g, 'ABCDEFGH'[c], cx + 75, 215, 26, 700, C.soft, 'center'); }
+        for (let r = 0; r < 18; r++) { const ry = 234 + r*40; g.beginPath(); g.moveTo(0, ry); g.lineTo(CW, ry); g.stroke(); txt(g, String(r + 1), 30, ry + 20, 23, 600, C.soft, 'center'); }
+        [[0,'FECHA'],[1,'DESCRIPCION'],[2,'IMPORTE']].forEach(([c, s]) => txt(g, s, 72 + c*150, 254, 25, 800, C.ink, 'left', 136));
+        for (let r = 1; r < 8; r++) for (let c = 0; c < 3; c++) { g.fillStyle = '#dde5ee'; rr(g, 72 + c*150, 264 + r*40 - 6, [70, 110, 80][c], 12, 6); g.fill(); }
+        if (open) {
+          dialog(g, 770, 192, 380, 76);
+          const hov = lt > 1.65;
+          if (hov) { g.fillStyle = '#eef2f7'; g.fillRect(778, 200, 364, 60); }
+          txt(g, 'Configurar herramienta', 796, 230, 32, 700, C.ink, 'left', 336);
+        }
+        const sp = ease((lt - 2.0) / 0.5);
+        if (sp > 0) {
+          const px = CW - 460*sp;
+          g.save(); rr(g, 0, 0, CW, CH, 34); g.clip();
+          g.fillStyle = '#fff'; g.fillRect(px, 196, 460, CH - 196);
+          g.fillStyle = C.brand; g.fillRect(px, 196, 5, CH - 196);
+          g.restore();
+          txt(g, 'Configurar herramienta', px + 36, 250, 38, 800, C.ink, 'left', 396);
+          txt(g, 'Te guía paso a paso.', px + 36, 290, 29, 600, C.muted);
+          ['Autoriza el acceso', 'Publica tu panel', 'Ábrelo y empieza'].forEach((s, k) => {
+            const a = easeOut((lt - 2.5 - k*0.2) / 0.3); if (a <= 0) return;
+            g.globalAlpha = a;
+            const y = 340 + k*96;
+            g.strokeStyle = k === 0 ? C.brand : C.line; g.lineWidth = 3; rr(g, px + 30, y, 400, 76, 16); g.stroke();
+            g.beginPath(); g.arc(px + 72, y + 38, 20, 0, Math.PI*2); g.fillStyle = k === 0 ? C.brand : '#eef2f7'; g.fill();
+            txt(g, String(k + 1), px + 72, y + 39, 20, 800, k === 0 ? '#fff' : C.muted, 'center');
+            txt(g, s, px + 108, y + 38, 32, 700, C.ink, 'left', 300);
+            g.globalAlpha = 1;
+          });
+        }
+      },
+      (g, lt) => {
+        base(g, 'Google');
+        const ok = lt > 1.5;
+        wrap(g, 'La herramienta quiere acceder a tu cuenta de Google', 120, 180, 900, 55, 800, C.ink, 1.2);
+        txt(g, 'La herramienta necesita leer y editar tu planilla.', 120, 300, 36, 400, C.muted);
+        ['Leer y editar tu planilla', 'Mostrar el panel de la herramienta'].forEach((s, k) => {
+          const y = 390 + k*80;
+          g.strokeStyle = C.line; g.lineWidth = 2; g.beginPath(); g.moveTo(120, y + 40); g.lineTo(1080, y + 40); g.stroke();
+          sheetIcon(g, 124, y - 18, 30, k ? C.brand : C.ok); txt(g, s, 180, y, 35, 600, C.ink);
+        });
+        g.globalAlpha = ok ? 0.35 : 1;
+        btn(g, 640, 640, 200, 64, 'Cancelar', 'ghost', 0, 35);
+        btn(g, 860, 640, 220, 64, 'Continuar', 'primary', press(lt, 1.35), 35);
+        g.globalAlpha = 1;
+        const b = easeOut((lt - 1.5) / 0.35);
+        if (b > 0) { g.globalAlpha = b; banner(g, 120, 760 + (1-b)*16, 420, 64, '✓ Acceso autorizado'); g.globalAlpha = 1; }
+        txt(g, 'El botón puede decir Continuar o Aceptar según tu navegador.', 120, 880, 29, 400, C.soft);
+      },
+      (g, lt) => {
+        base(g, 'Google Apps Script');
+        btn(g, 900, 12, 270, 52, 'Implementar ▾', 'primary', press(lt, 0.95), 32);
+        txt(g, 'Archivos', 34, 124, 29, 700, C.soft);
+        g.fillStyle = 'rgba(31,92,153,.1)'; rr(g, 20, 150, 200, 50, 10); g.fill(); txt(g, 'Código.gs', 38, 175, 32, 700, C.ink);
+        g.fillStyle = C.line; g.fillRect(236, 78, 2, CH - 110);
+        [320, 520, 410, 280, 600, 460, 350, 540, 300, 480, 390, 260, 440, 330].forEach((w, k) => {
+          const y = 130 + k*52;
+          txt(g, String(k + 1), 280, y, 26, 600, C.soft, 'right');
+          g.fillStyle = k % 4 === 0 ? '#c9dcef' : '#e3e9f0'; rr(g, 310 + (k % 3 ? 30 : 0), y - 8, w, 16, 8); g.fill();
+        });
+        if (lt > 0.95 && lt < 1.65) {
+          dialog(g, 880, 72, 290, 70);
+          if (lt > 1.4) { g.fillStyle = '#eef2f7'; g.fillRect(888, 80, 274, 54); }
+          txt(g, 'Nueva implementación', 904, 107, 32, 700, C.ink);
+        }
+        const d = ease((lt - 1.6) / 0.3);
+        if (d > 0) {
+          overlay(g, d); g.globalAlpha = d;
+          dialog(g, 180, 140, 840, 740);
+          txt(g, 'Nueva implementación', 224, 205, 46, 800, C.ink);
+          txt(g, 'Tipo', 224, 275, 30, 700, C.muted);
+          g.strokeStyle = C.line; g.lineWidth = 3; rr(g, 224, 296, 752, 64, 12); g.stroke();
+          if (lt > 2.1) txt(g, '✓ Aplicación web', 246, 329, 35, 700, C.ok); else txt(g, 'Seleccionar tipo ▾', 246, 329, 35, 600, C.soft);
+          txt(g, 'Quién tiene acceso', 224, 410, 30, 700, C.muted);
+          const sel = lt > 2.9;
+          [['Solo yo', 470], ['Cualquiera', 540]].forEach(([s, y], k) => {
+            g.beginPath(); g.arc(250, y, 15, 0, Math.PI*2); g.strokeStyle = (sel && !k) ? C.brand : C.soft; g.lineWidth = 3; g.stroke();
+            if (sel && !k) { g.beginPath(); g.arc(250, y, 8, 0, Math.PI*2); g.fillStyle = C.brand; g.fill(); }
+            txt(g, s, 280, y, 35, (sel && !k) ? 800 : 600, C.ink);
+          });
+          const w = easeOut((lt - 3.0) / 0.3);
+          if (w > 0) {
+            g.globalAlpha = d * w; g.fillStyle = '#fff5e6'; rr(g, 224, 596, 752, 76, 14); g.fill();
+            g.fillStyle = C.warn; g.fillRect(224, 596, 6, 76);
+            txt(g, '“Solo yo” significa privado. No elijas “Cualquiera”.', 250, 634, 32, 700, C.ink);
+            g.globalAlpha = d;
+          }
+          if (lt < 4.1) btn(g, 756, 760, 220, 64, 'Implementar', 'primary', press(lt, 3.9), 35);
+          const b = easeOut((lt - 4.1) / 0.35);
+          if (b > 0) { g.globalAlpha = d * b; banner(g, 224, 760, 520, 64, '✓ Panel publicado: solo tú lo ves'); }
+          g.globalAlpha = 1;
+        }
+      },
+      (g, lt) => {
+        base(g, 'Panel de la herramienta');
+        const dash = ease((lt - 3.1) / 0.4);
+        if (dash < 1) {
+          g.globalAlpha = 1 - dash;
+          txt(g, 'Instalación', 64, 150, 49, 800, C.ink);
+          txt(g, 'Comprueba que todo quedó bien antes de empezar.', 64, 198, 32, 400, C.muted);
+          btn(g, 64, 240, 340, 66, 'Verificar instalación', 'ghost', press(lt, 0.8), 35);
+          ['Copia en tu Drive', 'Acceso autorizado', 'Panel publicado (Solo yo)'].forEach((s, k) => {
+            const tc = 1.0 + k*0.5, on = lt > tc, y = 370 + k*80;
+            checkDot(g, 90, y, on, 1 + Math.sin(clamp((lt - tc)/0.25)*Math.PI)*0.25);
+            txt(g, s, 130, y, 36, on ? 700 : 600, on ? C.ink : C.soft);
+          });
+          btn(g, 64, 640, 280, 66, 'Abrir panel', lt > 2.3 ? 'primary' : 'disabled', press(lt, 2.9), 35);
+          g.globalAlpha = 1;
+        }
+        if (dash > 0) {
+          g.globalAlpha = dash;
+          const y0 = 100 + (1 - dash)*20;
+          g.fillStyle = C.brand; rr(g, 40, y0, CW - 80, 84, 20); g.fill();
+          txt(g, 'Ambilor.Lab', 72, y0 + 42, 43, 800, '#fff'); txt(g, 'Conciliador V1', CW - 72, y0 + 42, 38, 600, '#fff', 'right');
+          // Pestañas del panel = V1 actual (2026-09-30); subrayado medido con la misma letra
+          let tabX = 60;
+          [['Resumen', true], ['Resultados', false], ['Historial', false], ['Configuración', false]].forEach(([s, on]) => {
+            txt(g, s, tabX, y0 + 130, 30, on ? 800 : 600, on ? C.ink : C.soft);
+            const tw2 = g.measureText(s).width;
+            if (on) { g.fillStyle = C.brand; g.fillRect(tabX, y0 + 148, tw2, 4); }
+            tabX += tw2 + 30;
+          });
+          btn(g, 60, y0 + 180, CW - 120, 80, '▶  Ejecutar conciliación', 'primary', 0, 43);
+          txt(g, 'Listo para ejecutar', 60, y0 + 300, 35, 600, C.soft);
+          const tw = (CW - 120 - 3*20) / 4;
+          [['0%', 'conciliación'], ['0', 'pares'], ['0', 'pendientes'], ['$0', 'conciliado']].forEach(([v, l], i) => {
+            const x = 60 + i*(tw + 20);
+            g.fillStyle = '#eef2f7'; rr(g, x, y0 + 340, tw, 200, 20); g.fill();
+            txt(g, v, x + 22, y0 + 420, 80, 800, C.ink); txt(g, l, x + 22, y0 + 495, 32, 600, C.muted);
+          });
+          g.globalAlpha = 1;
+        }
+      },
+      (g, lt) => {
+        g.clearRect(0, 0, CW, CH);
+        g.fillStyle = '#ffffff'; rr(g, 0, 0, CW, CH, 34); g.fill();
+        const p = easeOut((lt - 0.1) / 0.4), pop = 1 + Math.sin(clamp((lt - 0.1)/0.4)*Math.PI)*0.18;
+        if (p > 0) { g.beginPath(); g.arc(600, 150, 64*p*pop, 0, Math.PI*2); g.fillStyle = C.ok; g.fill(); txt(g, '✓', 600, 154, 70*p, 800, '#fff', 'center'); }
+        txt(g, 'Listo. Ya quedó instalado.', 600, 272, 58, 800, C.ink, 'center');
+        const c = easeOut((lt - 0.6) / 0.4);
+        if (c > 0) {
+          g.globalAlpha = c;
+          g.setLineDash([14, 10]); g.strokeStyle = C.brand; g.lineWidth = 3; rr(g, 120, 340, 960, 360, 28); g.stroke(); g.setLineDash([]);
+          g.fillStyle = C.brand; rr(g, 150, 372, 26, 22, 5); g.fill();
+          g.beginPath(); g.arc(163, 372, 9, Math.PI, 0); g.strokeStyle = C.brand; g.lineWidth = 4; g.stroke();
+          txt(g, 'Tu cuenta de Google', 190, 384, 26, 800, C.brand);
+          g.globalAlpha = 1;
+        }
+        [['Planilla', 'tus datos', C.ok], ['Panel', 'solo tú lo ves', C.brand], ['Apps Script', 'el código', C.ink]].forEach(([s, sub, color], k) => {
+          const a = easeOut((lt - 0.9 - k*0.2) / 0.35); if (a <= 0) return;
+          const x = 170 + k*300, y = 440 + (1 - a)*20;
+          g.globalAlpha = a;
+          g.fillStyle = '#f6f8fb'; rr(g, x, y, 260, 210, 20); g.fill();
+          sheetIcon(g, x + 26, y + 30, 48, color);
+          txt(g, s, x + 26, y + 125, 40, 800, C.ink); txt(g, sub, x + 26, y + 168, 30, 600, C.muted);
+          g.globalAlpha = 1;
+        });
+        const l = easeOut((lt - 1.7) / 0.4);
+        if (l > 0) {
+          g.globalAlpha = l;
+          txt(g, '✓ Privado: nada sale de tu cuenta.', 150, 780, 36, 700, C.ink);
+          txt(g, '✓ Tuyo: sin suscripción ni cuota de uso.', 150, 836, 36, 700, C.ink);
+          g.globalAlpha = 1;
+        }
+      }
+    ];
+  }
+};
+</script>
+<script>
+/* Diseños verticales de las demos por tarjetas (2026-09-30). En un recuadro
+   angosto o alto (celular vertical, iPad en ⅓ o en ventana angosta) cada paso
+   se dibuja como una pantalla de celular de 800×1000: una sola columna, letra
+   más grande y botones a lo ancho. Mismos pasos, tiempos y textos que el
+   diseño apaisado; el cursor tiene sus propias posiciones (cursorV). */
+(function(){
+  // ── pasos de instalación que comparten las tres herramientas ──
+  const I = {
+    copia(H, archivo, otros){
+      const { C, CW, ease, easeOut, rr, txt, wrap, press, btn, base, overlay, dialog, sheetIcon } = H;
+      return (g, lt) => {
+        base(g, 'Google Drive');
+        txt(g, 'Mi Drive', 40, 128, 40, 800, C.ink);
+        txt(g, 'Nombre', 40, 182, 28, 700, C.soft);
+        const nIn = easeOut((lt - 2.7) / 0.4), rowY = k => 250 + k*90;
+        if (nIn > 0) {
+          g.globalAlpha = nIn;
+          const hl = 1 - ease((lt - 3.6) / 1.0);
+          g.fillStyle = 'rgba(245,200,76,' + (0.55*hl) + ')'; g.fillRect(20, rowY(0) - 40, CW - 40, 80);
+          sheetIcon(g, 44, rowY(0) - 24, 40); txt(g, archivo + ' (copia)', 108, rowY(0), 36, 800, C.ink, 'left', CW - 250);
+          txt(g, 'ahora', CW - 40, rowY(0), 28, 600, C.soft, 'right');
+          g.globalAlpha = 1;
+        }
+        otros.forEach((f, k) => {
+          const y = rowY(k + nIn);
+          g.strokeStyle = C.line; g.lineWidth = 2; g.beginPath(); g.moveTo(20, y + 45); g.lineTo(CW - 20, y + 45); g.stroke();
+          sheetIcon(g, 44, y - 24, 40, C.soft); txt(g, f, 108, y, 36, 600, C.ink, 'left', CW - 150);
+        });
+        const d = 1 - ease((lt - 2.4) / 0.35);
+        if (d > 0) {
+          overlay(g, d); g.globalAlpha = d;
+          dialog(g, 40, 250, 720, 610);
+          wrap(g, 'Copiar “' + archivo + '” en Mi Drive', 80, 320, 640, 44, 800, C.ink, 1.2);
+          txt(g, 'Nombre', 80, 450, 30, 700, C.muted);
+          g.strokeStyle = C.brand; g.lineWidth = 3; rr(g, 80, 474, 640, 72, 12); g.stroke();
+          txt(g, archivo + ' (copia)', 102, 511, 36, 600, C.ink, 'left', 600);
+          txt(g, 'Carpeta', 80, 590, 30, 700, C.muted);
+          g.strokeStyle = C.line; rr(g, 80, 614, 640, 72, 12); g.stroke();
+          txt(g, 'Mi Drive ▾', 102, 651, 36, 600, C.ink);
+          btn(g, 80, 760, 240, 72, 'Cancelar', 'ghost', 0, 34);
+          btn(g, 340, 760, 380, 72, 'Hacer una copia', 'primary', press(lt, 2.25), 36);
+          g.globalAlpha = 1;
+        }
+        const ts = easeOut((lt - 3.0) / 0.35);
+        if (ts > 0) { g.globalAlpha = ts; g.fillStyle = C.ink; rr(g, 110, 880 + (1-ts)*20, 580, 72, 36); g.fill(); txt(g, '✓ Copia creada en Mi Drive', 400, 917 + (1-ts)*20, 34, 700, '#fff', 'center'); g.globalAlpha = 1; }
+      };
+    },
+    // Planilla con el menú de la herramienta; el asistente sube desde abajo
+    menu(H, archivo, menuLabel, opciones, pasos, datos){
+      const { C, CW, CH, FONT, ease, easeOut, rr, txt, base, dialog, sheetIcon } = H;
+      return (g, lt) => {
+        base(g, 'Google Sheets');
+        sheetIcon(g, 34, 98, 30); txt(g, archivo + ' (copia)', 80, 118, 36, 700, C.ink, 'left', CW - 120);
+        [['Archivo', 34], ['Editar', 160], ['Ver', 262]].forEach(([m, x]) => txt(g, m, x, 172, 27, 600, C.muted));
+        const open = lt > 1.05 && lt < 1.95;
+        g.font = '800 27px ' + FONT; const mw = Math.min(g.measureText(menuLabel).width, CW - 420);
+        if (open || (lt > 0.85 && lt < 1.05)) { g.fillStyle = 'rgba(31,92,153,.12)'; rr(g, 370, 150, mw + 20, 44, 10); g.fill(); }
+        txt(g, menuLabel, 380, 172, 27, 800, C.brand, 'left', CW - 420);
+        g.fillStyle = '#f6f8fb'; g.fillRect(4, 200, CW - 8, 38);
+        g.strokeStyle = C.line; g.lineWidth = 1.5;
+        for (let c = 0; c <= 5; c++) { const cx = 60 + c*150; g.beginPath(); g.moveTo(cx, 200); g.lineTo(cx, CH - 20); g.stroke(); if (c < 5) txt(g, 'ABCDE'[c], cx + 75, 219, 26, 700, C.soft, 'center'); }
+        for (let r = 0; r < 18; r++) { const ry = 238 + r*42; g.beginPath(); g.moveTo(4, ry); g.lineTo(CW - 4, ry); g.stroke(); txt(g, String(r + 1), 30, ry + 21, 23, 600, C.soft, 'center'); }
+        if (datos) {
+          [[0, 'FECHA'], [1, 'DESCRIPCION'], [2, 'IMPORTE']].forEach(([c, s]) => txt(g, s, 72 + c*150, 259, 25, 800, C.ink, 'left', 136));
+          for (let r = 1; r < 8; r++) for (let c = 0; c < 3; c++) { g.fillStyle = '#dde5ee'; rr(g, 72 + c*150, 269 + r*42 - 6, [70, 110, 80][c], 12, 6); g.fill(); }
+        }
+        if (open) {
+          dialog(g, 340, 200, 440, 16 + opciones.length*72);
+          if (lt > 1.65) { g.fillStyle = '#eef2f7'; g.fillRect(348, 208, 424, 64); }
+          opciones.forEach((o, k) => txt(g, o, 366, 240 + k*72, 31, k ? 600 : 700, k ? C.muted : C.ink, 'left', 390));
+        }
+        const sp = ease((lt - 2.0) / 0.5);
+        if (sp > 0) {
+          const top = CH - 640*sp;
+          g.save(); rr(g, 0, 0, CW, CH, 34); g.clip();
+          g.save(); g.shadowColor = 'rgba(18,48,77,.25)'; g.shadowBlur = 40; g.shadowOffsetY = -8;
+          g.fillStyle = '#fff'; rr(g, 0, top, CW, 700, 30); g.fill(); g.restore();
+          g.fillStyle = C.brand; g.fillRect(0, top + 26, 5, 640);
+          g.fillStyle = C.line; rr(g, 360, top + 14, 80, 8, 4); g.fill();
+          g.restore();
+          txt(g, 'Configurar herramienta', 40, top + 72, 40, 800, C.ink, 'left', 720);
+          txt(g, 'Te guía paso a paso.', 40, top + 120, 30, 600, C.muted);
+          pasos.forEach((s, k) => {
+            const a = easeOut((lt - 2.5 - k*0.2) / 0.3); if (a <= 0) return;
+            g.globalAlpha = a;
+            const y = top + 164 + k*112;
+            g.strokeStyle = k === 0 ? C.brand : C.line; g.lineWidth = 3; rr(g, 30, y, 740, 92, 18); g.stroke();
+            g.beginPath(); g.arc(80, y + 46, 25, 0, Math.PI*2); g.fillStyle = k === 0 ? C.brand : '#eef2f7'; g.fill();
+            txt(g, String(k + 1), 80, y + 47, 26, 800, k === 0 ? '#fff' : C.muted, 'center');
+            txt(g, s, 124, y + 46, 34, 700, C.ink, 'left', 620);
+            g.globalAlpha = 1;
+          });
+        }
+      };
+    },
+    // Pantalla de permisos de Google (casillas: el V2 pide marcar cada una)
+    permisos(H, titulo, items, boton, casillas, sub){
+      const { C, CW, easeOut, rr, txt, wrap, press, btn, base, banner, sheetIcon } = H;
+      const tOk = casillas ? 2.1 : 1.5, tClic = casillas ? 1.95 : 1.35;
+      return (g, lt) => {
+        base(g, 'Google');
+        const yT = wrap(g, titulo, 60, 150, 680, 48, 800, C.ink, 1.2);
+        let y0 = yT + 80;
+        if (sub) { const ys = wrap(g, sub, 60, yT + 72, 680, 32, 400, C.muted); y0 = ys + 90; }
+        items.forEach((s, k) => {
+          const y = y0 + k*96, on = !casillas || lt > 0.6 + k*0.3;
+          g.strokeStyle = C.line; g.lineWidth = 2; g.beginPath(); g.moveTo(60, y + 48); g.lineTo(CW - 60, y + 48); g.stroke();
+          if (casillas) {
+            g.strokeStyle = on ? C.brand : C.soft; g.lineWidth = 3; rr(g, 60, y - 22, 44, 44, 9); g.stroke();
+            if (on) { g.fillStyle = C.brand; rr(g, 60, y - 22, 44, 44, 9); g.fill(); txt(g, '✓', 82, y + 1, 32, 800, '#fff', 'center'); }
+          } else sheetIcon(g, 64, y - 20, 32, k === 1 ? C.brand : C.ok);
+          txt(g, s, 128, y, 34, 600, C.ink, 'left', CW - 190);
+        });
+        g.globalAlpha = lt > tOk ? 0.35 : 1;
+        btn(g, 60, 800, 240, 76, 'Cancelar', 'ghost', 0, 34);
+        btn(g, 320, 800, 420, 76, boton, 'primary', press(lt, tClic), 36);
+        g.globalAlpha = 1;
+        const b = easeOut((lt - tOk) / 0.35);
+        if (b > 0) { g.globalAlpha = b; banner(g, 60, 900 + (1-b)*16, 680, 72, casillas ? '✓ Permisos autorizados' : '✓ Acceso autorizado'); g.globalAlpha = 1; }
+      };
+    },
+    // Apps Script → Implementar → Aplicación web
+    publicar(H, archivo, publico){
+      const { C, CW, CH, ease, easeOut, rr, txt, wrap, press, btn, base, overlay, dialog, banner } = H;
+      return (g, lt) => {
+        base(g, 'Google Apps Script');
+        btn(g, 540, 12, 240, 52, 'Implementar ▾', 'primary', press(lt, 0.95), 30);
+        g.fillStyle = 'rgba(31,92,153,.1)'; rr(g, 30, 96, 280, 54, 10); g.fill(); txt(g, archivo, 50, 123, 30, 700, C.ink, 'left', 240);
+        g.fillStyle = C.line; g.fillRect(4, 164, CW - 8, 2);
+        [320, 520, 410, 280, 600, 460, 350, 540, 300, 480, 390, 260, 440, 330].forEach((w, k) => {
+          const y = 212 + k*54;
+          txt(g, String(k + 1), 64, y, 26, 600, C.soft, 'right');
+          g.fillStyle = k % 4 === 0 ? '#c9dcef' : '#e3e9f0'; rr(g, 92 + (k % 3 ? 30 : 0), y - 8, Math.min(w, CW - 170), 16, 8); g.fill();
+        });
+        if (lt > 0.95 && lt < 1.65) {
+          dialog(g, 470, 72, 310, 72);
+          if (lt > 1.4) { g.fillStyle = '#eef2f7'; g.fillRect(478, 80, 294, 56); }
+          txt(g, 'Nueva implementación', 490, 108, 30, 700, C.ink, 'left', 280);
+        }
+        const d = ease((lt - 1.6) / 0.3);
+        if (d > 0) {
+          overlay(g, d); g.globalAlpha = d;
+          dialog(g, 40, 120, 720, 850);
+          txt(g, 'Nueva implementación', 80, 186, 44, 800, C.ink);
+          txt(g, 'Tipo', 80, 256, 30, 700, C.muted);
+          g.strokeStyle = C.line; g.lineWidth = 3; rr(g, 80, 280, 640, 72, 12); g.stroke();
+          if (lt > 2.1) txt(g, '✓ Aplicación web', 102, 317, 36, 700, C.ok); else txt(g, 'Seleccionar tipo ▾', 102, 317, 36, 600, C.soft);
+          txt(g, 'Quién tiene acceso', 80, 404, 30, 700, C.muted);
+          const sel = lt > 2.9;
+          [['Solo yo', 462], [publico ? 'Cualquier persona' : 'Cualquiera', 532]].forEach(([s, y], k) => {
+            const on = sel && (publico ? k === 1 : k === 0);
+            g.beginPath(); g.arc(106, y, 17, 0, Math.PI*2); g.strokeStyle = on ? C.brand : C.soft; g.lineWidth = 3; g.stroke();
+            if (on) { g.beginPath(); g.arc(106, y, 9, 0, Math.PI*2); g.fillStyle = C.brand; g.fill(); }
+            txt(g, s, 140, y, 36, on ? 800 : 600, C.ink);
+          });
+          const w = easeOut((lt - 3.0) / 0.3);
+          if (w > 0) {
+            g.globalAlpha = d * w; g.fillStyle = publico ? '#ebf2fa' : '#fff5e6'; rr(g, 80, 592, 640, 130, 14); g.fill();
+            g.fillStyle = publico ? C.brand : C.warn; g.fillRect(80, 592, 6, 130);
+            if (publico) { txt(g, 'Tus clientes abren el formulario.', 108, 636, 31, 700, C.ink, 'left', 590); txt(g, 'El panel queda protegido con tu clave.', 108, 680, 29, 600, C.muted, 'left', 590); }
+            else wrap(g, '“Solo yo” significa privado. No elijas “Cualquiera”.', 108, 638, 590, 33, 700, C.ink, 1.3);
+            g.globalAlpha = d;
+          }
+          if (lt < 4.1) btn(g, 400, 770, 320, 76, 'Implementar', 'primary', press(lt, 3.9), 36);
+          const b = easeOut((lt - 4.1) / 0.35);
+          if (b > 0) { g.globalAlpha = d * b; banner(g, 80, 770, 640, 76, publico ? '✓ App publicada' : '✓ Panel publicado: solo tú lo ves'); }
+          g.globalAlpha = 1;
+        }
+      };
+    },
+    // "Verificar instalación" y luego el panel recién abierto
+    verificar(H, titulo, checks, panel){
+      const { C, clamp, ease, press, btn, base, txt, wrap, checkDot } = H;
+      return (g, lt) => {
+        base(g, titulo);
+        const dash = ease((lt - 3.1) / 0.4);
+        if (dash < 1) {
+          g.globalAlpha = 1 - dash;
+          txt(g, 'Instalación', 50, 150, 50, 800, C.ink);
+          wrap(g, 'Comprueba que todo quedó bien antes de empezar.', 50, 212, 700, 32, 400, C.muted);
+          btn(g, 50, 290, 440, 76, 'Verificar instalación', 'ghost', press(lt, 0.8), 34);
+          checks.forEach((s, k) => {
+            const tc = 1.0 + k*0.5, on = lt > tc, y = 440 + k*92;
+            checkDot(g, 84, y, on, 1 + Math.sin(clamp((lt - tc)/0.25)*Math.PI)*0.25);
+            txt(g, s, 126, y, 36, on ? 700 : 600, on ? C.ink : C.soft, 'left', 640);
+          });
+          btn(g, 50, 760, 420, 76, 'Abrir panel', lt > 2.3 ? 'primary' : 'disabled', press(lt, 2.9), 36);
+          g.globalAlpha = 1;
+        }
+        if (dash > 0) { g.globalAlpha = dash; panel(g, dash); g.globalAlpha = 1; }
+      };
+    },
+    // Cierre: todo queda dentro de la cuenta de Google del cliente
+    listo(H, cajas, lineas){
+      const { C, CW, CH, clamp, easeOut, rr, txt, sheetIcon } = H;
+      return (g, lt) => {
+        g.clearRect(0, 0, CW, CH);
+        g.fillStyle = '#ffffff'; rr(g, 0, 0, CW, CH, 34); g.fill();
+        const p = easeOut((lt - 0.1) / 0.4), pop = 1 + Math.sin(clamp((lt - 0.1)/0.4)*Math.PI)*0.18;
+        if (p > 0) { g.beginPath(); g.arc(400, 130, 62*p*pop, 0, Math.PI*2); g.fillStyle = C.ok; g.fill(); txt(g, '✓', 400, 134, 68*p, 800, '#fff', 'center'); }
+        txt(g, 'Listo.', 400, 248, 58, 800, C.ink, 'center');
+        txt(g, 'Ya quedó instalado.', 400, 312, 46, 800, C.ink, 'center');
+        const c = easeOut((lt - 0.6) / 0.4);
+        if (c > 0) { g.globalAlpha = c; g.setLineDash([14, 10]); g.strokeStyle = C.brand; g.lineWidth = 3; rr(g, 50, 370, 700, 450, 28); g.stroke(); g.setLineDash([]); txt(g, 'Tu cuenta de Google', 84, 414, 28, 800, C.brand); g.globalAlpha = 1; }
+        cajas.forEach(([s, sub, color], k) => {
+          const a = easeOut((lt - 0.9 - k*0.2) / 0.35); if (a <= 0) return;
+          const y = 450 + k*118 + (1 - a)*20;
+          g.globalAlpha = a;
+          g.fillStyle = '#f6f8fb'; rr(g, 84, y, 632, 100, 18); g.fill();
+          sheetIcon(g, 108, y + 22, 46, color);
+          txt(g, s, 180, y + 36, 36, 800, C.ink); txt(g, sub, 180, y + 74, 28, 600, C.muted);
+          g.globalAlpha = 1;
+        });
+        const l = easeOut((lt - 1.7) / 0.4);
+        if (l > 0) { g.globalAlpha = l; lineas.forEach((s, k) => txt(g, s, 60, 880 + k*60, 32, 700, C.ink, 'left', 690)); g.globalAlpha = 1; }
+      };
+    }
+  };
+  // posiciones del cursor de los pasos comunes (en la tarjeta vertical)
+  const K = {
+    copia: { keys:[[1.4,700,960],[2.1,530,796],[2.6,530,796],[3.3,690,940]], clicks:[2.25] },
+    menu: x => ({ keys:[[0.2,700,900],[0.85,x,172],[1.2,x,172],[1.65,560,240],[1.95,560,240],[2.6,400,700]], clicks:[1.05,1.85] }),
+    permisos: casillas => casillas
+      ? { keys:[[0.3,200,960],[1.8,530,838],[2.1,530,838],[2.8,700,960]], clicks:[1.95] }
+      : { keys:[[0.3,200,960],[1.15,530,838],[1.6,530,838],[2.3,700,960]], clicks:[1.35] },
+    publicar: y => ({ keys:[[0.2,400,600],[0.8,660,38],[1.05,660,38],[1.4,620,108],[1.7,620,108],[2.7,106,y],[3.05,106,y],[3.7,560,808],[4.15,560,808],[4.8,700,960]], clicks:[0.95,1.55,2.9,3.9] }),
+    verificar: { keys:[[0.2,600,900],[0.65,270,328],[0.95,270,328],[2.55,260,798],[3.0,260,798],[3.6,650,940]], clicks:[0.8,2.9] }
+  };
+
+  // ── Conciliador V1 · Cómo se instala ──
+  const v1i = AL_DEMOS['como-se-instala'];
+  if (v1i) {
+    v1i.drawV = H => { const { C, CW, rr, txt, btn } = H;
+      return [
+        I.copia(H, 'Mi herramienta', ['Presupuesto 2026', 'Informe mensual', 'Cartolas septiembre', 'Proveedores']),
+        I.menu(H, 'Mi herramienta', 'Tu herramienta — Ambilor.Lab', ['Configurar herramienta'], ['Autoriza el acceso', 'Publica tu panel', 'Ábrelo y empieza'], true),
+        I.permisos(H, 'La herramienta quiere acceder a tu cuenta de Google', ['Leer y editar tu planilla', 'Mostrar el panel de la herramienta'], 'Continuar', false, 'La herramienta necesita leer y editar tu planilla.'),
+        I.publicar(H, 'Código.gs', false),
+        I.verificar(H, 'Panel de la herramienta', ['Copia en tu Drive', 'Acceso autorizado', 'Panel publicado (Solo yo)'], (g, dash) => {
+          const y0 = 100 + (1 - dash)*20;
+          g.fillStyle = C.brand; rr(g, 40, y0, CW - 80, 84, 20); g.fill();
+          txt(g, 'Ambilor.Lab', 70, y0 + 42, 40, 800, '#fff'); txt(g, 'Conciliador V1', CW - 70, y0 + 42, 32, 600, '#fff', 'right', 300);
+          let tx = 50;
+          ['Resumen', 'Resultados', 'Historial', 'Configuración'].forEach((s, k) => {
+            txt(g, s, tx, y0 + 130, 28, k ? 600 : 800, k ? C.soft : C.ink);
+            const w = g.measureText(s).width;
+            if (!k) { g.fillStyle = C.brand; g.fillRect(tx, y0 + 148, w, 4); }
+            tx += w + 28;
+          });
+          btn(g, 40, y0 + 180, CW - 80, 84, '▶  Ejecutar conciliación', 'primary', 0, 40);
+          txt(g, 'Listo para ejecutar', 40, y0 + 305, 32, 600, C.soft);
+          [['0%', 'conciliación'], ['0', 'pares'], ['0', 'pendientes'], ['$0', 'conciliado']].forEach(([v, l], i) => {
+            const x = 40 + (i % 2)*370, y = y0 + 345 + (i >> 1)*170;
+            g.fillStyle = '#eef2f7'; rr(g, x, y, 350, 150, 20); g.fill();
+            txt(g, v, x + 24, y + 62, 64, 800, C.ink); txt(g, l, x + 24, y + 118, 30, 600, C.muted);
+          });
+        }),
+        I.listo(H, [['Planilla', 'tus datos', C.ok], ['Panel', 'solo tú lo ves', C.brand], ['Apps Script', 'el código', C.ink]], ['✓ Privado: nada sale de tu cuenta.', '✓ Tuyo: sin suscripción ni cuota de uso.'])
+      ];
+    };
+    v1i.cursorV = [K.copia, K.menu(560), K.permisos(false), K.publicar(462), K.verificar, null];
+  }
+
+  // ── Conciliador V2 · Cómo se instala ──
+  const v2i = AL_DEMOS['v2-instala'];
+  v2i.drawV = H => { const { C, CW, rr, txt, wrap, btn, panelBar } = H;
+    return [
+      I.copia(H, 'Conciliador V2', ['Cartolas marzo', 'Libro mayor 2026', 'Presupuesto', 'Proveedores']),
+      I.menu(H, 'Conciliador V2', 'Conciliador V2', ['Configurar herramienta', 'Autorizar permisos'], ['Autoriza los permisos', 'Publica tu panel', 'Conecta tus fuentes'], false),
+      I.permisos(H, 'Conciliador V2 quiere acceder a tu cuenta de Google', ['Leer y editar tus planillas', 'Enviar correos en tu nombre', 'Ejecutarse a la hora que programes', 'Conectarse a la IA que elijas (opcional)'], 'Permitir', true),
+      I.publicar(H, 'Motor.gs', false),
+      I.verificar(H, 'Conciliador V2', ['Copia en tu Drive', 'Permisos autorizados', 'Panel publicado (Solo yo)'], g => {
+        panelBar(g, 'Conciliador V2', ['Resumen','Resultados','Sugerencias','Historial','Configuración'], 0);
+        g.fillStyle = '#ebf2fa'; rr(g, 40, 240, 720, 120, 14); g.fill(); g.fillStyle = C.brand; g.fillRect(40, 240, 6, 120);
+        wrap(g, 'Datos de ejemplo activos: míralo conciliar y luego conecta los tuyos.', 70, 282, 660, 30, 600, C.ink, 1.3);
+        [['47%', 'conciliación'], ['8', 'conciliados'], ['8', 'pendientes'], ['1', 'sugerencia']].forEach(([v, l], i) => {
+          const x = 40 + (i % 2)*370, y = 390 + (i >> 1)*190;
+          g.fillStyle = '#eef2f7'; rr(g, x, y, 350, 170, 20); g.fill();
+          txt(g, v, x + 24, y + 72, 72, 800, C.ink); txt(g, l, x + 24, y + 136, 30, 600, C.muted);
+        });
+        btn(g, 40, 790, CW - 80, 84, '▶  Ejecutar conciliación', 'primary', 0, 38);
+      }),
+      I.listo(H, [['Planillas', 'tus fuentes', C.ok], ['Panel', 'solo tú lo ves', C.brand], ['Correos', 'desde tu Gmail', C.ink]], ['✓ Privado: tus datos quedan en tus planillas.', '✓ IA opcional, con tu propia clave.'])
+    ];
+  };
+  v2i.cursorV = [K.copia, K.menu(480), { keys:[[0.3,200,960],[1.8,530,838],[2.1,530,838],[2.8,700,960]], clicks:[1.95] }, K.publicar(462), K.verificar, null];
+
+  // ── PedidoApp · Cómo se instala ──
+  const pi = AL_DEMOS['ped-instala'];
+  pi.drawV = H => { const { C, CW, CH, clamp, ease, easeOut, rr, txt, wrap, press, btn, base, overlay, dialog, banner, sheetIcon, pill, campo, panelBar } = H;
+    const TABS = ['Pedidos','Catálogo','Reportes','Ajustes'];
+    return [
+      I.copia(H, 'PedidoApp', ['Lista de precios', 'Proveedores', 'Clientes', 'Inventario']),
+      I.publicar(H, 'PedidoApp.gs', true),
+      I.permisos(H, 'PedidoApp quiere acceder a tu cuenta de Google', ['Guardar los pedidos en tu planilla', 'Enviarte avisos por correo', 'Mostrar el formulario y el panel'], 'Permitir', false),
+      (g, lt) => {
+        const login = ease((lt - 2.2) / 0.4);
+        if (login < 1) {
+          base(g, 'Google Sheets');
+          sheetIcon(g, 34, 98, 30); txt(g, 'PedidoApp (copia)', 80, 118, 36, 700, C.ink);
+          [['Archivo', 34], ['Editar', 160], ['Ver', 262]].forEach(([m, x]) => txt(g, m, x, 172, 27, 600, C.muted));
+          txt(g, 'PedidoApp', 380, 172, 27, 800, C.brand);
+          g.strokeStyle = C.line; g.lineWidth = 1.5;
+          for (let r = 0; r < 18; r++) { const ry = 238 + r*42; g.beginPath(); g.moveTo(4, ry); g.lineTo(CW - 4, ry); g.stroke(); }
+          if (lt > 0.75 && lt < 1.35) { dialog(g, 340, 200, 440, 76); if (lt > 1.15) { g.fillStyle = '#eef2f7'; g.fillRect(348, 208, 424, 60); } txt(g, 'Abrir panel de pedidos', 362, 238, 30, 700, C.ink, 'left', 400); }
+          const d = easeOut((lt - 1.4) / 0.3);
+          if (d > 0) {
+            overlay(g, d * (1 - login)); g.globalAlpha = d * (1 - login);
+            dialog(g, 40, 250, 720, 560);
+            txt(g, 'PedidoApp · Ambilor.Lab', 80, 315, 36, 800, C.ink);
+            txt(g, 'Panel:', 80, 385, 28, 700, C.muted);
+            txt(g, 'script.google.com/…/exec?admin', 80, 428, 31, 600, C.brand, 'left', 640);
+            txt(g, 'Clave del panel:', 80, 505, 28, 700, C.muted);
+            g.fillStyle = '#f1f5f9'; rr(g, 80, 532, 460, 72, 10); g.fill(); txt(g, 'k7Q2-mX9p-4Hrt', 104, 569, 34, 800, C.ink);
+            wrap(g, 'No compartas la clave. Puedes cambiarla en Ajustes.', 80, 664, 640, 28, 600, C.soft);
+            g.globalAlpha = 1;
+          }
+        }
+        if (login > 0) {
+          g.globalAlpha = login;
+          g.fillStyle = '#0f1b2a'; rr(g, 0, 0, CW, CH, 34); g.fill();
+          g.fillStyle = C.brand; rr(g, 360, 170, 80, 80, 18); g.fill(); txt(g, 'A', 400, 212, 44, 800, '#fff', 'center');
+          txt(g, 'Panel de Almacén Don Pepe', 400, 320, 42, 800, '#fff', 'center', 720);
+          g.strokeStyle = '#3b5470'; g.lineWidth = 3; rr(g, 80, 400, 640, 80, 14); g.stroke();
+          const n = Math.floor(clamp((lt - 2.6) / 0.6) * 14);
+          txt(g, '•'.repeat(n) || 'Clave', 110, 441, 34, 700, n ? '#fff' : '#6b819a');
+          btn(g, 80, 510, 640, 80, 'Entrar', 'primary', press(lt, 3.45), 34);
+          const ok = easeOut((lt - 3.6) / 0.35);
+          if (ok > 0) { g.globalAlpha = login * ok; banner(g, 160, 650, 480, 72, '✓ Dentro del panel'); }
+          g.globalAlpha = 1;
+        }
+      },
+      (g, lt) => {
+        base(g, 'Panel de pedidos');
+        panelBar(g, 'Almacén Don Pepe', TABS, 3);
+        txt(g, 'Negocio', 40, 262, 34, 800, C.ink);
+        const nombre = 'Almacén Don Pepe', n = Math.floor(clamp((lt - 0.3) / 0.8) * nombre.length);
+        campo(g, 40, 330, 720, 66, 'Nombre del negocio', nombre.slice(0, n), lt < 1.2);
+        const wa = '56912345678', m = Math.floor(clamp((lt - 1.2) / 0.6) * wa.length);
+        campo(g, 40, 440, 720, 66, 'WhatsApp del negocio', wa.slice(0, m), lt > 1.2 && lt < 1.9);
+        txt(g, 'Pagos', 40, 556, 32, 800, C.ink);
+        let px = 40;
+        ['Transferencia', 'Mercado Pago', 'Efectivo'].forEach((p, k) => { g.globalAlpha = Math.max(0, easeOut((lt - 1.8 - k*0.2) / 0.3)); px += pill(g, px, 584, '✓ ' + p, '#e6f2eb', C.ok, 24, 48) + 12; g.globalAlpha = 1; });
+        txt(g, 'Despacho por comuna', 40, 680, 30, 800, C.ink);
+        [['Providencia','$3.000'],['Ñuñoa','$3.000'],['Maipú','$4.500']].forEach(([c, v], k) => { const a = easeOut((lt - 2.3 - k*0.15) / 0.3); if (a > 0) { g.globalAlpha = a; txt(g, c, 40, 724 + k*42, 28, 600, C.ink); txt(g, v, CW - 40, 724 + k*42, 28, 800, C.ink, 'right'); g.globalAlpha = 1; } });
+        txt(g, 'Catálogo', 40, 856, 30, 800, C.ink);
+        const b = easeOut((lt - 3.75) / 0.35);
+        if (b < 1) btn(g, 40, 885, 720, 72, 'Importar productos', 'primary', press(lt, 3.55), 32);
+        if (b > 0) { g.globalAlpha = b; banner(g, 40, 885, 720, 72, '✓ 1.500 productos importados'); g.globalAlpha = 1; }
+      },
+      (g, lt) => {
+        base(g, 'Panel de pedidos');
+        panelBar(g, 'Almacén Don Pepe', TABS, 0);
+        txt(g, 'Pedidos', 40, 263, 40, 800, C.ink);
+        btn(g, 380, 232, 380, 62, 'Compartir formulario', 'ghost', press(lt, 1.1), 28);
+        const d = easeOut((lt - 1.25) / 0.3);
+        if (d > 0) {
+          overlay(g, d); g.globalAlpha = d;
+          dialog(g, 40, 320, 720, 640);
+          txt(g, 'Compartir el formulario', 80, 380, 38, 800, C.ink, 'left', 640);
+          wrap(g, 'Tus clientes piden desde este enlace, sin instalar nada.', 80, 432, 640, 28, 600, C.muted);
+          g.strokeStyle = C.brand; g.lineWidth = 3; rr(g, 80, 500, 640, 66, 12); g.stroke(); txt(g, 'script.google.com/macros/s/…/exec', 102, 533, 28, 600, C.ink, 'left', 600);
+          g.fillStyle = '#f6f8fb'; rr(g, 80, 590, 640, 140, 14); g.fill();
+          wrap(g, 'Haz tu pedido en Almacén Don Pepe: script.google.com/…/exec', 104, 632, 590, 28, 600, C.ink, 1.35);
+          if (lt < 3.0) { btn(g, 80, 760, 640, 66, 'Ver formulario', 'ghost', 0, 28); btn(g, 80, 846, 640, 72, 'Enviar por WhatsApp', 'wa', press(lt, 2.75), 30); }
+          const b = easeOut((lt - 3.0) / 0.35);
+          if (b > 0) { g.globalAlpha = d * b; banner(g, 80, 846, 640, 72, '✓ Enviado a tus clientes: ¡a recibir pedidos!', '#1da851'); }
+          g.globalAlpha = 1;
+        }
+      }
+    ];
+  };
+  pi.cursorV = [
+    K.copia, K.publicar(532), K.permisos(false),
+    { keys:[[0.2,600,820],[0.6,440,172],[0.85,440,172],[1.15,560,238],[1.4,560,238],[3.3,400,550],[3.55,400,550],[4.2,650,940]], clicks:[0.75,1.3,3.45] },
+    { keys:[[0.3,650,700],[3.4,400,921],[3.65,400,921],[4.3,650,760]], clicks:[3.55] },
+    { keys:[[0.3,650,960],[1.0,570,263],[1.2,570,263],[2.6,400,882],[2.85,400,882],[3.5,650,960]], clicks:[1.1,2.75] }
+  ];
+
+  // ── Conciliador V2 · Ver en acción ──
+  const v2a = AL_DEMOS['v2-accion'];
+  v2a.drawV = H => { const { C, CW, clamp, ease, easeOut, lerp, rr, txt, wrap, press, btn, base, overlay, dialog, banner, pill, campo, panelBar } = H;
+    const TABS = ['Resumen','Resultados','Sugerencias','Historial','Configuración'];
+    function tabla(g, x, y, w, titulo, filas, marca, a){
+      g.fillStyle = '#f6f8fb'; rr(g, x, y, w, 62, 14); g.fill();
+      txt(g, titulo, x + 22, y + 32, 32, 800, C.ink);
+      filas.forEach((f, k) => {
+        const ap = easeOut((a - k*0.12) / 0.35); if (ap <= 0) return;
+        const yy = y + 96 + k*56;
+        g.globalAlpha = ap;
+        const m = marca ? marca(k) : 0;
+        if (m > 0) { g.fillStyle = 'rgba(224,138,44,' + (0.22*m) + ')'; rr(g, x, yy - 26, w, 52, 12); g.fill(); }
+        txt(g, f[0], x + 20, yy, 28, 600, C.ink, 'left', w - 250);
+        txt(g, f[1], x + w - 20, yy, 30, 800, f[1][0] === '-' ? C.muted : C.ink, 'right');
+        g.strokeStyle = C.line; g.lineWidth = 2; g.beginPath(); g.moveTo(x, yy + 28); g.lineTo(x + w, yy + 28); g.stroke();
+        g.globalAlpha = 1;
+      });
+    }
+    const tarjeta = (g, x, y, w, fuente, concepto, monto, a, hl) => {
+      g.globalAlpha = a;
+      g.fillStyle = hl ? 'rgba(47,138,91,.12)' : '#f6f8fb'; rr(g, x, y, w, 150, 18); g.fill();
+      g.strokeStyle = hl ? C.ok : C.line; g.lineWidth = 3; rr(g, x, y, w, 150, 18); g.stroke();
+      txt(g, fuente, x + 24, y + 36, 24, 700, C.soft); txt(g, concepto, x + 24, y + 78, 30, 700, C.ink, 'left', w - 48);
+      txt(g, monto, x + 24, y + 120, 36, 800, C.ink);
+      g.globalAlpha = 1;
+    };
+    return [
+      (g, lt) => {
+        base(g, 'Cierre de marzo');
+        const izq = [['03/03 Abono cliente','$2.000.000'],['04/03 Transferencia','-$1.190.000'],['12/03 Comisión mantención','-$12.990'],['15/03 Pago proveedores','-$780.000'],['20/03 Intereses','$1.250'],['22/03 Depósito','$45.000']];
+        const der = [['Factura 1002','$1.200.000'],['Factura 1002 saldo','$800.000'],['Pago fact. 1001','-$1.190.000'],['Pago fact. 1003-1004','-$780.000'],['Depósito cliente','$45.000']];
+        const ml = k => (k === 0 || k === 2 || k === 4) ? easeOut((lt - 1.8 - k*0.15) / 0.4) : 0;
+        const mr = k => (k <= 1) ? easeOut((lt - 1.9) / 0.4) : 0;
+        tabla(g, 40, 96, 720, 'Cartola banco', izq, ml, lt - 0.2);
+        tabla(g, 40, 516, 720, 'Libro mayor', der, mr, lt - 0.5);
+        const p = easeOut((lt - 2.8) / 0.4);
+        if (p > 0) { g.globalAlpha = p; pill(g, 400, 892 + (1-p)*14, 'No cuadra: faltan $645.390', C.bad, '#fff', 34, 68, 'center'); g.globalAlpha = 1; }
+      },
+      (g, lt) => {
+        base(g, 'Conciliador V2');
+        panelBar(g, 'Conciliador V2', TABS, 4);
+        txt(g, '1 · Fuentes de datos', 40, 262, 38, 800, C.ink);
+        const url = 'docs.google.com/spreadsheets/d/1Cartola…';
+        const n = Math.floor(clamp((lt - 0.4) / 0.9) * url.length);
+        txt(g, 'Fuente 1', 40, 318, 28, 800, C.brand);
+        campo(g, 40, 372, 720, 62, 'Enlace o ID del Sheet', url.slice(0, n), lt > 0.4 && lt < 1.4);
+        campo(g, 40, 470, 720, 62, 'Hoja', lt > 1.3 ? 'Movimientos ▾' : '', false);
+        const f2 = easeOut((lt - 1.4) / 0.45);
+        if (f2 > 0) {
+          g.globalAlpha = f2;
+          txt(g, 'Fuente 2', 40, 566, 28, 800, C.brand);
+          campo(g, 40, 618, 340, 62, 'Sheet', 'el mismo Sheet', false);
+          campo(g, 400, 618, 360, 62, 'Hoja', 'Mayor banco ▾', false);
+          g.globalAlpha = 1;
+        }
+        [['Fecha','Glosa','Cargo / Abono'],['Fecha','Descripción','Debe / Haber']].forEach((cs, fi) => {
+          let x = 40;
+          cs.forEach((c, k) => {
+            const a = easeOut((lt - 2.0 - fi*0.35 - k*0.12) / 0.3); if (a <= 0) return;
+            g.globalAlpha = a; x += pill(g, x, 706 + fi*60, '✓ ' + c, '#e6f2eb', C.ok, 25, 48) + 12; g.globalAlpha = 1;
+          });
+        });
+        const b = easeOut((lt - 3.3) / 0.35);
+        if (b < 1) btn(g, 40, 870, 720, 72, 'Guardar fuentes', 'primary', press(lt, 3.05), 34);
+        if (b > 0) { g.globalAlpha = b; banner(g, 40, 870, 720, 72, '✓ 2 fuentes listas'); g.globalAlpha = 1; }
+      },
+      (g, lt) => {
+        base(g, 'Conciliador V2');
+        panelBar(g, 'Conciliador V2', TABS, 1);
+        const ok = lt > 2.6;
+        tarjeta(g, 40, 250, 720, 'CARTOLA · 03/03', 'Abono Comercial Sur', '$2.000.000', easeOut(lt / 0.4), ok);
+        tarjeta(g, 40, 520, 350, 'MAYOR · 02/03', 'Factura 1002', '$1.200.000', easeOut((lt - 0.4) / 0.4), ok);
+        tarjeta(g, 410, 520, 350, 'MAYOR · 19/03', 'Factura 1002 saldo', '$800.000', easeOut((lt - 0.55) / 0.4), ok);
+        [[215, 0.9], [585, 1.2]].forEach(([x2, t0]) => {
+          const p = ease((lt - t0) / 0.6); if (p <= 0) return;
+          g.strokeStyle = ok ? C.ok : C.brand; g.lineWidth = 5; g.beginPath(); g.moveTo(400, 400);
+          const x = lerp(400, x2, p), y = lerp(400, 520, p), cy = lerp(400, 460, p);
+          g.bezierCurveTo(400, cy, x, cy, x, y); g.stroke();
+        });
+        const s = easeOut((lt - 1.9) / 0.4);
+        if (s > 0) { g.globalAlpha = s; txt(g, '$1.200.000 + $800.000 = $2.000.000 ✓', 400, 730, 34, 800, C.ink, 'center', 720); g.globalAlpha = 1; }
+        const b = easeOut((lt - 2.6) / 0.35);
+        if (b > 0) { g.globalAlpha = b; pill(g, 400, 772, 'Grupo 1:2 · Conciliado', C.ok, '#fff', 32, 62, 'center'); g.globalAlpha = 1; }
+        const m = easeOut((lt - 3.1) / 0.4);
+        if (m > 0) { g.globalAlpha = m; wrap(g, 'Motivo: suman lo mismo · 17 días de diferencia · «1002» en ambos conceptos', 60, 890, 680, 28, 600, C.muted, 1.3); g.globalAlpha = 1; }
+      },
+      (g, lt) => {
+        base(g, 'Conciliador V2');
+        panelBar(g, 'Conciliador V2', TABS, 4);
+        txt(g, '3 · Reglas para explicar pendientes', 40, 262, 34, 800, C.ink, 'left', 720);
+        g.strokeStyle = C.line; g.lineWidth = 3; rr(g, 40, 296, 720, 364, 18); g.stroke();
+        campo(g, 70, 350, 660, 56, 'Nombre', 'Comisiones del banco', false);
+        campo(g, 70, 450, 660, 56, 'Queda explicado como', lt > 0.5 ? 'Gasto bancario' : '', lt > 0.3 && lt < 0.9);
+        [['si','Concepto','contiene','comisión'],['y','Tipo','es cargo',''],['y','Monto','hasta','$20.000']].forEach((c, k) => {
+          const a = easeOut((lt - 0.7 - k*0.3) / 0.3); if (a <= 0) return;
+          const y = 546 + k*40;
+          g.globalAlpha = a;
+          txt(g, c[0], 80, y, 24, 700, C.soft);
+          txt(g, c[1], 120, y, 27, 700, C.ink); txt(g, c[2], 290, y, 27, 600, C.muted);
+          if (c[3]) pill(g, 470, y - 19, c[3], '#eef2f7', C.ink, 24, 38);
+          g.globalAlpha = 1;
+        });
+        btn(g, 40, 684, 720, 66, 'Guardar estas reglas', 'primary', press(lt, 2.15), 32);
+        [['12/03','Comisión mantención cuenta','-$12.990'],['14/03','Comisión transferencia','-$490'],['28/03','Comisión por giro','-$1.200']].forEach((r, k) => {
+          const y = 800 + k*64, t0 = 2.5 + k*0.3, on = lt > t0;
+          txt(g, r[0], 50, y, 24, 600, C.soft); txt(g, r[1], 130, y, 27, 600, C.ink, 'left', 330); txt(g, r[2], 590, y, 27, 800, C.ink, 'right');
+          const pop = 1 + Math.sin(clamp((lt - t0) / 0.3) * Math.PI) * 0.12;
+          g.save(); g.translate(690, y); g.scale(pop, pop);
+          pill(g, 0, -21, on ? 'Explicado' : 'Pendiente', on ? '#ece9fb' : '#fdf1e2', on ? C.expl : C.warn, 24, 42, 'center');
+          g.restore();
+        });
+      },
+      (g, lt) => {
+        base(g, 'Conciliador V2');
+        panelBar(g, 'Conciliador V2', TABS, 1);
+        for (let r = 0; r < 9; r++) { g.fillStyle = r % 2 ? '#f6f8fb' : '#fff'; g.fillRect(40, 240 + r*80, 720, 80); g.fillStyle = '#dde5ee'; rr(g, 70, 272 + r*80, 280, 14, 7); g.fill(); rr(g, 560, 272 + r*80, 170, 14, 7); g.fill(); }
+        const d = easeOut((lt - 0.25) / 0.35);
+        overlay(g, d); g.globalAlpha = d;
+        dialog(g, 40, 236, 720, 730);
+        txt(g, 'Enviar por correo', 80, 292, 40, 800, C.ink);
+        pill(g, 80, 326, 'Movimientos de esta vista', C.brand, '#fff', 24, 44);
+        const para = 'contabilidad@empresa.cl' + (lt > 1.45 ? ', ana@empresa.cl' : '');
+        campo(g, 80, 430, 640, 60, 'Para', para, lt < 1.6);
+        if (lt < 1.5) pill(g, 80, 502, '+ ana@empresa.cl', '#eef2f7', C.brand, 24, 40);
+        campo(g, 80, 600, 640, 60, 'Asunto', 'Pendientes de marzo · 8 movimientos', false);
+        g.fillStyle = '#f6f8fb'; rr(g, 80, 680, 640, 100, 14); g.fill();
+        txt(g, 'Vista previa', 104, 706, 22, 700, C.soft);
+        for (let k = 0; k < 3; k++) { g.fillStyle = '#dde5ee'; rr(g, 104, 730 + k*16, [480, 400, 540][k], 9, 4); g.fill(); }
+        if (lt < 3.3) btn(g, 80, 800, 640, 70, 'Enviar a 2 destinatarios', 'primary', press(lt, 3.05), 32);
+        const b = easeOut((lt - 3.3) / 0.35);
+        if (b > 0) banner(g, 80, 800, 640, 70, '✓ Enviado · queda en Historial');
+        const au = easeOut((lt - 3.9) / 0.4);
+        if (au > 0) { g.globalAlpha = d * au; pill(g, 400, 892, '⏰ Envío automático: todos los días, 8:00', '#e6f2eb', C.ok, 24, 44, 'center'); }
+        g.globalAlpha = 1;
+      },
+      (g, lt) => {
+        base(g, 'Conciliador V2');
+        panelBar(g, 'Conciliador V2', TABS, 0);
+        const p = ease((lt - 0.3) / 1.6);
+        const tiles = [[Math.round(lerp(47, 94, p)) + '%', 'conciliación', C.ok], [String(Math.round(lerp(8, 15, p))), 'conciliados', C.ok], [String(Math.round(lerp(0, 3, p))), 'explicados', C.expl], [String(Math.round(lerp(8, 1, p))), 'pendientes', C.warn]];
+        tiles.forEach(([v, l, c], i) => {
+          const x = 40 + (i % 2)*370, y = 244 + (i >> 1)*176;
+          g.fillStyle = '#f6f8fb'; rr(g, x, y, 350, 160, 20); g.fill();
+          txt(g, v, x + 175, y + 64, 64, 800, c, 'center'); txt(g, l, x + 175, y + 124, 28, 700, C.muted, 'center');
+        });
+        txt(g, 'Montos por grupo', 40, 630, 30, 800, C.ink);
+        [0.9, 0.7, 0.55, 0.4, 0.3, 0.2].forEach((v, k) => {
+          const h = 190 * v * ease((lt - 0.6 - k*0.1) / 0.7);
+          g.fillStyle = k < 4 ? C.ok : C.warn; rr(g, 56 + k*118, 866 - h, 84, h, 10); g.fill();
+        });
+        const s = easeOut((lt - 2.6) / 0.4);
+        if (s > 0) { g.globalAlpha = s; pill(g, 400, 900, 'IA opcional: 1 propuesta en Sugerencias', '#eef2f7', C.brand, 26, 56, 'center'); g.globalAlpha = 1; }
+      }
+    ];
+  };
+  v2a.cursorV = [
+    null,
+    { keys:[[0.3,700,960],[2.9,400,906],[3.2,400,906],[3.9,650,980]], clicks:[3.05] },
+    null,
+    { keys:[[0.3,650,960],[2.0,400,717],[2.25,400,717],[2.9,650,980]], clicks:[2.15] },
+    { keys:[[0.3,650,960],[1.25,190,522],[1.5,190,522],[2.9,400,835],[3.2,400,835],[3.9,650,980]], clicks:[1.4,3.05] },
+    null
+  ];
+
+  // ── PedidoApp · Ver en acción ──
+  const pa = AL_DEMOS['ped-accion'];
+  pa.drawV = H => { const { C, CW, CH, FONT, clamp, ease, easeOut, rr, txt, wrap, press, btn, base, overlay, dialog, banner, pill, panelBar, celular } = H;
+    const TABS = ['Pedidos','Catálogo','Reportes','Ajustes'];
+    const PROD = [['Pan amasado (kg)','$2.490'],['Queso mantecoso','$6.990'],['Café molido 500 g','$5.490'],['Huevos x 30','$7.290']];
+    // el formulario del cliente ocupa la tarjeta completa: un celular de frente
+    const cel = (g, top = 18) => { g.clearRect(0, 0, CW, CH); g.fillStyle = '#f4f7fb'; rr(g, 0, 0, CW, CH, 34); g.fill(); return celular(g, 150 + (top - 18)*0.25, top, 500 - (top - 18)*0.5, 982 - top); };
+    const flota = (g, x, y, s, ink, size, h, align) => { g.save(); g.shadowColor = 'rgba(18,48,77,.28)'; g.shadowBlur = 22; g.shadowOffsetY = 8; pill(g, x, y, s, '#fff', ink, size, h, align); g.restore(); };
+    return [
+      (g, lt) => {
+        base(g, 'WhatsApp · 37 chats sin leer');
+        const msgs = [['Hola! me mandas 2 kg de pan?', 0], ['cuánto sale el queso mantecoso?', 1], ['y el despacho a Maipú cuánto es?', 0], ['ya transferí 👍', 1], ['me cambias el café por el de 1 kg?', 0], ['sigue disponible la oferta?', 1]];
+        msgs.forEach(([m, lado], k) => {
+          const a = easeOut((lt - 0.2 - k*0.35) / 0.3); if (a <= 0) return;
+          g.globalAlpha = a;
+          g.font = '600 31px ' + FONT; const w = Math.min(g.measureText(m).width + 60, 640);
+          const x = lado ? CW - 40 - w : 40, y = 110 + k*112 + (1 - a)*14;
+          g.fillStyle = lado ? '#dcf8c6' : '#f1f3f6'; rr(g, x, y, w, 82, 22); g.fill();
+          txt(g, m, x + 30, y + 42, 31, 600, C.ink, 'left', w - 60);
+          g.globalAlpha = 1;
+        });
+        const p = easeOut((lt - 2.6) / 0.4);
+        if (p > 0) { g.globalAlpha = p; pill(g, 400, 846, '¿Quién pidió qué? ¿Quién ya pagó?', C.bad, '#fff', 31, 66, 'center'); g.globalAlpha = 1; }
+      },
+      (g, lt) => {
+        const a = cel(g, 104);   // arriba queda lugar para las etiquetas
+        g.fillStyle = C.brand; rr(g, a.x, a.y, a.w, 100, 18); g.fill();
+        txt(g, 'Almacén Don Pepe', a.x + 22, a.y + 38, 30, 800, '#fff'); txt(g, 'Todo para tu casa', a.x + 22, a.y + 76, 22, 600, 'rgba(255,255,255,.85)');
+        let x = a.x;
+        ['Destacados', 'Panadería', 'Lácteos'].forEach((c, k) => { x += pill(g, x, a.y + 118, c, k ? '#eef2f7' : C.brand, k ? C.muted : '#fff', 21, 40) + 8; });
+        PROD.forEach(([n, p], k) => {
+          const e = easeOut((lt - 0.4 - k*0.25) / 0.35); if (e <= 0) return;
+          const y = a.y + 180 + k*150;
+          g.globalAlpha = e;
+          g.fillStyle = '#f6f8fb'; rr(g, a.x, y, a.w, 134, 16); g.fill();
+          g.fillStyle = ['#e9c99b','#f3dfa2','#8a5a3c','#f1e4c8'][k]; rr(g, a.x + 14, y + 14, 106, 106, 14); g.fill();
+          txt(g, n, a.x + 136, y + 40, 25, 700, C.ink, 'left', a.w - 200); txt(g, p, a.x + 136, y + 80, 28, 800, C.ink);
+          if (k === 0) txt(g, 'Desde 6 u.: $2.190 c/u', a.x + 136, y + 112, 19, 700, C.ok, 'left', a.w - 200);
+          g.fillStyle = C.brand; g.beginPath(); g.arc(a.x + a.w - 34, y + 96, 23, 0, Math.PI*2); g.fill(); txt(g, '+', a.x + a.w - 34, y + 97, 30, 800, '#fff', 'center');
+          g.globalAlpha = 1;
+        });
+        const l = easeOut((lt - 1.8) / 0.4);
+        if (l > 0) { g.globalAlpha = l; flota(g, 392, 22, '🔗 Un enlace', C.brand, 28, 58, 'right'); flota(g, 408, 24, 'Sin instalar nada', C.ink, 26, 54); flota(g, 780, 474, 'Precios por cantidad', C.ok, 26, 54, 'right'); g.globalAlpha = 1; }
+      },
+      (g, lt) => {
+        const a = cel(g);
+        if (lt <= 2.9) {
+          txt(g, 'Tu pedido', a.x, a.y + 30, 34, 800, C.ink);
+          [['2× Pan amasado (kg)','$4.980'],['1× Queso mantecoso','$6.990'],['1× Café molido 500 g','$5.490']].forEach(([n, p], k) => {
+            const y = a.y + 92 + k*62; txt(g, n, a.x, y, 24, 600, C.ink, 'left', 290); txt(g, p, a.x + a.w, y, 24, 800, C.ink, 'right');
+          });
+          [['Entrega', lt > 0.8 ? 'Despacho · Providencia $3.000' : 'Elige…'], ['Pago', lt > 1.4 ? 'Transferencia' : 'Elige…']].forEach(([k2, v], k) => {
+            const y = a.y + 300 + k*112;
+            txt(g, k2, a.x, y, 22, 700, C.muted);
+            g.strokeStyle = (lt > 0.8 + k*0.6) ? C.brand : C.line; g.lineWidth = 3; rr(g, a.x, y + 18, a.w, 62, 12); g.stroke();
+            txt(g, v, a.x + 16, y + 50, 23, 700, C.ink, 'left', a.w - 30);
+          });
+          g.fillStyle = C.line; g.fillRect(a.x, a.y + 560, a.w, 2);
+          txt(g, 'Total', a.x, a.y + 602, 28, 800, C.ink); txt(g, '$20.460', a.x + a.w, a.y + 602, 34, 800, C.ink, 'right');
+          btn(g, a.x, a.y + 690, a.w, 76, 'Enviar pedido', 'primary', press(lt, 2.75), 30);
+        } else {
+          const p = easeOut((lt - 2.9) / 0.4), pop = 1 + Math.sin(clamp((lt - 2.9)/0.4)*Math.PI)*0.15;
+          g.beginPath(); g.arc(400, a.y + 170, 62*p*pop, 0, Math.PI*2); g.fillStyle = C.ok; g.fill(); txt(g, '✓', 400, a.y + 174, 66*p, 800, '#fff', 'center');
+          txt(g, '¡Pedido recibido!', 400, a.y + 300, 34, 800, C.ink, 'center');
+          txt(g, 'N° 341 · $20.460', 400, a.y + 350, 28, 700, C.muted, 'center');
+          const s = easeOut((lt - 3.4) / 0.4);
+          if (s > 0) { g.globalAlpha = s; btn(g, a.x, a.y + 430, a.w, 68, 'Seguir mi pedido', 'ghost', 0, 26); btn(g, a.x, a.y + 514, a.w, 68, 'Escribir por WhatsApp', 'wa', 0, 26); g.globalAlpha = 1; }
+        }
+      },
+      (g, lt) => {
+        base(g, 'Panel de pedidos');
+        panelBar(g, 'Almacén Don Pepe', TABS, 0);
+        [['Pendientes', lt > 1.2 ? '19' : '18', C.warn], ['Pedidos', lt > 1.2 ? '341' : '340', C.brand], ['Por pagar', '46', C.brand], ['Ventas', lt > 1.2 ? '$16,86 M' : '$16,84 M', C.ok]].forEach(([l, v, c], i) => {
+          const x = 40 + (i % 2)*370, y = 236 + (i >> 1)*124;
+          g.fillStyle = '#f6f8fb'; rr(g, x, y, 350, 110, 16); g.fill(); g.fillStyle = c; g.fillRect(x, y, 6, 110);
+          txt(g, l.toUpperCase(), x + 24, y + 34, 21, 700, C.muted); txt(g, v, x + 24, y + 78, 38, 800, C.ink);
+        });
+        const n = easeOut((lt - 0.9) / 0.45);
+        const fila = (y, num, cli, tot, est, nuevo) => {
+          g.fillStyle = nuevo ? 'rgba(245,200,76,.25)' : '#fff'; rr(g, 40, y, 720, 110, 14); g.fill();
+          g.strokeStyle = C.line; g.lineWidth = 2; rr(g, 40, y, 720, 110, 14); g.stroke();
+          txt(g, cli, 66, y + 40, 31, 800, C.ink, 'left', 440); txt(g, '#' + num + ' · Providencia · Transferencia', 66, y + 80, 22, 600, C.muted, 'left', 470);
+          pill(g, 736, y + 16, est, nuevo ? '#fdf1e2' : '#e6f2eb', nuevo ? C.warn : C.ok, 22, 42, 'right');
+          txt(g, tot, 736, y + 84, 29, 800, C.ink, 'right');
+        };
+        const b0 = 500 + 126*n;
+        fila(b0, 340, 'Benjamín Fuentes', '$104.300', 'En camino', false);
+        g.globalAlpha = 1 - n; fila(b0 + 126, 339, 'Ignacio Castro', '$53.990', 'Entregado', false); g.globalAlpha = 1;
+        if (n > 0) { g.globalAlpha = n; fila(500, 341, 'Josefa Morales', '$20.460', 'Nuevo', true); g.globalAlpha = 1; }
+        const t = easeOut((lt - 1.3) / 0.35) * (1 - ease((lt - 3.6) / 0.4));
+        if (t > 0) { g.globalAlpha = t; g.fillStyle = C.ink; rr(g, 80, 790, 640, 72, 36); g.fill(); txt(g, '🔔 Pedido #341 · Josefa · $20.460', 400, 826, 28, 700, '#fff', 'center', 600); g.globalAlpha = 1; }
+        const s = easeOut((lt - 2.2) / 0.4);
+        if (s > 0) { g.globalAlpha = s; pill(g, 400, 900, 'Stock: Pan amasado 24 → 22', '#eef2f7', C.ink, 26, 50, 'center'); g.globalAlpha = 1; }
+      },
+      (g, lt) => {
+        base(g, 'Panel de pedidos');
+        panelBar(g, 'Almacén Don Pepe', TABS, 0);
+        txt(g, 'Pedido #341 · Josefa Morales', 40, 262, 34, 800, C.ink, 'left', 720);
+        [['2× Pan amasado (kg)','$4.980'],['1× Queso mantecoso','$6.990'],['1× Café molido 500 g','$5.490'],['Despacho Providencia','$3.000']].forEach(([n, p], k) => { const y = 322 + k*54; txt(g, n, 40, y, 28, 600, C.ink); txt(g, p, CW - 40, y, 28, 800, C.ink, 'right'); });
+        btn(g, 40, 560, 720, 72, 'Confirmar', 'primary', press(lt, 1.0), 32);
+        const d = easeOut((lt - 1.15) / 0.3);
+        if (d > 0) {
+          overlay(g, d); g.globalAlpha = d;
+          dialog(g, 40, 290, 720, 680);
+          txt(g, '¿Cambiar a Confirmado?', 80, 350, 38, 800, C.ink);
+          txt(g, 'MENSAJE PARA EL CLIENTE', 80, 405, 21, 700, C.soft);
+          g.fillStyle = '#dcf8c6'; rr(g, 80, 430, 640, 290, 18); g.fill();
+          const msg = 'Hola Josefa, confirmamos tu pedido #341 por $20.460. Te lo llevamos hoy a Providencia. Sigue tu pedido aquí: ambilor.lab/…';
+          const n = Math.floor(clamp((lt - 1.4) / 0.9) * msg.length);
+          wrap(g, msg.slice(0, n), 106, 474, 590, 30, 600, C.ink, 1.35);
+          if (lt < 3.1) { btn(g, 80, 750, 640, 66, 'Volver', 'ghost', 0, 28); btn(g, 80, 834, 640, 76, 'Confirmar y avisar por WhatsApp', 'wa', press(lt, 2.75), 30); }
+          const b = easeOut((lt - 3.1) / 0.35);
+          if (b > 0) { g.globalAlpha = d * b; banner(g, 80, 834, 640, 76, '✓ Confirmado · WhatsApp abierto con el mensaje', '#1da851'); }
+          g.globalAlpha = 1;
+        }
+      },
+      (g, lt) => {
+        base(g, 'Panel de pedidos');
+        panelBar(g, 'Almacén Don Pepe', TABS, 2);
+        btn(g, 40, 232, 170, 54, 'CSV', 'ghost', 0, 24);
+        btn(g, 226, 232, 170, 54, 'Hoy', 'ghost', press(lt, 2.55), 24);
+        g.fillStyle = '#f6f8fb'; rr(g, 40, 304, 720, 104, 16); g.fill();
+        txt(g, 'VENTAS', 64, 336, 21, 700, C.muted); txt(g, '$16.839.800', 64, 380, 40, 800, C.ink);
+        [['Pedidos', '340'], ['Ticket promedio', '$49.529']].forEach(([l, v], i) => {
+          const x = 40 + i*370;
+          g.fillStyle = '#f6f8fb'; rr(g, x, 424, 350, 104, 16); g.fill();
+          txt(g, l.toUpperCase(), x + 24, 456, 21, 700, C.muted); txt(g, v, x + 24, 500, 36, 800, C.ink, 'left', 300);
+        });
+        txt(g, 'Ventas por día', 40, 578, 28, 800, C.ink);
+        for (let k = 0; k < 14; k++) {
+          const h = (40 + 100 * Math.abs(Math.sin(k*1.7 + 0.4))) * ease((lt - 0.4 - k*0.05) / 0.6);
+          g.fillStyle = k === 13 ? C.brand : '#9dbbe0'; rr(g, 46 + k*50, 746 - h, 36, h, 6); g.fill();
+        }
+        txt(g, 'Lo más pedido', 40, 790, 28, 800, C.ink);
+        [['Pan amasado', 0.95], ['Huevos x 30', 0.7], ['Queso mantecoso', 0.55], ['Café molido', 0.4]].forEach(([n, v], k) => {
+          const x = 40 + (k % 2)*370, y = 830 + (k >> 1)*52, w = 320 * v * ease((lt - 0.9 - k*0.12) / 0.5);
+          txt(g, n, x, y, 23, 600, C.ink); g.fillStyle = C.ok; rr(g, x, y + 16, Math.max(1, w), 12, 6); g.fill();
+        });
+        const r = easeOut((lt - 2.8) / 0.4);
+        if (r > 0) { g.globalAlpha = r; pill(g, 400, 928, '📊 Resumen de hoy: 19 pedidos · $412.300', C.ink, '#fff', 26, 58, 'center'); g.globalAlpha = 1; }
+      }
+    ];
+  };
+  pa.cursorV = [
+    null,
+    null,
+    { keys:[[0.3,650,960],[2.6,400,810],[2.85,400,810],[3.6,650,960]], clicks:[2.75] },
+    null,
+    { keys:[[0.3,650,960],[0.9,400,596],[1.1,400,596],[2.6,400,872],[2.85,400,872],[3.6,650,980]], clicks:[1.0,2.75] },
+    { keys:[[0.3,650,960],[2.4,311,259],[2.65,311,259],[3.3,650,980]], clicks:[2.55] }
+  ];
+
+  // el V1 es la sub-pestaña visible al cargar: su demo de instalación parte ya
+  const r1 = document.getElementById('como-se-instala');
+  if (r1 && v1i && window.alDemoTarjetas) alDemoTarjetas(r1, v1i);
+})();
 </script>
 <script>
 /* Herramientas → sub-pestañas. Los demos 3D de V2 y PedidoApp se inician la
