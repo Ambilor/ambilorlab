@@ -629,6 +629,48 @@ nav.scrolled .nav-links a{font-size:12px}
 .al-demo__step[aria-current="step"] .al-demo__label{color:var(--negro); font-weight:600}
 .al-demo__note{margin:10px 0 0; font-size:12px; color:var(--gris-2); line-height:1.5}
 .al-demo__count{flex:none; margin-left:6px; font-family:var(--mono); font-size:11px; font-weight:500; color:var(--gris-2); font-variant-numeric:tabular-nums}
+/* Simulación (2026-09-30): panel sobre la escena con la fase, el avance, lo
+   que acaba de pasar y los contadores. Datos de ejemplo, no de un usuario. */
+.al-demo__btn--rst span{display:inline-block;font-size:1.05rem;line-height:1}
+.al-demo__btn--rst.gira span{animation:alGiro .55s var(--ease)}
+@keyframes alGiro{from{transform:rotate(0)}to{transform:rotate(-360deg)}}
+.al-sim{position:absolute;inset:0;pointer-events:none;font-family:var(--mono);color:#e8edf5;z-index:2}
+.al-sim__bar{position:absolute;left:0;right:0;top:0;height:3px;opacity:0;transition:opacity .3s}
+.al-sim__bar.on,.al-sim--ok .al-sim__bar{opacity:1}
+.al-sim__bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#4c8ddb,#35b37e);box-shadow:0 0 10px rgba(76,141,219,.7);transition:width .18s linear}
+.al-sim__top{position:absolute;left:8px;top:9px;display:flex;align-items:center;gap:7px;max-width:calc(100% - 118px);padding:4px 9px 4px 8px;border-radius:12px;background:rgba(10,18,30,.74);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:0 6px 18px -8px rgba(0,0,0,.5);font-size:10.5px;line-height:1.3}
+.al-sim__dot{flex:none;width:7px;height:7px;border-radius:50%;background:#4c8ddb;animation:alLatido 1.2s ease-in-out infinite}
+.al-sim--ok .al-sim__dot{background:#35b37e}
+.al-demo--manual .al-sim__dot{animation:none;background:#98a2b3}
+@keyframes alLatido{0%,100%{box-shadow:0 0 0 0 rgba(76,141,219,.7)}50%{box-shadow:0 0 0 5px rgba(76,141,219,0)}}
+.al-sim__fase{min-width:0;overflow-wrap:anywhere}   /* si no cabe en una línea usa dos: nunca se corta */
+.al-sim__modo{flex:none;padding:1px 6px;border-radius:999px;background:rgba(255,255,255,.12);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#b8c4d4}
+.al-demo--manual .al-sim__modo{background:rgba(245,200,76,.2);color:#f5d27a}
+.al-sim__demo{position:absolute;right:8px;top:9px;padding:4px 8px;border-radius:999px;background:rgba(245,200,76,.92);color:#3b2a00;font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.al-sim__evt{position:absolute;left:50%;top:40px;width:max-content;max-width:calc(100% - 16px);padding:5px 11px;border-radius:9px;background:rgba(36,122,80,.94);color:#fff;font-size:10.5px;text-align:center;opacity:0;transform:translate(-50%,-6px);transition:opacity .25s,transform .25s var(--ease);box-shadow:0 8px 20px -10px rgba(0,0,0,.55)}
+.al-sim__evt.on{opacity:1;transform:translate(-50%,0)}
+.al-sim__kpis{position:absolute;left:8px;right:8px;bottom:8px;display:flex;gap:5px;margin:0;padding:0;list-style:none}
+.al-sim__kpis li{flex:1 1 0;min-width:0;padding:4px 4px 3px;border-radius:9px;background:rgba(10,18,30,.74);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);text-align:center;transition:background .3s}
+.al-sim__kpis b{display:block;font-size:14px;font-weight:600;line-height:1.2;font-variant-numeric:tabular-nums}
+.al-sim__kpis span{display:block;font-family:var(--sans);font-size:9px;line-height:1.2;color:#b8c4d4;overflow-wrap:anywhere}
+.al-sim__kpis li.cambia{animation:alSube .6s var(--ease)}
+@keyframes alSube{0%{background:rgba(53,179,126,.75);transform:translateY(-2px)}100%{background:rgba(10,18,30,.74);transform:none}}
+.al-sim--fin .al-sim__kpis li{background:rgba(22,60,44,.8)}
+.al-sim--fin .al-sim__kpis li:nth-child(2) b{color:#7fd3a8}
+.al-sim--fin .al-sim__kpis li:nth-child(3) b{color:#f5c07a}
+@media (min-width:900px){ .al-sim__top{font-size:11.5px} .al-sim__evt{font-size:11.5px} .al-sim__kpis b{font-size:16px} .al-sim__kpis span{font-size:9.5px} }
+@media (max-width:639px){
+  .al-sim__top{left:6px;top:7px;padding:3px 8px 3px 7px;font-size:10px;max-width:calc(100% - 108px)}
+  .al-sim__modo{display:none}
+  .al-sim__demo{right:6px;top:7px;padding:3px 6px;font-size:8px;letter-spacing:.05em}
+  .al-sim__evt{top:42px;font-size:9.5px;padding:4px 9px}
+  .al-sim__kpis{left:6px;right:6px;bottom:6px;gap:4px}
+  .al-sim__kpis li{padding:3px 2px 2px;border-radius:7px}
+  .al-sim__kpis li:nth-child(n+5){display:none}
+  .al-sim__kpis b{font-size:12px}
+  .al-sim__kpis span{font-size:8px}
+}
+@media (prefers-reduced-motion: reduce){ .al-sim__dot,.al-sim__kpis li.cambia,.al-demo__btn--rst.gira span{animation:none} .al-sim__evt,.al-sim__bar i{transition:none} }
 /* Fallback sin 3D: se oculta el canvas y se listan los 6 pasos en texto. */
 .al-demo__fallback{display:none}
 .al-demo--no3d .al-demo__stage,
@@ -4482,6 +4524,140 @@ window.AL3D = (function(){
   requestAnimationFrame(bucle);
 })();
 });</script>
+<script>
+/* ═══ Línea de tiempo de las demos (2026-09-30, Ambilor.Lab) ═══
+   Un solo controlador para todas las demos (la escena 3D del V1 y el motor
+   de tarjetas): modo automático y manual, Anterior / Siguiente / Reiniciar,
+   teclado y la barra de pasos. Opcionalmente arma un panel de simulación
+   sobre la escena (cfg.sim): fase actual, barra de progreso, avisos de lo que
+   acaba de pasar y contadores que suben, marcados como datos de ejemplo.
+
+   alDemoLinea(root, STEPS, { hold, onStep(i, primero), sim(t) })
+     → { T, playing, current, go(i), setPlaying(p), restart(), tick(dt, visible) }
+   · Automático: el tiempo avanza solo y la demo recorre sus etapas.
+   · Pausa: todo queda congelado donde está; Anterior / Siguiente muestran
+     cada etapa completa. Reproducir sigue desde ese punto, sin reiniciar.
+   · Reiniciar: vuelve al estado inicial (contadores, escena y progreso) y
+     reproduce desde el comienzo.
+   sim(t) devuelve { fase, prog (0..1 o null), ok, evt, kpis:[[valor, etiqueta]], fin }. */
+window.alDemoLinea = function(root, STEPS, o){
+  o = o || {};
+  const $ = s => root.querySelector(s);
+  const DUR = STEPS[STEPS.length - 1].b, HOLD = o.hold == null ? 0.45 : o.hold;
+  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const stepOf = t => { for (let i = STEPS.length - 1; i >= 0; i--) if (t >= STEPS[i].a) return i; return 0; };
+  const list = $('.al-demo__steps'), elCount = $('.al-demo__count'), playBtn = $('[data-act="play"]'), nextBtn = $('[data-act="next"]');
+  const L = { T: 0, playing: !reduce, current: -1, sucio: true };
+
+  // barra de pasos (se arma aquí: el HTML la trae vacía)
+  list.innerHTML = '';
+  const fills = STEPS.map((s, i) => {
+    const li = document.createElement('li');
+    li.innerHTML = '<button class="al-demo__step" type="button"><span class="al-demo__track"><i></i></span><span class="al-demo__label"></span></button>';
+    li.firstChild.setAttribute('aria-label', 'Ir a: ' + s.kicker);
+    li.querySelector('.al-demo__label').textContent = s.short;
+    li.firstChild.addEventListener('click', () => L.go(i));
+    list.appendChild(li);
+    return { fill: li.querySelector('i'), btn: li.firstChild };
+  });
+  // Reiniciar: se agrega junto a los controles existentes (no se duplica)
+  let rst = $('[data-act="restart"]');
+  if (!rst && nextBtn) {
+    rst = document.createElement('button'); rst.type = 'button'; rst.className = 'al-demo__btn al-demo__btn--rst';
+    rst.setAttribute('data-act', 'restart'); rst.setAttribute('aria-label', 'Reiniciar la demo'); rst.title = 'Reiniciar';
+    rst.innerHTML = '<span aria-hidden="true">↻</span>';
+    nextBtn.insertAdjacentElement('afterend', rst);
+  }
+
+  // panel de simulación sobre la escena
+  let S = null;
+  if (o.sim) {
+    const stage = $('.al-demo__stage');
+    S = document.createElement('div'); S.className = 'al-sim'; S.setAttribute('aria-hidden', 'true');
+    S.innerHTML = '<div class="al-sim__bar"><i></i></div><div class="al-sim__top"><span class="al-sim__dot"></span><span class="al-sim__fase"></span><span class="al-sim__modo"></span></div><span class="al-sim__demo">Datos de ejemplo</span><div class="al-sim__evt"></div><ul class="al-sim__kpis"></ul>';
+    stage.appendChild(S);
+    S.q = { bar: S.querySelector('.al-sim__bar i'), fase: S.querySelector('.al-sim__fase'), modo: S.querySelector('.al-sim__modo'), evt: S.querySelector('.al-sim__evt'), kpis: S.querySelector('.al-sim__kpis') };
+    S.prev = {};
+  }
+  function pintarSim(){
+    if (!S) return;
+    const e = o.sim(L.T) || {}, p = S.prev;
+    if (e.fase !== p.fase) S.q.fase.textContent = e.fase || '';
+    const modo = L.playing ? 'Automático' : 'Manual';
+    if (modo !== p.modo) S.q.modo.textContent = modo;
+    const prog = e.prog == null ? (e.ok ? 1 : 0) : e.prog;
+    if (prog !== p.prog) { S.q.bar.style.width = (prog * 100).toFixed(1) + '%'; S.q.bar.parentNode.classList.toggle('on', e.prog != null); }
+    S.classList.toggle('al-sim--ok', !!e.ok); S.classList.toggle('al-sim--fin', !!e.fin);
+    if (e.evt !== p.evt) {
+      S.q.evt.classList.remove('on');
+      if (e.evt) { S.q.evt.textContent = e.evt; void S.q.evt.offsetWidth; S.q.evt.classList.add('on'); }
+    }
+    const k = e.kpis || [], firma = k.map(x => x[1]).join('|');
+    if (firma !== p.firma) S.q.kpis.innerHTML = k.map(() => '<li><b></b><span></span></li>').join('');
+    k.forEach(([v, l], n) => {
+      const li = S.q.kpis.children[n], b = li.firstChild, sv = String(v);
+      if (b.textContent !== sv) {
+        if (b.textContent && firma === p.firma && !reduce) { li.classList.remove('cambia'); void li.offsetWidth; li.classList.add('cambia'); }
+        b.textContent = sv;
+      }
+      if (li.lastChild.textContent !== l) li.lastChild.textContent = l;
+    });
+    S.prev = { fase: e.fase, modo, prog, evt: e.evt, firma };
+  }
+
+  L.stepOf = stepOf;
+  L.setStep = i => {
+    if (i === L.current) return;
+    const primero = L.current === -1;
+    L.current = i;
+    if (elCount) elCount.textContent = (i + 1) + ' de ' + STEPS.length;
+    fills.forEach((f, j) => { if (j === i) f.btn.setAttribute('aria-current', 'step'); else f.btn.removeAttribute('aria-current'); });
+    if (o.onStep) o.onStep(i, primero);
+  };
+  L.go = i => {
+    i = (i + STEPS.length) % STEPS.length;
+    // en automático parte al inicio de la etapa; en manual muestra la etapa completa
+    L.T = L.playing ? STEPS[i].a + 0.001 : STEPS[i].b - HOLD;
+    L.setStep(i); L.sucio = true;
+  };
+  L.setPlaying = p => {
+    L.playing = p;
+    if (playBtn) { playBtn.textContent = p ? '▮▮' : '▶'; playBtn.setAttribute('aria-label', p ? 'Pausar' : 'Reproducir'); }
+    root.classList.toggle('al-demo--manual', !p);
+    // al volver a automático sigue desde donde quedó (si terminó, vuelve a empezar)
+    if (p && L.T >= DUR - 0.02) L.T = 0;
+    L.sucio = true;
+  };
+  L.restart = () => {
+    L.T = 0; L.setStep(0); L.setPlaying(!reduce);
+    if (reduce) L.T = STEPS[0].b - HOLD;
+    if (rst && !reduce) { rst.classList.remove('gira'); void rst.offsetWidth; rst.classList.add('gira'); }
+  };
+  L.tick = (dt, visible) => {
+    if (L.playing && visible) { L.T += dt; if (L.T >= DUR) L.T = 0; L.sucio = true; }
+    if (!L.sucio) return false;
+    L.sucio = false;
+    L.setStep(stepOf(L.T));
+    fills.forEach((f, i) => { const s = STEPS[i]; f.fill.style.width = (Math.min(1, Math.max(0, (L.T - s.a) / (s.b - s.a))) * 100) + '%'; });
+    pintarSim();
+    return true;
+  };
+
+  $('[data-act="prev"]').addEventListener('click', () => L.go(L.current - 1));
+  if (nextBtn) nextBtn.addEventListener('click', () => L.go(L.current + 1));
+  if (playBtn) playBtn.addEventListener('click', () => L.setPlaying(!L.playing));
+  if (rst) rst.addEventListener('click', () => L.restart());
+  root.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') { L.go(L.current + 1); e.preventDefault(); }
+    if (e.key === 'ArrowLeft') { L.go(L.current - 1); e.preventDefault(); }
+    if (e.key === 'Home') { L.restart(); e.preventDefault(); }
+  });
+  if (reduce) { L.T = STEPS[0].b - HOLD; root.classList.add('al-demo--manual'); if (playBtn) { playBtn.textContent = '▶'; playBtn.setAttribute('aria-label', 'Reproducir'); } }
+  L.setStep(stepOf(L.T));
+  L.tick(0, false);
+  return L;
+};
+</script>
 <script>alConTHREE(function(){
 /* Demo 3D del Conciliador Automatico V1.
    Adaptada de ver-en-accion-conciliador.html al sitio (ancho 660px, dark mode).
@@ -4541,25 +4717,8 @@ function fallback(){
   if (window.console) console.warn('[al-demo] 3D no disponible, se muestra la version en texto.');
 }
 
-// La lista de pasos (ol.al-demo__steps) llega vacia desde el HTML; el copy del paso 1 si viene escrito.
-const fills = [];
-if (!list.children.length) {
-  STEPS.forEach((s, i) => {
-    const li = document.createElement('li');
-    li.innerHTML = '<button class="al-demo__step" type="button" aria-label="Ir a: ' + s.kicker + '"><span class="al-demo__track"><i></i></span><span class="al-demo__label">' + s.short + '</span></button>';
-    li.firstChild.addEventListener('click', () => go(i));
-    list.appendChild(li);
-    fills.push({ fill: li.querySelector('i'), btn: li.firstChild });
-  });
-} else {
-  Array.prototype.forEach.call(list.querySelectorAll('.al-demo__step'), (btn, i) => {
-    btn.addEventListener('click', () => go(i));
-    fills.push({ fill: btn.querySelector('i'), btn: btn });
-  });
-}
-
 const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-let T = 0, playing = !reduce, current = -1, visible = true, needsRender = true;
+let visible = true, needsRender = true;
 
 function fillCopy(i){
   const s = STEPS[i];
@@ -4580,16 +4739,32 @@ function fillCopy(i){
     elX.appendChild(ul);
   }
 }
-function setStep(i){
-  if (i === current) return;
-  const first = current === -1;
-  current = i;
-  elCount.textContent = (i + 1) + ' de ' + STEPS.length;
-  fills.forEach((f, j) => { if (j === i) f.btn.setAttribute('aria-current', 'step'); else f.btn.removeAttribute('aria-current'); });
-  if (first || reduce) { fillCopy(i); return; }
+/* Simulación (2026-09-30): lo que pasa en la escena, dicho en el panel de la
+   demo. Mismos tiempos que la escena 3D; 12 movimientos de ejemplo. */
+const SIM = t => {
+  const cl = x => Math.min(1, Math.max(0, x));
+  const PARES = [['Factura F-101', 'Pago F-101', 11.75], ['Factura F-102', 'Pago F-102', 12.1], ['Factura F-103', 'Pago F-103', 12.45], ['Factura F-104', 'Pago F-104', 12.8]];
+  const hechos = PARES.filter(p => t >= p[2]).length, manual = t >= 18.9;
+  const anal = t < 11.2 ? 0 : Math.round(12 * cl((t - 11.2) / 3.0));
+  const conc = hechos*2 + (manual ? 2 : 0);
+  const k = [[anal, 'analizados'], [conc, 'conciliados'], [12 - conc, 'pendientes'], [manual ? 2 : 0, 'revisados']];
+  let evt = null;
+  PARES.forEach(p => { if (t >= p[2] && t < p[2] + 1.2) evt = '✓ ' + p[0] + ' → ' + p[1] + ' · coincidencia'; });
+  if (t >= 18.9 && t < 20.4) evt = '✓ Honorario B-23 → Transf. sin referencia · par manual';
+  if (t < 3.6) return { fase:'12 movimientos sin conciliar', kpis:k };
+  if (t < 8.0) return t < 6.6 ? { fase:'Leyendo la planilla y sus columnas…', prog:cl((t - 3.6) / 3.0), kpis:k } : { fase:'✓ Columnas: Fecha, Concepto, Monto', ok:true, kpis:k };
+  if (t < 10.9) return t < 9.45 ? { fase:'Listo para ejecutar', kpis:k } : t < 10.2 ? { fase:'Validando datos…', prog:cl((t - 9.45) / 0.75), kpis:k } : { fase:'✓ Datos validados', ok:true, kpis:k };
+  if (t < 15.3) return t < 11.2 ? { fase:'Iniciando conciliación…', prog:0, kpis:k } : t < 14.2 ? { fase:'Analizando movimientos… ' + anal + ' de 12', prog:cl((t - 11.2) / 3.0), kpis:k, evt } : { fase:'✓ 4 pares encontrados · 4 pendientes', ok:true, kpis:k, evt };
+  if (t < 21.0) return t < 17.5 ? { fase:'Revisión: 4 pendientes por revisar', kpis:k } : t < 18.9 ? { fase:'Emparejando a mano un pendiente…', prog:cl((t - 17.5) / 1.4), kpis:k } : { fase:'✓ Par manual guardado · 2 pendientes', ok:true, kpis:k, evt };
+  const fin = [[12, 'analizados'], [10, 'conciliados'], [2, 'pendientes'], [2, 'revisados'], ['3 s', 'de proceso']];
+  if (t < 22.6) return { fase:'Generando la hoja de resultados…', prog:cl((t - 21.0) / 1.6), kpis:fin };
+  return { fase: t < 26.1 ? '✓ 10 de 12 conciliados (83%) en 3 s' : '✓ Resultados exportados', ok:true, kpis:fin, fin:true };
+};
+const L = alDemoLinea(root, STEPS, { hold:0.05, sim:SIM, onStep(i, primero){
+  if (primero || reduce) { fillCopy(i); return; }
   copy.classList.add('is-changing');
   setTimeout(() => { fillCopy(i); copy.classList.remove('is-changing'); }, 280);
-}
+} });
 const stepOf = t => { for (let i = STEPS.length - 1; i >= 0; i--) if (t >= STEPS[i].a) return i; return 0; };
 // 2026-09-28: el texto reserva el alto del paso mas largo (medido para el ancho
 // actual) para que los controles (anterior, pausa, siguiente) no cambien de
@@ -4601,33 +4776,11 @@ function reservarAlto(){
   if (matchMedia('(orientation:landscape) and (max-height:560px)').matches) return;   // controles bajo la escena
   let max = 0;
   STEPS.forEach((s, i) => { fillCopy(i); max = Math.max(max, copy.offsetHeight); });
-  fillCopy(Math.max(0, current));
+  fillCopy(Math.max(0, L.current));
   copy.style.minHeight = max + 'px';
 }
 if ('ResizeObserver' in window) new ResizeObserver(reservarAlto).observe(copy);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { anchoReservado = 0; reservarAlto(); });
-function go(i){
-  i = (i + STEPS.length) % STEPS.length;
-  T = playing ? STEPS[i].a + 0.001 : STEPS[i].b - 0.05;
-  setStep(i); needsRender = true;
-}
-function setPlaying(p){
-  playing = p;
-  playBtn.textContent = p ? '▮▮' : '▶';
-  playBtn.setAttribute('aria-label', p ? 'Pausar' : 'Reproducir');
-  if (p && T >= STEPS[current].b - 0.06) T = STEPS[current].a + 0.001;
-  needsRender = true;
-}
-root.querySelector('[data-act="prev"]').addEventListener('click', () => go(current - 1));
-root.querySelector('[data-act="next"]').addEventListener('click', () => go(current + 1));
-playBtn.addEventListener('click', () => setPlaying(!playing));
-root.addEventListener('keydown', e => {
-  if (e.key === 'ArrowRight') { go(current + 1); e.preventDefault(); }
-  if (e.key === 'ArrowLeft') { go(current - 1); e.preventDefault(); }
-});
-
-if (reduce) T = STEPS[0].b - 0.05;
-setStep(stepOf(T));   // el copy se pinta antes de tocar 3D: pase lo que pase hay texto
 
 if (!window.THREE || !hasWebGL()) { fallback(); return; }
 
@@ -5193,15 +5346,13 @@ let last = performance.now();
 function frame(now){
   const dt = Math.min(0.05, (now - last) / 1000); last = now;
   if (PX.update(dt)) needsRender = true;
-  if (visible && !document.hidden && (playing || needsRender)) {
-    if (playing) { T += dt; if (T >= DUR) T = 0; }
-    setStep(stepOf(T));
-    const t = T;
+  const mueve = L.tick(dt, visible && !document.hidden);
+  if (visible && !document.hidden && (mueve || needsRender)) {
+    const t = L.T;
     camara(t);
     const ps = updatePanel(t);
     updateTable(t, ps.pres); updateCube(t); updateExport(t);
     renderer.render(scene, camera);
-    fills.forEach((f, i) => { const s = STEPS[i]; f.fill.style.width = (clamp((T - s.a) / (s.b - s.a)) * 100) + '%'; });
     needsRender = false;
   }
   requestAnimationFrame(frame);
@@ -5247,19 +5398,8 @@ window.alDemoTarjetas = function(root, cfg){
     fb.appendChild(li);
   });
 
-  const fills = STEPS.map((s, i) => {
-    const li = document.createElement('li');
-    li.innerHTML = '<button class="al-demo__step" type="button"><span class="al-demo__track"><i></i></span><span class="al-demo__label"></span></button>';
-    li.firstChild.setAttribute('aria-label', 'Ir a: ' + s.kicker);
-    li.querySelector('.al-demo__label').textContent = s.short;
-    li.firstChild.addEventListener('click', () => go(i));
-    list.appendChild(li);
-    return { fill: li.querySelector('i'), btn: li.firstChild };
-  });
-
   const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const HOLD = 0.45;
-  let T = 0, playing = !reduce, current = -1, visible = true, needsRender = true;
+  let visible = true, needsRender = true;
 
   function fillCopy(i){
     const s = STEPS[i];
@@ -5279,16 +5419,11 @@ window.alDemoTarjetas = function(root, cfg){
     if (s.cta) { const a = document.createElement('a'); a.className = 'al-demo__cta'; a.href = '#' + s.cta[1]; a.textContent = s.cta[0]; a.addEventListener('click', ev => { ev.preventDefault(); irA(s.cta[1]); }); elX.appendChild(a); }
     if (s.contact) { const a = document.createElement('a'); a.className = 'al-demo__contact'; a.href = '#contact'; a.textContent = s.contact; a.addEventListener('click', ev => { ev.preventDefault(); if (typeof show === 'function') show('contact'); }); elX.appendChild(a); }
   }
-  function setStep(i){
-    if (i === current) return;
-    const first = current === -1;
-    current = i;
-    elCount.textContent = (i + 1) + ' de ' + STEPS.length;
-    fills.forEach((f, j) => { if (j === i) f.btn.setAttribute('aria-current', 'step'); else f.btn.removeAttribute('aria-current'); });
-    if (first || reduce) { fillCopy(i); return; }
+  const L = alDemoLinea(root, STEPS, { hold:0.45, sim:cfg.sim, onStep(i, primero){
+    if (primero || reduce) { fillCopy(i); return; }
     copy.classList.add('is-changing');
     setTimeout(() => { fillCopy(i); copy.classList.remove('is-changing'); }, 280);
-  }
+  } });
   const stepOf = t => { for (let i = STEPS.length - 1; i >= 0; i--) if (t >= STEPS[i].a) return i; return 0; };
   let anchoReservado = 0;
   function reservarAlto(){
@@ -5297,32 +5432,11 @@ window.alDemoTarjetas = function(root, cfg){
     if (matchMedia('(orientation:landscape) and (max-height:560px)').matches) return;
     let max = 0;
     STEPS.forEach((s, i) => { fillCopy(i); max = Math.max(max, copy.offsetHeight); });
-    fillCopy(Math.max(0, current));
+    fillCopy(Math.max(0, L.current));
     copy.style.minHeight = max + 'px';
   }
   if ('ResizeObserver' in window) new ResizeObserver(reservarAlto).observe(copy);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { anchoReservado = 0; reservarAlto(); });
-  function go(i){
-    i = (i + STEPS.length) % STEPS.length;
-    T = playing ? STEPS[i].a + 0.001 : STEPS[i].b - HOLD;
-    setStep(i); needsRender = true;
-  }
-  function setPlaying(p){
-    playing = p;
-    playBtn.textContent = p ? '▮▮' : '▶';
-    playBtn.setAttribute('aria-label', p ? 'Pausar' : 'Reproducir');
-    if (p && T >= STEPS[current].b - HOLD - 0.01) T = STEPS[current].a + 0.001;
-    needsRender = true;
-  }
-  $('[data-act="prev"]').addEventListener('click', () => go(current - 1));
-  $('[data-act="next"]').addEventListener('click', () => go(current + 1));
-  playBtn.addEventListener('click', () => setPlaying(!playing));
-  root.addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight') { go(current + 1); e.preventDefault(); }
-    if (e.key === 'ArrowLeft') { go(current - 1); e.preventDefault(); }
-  });
-  if (reduce) T = STEPS[0].b - HOLD;
-  setStep(stepOf(T));
   reservarAlto();
 
   function fallback(){ root.classList.add('al-demo--no3d'); }
@@ -5552,9 +5666,9 @@ window.alDemoTarjetas = function(root, cfg){
   function frame(now){
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
     if (PX.update(dt)) needsRender = true;
-    if (visible && (playing || needsRender)) {
-      if (playing) { T += dt; if (T >= DUR) T = 0; }
-      setStep(stepOf(T));
+    const mueve = L.tick(dt, visible);
+    if (visible && (mueve || needsRender)) {
+      const T = L.T;
       updateCards(T); updateCursor(T);
       const ip = stepOf(T), sp = STEPS[ip], lt = T - sp.a, lado = ip % 2 ? -1 : 1;
       const u = ease(clamp(lt / (sp.b - sp.a)));
@@ -5568,7 +5682,6 @@ window.alDemoTarjetas = function(root, cfg){
       camera.position.set(bx + PX.x*1.05 + fx*0.6, by + PX.y*0.65 + fy*0.6, (J.vert ? zV : 9.55) - 0.7*f);
       camera.lookAt(bx*0.3 + fx, by*0.4 + fy, 0);
       renderer.render(scene, camera);
-      fills.forEach((f, i) => { const s = STEPS[i]; f.fill.style.width = (clamp((T - s.a) / (s.b - s.a)) * 100) + '%'; });
       needsRender = false;
     }
     requestAnimationFrame(frame);
