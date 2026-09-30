@@ -4774,21 +4774,17 @@ function fillCopy(i){
 const SIM = t => {
   const cl = x => Math.min(1, Math.max(0, x));
   const PARES = [['Factura F-101', 'Pago F-101', 11.75], ['Factura F-102', 'Pago F-102', 12.1], ['Factura F-103', 'Pago F-103', 12.45], ['Factura F-104', 'Pago F-104', 12.8]];
-  const hechos = PARES.filter(p => t >= p[2]).length, manual = t >= 18.9;
   const anal = t < 11.2 ? 0 : Math.round(12 * cl((t - 11.2) / 3.0));
-  const conc = hechos*2 + (manual ? 2 : 0);
-  const k = [[anal, 'analizados'], [conc, 'conciliados'], [12 - conc, 'pendientes'], [manual ? 2 : 0, 'revisados']];
   let evt = null;
   PARES.forEach(p => { if (t >= p[2] && t < p[2] + 1.2) evt = '✓ ' + p[0] + ' → ' + p[1] + ' · coincidencia'; });
   if (t >= 18.9 && t < 20.4) evt = '✓ Honorario B-23 → Transf. sin referencia · par manual';
-  if (t < 3.6) return { fase:'12 movimientos sin conciliar', kpis:k };
-  if (t < 8.0) return t < 6.6 ? { fase:'Leyendo la planilla y sus columnas…', prog:cl((t - 3.6) / 3.0), kpis:k } : { fase:'✓ Columnas: Fecha, Concepto, Monto', ok:true, kpis:k };
-  if (t < 10.9) return t < 9.45 ? { fase:'Listo para ejecutar', kpis:k } : t < 10.2 ? { fase:'Validando datos…', prog:cl((t - 9.45) / 0.75), kpis:k } : { fase:'✓ Datos validados', ok:true, kpis:k };
-  if (t < 15.3) return t < 11.2 ? { fase:'Iniciando conciliación…', prog:0, kpis:k } : t < 14.2 ? { fase:'Analizando movimientos… ' + anal + ' de 12', prog:cl((t - 11.2) / 3.0), kpis:k, evt } : { fase:'✓ 4 pares encontrados · 4 pendientes', ok:true, kpis:k, evt };
-  if (t < 21.0) return t < 17.5 ? { fase:'Revisión: 4 pendientes por revisar', kpis:k } : t < 18.9 ? { fase:'Emparejando a mano un pendiente…', prog:cl((t - 17.5) / 1.4), kpis:k } : { fase:'✓ Par manual guardado · 2 pendientes', ok:true, kpis:k, evt };
-  const fin = [[12, 'analizados'], [10, 'conciliados'], [2, 'pendientes'], [2, 'revisados'], ['3 s', 'de proceso']];
-  if (t < 22.6) return { fase:'Generando la hoja de resultados…', prog:cl((t - 21.0) / 1.6), kpis:fin };
-  return { fase: t < 26.1 ? '✓ 10 de 12 conciliados (83%) en 3 s' : '✓ Resultados exportados', ok:true, kpis:fin, fin:true };
+  if (t < 3.6) return { fase:'12 movimientos sin conciliar' };
+  if (t < 8.0) return t < 6.6 ? { fase:'Leyendo la planilla y sus columnas…', prog:cl((t - 3.6) / 3.0) } : { fase:'✓ Columnas: Fecha, Concepto, Monto', ok:true };
+  if (t < 10.9) return t < 9.45 ? { fase:'Listo para ejecutar' } : t < 10.2 ? { fase:'Validando datos…', prog:cl((t - 9.45) / 0.75) } : { fase:'✓ Datos validados', ok:true };
+  if (t < 15.3) return t < 11.2 ? { fase:'Iniciando conciliación…', prog:0 } : t < 14.2 ? { fase:'Analizando movimientos… ' + anal + ' de 12', prog:cl((t - 11.2) / 3.0), evt } : { fase:'✓ 4 pares encontrados · 4 pendientes', ok:true, evt };
+  if (t < 21.0) return t < 17.5 ? { fase:'Revisión: 4 pendientes por revisar' } : t < 18.9 ? { fase:'Emparejando a mano un pendiente…', prog:cl((t - 17.5) / 1.4) } : { fase:'✓ Par manual guardado · 2 pendientes', ok:true, evt };
+  if (t < 22.6) return { fase:'Generando la hoja de resultados…', prog:cl((t - 21.0) / 1.6) };
+  return { fase: t < 26.1 ? '✓ 10 de 12 conciliados (83%) en 3 s' : '✓ Resultados exportados', ok:true, fin:true };
 };
 const L = alDemoLinea(root, STEPS, { hold:0.05, sim:SIM, onStep(i, primero){
   if (primero || reduce) { fillCopy(i); return; }
