@@ -6,7 +6,7 @@ Guía para armar la demo de un aplicativo nuevo sobre lo que ya existe, sin part
 
 | Pieza | Qué hace | Dónde |
 |---|---|---|
-| `alDemoLinea(root, steps, opciones)` | Controlador común de todas las demos: modo **automático** y **manual**, ← Anterior, ▶/⏸, → Siguiente, **↻ Reiniciar** (lo agrega solo), barra de pasos, teclado (← → e Inicio) y el **panel de simulación** opcional. | Bloque "Línea de tiempo de las demos" |
+| `alDemoLinea(root, steps, opciones)` | Controlador común de todas las demos: modo **automático** y **manual**, ← Anterior, ▶/⏸, → Siguiente, **↻ Reiniciar** (lo agrega solo), barra de pasos, teclado (← → e Inicio) y el **panel de simulación** opcional. Mueve los controles del HTML a una **barra de reproductor dentro de la escena**; el canvas deja libre ese alto (`--al-barra`). | Bloque "Línea de tiempo de las demos" |
 | `alDemoTarjetas(root, cfg)` | Motor de demos por **tarjetas**: una pantalla por etapa, dibujada en canvas y mostrada en 3D, con cursor que hace clic. Elige solo el diseño **apaisado** (`draw`) o el **vertical** (`drawV`) según la forma del recuadro. | Bloque "Motor de demos por tarjetas" |
 | `AL_DEMOS['id']` | La configuración de cada demo: etapas, textos, dibujos, cursor y simulación. **Es lo único que se escribe para una demo nueva.** | Bloques "Demos del Conciliador V2", "Demos de PedidoApp" y "Diseños verticales" |
 

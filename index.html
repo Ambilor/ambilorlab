@@ -647,9 +647,9 @@ nav.scrolled .nav-links a{font-size:12px}
 .al-sim__modo{flex:none;padding:1px 6px;border-radius:999px;background:rgba(255,255,255,.12);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#b8c4d4}
 .al-demo--manual .al-sim__modo{background:rgba(245,200,76,.2);color:#f5d27a}
 .al-sim__demo{position:absolute;right:8px;top:9px;padding:4px 8px;border-radius:999px;background:rgba(245,200,76,.92);color:#3b2a00;font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
-.al-sim__evt{position:absolute;left:50%;top:40px;width:max-content;max-width:calc(100% - 16px);padding:5px 11px;border-radius:9px;background:rgba(36,122,80,.94);color:#fff;font-size:10.5px;text-align:center;opacity:0;transform:translate(-50%,-6px);transition:opacity .25s,transform .25s var(--ease);box-shadow:0 8px 20px -10px rgba(0,0,0,.55)}
+.al-sim__evt{position:absolute;left:50%;top:44px;width:max-content;max-width:calc(100% - 16px);padding:5px 11px;border-radius:9px;background:rgba(36,122,80,.94);color:#fff;font-size:10.5px;text-align:center;opacity:0;transform:translate(-50%,-6px);transition:opacity .25s,transform .25s var(--ease);box-shadow:0 8px 20px -10px rgba(0,0,0,.55)}
 .al-sim__evt.on{opacity:1;transform:translate(-50%,0)}
-.al-sim__kpis{position:absolute;left:8px;right:8px;bottom:8px;display:flex;gap:5px;margin:0;padding:0;list-style:none}
+.al-sim__kpis{position:absolute;left:8px;right:8px;bottom:calc(var(--al-barra) + 6px);display:flex;gap:5px;margin:0;padding:0;list-style:none}
 .al-sim__kpis li{flex:1 1 0;min-width:0;padding:4px 4px 3px;border-radius:9px;background:rgba(10,18,30,.74);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);text-align:center;transition:background .3s}
 .al-sim__kpis b{display:block;font-size:14px;font-weight:600;line-height:1.2;font-variant-numeric:tabular-nums}
 .al-sim__kpis span{display:block;font-family:var(--sans);font-size:9px;line-height:1.2;color:#b8c4d4;overflow-wrap:anywhere}
@@ -664,13 +664,33 @@ nav.scrolled .nav-links a{font-size:12px}
   .al-sim__modo{display:none}
   .al-sim__demo{right:6px;top:7px;padding:3px 6px;font-size:8px;letter-spacing:.05em}
   .al-sim__evt{top:42px;font-size:9.5px;padding:4px 9px}
-  .al-sim__kpis{left:6px;right:6px;bottom:6px;gap:4px}
+  .al-sim__kpis{left:6px;right:6px;bottom:calc(var(--al-barra) + 4px);gap:4px}
   .al-sim__kpis li{padding:3px 2px 2px;border-radius:7px}
   .al-sim__kpis li:nth-child(n+5){display:none}
   .al-sim__kpis b{font-size:12px}
   .al-sim__kpis span{font-size:8px}
 }
 @media (prefers-reduced-motion: reduce){ .al-sim__dot,.al-sim__kpis li.cambia,.al-demo__btn--rst.gira span{animation:none} .al-sim__evt,.al-sim__bar i{transition:none} }
+/* Barra de reproductor dentro de la escena (2026-09-30). El canvas deja libre
+   el alto de la barra (--al-barra), así la escena no queda tapada. */
+.al-demo{--al-barra:48px}
+.al-demo--player .al-demo__controls{display:none}
+.al-demo--player .al-demo__stage canvas{height:calc(100% - var(--al-barra))}
+.al-player{position:absolute;left:6px;right:6px;bottom:6px;z-index:3;display:flex;align-items:center;gap:6px;height:calc(var(--al-barra) - 12px);padding:0 6px;border-radius:11px;background:rgba(10,18,30,.8);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:0 8px 22px -12px rgba(0,0,0,.6)}
+.al-demo .al-player .al-demo__btn{width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);color:#e8edf5;font-size:.85rem}
+.al-demo .al-player .al-demo__btn:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.3);color:#fff}
+.al-demo .al-player .al-demo__btn--play{background:#3d7fd6;border-color:#3d7fd6;color:#fff}
+.al-demo .al-player .al-demo__btn--play:hover{background:#4c8ddb;border-color:#4c8ddb}
+.al-demo .al-player .al-demo__btn:focus-visible{outline:2px solid #9cc4f2;outline-offset:1px}
+.al-demo .al-player .al-demo__steps{flex:1 1 auto;order:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px;margin:0 2px 0 4px;min-width:0}
+.al-demo .al-player .al-demo__step{padding:8px 0}
+.al-demo .al-player .al-demo__label{display:none}
+.al-demo .al-player .al-demo__track{height:4px;background:rgba(255,255,255,.18)}
+.al-demo .al-player .al-demo__track i{background:linear-gradient(90deg,#4c8ddb,#6fb0f0)}
+.al-demo .al-player .al-demo__step[aria-current="step"] .al-demo__track{background:rgba(255,255,255,.3)}
+.al-demo .al-player .al-demo__count{flex:none;margin:0 2px 0 0;color:#b8c4d4;font-size:10px}
+.al-demo--manual .al-player .al-demo__btn--play{box-shadow:0 0 0 3px rgba(61,127,214,.35)}
+@media (max-width:639px){ .al-demo{--al-barra:44px} .al-demo .al-player .al-demo__btn{width:26px;height:26px} .al-player{gap:4px;padding:0 5px} }
 /* Fallback sin 3D: se oculta el canvas y se listan los 6 pasos en texto. */
 .al-demo__fallback{display:none}
 .al-demo--no3d .al-demo__stage,
@@ -1557,7 +1577,7 @@ footer{margin-top:auto}
   #product .prod-h1{font-size:19.5px;line-height:1.28;margin-bottom:0}
   #product .prod-cab{margin-bottom:1rem}
   #product .demo-label{margin-bottom:.45rem}
-  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala){--resto:492px;padding-top:12px;padding-bottom:12px}
+  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala){--resto:448px;padding-top:12px;padding-bottom:12px}   /* 2026-09-30: sin controles bajo la escena (van en su barra) */
   :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__stage{height:max(104px, min(100cqw, calc(100svh - var(--resto) - var(--hp-alto, 0px))))}
   :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__kicker{margin-bottom:.35rem}
   :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__title{margin-bottom:.3rem}
@@ -4569,6 +4589,16 @@ window.alDemoLinea = function(root, STEPS, o){
     nextBtn.insertAdjacentElement('afterend', rst);
   }
 
+  // Barra de reproductor dentro de la escena (2026-09-30): los mismos botones,
+  // la barra de pasos y el contador se mueven (no se duplican) al pie del
+  // recuadro, para que el control sea parte de la demo.
+  const stageB = $('.al-demo__stage'), ctr = $('.al-demo__controls');
+  if (stageB && ctr) {
+    const barra = document.createElement('div'); barra.className = 'al-player';
+    Array.prototype.slice.call(ctr.children).forEach(el => barra.appendChild(el));
+    stageB.appendChild(barra); root.classList.add('al-demo--player');
+  }
+
   // panel de simulación sobre la escena
   let S = null;
   if (o.sim) {
@@ -5324,7 +5354,7 @@ function camara(t){
 
 
 function resize(){
-  const w = Math.max(1, stage.clientWidth), h = Math.max(1, stage.clientHeight);
+  const w = Math.max(1, canvas.clientWidth), h = Math.max(1, canvas.clientHeight);
   // Tope en 3 (no en 2): nativo en DPR 1, 2 y 3, o sea todo escritorio y todo
   // telefono. Con el tope anterior de 1.5, en una pantalla DPR 2 el buffer
   // quedaba en 510x510 cuando el nativo es 680x680: el navegador reescala
@@ -5650,7 +5680,7 @@ window.alDemoTarjetas = function(root, cfg){
   // la cámara a la distancia justa para que la tarjeta llene el cuadro.
   let zV = 9.55;
   function resize(){
-    const w = Math.max(1, stage.clientWidth), h = Math.max(1, stage.clientHeight);
+    const w = Math.max(1, canvas.clientWidth), h = Math.max(1, canvas.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(w, h, false);
     camera.aspect = w / h; camera.updateProjectionMatrix();
