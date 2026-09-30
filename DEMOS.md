@@ -63,7 +63,7 @@ AL_DEMOS['xxx-accion'] = {
     prog: Math.min(1, t / 4),               // 0..1 muestra la barra; null la oculta
     ok: false,                              // true: fase terminada (punto verde)
     evt: '✓ Pedido #341 → confirmado',      // aviso breve (null = ninguno); cambia el texto para mostrar otro
-    kpis: [[12, 'pedidos'], [8, 'listos'], [4, 'pendientes']],   // contadores (máx. 4 en celular)
+    kpis: [[12, 'pedidos'], [8, 'listos'], [4, 'pendientes']],   // opcional: solo si la escena no muestra ya esas cifras
     fin: false                              // true en el resultado final (resalta los contadores)
   })
 };
@@ -82,5 +82,5 @@ Ayudantes de dibujo (`H`), en coordenadas de la tarjeta:
 
 - Los números de las demos son **de ejemplo**: nunca se presentan como resultados de un usuario. El panel de simulación lo indica y la nota de la demo lo repite.
 - En la tarjeta vertical, el texto va de 28 a 46 px (en la tarjeta de 800 de ancho) y los botones van a lo ancho.
-- En celular el panel de simulación muestra hasta 4 contadores: el quinto (por ejemplo, el tiempo) se dice también en la fase.
+- Los contadores del panel (`kpis`) son opcionales: si la escena ya muestra las cifras (como el V1), no se repiten. En celular caben hasta 4.
 - Una demo nueva no copia el motor ni el controlador: solo agrega su `AL_DEMOS[...]`.
