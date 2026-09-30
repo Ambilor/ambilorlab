@@ -1472,16 +1472,15 @@ footer{margin-top:auto}
 @media (orientation:portrait) and (min-width:1000px) and (max-aspect-ratio:9/10){ :is(#ver-en-accion,.al-demo--accion){--resto:664px} }
 @media (max-width:639px){
   .al-demo{--resto:355px}
-  :is(#como-se-instala,.al-demo--instala){--resto:460px}
-  :is(#como-se-instala,.al-demo--instala) .al-demo__stage{height:max(150px, min(100cqw, calc(100svh - var(--resto) - var(--hp-alto, 0px))))}
   .al-demo__copy{min-height:12rem}
-  :is(#como-se-instala,.al-demo--instala) .al-demo__copy{min-height:16rem}
 }
 /* 2026-09-28: al abrir Herramientas en celular vertical, la primera pantalla
    muestra desde "Proximamente" hasta el final de la demo "Ver en accion".
    La bajada y "¿Que es conciliar?" pasan bajo la demo (.prod-cel), el
    encabezado y el texto de la demo se compactan y la escena toma el alto que
-   sobra (--resto = barra + encabezado + texto + controles). */
+   sobra (--resto = barra + encabezado + texto + controles).
+   2026-09-30: "Cómo se instala" ocupa el mismo lugar que "Ver en acción" y
+   usa las mismas medidas, para que el cambio entre ambas no salte. */
 .prod-cel{display:none}
 @media (max-width:639px){
   .prod-cab .prod-tagline,.prod-cab .alert-box{display:none}
@@ -1492,14 +1491,18 @@ footer{margin-top:auto}
   #product .prod-h1{font-size:19.5px;line-height:1.28;margin-bottom:0}
   #product .prod-cab{margin-bottom:1rem}
   #product .demo-label{margin-bottom:.45rem}
-  :is(#ver-en-accion,.al-demo--accion){--resto:492px;padding-top:12px;padding-bottom:12px}
-  :is(#ver-en-accion,.al-demo--accion) .al-demo__stage{height:max(104px, min(100cqw, calc(100svh - var(--resto) - var(--hp-alto, 0px))))}
-  :is(#ver-en-accion,.al-demo--accion) .al-demo__kicker{margin-bottom:.35rem}
-  :is(#ver-en-accion,.al-demo--accion) .al-demo__title{margin-bottom:.3rem}
-  :is(#ver-en-accion,.al-demo--accion) .al-demo__body{font-size:13px;line-height:1.45}
-  :is(#ver-en-accion,.al-demo--accion) .al-demo__copy{min-height:178px}   /* el paso mas largo: sin saltos al avanzar */
-  :is(#ver-en-accion,.al-demo--accion) .al-demo__controls{margin-top:8px}
-  :is(#ver-en-accion,.al-demo--accion) .al-demo__note{display:none}
+  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala){--resto:492px;padding-top:12px;padding-bottom:12px}
+  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__stage{height:max(104px, min(100cqw, calc(100svh - var(--resto) - var(--hp-alto, 0px))))}
+  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__kicker{margin-bottom:.35rem}
+  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__title{margin-bottom:.3rem}
+  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__body{font-size:13px;line-height:1.45}
+  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__copy{min-height:178px}   /* el paso mas largo: sin saltos al avanzar */
+  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__controls{margin-top:8px}
+  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__note{display:none}
+  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__tip{margin-top:.45rem;padding:.4rem .7rem;font-size:12px;line-height:1.4}
+  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__checks{margin-top:.45rem;gap:.2rem;font-size:12px}
+  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__checks li{line-height:1.38}
+  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__contact{display:none}   /* Contacto sigue a un toque en la barra */
 }
 /* 3) inicio: cada bloque es una escena del alto de la pantalla */
 .hx-escena{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding-top:clamp(3rem,8vh,5rem)!important;padding-bottom:clamp(3rem,8vh,5rem)}
@@ -1589,11 +1592,10 @@ footer{margin-top:auto}
 @media (max-width:639px) and (max-height:580px){
   #product .prod-h1{font-size:17.5px}
   #product .prod-eyebrow{margin-bottom:.3rem}
-  :is(#ver-en-accion,.al-demo--accion) .al-demo__body{font-size:12px;line-height:1.38}
-  :is(#ver-en-accion,.al-demo--accion) .al-demo__title{font-size:15px}
-  :is(#ver-en-accion,.al-demo--accion) .al-demo__copy{min-height:150px}
-  :is(#ver-en-accion,.al-demo--accion) .al-demo__stage{height:max(84px, min(100cqw, calc(100svh - var(--resto) - var(--hp-alto, 0px))))}
-  :is(#como-se-instala,.al-demo--instala) .al-demo__stage{height:max(110px, min(100cqw, calc(100svh - var(--resto) - var(--hp-alto, 0px))))}
+  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__body{font-size:12px;line-height:1.38}
+  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__title{font-size:15px}
+  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__copy{min-height:150px}
+  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__stage{height:max(84px, min(100cqw, calc(100svh - var(--resto) - var(--hp-alto, 0px))))}
   :is(#como-se-instala,.al-demo--instala) .al-demo__note{display:none}
   #guias .home-h1{font-size:22px;margin-bottom:.3rem}
   #guias .gp-tabs{margin-bottom:8px}
