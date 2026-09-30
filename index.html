@@ -586,7 +586,7 @@ nav.scrolled .nav-links a{font-size:12px}
    Centrado, el bloque se ve parejo. En dos columnas la columna es de ~356px,
    mas angosta que el tope, asi que no cambia nada. */
 .al-demo__copy{min-height:18rem; max-width:560px; margin-inline:auto; display:flex; flex-direction:column; justify-content:center; transition:opacity .28s ease, transform .28s ease}
-.al-demo__copy.is-changing{opacity:0; transform:translateY(8px)}
+.al-demo__copy.is-changing{opacity:0}   /* 2026-09-30: solo se desvanece; antes bajaba 8 px en cada paso */
 .al-demo__kicker{font-family:var(--mono); font-size:10.5px; font-weight:500; text-transform:uppercase; letter-spacing:.08em; color:var(--azul); margin-bottom:.5rem}
 .al-demo__title{font-size:18px; font-weight:600; letter-spacing:-.3px; line-height:1.35; color:var(--negro); margin-bottom:.6rem; text-wrap:balance}
 .al-demo__body{font-size:14px; line-height:1.65; color:var(--gris-1); max-width:440px; margin:0}
@@ -1784,7 +1784,7 @@ body>section:not(#home)>.container{padding-top:1.6rem}
   .al-demo__grid{display:contents}
   .al-demo__stage,:is(#como-se-instala,.al-demo--instala) .al-demo__stage{grid-column:1;grid-row:1}
   .al-demo__controls{grid-column:1;grid-row:2;align-self:start}
-  .al-demo__copy,:is(#como-se-instala,.al-demo--instala) .al-demo__copy{grid-column:2;grid-row:1 / span 2;align-self:center}
+  .al-demo__copy,:is(#como-se-instala,.al-demo--instala) .al-demo__copy{grid-column:2;grid-row:1 / span 2;align-self:start}   /* anclado arriba: el largo de cada paso no lo mueve */
   /* Guias: el paso activo mas bajo */
   .gp-modo-pasos .gp-step.act{grid-template-columns:minmax(0,1.1fr) 30px minmax(0,1fr);grid-template-areas:"vis n t";padding:12px;gap:12px;align-items:center}
   .gp-modo-pasos .gp-vis{min-height:0}
@@ -2181,7 +2181,7 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
 /* Herramientas: "Ver en acción" y "Cómo se instala" comparten un lugar; el
    selector va donde estaba la etiqueta de cada demo y el cambio hace un fundido
    con desplazamiento suave, con la curva del sitio (2026-09-30). */
-.demo-par{position:relative}
+.demo-par{position:relative;display:flow-root}   /* 2026-09-30: sus márgenes quedan adentro: fijar su alto durante el cambio de demo ya no mueve el texto de abajo */
 #product .demo-par>.demo-section{margin-top:0}
 .demo-par>.demo-section[hidden]{display:none}
 /* 2026-09-30: el marco queda quieto (recuadro, escena y barra); solo el
@@ -7637,7 +7637,7 @@ window.addEventListener('load', function(){ var h = new URLSearchParams(location
     };
     if (reduce) { entrar(); par._cambiando = false; return; }
     par._cambiando = true;
-    par.style.minHeight = par.offsetHeight + 'px';   // sin salto de la página durante el cambio
+    par.style.minHeight = par.getBoundingClientRect().height + 'px';   // sin salto de la página durante el cambio
     act.classList.add('saliendo');
     setTimeout(entrar, 300);
   }
