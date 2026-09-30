@@ -2212,6 +2212,29 @@ html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) ro
   :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__stage{
     height:max(300px, min(calc(100cqw + var(--al-barra)), calc(100svh - 360px)))}
 }
+/* 2026-09-30: iPad y tablets en VERTICAL. Apilada (escena arriba, texto abajo)
+   la demo no cabía en la pantalla (terminaba ~300 px bajo el borde). Ahora la
+   escena va a la derecha, más alta que ancha (diseño vertical), y el texto de
+   la etapa a su izquierda; la bajada y "¿Qué es conciliar?" pasan bajo la
+   demo, como en el celular. Así, al abrir Herramientas, la demo completa y
+   su barra quedan en la primera pantalla. */
+@media (orientation:portrait) and (min-width:640px) and (max-aspect-ratio:9/10){
+  .prod-cab .prod-tagline,.prod-cab .alert-box{display:none}
+  .prod-cel{display:block;margin:1.6rem 0 2.5rem}
+  .prod-cel .prod-tagline{margin-bottom:1rem}
+  .prod-cel .alert-box{margin-bottom:0}
+  #product .prod-cab{margin-bottom:1rem}
+  .al-demo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);grid-template-rows:auto 1fr;column-gap:clamp(20px,3vw,32px);align-items:start}
+  .al-demo__grid{display:contents}
+  .al-demo__copy,:is(#como-se-instala,.al-demo--instala) .al-demo__copy{grid-column:1;grid-row:1;display:flex;flex-direction:column;min-height:0;padding-top:.3rem}
+  .al-demo__copy>.al-demo__extra{grid-column:auto;grid-row:auto;padding-top:.6rem}
+  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__stage{grid-column:2;grid-row:1 / span 2;order:0;align-self:start;
+    height:max(380px, min(calc(100cqw * .8), calc(100svh - 330px - var(--hp-alto, 0px))))}
+  .al-demo__note{grid-column:1;grid-row:2;align-self:end;margin-top:1rem}
+  .al-demo__title{font-size:clamp(17px,2.3vw,21px)}
+  .al-demo__body{font-size:14px;line-height:1.55}
+  .al-demo__stats{flex-wrap:wrap;gap:10px 16px}
+}
 </style>
 </head>
 
@@ -2406,7 +2429,7 @@ html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) ro
     <div class="prod-cab">
       <div class="prod-cab-txt">
         <div class="prod-eyebrow"><span class="prox-badge">Próximamente</span></div>
-        <h2 class="prod-h1">Conciliador Automatico V1 para Google Sheets</h2>
+        <h2 class="prod-h1">Conciliador Semiautomático V1</h2>
         <p class="prod-tagline">Tu conciliación mensual, hecha en segundos dentro de tu propio Google Sheets.</p>
       </div>
       <div class="alert-box"><b>¿Qué es conciliar?</b> Confirmar que cada movimiento de tu cartola o libro mayor tenga su contraparte: la factura con su pago, el cargo con su abono.</div>
@@ -2605,7 +2628,7 @@ html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) ro
     <div class="prod-cab">
       <div class="prod-cab-txt">
         <div class="prod-eyebrow"><span class="prox-badge">Próximamente</span></div>
-        <h2 class="prod-h1">Conciliador Automático V2 para Google Sheets</h2>
+        <h2 class="prod-h1">Conciliador Automático V2</h2>
         <p class="prod-tagline">Cruza el banco contra tu contabilidad, en grupos y con avisos automáticos, dentro de tu propio Google Sheets.</p>
       </div>
       <div class="alert-box"><b>¿Qué suma al V1?</b> Dos fuentes a la vez (cartola contra libro mayor), grupos de varias partidas, reglas para explicar pendientes, correos automáticos e IA opcional.</div>
@@ -2708,7 +2731,7 @@ html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) ro
     <div class="prod-cab">
       <div class="prod-cab-txt">
         <div class="prod-eyebrow"><span class="prox-badge">Próximamente</span></div>
-        <h2 class="prod-h1">App de Pedidos para tu negocio</h2>
+        <h2 class="prod-h1">App de Pedidos</h2>
         <p class="prod-tagline">Tus clientes piden desde el celular y tú lo gestionas todo desde un panel, sin comisiones por venta.</p>
       </div>
       <div class="alert-box"><b>¿Para quién?</b> Negocios que hoy reciben pedidos por WhatsApp: almacenes, panaderías, pastelerías, distribuidoras y emprendimientos.</div>
@@ -7521,6 +7544,27 @@ function showHP(id){
   panel.querySelectorAll('.al-demo[id]').forEach(function(d){ if (window.AL_DEMOS && AL_DEMOS[d.id] && window.alDemoTarjetas) alDemoTarjetas(d, AL_DEMOS[d.id]); });
   panel.querySelectorAll('.rv:not(.in)').forEach(function(el){ el.classList.add('in'); });
 }
+/* 2026-09-30: los encabezados de las tres herramientas miden lo mismo, así la
+   demo queda en el mismo lugar al cambiar de sub-pestaña (antes saltaba ~18 px
+   según el largo de la bajada o del recuadro). */
+(function(){
+  var cabs = [].slice.call(document.querySelectorAll('#product .hp-panel .prod-cab'));
+  if (!cabs.length) return;
+  function igualar(){
+    var max = 0;
+    cabs.forEach(function(c){ c.style.minHeight = ''; });
+    cabs.forEach(function(c){
+      var pn = c.closest('.hp-panel'), oculto = pn.hasAttribute('hidden');
+      if (oculto) { pn.removeAttribute('hidden'); pn.classList.add('on'); pn.style.cssText = 'position:absolute;left:0;right:0;visibility:hidden;pointer-events:none;display:block'; }
+      max = Math.max(max, c.offsetHeight);
+      if (oculto) { pn.setAttribute('hidden', ''); pn.classList.remove('on'); pn.style.cssText = ''; }
+    });
+    if (max) cabs.forEach(function(c){ c.style.minHeight = max + 'px'; });
+  }
+  if ('ResizeObserver' in window) { var ro = new ResizeObserver(function(){ ro.disconnect(); igualar(); cabs.forEach(function(c){ ro.observe(c); }); }); cabs.forEach(function(c){ ro.observe(c); }); }
+  window.addEventListener('resize', igualar);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(igualar);
+})();
 document.querySelectorAll('#product .hp-tabs .gp-tab').forEach(function(b){
   b.addEventListener('click', function(){ showHP(b.getAttribute('data-hp')); var t = document.querySelector('#product .hp-tabs'); if (t && t.getBoundingClientRect().top < 0) t.scrollIntoView({ block:'start' }); });
 });
