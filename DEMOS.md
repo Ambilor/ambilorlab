@@ -84,3 +84,4 @@ Ayudantes de dibujo (`H`), en coordenadas de la tarjeta:
 - En la tarjeta vertical, el texto va de 28 a 46 px (en la tarjeta de 800 de ancho) y los botones van a lo ancho.
 - Los contadores del panel (`kpis`) son opcionales: si la escena ya muestra las cifras (como el V1), no se repiten. En celular caben hasta 4.
 - Una demo nueva no copia el motor ni el controlador: solo agrega su `AL_DEMOS[...]`.
+- En pantallas táctiles todo control de la demo mide al menos 44 px (botones de la barra 44×44, selector de demo 40 px con 48 de toque). La barra va en dos filas (línea de avance arriba, botones abajo) y en una sola fila en celular horizontal; esto lo da el CSS común, no se configura por demo.

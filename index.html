@@ -2268,6 +2268,41 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
 @media (orientation:portrait) and (max-width:379px){
   :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__copy{min-height:172px!important}
 }
+/* 2026-09-30: pantallas táctiles. Los controles de las demos quedaban bajo el
+   mínimo de 44 px para tocar con el dedo (26-28 px en la barra, 24 px el
+   selector de demo). En táctil: botones de 44 px, segmentos de pasos con 44 px
+   de alto de toque y selector de 40 px (48 de toque). Con mouse no cambia. */
+@media (pointer:coarse){
+  /* la barra en dos filas: arriba la línea de avance a todo el ancho (6
+     segmentos), abajo los botones de 44 px (← ▮▮ → a la izquierda, ↻ a la
+     derecha). La línea es indicador: se navega con los botones. */
+  .al-demo{--al-barra:84px}   /* 6 de margen + barra de 72 (línea 8 + 6 + botones 44 + relleno 14) + 6 */
+  .al-player{height:auto;flex-wrap:wrap;align-content:center;row-gap:6px;gap:8px;padding:6px 8px 8px;border-radius:14px}
+  .al-demo .al-player .al-demo__btn{width:44px;height:44px;border-radius:11px;font-size:1rem}
+  .al-demo .al-player .al-demo__btn--rst{margin-left:auto}
+  .al-demo .al-player .al-demo__btn--rst span{font-size:1.2rem}
+  .al-demo .al-player .al-demo__steps{order:-1;flex:0 0 100%;gap:4px;margin:0;pointer-events:none}
+  .al-demo .al-player .al-demo__steps>li{display:flex}   /* sin el alto de línea del elemento de lista */
+  .al-demo .al-player .al-demo__step{padding:2px 0}
+  .al-demo .al-player .al-demo__track{height:4px}
+  .al-demo .al-player .al-demo__count{display:none}
+  .demo-cambio{padding:3px}
+  .demo-cambio button{min-height:40px;padding:8px 16px;font-size:11px}
+  .demo-cambio button::after{inset:-4px -2px}
+  .demo-cambio i{top:3px;bottom:3px}
+  #product .hp-tabs .gp-tab{min-height:44px}
+}
+@media (pointer:coarse) and (max-width:639px){
+  .demo-cambio button{padding:8px 14px}
+}
+/* celular horizontal (poco alto): la barra en una sola fila, la línea de
+   avance entre los botones, para no quitarle alto a la escena */
+@media (pointer:coarse) and (orientation:landscape) and (max-height:560px){
+  .al-demo{--al-barra:68px}
+  .al-player{flex-wrap:nowrap;padding:6px 8px}
+  .al-demo .al-player .al-demo__steps{order:0;flex:1 1 auto;min-width:0;margin:0 4px}
+  .al-demo .al-player .al-demo__btn--rst{margin-left:0}
+}
 </style>
 </head>
 
