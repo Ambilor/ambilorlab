@@ -1385,7 +1385,7 @@ footer{margin-top:auto}
 .al-demo__grid{grid-template-columns:1fr}
 .al-demo__stage,:is(#como-se-instala,.al-demo--instala) .al-demo__stage{order:-1;justify-self:stretch;width:100%;max-width:none;margin:0;aspect-ratio:auto;
   height:420px;
-  height:max(220px, min(100cqw, calc(100svh - var(--resto))))}
+  height:max(220px, min(100cqw, calc(100svh - var(--resto) - var(--hp-alto, 0px))))}
 /* HORIZONTAL (tablet y computador): dos columnas. A la izquierda el texto del
    paso, sus cifras y la lista de pasos en vertical; a la derecha la escena con
    todo el alto que deja la pantalla. Apilar escena + texto + controles no cabe
@@ -1398,7 +1398,7 @@ footer{margin-top:auto}
   .al-demo__grid{display:contents}
   .al-demo__copy,:is(#como-se-instala,.al-demo--instala) .al-demo__copy{grid-column:1;grid-row:1;display:flex;flex-direction:column;min-height:0;padding-top:.3rem}
   .al-demo__stage,:is(#como-se-instala,.al-demo--instala) .al-demo__stage{grid-column:2;grid-row:1 / span 2;order:0;align-self:start;
-    height:max(240px, min(52cqw, calc(100svh - 356px)))}   /* cabe junto al encabezado de Herramientas */
+    height:max(240px, min(52cqw, calc(100svh - 356px - var(--hp-alto, 0px))))}   /* cabe junto al encabezado de Herramientas */
   #product .prod-cab{margin-bottom:1.2rem}
   #product .demo-label{margin-bottom:.5rem}
   .al-demo__controls{grid-column:1;grid-row:2;align-self:end;flex-wrap:wrap;margin-top:1.4rem}   /* 2026-09-28: al borde inferior de la escena, igual en todos los pasos y en ambas demos */
@@ -1466,14 +1466,14 @@ footer{margin-top:auto}
   #product .prod-cab{margin-bottom:1.4rem}
   #product .demo-label{margin-bottom:.5rem}
   :is(#ver-en-accion,.al-demo--accion){--resto:700px}
-  :is(#ver-en-accion,.al-demo--accion) .al-demo__stage{height:max(150px, min(100cqw, calc(100svh - var(--resto))))}
+  :is(#ver-en-accion,.al-demo--accion) .al-demo__stage{height:max(150px, min(100cqw, calc(100svh - var(--resto) - var(--hp-alto, 0px))))}
 }
 /* desde 1000px el encabezado va en dos columnas y es mas bajo */
 @media (orientation:portrait) and (min-width:1000px) and (max-aspect-ratio:9/10){ :is(#ver-en-accion,.al-demo--accion){--resto:664px} }
 @media (max-width:639px){
   .al-demo{--resto:355px}
   :is(#como-se-instala,.al-demo--instala){--resto:460px}
-  :is(#como-se-instala,.al-demo--instala) .al-demo__stage{height:max(150px, min(100cqw, calc(100svh - var(--resto))))}
+  :is(#como-se-instala,.al-demo--instala) .al-demo__stage{height:max(150px, min(100cqw, calc(100svh - var(--resto) - var(--hp-alto, 0px))))}
   .al-demo__copy{min-height:12rem}
   :is(#como-se-instala,.al-demo--instala) .al-demo__copy{min-height:16rem}
 }
@@ -1493,7 +1493,7 @@ footer{margin-top:auto}
   #product .prod-cab{margin-bottom:1rem}
   #product .demo-label{margin-bottom:.45rem}
   :is(#ver-en-accion,.al-demo--accion){--resto:492px;padding-top:12px;padding-bottom:12px}
-  :is(#ver-en-accion,.al-demo--accion) .al-demo__stage{height:max(104px, min(100cqw, calc(100svh - var(--resto))))}
+  :is(#ver-en-accion,.al-demo--accion) .al-demo__stage{height:max(104px, min(100cqw, calc(100svh - var(--resto) - var(--hp-alto, 0px))))}
   :is(#ver-en-accion,.al-demo--accion) .al-demo__kicker{margin-bottom:.35rem}
   :is(#ver-en-accion,.al-demo--accion) .al-demo__title{margin-bottom:.3rem}
   :is(#ver-en-accion,.al-demo--accion) .al-demo__body{font-size:13px;line-height:1.45}
@@ -1592,8 +1592,8 @@ footer{margin-top:auto}
   :is(#ver-en-accion,.al-demo--accion) .al-demo__body{font-size:12px;line-height:1.38}
   :is(#ver-en-accion,.al-demo--accion) .al-demo__title{font-size:15px}
   :is(#ver-en-accion,.al-demo--accion) .al-demo__copy{min-height:150px}
-  :is(#ver-en-accion,.al-demo--accion) .al-demo__stage{height:max(84px, min(100cqw, calc(100svh - var(--resto))))}
-  :is(#como-se-instala,.al-demo--instala) .al-demo__stage{height:max(110px, min(100cqw, calc(100svh - var(--resto))))}
+  :is(#ver-en-accion,.al-demo--accion) .al-demo__stage{height:max(84px, min(100cqw, calc(100svh - var(--resto) - var(--hp-alto, 0px))))}
+  :is(#como-se-instala,.al-demo--instala) .al-demo__stage{height:max(110px, min(100cqw, calc(100svh - var(--resto) - var(--hp-alto, 0px))))}
   :is(#como-se-instala,.al-demo--instala) .al-demo__note{display:none}
   #guias .home-h1{font-size:22px;margin-bottom:.3rem}
   #guias .gp-tabs{margin-bottom:8px}
@@ -2071,12 +2071,21 @@ html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) ro
    contenedor, que no se desplaza, y la pagina no bajaba (la barra lateral si).
    overflow:clip recorta igual pero no es contenedor de scroll. ── */
 #home{overflow:hidden;overflow:clip}
-/* Herramientas: sub-pestañas por producto (2026-09-30) */
-.hp-tabs{margin-bottom:1.6rem}
+/* Herramientas: sub-pestañas por producto (2026-09-30). Compactas (una línea) y
+   su alto se descuenta del demo "Ver en acción" para que encabezado + demo
+   sigan cabiendo en la primera pantalla. */
+#product{--hp-alto:52px}
+.hp-tabs{margin-bottom:12px;gap:6px;flex-wrap:nowrap}
+.hp-tabs .gp-tab{flex:1 1 0;min-width:0;padding:8px 12px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;height:40px}
+.hp-tabs .gp-tab-name{font-size:13.5px;font-weight:600}
+/* la insignia "Próximamente" va en cada sub-pestaña: su fila propia ya no hace
+   falta dentro de Herramientas (deja espacio para que el demo quepa) */
+#product .hp-panel .prod-eyebrow{display:none}
+.hp-tabs .gp-tab{display:flex;align-items:center;justify-content:center;gap:8px}
+.hp-prox{flex:none;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:999px;border:1px solid currentColor;opacity:.75}
 .hp-panel{display:none}
 .hp-panel.on{display:block}
-.hp-tabs .gp-tab-ey{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-@media (max-width:560px){ .hp-tabs{gap:6px} .hp-tabs .gp-tab{min-width:0;padding:9px 10px} .hp-tabs .gp-tab-ey{display:none} .hp-tabs .gp-tab-name{font-size:13px} }
+@media (max-width:520px){ .hp-tabs .gp-tab{padding:8px 6px} .hp-tabs .gp-tab-name{font-size:12.5px} .hp-prox{display:none} }
 </style>
 </head>
 
@@ -2263,9 +2272,9 @@ html.al-giro body>section:not(#home)>.container{transform:perspective(1300px) ro
          formato en las tres: cabecera, "Ver en acción", "Cómo se instala", qué incluye,
          lo que necesitas saber y preguntas frecuentes. -->
     <div class="gp-tabs hp-tabs" role="tablist" aria-label="Herramientas">
-      <button class="gp-tab on" id="hpt-v1" data-hp="v1" role="tab" aria-selected="true" aria-controls="hp-v1"><span class="gp-tab-ey">Próximamente · una planilla</span><span class="gp-tab-name">Conciliador V1</span></button>
-      <button class="gp-tab" id="hpt-v2" data-hp="v2" role="tab" aria-selected="false" aria-controls="hp-v2"><span class="gp-tab-ey">Próximamente · banco y contabilidad</span><span class="gp-tab-name">Conciliador V2</span></button>
-      <button class="gp-tab" id="hpt-ped" data-hp="ped" role="tab" aria-selected="false" aria-controls="hp-ped"><span class="gp-tab-ey">Próximamente · para tu negocio</span><span class="gp-tab-name">App de Pedidos</span></button>
+      <button class="gp-tab on" id="hpt-v1" data-hp="v1" role="tab" aria-selected="true" aria-controls="hp-v1"><span class="gp-tab-name">Conciliador V1</span><span class="hp-prox">Pronto</span></button>
+      <button class="gp-tab" id="hpt-v2" data-hp="v2" role="tab" aria-selected="false" aria-controls="hp-v2"><span class="gp-tab-name">Conciliador V2</span><span class="hp-prox">Pronto</span></button>
+      <button class="gp-tab" id="hpt-ped" data-hp="ped" role="tab" aria-selected="false" aria-controls="hp-ped"><span class="gp-tab-name">App de Pedidos</span><span class="hp-prox">Pronto</span></button>
     </div>
   <div class="hp-panel on" id="hp-v1" role="tabpanel" aria-labelledby="hpt-v1">
     <div class="prod-cab">
