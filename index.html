@@ -731,24 +731,6 @@ nav.scrolled .nav-links a{font-size:12px}
 @media (min-width:640px){
   .al-demo__fblist{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:clamp(.75rem,1.5vh,1.1rem) clamp(1.5rem,3vw,2.5rem)}
 }
-/* Telefono (2026-09-28): el bloque completo (titulo "Ver en accion" + demo)
-   cabe en el alto visible de la pantalla. La escena toma el alto que sobra
-   (100svh = alto visible con las barras de Safari) y el texto se compacta:
-   las cifras y el mapa de columnas se ocultan (la informacion esta en la
-   ficha del producto) y la reserva de alto del texto baja a 12rem. */
-@media (max-width:639px){
-  .al-demo{padding:16px; border-radius:16px}
-  .al-demo__grid{gap:12px}
-  .al-demo__stats, .al-demo__map{display:none}
-  .al-demo__cta{margin-top:.8rem}
-  .al-demo__title{font-size:16.5px; margin-bottom:.45rem}
-  .al-demo__body{font-size:13.5px; line-height:1.55}
-  .al-demo__controls{margin-top:12px}
-  .al-demo__note{margin-top:8px; font-size:11px; line-height:1.4}
-  .demo-label{margin-bottom:.5rem}
-  /* "Como se instala" tiene pasos con consejos y listas (254px medidos):
-     reserva mayor para el texto y la escena cede ese alto */
-}
 @media (prefers-reduced-motion: reduce){ .al-demo__copy{transition:none} }
 /* Reglas de modo oscuro de las demos: INACTIVAS. Quedaron dentro de un
    comentario sin cerrar y el sitio publicado se ve asi (demo clara sobre
@@ -1467,130 +1449,6 @@ footer{margin-top:auto}
 .alert-box{max-width:820px}
 .pi-faq p{max-width:78ch}
 .gvw-tl{max-width:720px;margin-left:auto;margin-right:auto}
-/* 2) demos: escena arriba con proporcion fija */
-.al-demo{--resto:440px}
-.al-demo__grid{grid-template-columns:1fr}
-.al-demo__stage,:is(#como-se-instala,.al-demo--instala) .al-demo__stage{order:-1;justify-self:stretch;width:100%;max-width:none;margin:0;aspect-ratio:auto;
-  height:420px;
-  height:max(220px, min(100cqw, calc(100svh - var(--resto) - var(--hp-alto, 0px))))}
-/* HORIZONTAL (tablet y computador): dos columnas. A la izquierda el texto del
-   paso, sus cifras y la lista de pasos en vertical; a la derecha la escena con
-   todo el alto que deja la pantalla. Apilar escena + texto + controles no cabe
-   en ~690px de alto (iPad horizontal con barras del navegador). */
-/* 2026-09-28: una ventana casi cuadrada (computador con la ventana a la mitad)
-   usa tambien la disposicion horizontal: apilada no cabe */
-@media (orientation:landscape) and (min-width:640px) and (min-height:561px),
-       (min-aspect-ratio:9/10) and (min-width:640px) and (min-height:561px){
-  .al-demo{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);grid-template-rows:min-content 1fr auto;column-gap:clamp(20px,3vw,40px)}
-  .al-demo__grid{display:contents}
-  .al-demo__copy,:is(#como-se-instala,.al-demo--instala) .al-demo__copy{grid-column:1;grid-row:1;display:flex;flex-direction:column;min-height:0;padding-top:.3rem}
-  .al-demo__stage,:is(#como-se-instala,.al-demo--instala) .al-demo__stage{grid-column:2;grid-row:1 / span 2;order:0;align-self:start;
-    height:max(240px, min(52cqw, calc(100svh - 356px - var(--hp-alto, 0px))))}   /* cabe junto al encabezado de Herramientas */
-  #product .prod-cab{margin-bottom:1.2rem}
-  #product .demo-label{margin-bottom:.5rem}
-  .al-demo__controls{grid-column:1;grid-row:2;align-self:end;flex-wrap:wrap;margin-top:1.4rem}   /* 2026-09-28: al borde inferior de la escena, igual en todos los pasos y en ambas demos */
-  .al-demo__steps{flex:0 0 100%;order:5;grid-template-columns:1fr;gap:2px;margin:10px 0 0}
-  .al-demo__step{display:flex;align-items:center;gap:10px;padding:3px 0}
-  .al-demo__track{width:30px;flex:none}
-  .al-demo__label{display:block;margin-top:0;font-size:11.5px}
-  .al-demo__count{margin-left:auto}
-  .al-demo__note{grid-column:1 / -1;grid-row:3}
-  .al-demo__title{font-size:clamp(18px,1.6vw,22px)}
-  .al-demo__body{font-size:clamp(14px,1.15vw,15.5px);line-height:1.6}
-  .al-demo__stats strong{font-size:clamp(24px,2.3vw,34px)}
-  .al-demo__extra{padding-top:0}
-}
-/* horizontal y bajo (iPad, portatil): la lista de pasos vuelve a una fila
-   compacta para que la columna del texto no sea mas alta que la escena */
-@media (orientation:landscape) and (min-width:640px) and (min-height:561px) and (max-height:860px),
-       (min-aspect-ratio:9/10) and (min-width:640px) and (min-height:561px) and (max-height:860px){
-  .al-demo__steps{grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;margin-top:8px}
-  .al-demo__step{display:block;padding:3px 0}
-  .al-demo__track{width:auto}
-  .al-demo__label{display:none}
-  .al-demo__controls{margin-top:.6rem}
-  .al-demo__cta{margin-top:.7rem;padding:7px 16px}
-  .al-demo__stats strong{font-size:clamp(22px,2vw,28px)}
-  .al-demo__stats{gap:10px 12px}   /* las dos cifras lado a lado en columnas angostas */
-  .al-demo__body{font-size:14px;line-height:1.55}
-}
-/* ventanas horizontales angostas y bajas (mitad de un portatil de 1366x768,
-   ventanas de iPad):
-   columna de texto mas compacta para que la demo quepa */
-@media (min-width:640px) and (max-width:1099px) and (min-aspect-ratio:9/10) and (min-height:561px) and (max-height:760px),
-       (min-width:1100px) and (max-width:1439px) and (orientation:landscape) and (min-height:561px) and (max-height:680px){
-  .al-demo__body{font-size:12.5px;line-height:1.4}
-  .al-demo__note{display:none}
-  .al-demo__title{font-size:16px;margin-bottom:.25rem}
-  .al-demo__kicker{margin-bottom:.25rem}
-  .al-demo__stats{display:none}
-  #product .prod-h1{font-size:19px}
-  #product .prod-cab .alert-box{font-size:12.5px;padding:.8rem 1rem}
-}
-/* Encabezado de Herramientas: en pantallas anchas, texto a la izquierda y la
-   tarjeta "¿Que es conciliar?" a la derecha */
-/* 2026-09-28: tambien en ventanas casi cuadradas desde 640px (computador con la
-   ventana a la mitad), donde la demo va en dos columnas */
-@media (min-width:1000px), (min-width:640px) and (min-aspect-ratio:9/10) and (min-height:561px){
-  .prod-cab{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:center;margin-bottom:2rem}
-  .prod-cab .prod-tagline{margin-bottom:0}
-  .prod-cab .alert-box{margin:0;font-size:13.5px;padding:1.1rem 1.2rem}
-}
-/* 3) texto arriba a la izquierda, cifras a la derecha */
-.al-demo__copy{max-width:none;margin:0;justify-content:flex-start}
-/* VERTICAL (tablet): bajo la escena, texto a la izquierda y cifras a la derecha */
-@media (orientation:portrait) and (min-width:640px) and (max-aspect-ratio:9/10){
-  .al-demo__copy{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);column-gap:36px;align-content:start;min-height:11.5rem}
-  .al-demo__copy>*{grid-column:1}
-  .al-demo__copy>.al-demo__extra{grid-column:2;grid-row:1 / span 3;align-self:start;padding-top:1.4rem}
-  .al-demo__stats{margin-top:0}
-  .al-demo__body{max-width:620px}
-  /* 2026-09-28: al abrir Herramientas en tablet vertical, la primera pantalla
-     muestra desde "Proximamente" hasta el final de la demo "Ver en accion".
-     El encabezado se compacta y la escena toma solo el alto que sobra
-     (--resto = todo lo que no es escena: barra, encabezado, texto y controles) */
-  #product .prod-tagline{margin-bottom:1.1rem}
-  #product .prod-cab{margin-bottom:1.4rem}
-  #product .demo-label{margin-bottom:.5rem}
-  :is(#ver-en-accion,.al-demo--accion){--resto:700px}
-  :is(#ver-en-accion,.al-demo--accion) .al-demo__stage{height:max(150px, min(100cqw, calc(100svh - var(--resto) - var(--hp-alto, 0px))))}
-}
-/* desde 1000px el encabezado va en dos columnas y es mas bajo */
-@media (orientation:portrait) and (min-width:1000px) and (max-aspect-ratio:9/10){ :is(#ver-en-accion,.al-demo--accion){--resto:664px} }
-@media (max-width:639px){
-  .al-demo{--resto:355px}
-  .al-demo__copy{min-height:12rem}
-}
-/* 2026-09-28: al abrir Herramientas en celular vertical, la primera pantalla
-   muestra desde "Proximamente" hasta el final de la demo "Ver en accion".
-   La bajada y "¿Que es conciliar?" pasan bajo la demo (.prod-cel), el
-   encabezado y el texto de la demo se compactan y la escena toma el alto que
-   sobra (--resto = barra + encabezado + texto + controles).
-   2026-09-30: "Cómo se instala" ocupa el mismo lugar que "Ver en acción" y
-   usa las mismas medidas, para que el cambio entre ambas no salte. */
-.prod-cel{display:none}
-@media (max-width:639px){
-  .prod-cab .prod-tagline,.prod-cab .alert-box{display:none}
-  .prod-cel{display:block;margin:-.6rem 0 2.5rem}
-  .prod-cel .prod-tagline{margin-bottom:1rem}
-  .prod-cel .alert-box{margin-bottom:0}
-  #product .prod-eyebrow{margin-bottom:.45rem}
-  #product .prod-h1{font-size:19.5px;line-height:1.28;margin-bottom:0}
-  #product .prod-cab{margin-bottom:1rem}
-  #product .demo-label{margin-bottom:.45rem}
-  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala){--resto:448px;padding-top:12px;padding-bottom:12px}   /* 2026-09-30: sin controles bajo la escena (van en su barra) */
-  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__stage{height:max(104px, min(100cqw, calc(100svh - var(--resto) - var(--hp-alto, 0px))))}
-  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__kicker{margin-bottom:.35rem}
-  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__title{margin-bottom:.3rem}
-  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__body{font-size:13px;line-height:1.45}
-  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__copy{min-height:178px}   /* el paso mas largo: sin saltos al avanzar */
-  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__controls{margin-top:8px}
-  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__note{display:none}
-  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__tip{margin-top:.45rem;padding:.4rem .7rem;font-size:12px;line-height:1.4}
-  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__checks{margin-top:.45rem;gap:.2rem;font-size:12px}
-  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__checks li{line-height:1.38}
-  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__contact{display:none}   /* Contacto sigue a un toque en la barra */
-}
 /* 3) inicio: cada bloque es una escena del alto de la pantalla */
 .hx-escena{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding-top:clamp(3rem,8vh,5rem)!important;padding-bottom:clamp(3rem,8vh,5rem)}
 .hx-escena .hx-panels,.hx-escena .hx-who{margin-bottom:0}
@@ -1677,13 +1535,6 @@ footer{margin-top:auto}
 /* 2026-09-28 iPhone SE con barra de Chrome (~375x553): Herramientas y Guias mas
    compactas para caber en la primera pantalla */
 @media (max-width:639px) and (max-height:580px){
-  #product .prod-h1{font-size:17.5px}
-  #product .prod-eyebrow{margin-bottom:.3rem}
-  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__body{font-size:12px;line-height:1.38}
-  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__title{font-size:15px}
-  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__copy{min-height:150px}
-  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__stage{height:max(84px, min(100cqw, calc(100svh - var(--resto) - var(--hp-alto, 0px))))}
-  :is(#como-se-instala,.al-demo--instala) .al-demo__note{display:none}
   #guias .home-h1{font-size:22px;margin-bottom:.3rem}
   #guias .gp-tabs{margin-bottom:8px}
   #guias .gp-tab{padding:6px 8px}
@@ -1763,28 +1614,6 @@ body>section:not(#home)>.container{padding-top:1.6rem}
   .hx-btn{padding-top:.55rem;padding-bottom:.55rem}
   .hx-hud{display:none}
   .hx-play-msg{display:none}
-  /* Demos: dos columnas */
-  .demo-label{margin-bottom:.4rem}
-  .al-demo{padding:12px 16px}
-  .al-demo__grid{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:18px;align-items:center}
-  .al-demo__stage,:is(#como-se-instala,.al-demo--instala) .al-demo__stage{order:0;justify-self:stretch;width:100%;max-width:none;aspect-ratio:auto;margin:0;
-    height:clamp(150px, calc(100vh - 110px), 420px);
-    height:clamp(150px, calc(100svh - 110px), 420px)}
-  .al-demo__copy,:is(#como-se-instala,.al-demo--instala) .al-demo__copy{display:flex;min-height:0;max-width:none;margin:0}
-  .al-demo__extra{padding-top:0}
-  .al-demo__kicker{margin-bottom:.3rem}
-  .al-demo__title{font-size:15.5px;margin-bottom:.35rem}
-  .al-demo__body{font-size:13px;line-height:1.5}
-  .al-demo__stats,.al-demo__map{display:none}
-  .al-demo__controls{margin-top:8px}
-  .al-demo__note{display:none}
-  /* 2026-09-28: los controles van justo bajo la escena (columna izquierda) y el
-     texto a la derecha; asi el largo del texto de cada paso no los mueve */
-  .al-demo{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);grid-template-rows:auto 1fr;column-gap:18px;align-items:start}
-  .al-demo__grid{display:contents}
-  .al-demo__stage,:is(#como-se-instala,.al-demo--instala) .al-demo__stage{grid-column:1;grid-row:1}
-  .al-demo__controls{grid-column:1;grid-row:2;align-self:start}
-  .al-demo__copy,:is(#como-se-instala,.al-demo--instala) .al-demo__copy{grid-column:2;grid-row:1 / span 2;align-self:start}   /* anclado arriba: el largo de cada paso no lo mueve */
   /* Guias: el paso activo mas bajo */
   .gp-modo-pasos .gp-step.act{grid-template-columns:minmax(0,1.1fr) 30px minmax(0,1fr);grid-template-areas:"vis n t";padding:12px;gap:12px;align-items:center}
   .gp-modo-pasos .gp-vis{min-height:0}
@@ -2204,69 +2033,130 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
 [data-theme="dark"] .demo-cambio button.on{color:#fff}
 [data-theme="dark"] .demo-cambio i{background:var(--glow,#4C8DDB);box-shadow:0 0 22px -4px var(--glow,#4C8DDB)}
 @media (prefers-reduced-motion: reduce){ .demo-par :is(.al-demo__stage>canvas,.al-sim,.al-demo__copy),.demo-cambio i{transition:none} }
-/* 2026-09-30: en VERTICAL la demo manda. Antes la escena cedía su alto para
-   que el título y la demo entraran juntos en la primera pantalla, y en un
-   celular real (402×700 con las barras de Safari) quedaba una franja de
-   ~130 px, dibujada en apaisado. Ahora la escena mide hasta 1,25 veces su
-   ancho (tarjeta vertical) y solo se ajusta para que la demo completa quepa
-   en la pantalla; el título queda justo encima. */
-@media (orientation:portrait) and (max-width:899px){
-  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__stage{
-    height:max(260px, min(calc(125cqw + var(--al-barra)), calc(100svh - 268px)))}
+/* ════════════════════════════════════════════════════════════════════
+   HERRAMIENTAS: CUATRO FORMATOS (2026-09-30)
+   Toda la disposición de las demos y del encabezado de cada herramienta vive
+   aquí, en cuatro formatos que no se pisan (cada tamaño cae en uno solo):
+     A  celular vertical ......... vertical y angosto (< 640 px); también las
+                                   ventanas chicas casi cuadradas
+     B  celular horizontal ....... apaisado y bajo (≤ 560 px de alto)
+     C  tablet vertical .......... vertical, desde 640 px, más alto que ancho
+     D  tablet / computador ...... desde 640 px, horizontal o casi cuadrado,
+                                   con más de 560 px de alto
+   Arriba, lo común; en cada formato, solo lo que cambia. El tacto (botones de
+   44 px) va aparte, más abajo, y se suma a cualquiera de los cuatro.
+   Reglas: la escena tiene proporción fija y nunca se estira para llenar; el
+   texto reserva su alto (nada se mueve al avanzar ni al cambiar de demo).
+   ════════════════════════════════════════════════════════════════════ */
+.prod-cel{display:none}
+.al-demo__grid{grid-template-columns:1fr}
+.al-demo__copy{max-width:none;margin:0;justify-content:flex-start}
+.al-demo__stage{order:-1;justify-self:stretch;width:100%;max-width:none;margin:0;aspect-ratio:auto;height:420px}
+/* A · CELULAR VERTICAL: escena arriba (cuadrada, con su tarjeta vertical) y
+   el texto de la etapa debajo; la bajada y "¿Qué es…?" pasan bajo la demo. */
+@media (orientation:portrait) and (max-width:639px), (max-width:639px) and (min-height:561px){
+  #product .hp-tabs{margin-bottom:8px}
+  #product .hp-panel .prod-cab{margin-bottom:10px}
+  #product .prod-h1{font-size:19.5px;line-height:1.28;margin-bottom:0}
+  .prod-cab .prod-tagline,.prod-cab .alert-box{display:none}
+  .prod-cel{display:block;margin:-.6rem 0 2.5rem}
+  .prod-cel .prod-tagline{margin-bottom:1rem}
+  .prod-cel .alert-box{margin-bottom:0}
+  #product .demo-label{margin-bottom:.35rem}
+  .al-demo{padding:12px 16px;border-radius:16px}
+  .al-demo__grid{gap:10px}
+  .al-demo__stage{height:min(calc(100cqw + var(--al-barra)), calc(100svh - 250px))}   /* tope: ventanas anchas y bajas */
+  .al-demo__copy{min-height:158px}   /* el paso más largo de las 6 demos (medido) */
+  .al-demo__kicker{display:none}     /* la etapa ya la dicen el título y la barra */
+  .al-demo__title{font-size:16px;line-height:1.3;margin-bottom:.3rem}
+  .al-demo__body{font-size:13px;line-height:1.45}
+  .al-demo__stats,.al-demo__map,.al-demo__note,.al-demo__contact{display:none}   /* Contacto sigue a un toque en el menú */
+  .al-demo__cta{margin-top:.55rem;padding:7px 16px;font-size:12.5px}
+  .al-demo__tip{margin-top:.45rem;padding:.4rem .7rem;font-size:12px;line-height:1.4}
+  .al-demo__checks{margin-top:.45rem;gap:.2rem;font-size:12px}
+  .al-demo__checks li{line-height:1.38}
 }
-@media (orientation:portrait) and (min-width:640px) and (max-width:899px){
-  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__stage{
-    height:max(300px, min(calc(100cqw + var(--al-barra)), calc(100svh - 360px)))}
+@media (orientation:portrait) and (max-width:379px){ .al-demo__copy{min-height:172px} }
+@media (orientation:portrait) and (max-width:639px) and (max-height:580px){   /* iPhone SE con barras */
+  #product .prod-h1{font-size:17.5px}
+  .al-demo__title{font-size:15px}
+  .al-demo__body{font-size:12px;line-height:1.38}
 }
-/* 2026-09-30: iPad y tablets en VERTICAL. Apilada (escena arriba, texto abajo)
-   la demo no cabía en la pantalla (terminaba ~300 px bajo el borde). Ahora la
-   escena va a la derecha, más alta que ancha (diseño vertical), y el texto de
-   la etapa a su izquierda; la bajada y "¿Qué es conciliar?" pasan bajo la
-   demo, como en el celular. Así, al abrir Herramientas, la demo completa y
-   su barra quedan en la primera pantalla. */
+/* B · CELULAR HORIZONTAL: escena a la izquierda con todo el alto visible y el
+   texto a la derecha, anclado arriba. */
+@media (orientation:landscape) and (max-height:560px){
+  #product .hp-panel .prod-cab{margin-bottom:10px}
+  .prod-cab .prod-tagline,.prod-cab .alert-box{display:none}
+  .prod-cel{display:block;margin:-.6rem 0 2.5rem}
+  .prod-cel .prod-tagline{margin-bottom:1rem}
+  .prod-cel .alert-box{margin-bottom:0}
+  #product .demo-label{margin-bottom:.4rem}
+  .al-demo{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);column-gap:18px;align-items:start;padding:12px 16px;border-radius:16px}
+  .al-demo__grid{display:contents}
+  .al-demo__stage{grid-column:1;grid-row:1;order:0;height:clamp(150px, calc(100vh - 110px), 420px);height:clamp(150px, calc(100svh - 110px), 420px)}
+  .al-demo__copy{grid-column:2;grid-row:1;align-self:start;min-height:0}
+  .al-demo__extra{padding-top:0}
+  .al-demo__kicker{margin-bottom:.3rem}
+  .al-demo__title{font-size:15.5px;margin-bottom:.35rem}
+  .al-demo__body{font-size:13px;line-height:1.5}
+  .al-demo__stats,.al-demo__map,.al-demo__note{display:none}
+  .al-demo__cta{margin-top:.8rem}
+  .al-demo__tip{margin-top:.45rem;padding:.4rem .7rem;font-size:12px;line-height:1.4}
+  .al-demo__checks{margin-top:.45rem;gap:.2rem;font-size:12px}
+}
+/* D · TABLET HORIZONTAL Y COMPUTADOR (también ventanas casi cuadradas): el
+   encabezado en dos columnas (texto | "¿Qué es…?"); en la demo, el texto de la
+   etapa a la izquierda y la escena a la derecha con el alto que queda. */
+@media (min-width:640px) and (min-aspect-ratio:9/10) and (min-height:561px){
+  .prod-cab{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:center}
+  .prod-cab .prod-tagline{margin-bottom:0}
+  .prod-cab .alert-box{margin:0;font-size:13.5px;padding:1.1rem 1.2rem}
+  #product .prod-cab{margin-bottom:1.2rem}
+  #product .demo-label{margin-bottom:.5rem}
+  .al-demo{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);grid-template-rows:min-content 1fr auto;column-gap:clamp(20px,3vw,40px)}
+  .al-demo__grid{display:contents}
+  .al-demo__copy{grid-column:1;grid-row:1;min-height:0;padding-top:.3rem}
+  .al-demo__stage{grid-column:2;grid-row:1 / span 2;order:0;align-self:start;height:max(240px, min(52cqw, calc(100svh - 356px - var(--hp-alto))))}
+  .al-demo__note{grid-column:1 / -1;grid-row:3}
+  .al-demo__extra{padding-top:0}
+  .al-demo__title{font-size:clamp(18px,1.6vw,22px)}
+  .al-demo__body{font-size:clamp(14px,1.15vw,15.5px);line-height:1.6}
+  .al-demo__stats strong{font-size:clamp(24px,2.3vw,34px)}
+}
+@media (min-width:640px) and (min-aspect-ratio:9/10) and (min-height:561px) and (max-height:860px){   /* iPad horizontal, portátiles */
+  .al-demo__body{font-size:14px;line-height:1.55}
+  .al-demo__cta{margin-top:.7rem;padding:7px 16px}
+  .al-demo__stats{gap:10px 12px}
+  .al-demo__stats strong{font-size:clamp(22px,2vw,28px)}
+}
+@media (min-width:640px) and (max-width:1099px) and (min-aspect-ratio:9/10) and (min-height:561px) and (max-height:760px),
+       (min-width:1100px) and (max-width:1439px) and (orientation:landscape) and (min-height:561px) and (max-height:680px){   /* ventanas angostas y bajas */
+  #product .prod-h1{font-size:19px}
+  #product .prod-cab .alert-box{font-size:12.5px;padding:.8rem 1rem}
+  .al-demo__kicker{margin-bottom:.25rem}
+  .al-demo__title{font-size:16px;margin-bottom:.25rem}
+  .al-demo__body{font-size:12.5px;line-height:1.4}
+  .al-demo__stats,.al-demo__note{display:none}
+}
+/* C · TABLET VERTICAL: escena a la derecha, más alta que ancha, y el texto de
+   la etapa a su izquierda, con la nota abajo en la misma celda (el alto lo da
+   solo la escena); la bajada y "¿Qué es…?" pasan bajo la demo. */
 @media (orientation:portrait) and (min-width:640px) and (max-aspect-ratio:9/10){
   .prod-cab .prod-tagline,.prod-cab .alert-box{display:none}
   .prod-cel{display:block;margin:1.6rem 0 2.5rem}
   .prod-cel .prod-tagline{margin-bottom:1rem}
   .prod-cel .alert-box{margin-bottom:0}
   #product .prod-cab{margin-bottom:1rem}
-  .al-demo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);grid-template-rows:auto;column-gap:clamp(20px,3vw,32px);align-items:start}
+  #product .demo-label{margin-bottom:.5rem}
+  .al-demo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);column-gap:clamp(20px,3vw,32px);align-items:start}
   .al-demo__grid{display:contents}
-  .al-demo__copy,:is(#como-se-instala,.al-demo--instala) .al-demo__copy{grid-column:1;grid-row:1;display:flex;flex-direction:column;min-height:0;padding-top:.3rem}
-  .al-demo__copy>.al-demo__extra{grid-column:auto;grid-row:auto;padding-top:.6rem}
-  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__stage{grid-column:2;grid-row:1;order:0;align-self:start;
-    height:max(380px, min(calc(100cqw * .8), calc(100svh - 330px - var(--hp-alto, 0px))))}
-  .al-demo__note{grid-column:1;grid-row:1;align-self:end;margin-top:1rem}   /* misma celda que el texto, abajo: el alto lo da solo la escena (sin saltos al cambiar de demo) */
+  .al-demo__copy{grid-column:1;grid-row:1;min-height:0;padding-top:.3rem}
+  .al-demo__stage{grid-column:2;grid-row:1;order:0;align-self:start;height:max(380px, min(calc(100cqw * .8), calc(100svh - 330px - var(--hp-alto))))}
+  .al-demo__note{grid-column:1;grid-row:1;align-self:end;margin-top:1rem}
+  .al-demo__extra{padding-top:.6rem}
   .al-demo__title{font-size:clamp(17px,2.3vw,21px)}
-  .al-demo__body{font-size:14px;line-height:1.55}
-  .al-demo__stats{flex-wrap:wrap;gap:10px 16px}
-}
-/* 2026-09-30: CELULAR en vertical. Al abrir Herramientas, la demo completa
-   (escena, barra y texto de la etapa) queda en la primera pantalla: el
-   encabezado y el texto se compactan (la etapa ya la dicen el título y la
-   barra, así que la línea pequeña de arriba se oculta) y la escena guarda
-   una proporción natural (ver abajo). */
-@media (orientation:portrait) and (max-width:639px){
-  #product .hp-tabs{margin-bottom:8px}
-  #product .hp-panel .prod-cab{margin-bottom:10px}
-  #product .demo-label{margin-bottom:.35rem}
-  .al-demo__kicker{display:none}
-  .al-demo__title{font-size:16px;line-height:1.3;margin-bottom:.3rem}
-  .al-demo__body{font-size:12.5px;line-height:1.45}
-  .al-demo__cta{margin-top:.55rem;padding:7px 16px;font-size:12.5px}
-  .al-demo__grid{gap:10px}
-  /* alto común del texto = el paso más largo de las 6 demos (medido): el
-     borde de la demo no se mueve al avanzar de paso ni al cambiar entre
-     "Ver en acción" y "Cómo se instala" */
-  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__copy{min-height:158px!important}
-  /* proporción natural y fija: escena cuadrada (con su tarjeta vertical) en
-     todos los celulares, sin forzarla a llenar la pantalla ni script que la
-     estire al cargar; el texto va a su medida debajo */
-  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__stage{
-    height:min(calc(100cqw + var(--al-barra)), calc(100svh - 250px))}   /* tope: ventanas anchas y bajas (iPad dividido) */
-}
-@media (orientation:portrait) and (max-width:379px){
-  :is(#ver-en-accion,.al-demo--accion,#como-se-instala,.al-demo--instala) .al-demo__copy{min-height:172px!important}
+  .al-demo__body{font-size:14px;line-height:1.55;max-width:620px}
+  .al-demo__stats{margin-top:0;flex-wrap:wrap;gap:10px 16px}
 }
 /* 2026-09-30: pantallas táctiles. Los controles de las demos quedaban bajo el
    mínimo de 44 px para tocar con el dedo (26-28 px en la barra, 24 px el
