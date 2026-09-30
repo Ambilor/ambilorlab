@@ -1884,6 +1884,12 @@ html.i3-encaje{scroll-snap-type:y mandatory}
 .i3-estatico .i3-tunel{display:none}
 .i3-estatico #i3Escena{opacity:.35}
 .i3-estatico .i3-ruta{display:none}
+/* tactil (Inicio como pagina normal): menos aire entre bloques; el primero conserva
+   el alto de portada */
+@media (pointer:coarse){
+  .i3-estatico .i3-estacion{padding:9vh 0 5vh}
+  .i3-estatico .i3-estacion:first-child{padding-top:18vh;min-height:88vh}
+}
 
 /* ── Inicio 3D (2026-09-28): el recorrido de la pagina de prueba pasa al inicio.
    Variables propias por tema; el resto usa las del sitio (--gris-*, --glow...). */
@@ -3496,7 +3502,11 @@ window.AL3D = (function(){
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var canvas = document.getElementById('i3Escena');
   var hay3D = typeof THREE !== 'undefined';
-  if (reduce || !hay3D) { document.body.classList.add('i3-estatico'); if (!hay3D) canvas.style.display = 'none'; }
+  // 2026-09-30 (Director): en pantallas tactiles el Inicio se desplaza como una pagina
+  // normal (como el panel del V2): bloques uno bajo otro que siguen al dedo, sin el
+  // recorrido 3D con bloques fijos ni paradas. El 3D queda para computador.
+  var tactilInicio = window.matchMedia && matchMedia('(pointer: coarse)').matches;
+  if (reduce || !hay3D || tactilInicio) { document.body.classList.add('i3-estatico'); if (!hay3D) canvas.style.display = 'none'; }
 
   // ── avance por tramos: en cada bloque hay un tramo de lectura (el bloque queda
   // quieto y el cubo recorre sus elementos: titulo, tarjetas, botones) y entre
