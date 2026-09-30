@@ -10,8 +10,8 @@
 window.__errores=[];window.addEventListener("error",function(e){window.__errores.push(String(e.message||e))});
 try{if("scrollRestoration" in history)history.scrollRestoration="manual";if(location.hash)history.replaceState(null,"",location.pathname+location.search);}catch(e){}</script>
 <meta name="theme-color" content="#06080C" />
-<title>Ambilor.Lab — Automatizacion contable y financiera</title>
-<meta name="description" content="Herramientas de automatizacion para contadores, equipos financieros y PyMEs. Conciliador Automático V1 próximamente en Google Sheets." />
+<title>Ambilor Lab (Ambilor.Lab) · Automatización contable y financiera</title>
+<meta name="description" content="Ambilor Lab: herramientas de automatización contable y financiera para contadores, equipos financieros y PyMEs, dentro de Google Sheets. Conciliador Automático, conciliación bancaria y app de pedidos." />
 <link rel="canonical" href="https://ambilor.github.io/ambilorlab/" />
 
 <!-- Preconnect -->
@@ -28,33 +28,57 @@ try{if("scrollRestoration" in history)history.scrollRestoration="manual";if(loca
 <!-- Open Graph -->
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Ambilor.Lab" />
-<meta property="og:title" content="Ambilor.Lab — Automatizacion contable y financiera" />
-<meta property="og:description" content="Herramientas de automatizacion para contadores, equipos financieros y PyMEs. Conciliador Automático V1 próximamente en Google Sheets." />
+<meta property="og:title" content="Ambilor Lab (Ambilor.Lab) · Automatización contable y financiera" />
+<meta property="og:locale" content="es_CL" />
+<meta property="og:description" content="Ambilor Lab: herramientas de automatización contable y financiera para contadores, equipos financieros y PyMEs, dentro de Google Sheets. Conciliador Automático, conciliación bancaria y app de pedidos." />
 <meta property="og:url" content="https://ambilor.github.io/ambilorlab/" />
 <meta property="og:image" content="https://ambilor.github.io/ambilorlab/og-image.png" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Ambilor.Lab — Automatizacion contable y financiera" />
-<meta name="twitter:description" content="Herramientas de automatizacion para contadores, equipos financieros y PyMEs." />
+<meta name="twitter:title" content="Ambilor Lab (Ambilor.Lab) · Automatización contable y financiera" />
+<meta name="twitter:description" content="Ambilor Lab: herramientas de automatización contable y financiera para contadores, equipos financieros y PyMEs, dentro de Google Sheets. Conciliador Automático, conciliación bancaria y app de pedidos." />
 
-<!-- JSON-LD -->
+<!-- JSON-LD (2026-09-30): el sitio, la marca y su autor. "alternateName"
+     cubre cómo se busca la marca ("Ambilor Lab", sin punto) y "sameAs" une el
+     sitio con su Instagram y LinkedIn como una misma entidad. -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "Jordan Riquelme",
-  "alternateName": "Ambilor",
-  "jobTitle": "Contador Publico y Auditor · Analista de Datos",
-  "description": "Construyo herramientas de automatizacion para contadores, equipos financieros y PyMEs usando Google Sheets, Apps Script y Power BI.",
-  "url": "https://ambilor.github.io/ambilorlab/",
-  "sameAs": [
-    "https://www.instagram.com/ambilor.lab/",
-    "https://www.linkedin.com/in/jordan-riquelme"
-  ],
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Santiago",
-    "addressCountry": "CL"
-  }
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://ambilor.github.io/ambilorlab/#sitio",
+      "url": "https://ambilor.github.io/ambilorlab/",
+      "name": "Ambilor.Lab",
+      "alternateName": ["Ambilor Lab", "AmbilorLab"],
+      "inLanguage": "es-CL",
+      "publisher": { "@id": "https://ambilor.github.io/ambilorlab/#marca" }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://ambilor.github.io/ambilorlab/#marca",
+      "name": "Ambilor.Lab",
+      "alternateName": ["Ambilor Lab", "AmbilorLab", "Ambilor"],
+      "url": "https://ambilor.github.io/ambilorlab/",
+      "logo": "https://ambilor.github.io/ambilorlab/og-image.png",
+      "description": "Herramientas de automatización contable y financiera para contadores, equipos financieros y PyMEs, dentro de Google Sheets.",
+      "areaServed": "CL",
+      "sameAs": [
+        "https://www.instagram.com/ambilor.lab/",
+        "https://www.linkedin.com/in/jordan-riquelme"
+      ],
+      "founder": { "@id": "https://ambilor.github.io/ambilorlab/#autor" }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://ambilor.github.io/ambilorlab/#autor",
+      "name": "Jordan Riquelme",
+      "jobTitle": "Contador Público y Auditor · Analista de Datos",
+      "description": "Construyo herramientas de automatización para contadores, equipos financieros y PyMEs usando Google Sheets, Apps Script y Power BI.",
+      "url": "https://ambilor.github.io/ambilorlab/",
+      "sameAs": ["https://www.linkedin.com/in/jordan-riquelme"],
+      "address": { "@type": "PostalAddress", "addressLocality": "Santiago", "addressCountry": "CL" }
+    }
+  ]
 }
 </script>
 
