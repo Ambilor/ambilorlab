@@ -1194,6 +1194,7 @@ body>section:not(#home)>.container{padding-top:1.6rem}
 .rc-filtros{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
 .rc-f{display:inline-flex;align-items:center;gap:6px;font-family:var(--sans);font-size:13px;font-weight:500;padding:7px 14px;border-radius:100px;border:1px solid var(--borde);background:var(--blanco);color:var(--gris-1);cursor:pointer;transition:border-color .2s,background .2s,color .2s}
 .rc-f i{font-size:15px}
+.rc-f[hidden]{display:none}
 .rc-f:hover{border-color:var(--azul);color:var(--azul)}
 .rc-f.on{background:var(--azul);border-color:var(--azul);color:#fff}
 [data-theme="dark"] .rc-f:hover{border-color:var(--glow);color:var(--glow-2)}
@@ -2600,11 +2601,13 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
        ?r=slug). Las tarjetas de la lista se arman solas desde estos artículos:
        un recurso nuevo = un <article> nuevo, con data-r (dirección), data-tipo
        (prompt, tip, consejo), data-min (minutos de lectura) y data-gancho (el
-       resumen de la tarjeta). Las guías paso a paso siguen más abajo (#gp-guias). -->
+       resumen de la tarjeta). Con data-oculto el artículo queda guardado pero no se
+       muestra ni se abre (2026-10-01: por ahora solo se publican Gemini y BUSCARX).
+       Las guías paso a paso siguen más abajo (#gp-guias). -->
   <div class="container rc-lib" id="rc-lib">
     <div class="home-eyebrow">Recursos</div>
     <h2 class="home-h1">Prompts, tips y guías para tu negocio</h2>
-    <p class="home-lead">Ideas prácticas para ahorrar tiempo con IA, planillas y WhatsApp. Gratis y listas para usar.</p>
+    <p class="home-lead">Ideas prácticas para ahorrar tiempo con IA y planillas. Gratis y listas para usar.</p>
     <div class="rc-filtros" role="group" aria-label="Filtrar recursos">
       <button type="button" class="rc-f on" data-f="todos" aria-pressed="true">Todos</button>
       <button type="button" class="rc-f" data-f="prompt" aria-pressed="false"><i class="ti ti-sparkles" aria-hidden="true"></i>Prompts de IA</button>
@@ -2622,7 +2625,7 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
     </div>
 
     <!-- ── Prompt 1: reclamos por WhatsApp ── -->
-    <article class="rc-doc" data-r="prompt-reclamos-whatsapp" data-tipo="prompt" data-min="3" data-app="pedidoapp"
+    <article class="rc-doc" data-r="prompt-reclamos-whatsapp" data-oculto data-tipo="prompt" data-min="3" data-app="pedidoapp"
       data-gancho="Un prompt para contestar a un cliente molesto en minutos, con una solución clara y sin perder el tono.">
       <h2 class="rc-h">Prompt para responder reclamos de clientes sin perder la calma (ni al cliente)</h2>
       <p class="rc-bajada">Un reclamo bien respondido puede dejarte un cliente más fiel que antes. Este prompt te da una respuesta lista para WhatsApp en menos de un minuto.</p>
@@ -2653,7 +2656,7 @@ Mensaje del cliente:
     </article>
 
     <!-- ── Prompt 2: revisar la cartola ── -->
-    <article class="rc-doc" data-r="prompt-cartola-bancaria" data-tipo="prompt" data-min="4" data-app="conciliador"
+    <article class="rc-doc" data-r="prompt-cartola-bancaria" data-oculto data-tipo="prompt" data-min="4" data-app="conciliador"
       data-gancho="Pega tus movimientos del mes y encuentra cobros duplicados, comisiones y suscripciones olvidadas.">
       <h2 class="rc-h">Revisa tu cartola bancaria con IA y encuentra cobros raros en 2 minutos</h2>
       <p class="rc-bajada">Comisiones que no esperabas, suscripciones que ya no usas, un cargo duplicado. Este prompt ordena tu mes y te dice qué revisar primero.</p>
@@ -2826,7 +2829,7 @@ Al finalizar, indícame:
     </article>
 
     <!-- ── Tip 2: respuestas rápidas ── -->
-    <article class="rc-doc" data-r="tip-respuestas-rapidas-whatsapp" data-tipo="tip" data-min="3" data-app="pedidoapp"
+    <article class="rc-doc" data-r="tip-respuestas-rapidas-whatsapp" data-oculto data-tipo="tip" data-min="3" data-app="pedidoapp"
       data-gancho="Escribe / y elige: horario, datos de pago, despacho. Las 5 respuestas rápidas que todo negocio necesita.">
       <h2 class="rc-h">Respuestas rápidas de WhatsApp Business: contesta lo mismo en 2 segundos</h2>
       <p class="rc-bajada">Si respondes el horario o los datos de transferencia diez veces al día, esto es para ti. Es gratis y ya viene en WhatsApp Business.</p>
@@ -2848,7 +2851,7 @@ Al finalizar, indícame:
     </article>
 
     <!-- ── Consejo 1: conciliar cada semana ── -->
-    <article class="rc-doc" data-r="consejo-cuadrar-banco-semanal" data-tipo="consejo" data-min="4" data-app="conciliador"
+    <article class="rc-doc" data-r="consejo-cuadrar-banco-semanal" data-oculto data-tipo="consejo" data-min="4" data-app="conciliador"
       data-gancho="Revisar 70 movimientos cada lunes es más fácil que 300 a fin de mes. Una rutina de 20 minutos.">
       <h2 class="rc-h">Cuadra tu banco cada semana, no a fin de mes</h2>
       <p class="rc-bajada">A fin de mes todo se junta: cientos de movimientos, diferencias que ya nadie recuerda y cobros que ya no alcanzas a reclamar. Una rutina corta cada semana lo cambia.</p>
@@ -2870,7 +2873,7 @@ Al finalizar, indícame:
     </article>
 
     <!-- ── Consejo 2: cupones ── -->
-    <article class="rc-doc" data-r="consejo-cupones-margen" data-tipo="consejo" data-min="4" data-app="pedidoapp"
+    <article class="rc-doc" data-r="consejo-cupones-margen" data-oculto data-tipo="consejo" data-min="4" data-app="pedidoapp"
       data-gancho="Un 20 % de descuento puede obligarte a vender el triple. Cómo armar cupones que suben las ventas sin regalar tu margen.">
       <h2 class="rc-h">Cupones que venden (y cupones que solo regalan margen)</h2>
       <p class="rc-bajada">Un descuento se siente como una buena idea hasta que haces la cuenta. Antes de lanzar tu próximo cupón, haz esta cuenta.</p>
@@ -3733,7 +3736,7 @@ var RC_APPS={
 };
 var RC_ABRIENDO=false;
 var RC_BASE={titulo:document.title,desc:(document.querySelector('meta[name="description"]')||{}).content||'',canon:(document.querySelector('link[rel="canonical"]')||{}).href||''};
-function rcDocs(){ return [].slice.call(document.querySelectorAll('#rc-art .rc-doc')); }
+function rcDocs(){ return [].slice.call(document.querySelectorAll('#rc-art .rc-doc:not([data-oculto])')); }
 function rcModo(m){ var s=document.getElementById('guias'); if(!s) return; s.classList.remove('rc-lista','rc-articulo','rc-guia'); s.classList.add('rc-'+m); document.body.classList.toggle('rc-leyendo',m==='articulo'); }
 function rcTipoHtml(tipo){ var t=RC_TIPOS[tipo]; return '<span class="rc-tipo rc-tipo--'+tipo+'"><i class="ti '+t[1]+'" aria-hidden="true"></i>'+t[0]+'</span>'; }
 function rcTarjeta(x){
@@ -3758,7 +3761,8 @@ function rcMeta(titulo,desc,url){
 function rcAbrir(r,empujar){
   var doc=null; rcDocs().forEach(function(a){ var on=a.getAttribute('data-r')===r; a.classList.toggle('on',on); if(on) doc=a; });
   var guia=null; RC_GUIAS.forEach(function(g){ if(g.r===r) guia=g; });
-  if(!doc&&!guia){ rcLista(); return false; }
+  // dirección desconocida o recurso oculto: se muestra la lista de Recursos
+  if(!doc&&!guia){ if(!document.getElementById('guias').classList.contains('visible')){ RC_ABRIENDO=true; show('guias'); RC_ABRIENDO=false; } rcLista(); try{ history.replaceState(null,'',location.pathname+'?p=recursos'); }catch(e){} return false; }
   if(!document.getElementById('guias').classList.contains('visible')){ RC_ABRIENDO=true; show('guias'); RC_ABRIENDO=false; }
   if(guia){
     rcModo('guia');
@@ -3775,6 +3779,7 @@ function rcAbrir(r,empujar){
     }
     var app=RC_APPS[doc.getAttribute('data-app')], todos=rcLista_().filter(function(x){ return x.r!==r&&x.tipo!=='guia'; });
     var mas=todos.filter(function(x){ return x.tipo!==tipo; }).slice(0,1).concat(todos.filter(function(x){ return x.tipo===tipo; }).slice(0,1));
+    if(mas.length<2) mas=mas.concat(rcLista_().filter(function(x){ return x.tipo==='guia'; }).slice(0,2-mas.length));
     document.getElementById('rc-cierre').innerHTML=(app?'<aside class="rc-app"><i class="ti '+app.ico+'" aria-hidden="true"></i><div><b>'+app.t+'</b><p>'+app.d+'</p><button type="button" class="rc-boton rc-boton--pri" onclick="rcVerApp(\''+app.tab+'\')">'+app.b+'<i class="ti ti-arrow-right" aria-hidden="true"></i></button></div></aside>':'')
       +'<div class="rc-acc"><button type="button" class="rc-boton" onclick="rcCompartir(this)"><i class="ti ti-share" aria-hidden="true"></i><span>Compartir</span></button><button type="button" class="rc-boton" onclick="rcVolver()"><i class="ti ti-arrow-left" aria-hidden="true"></i>Todos los recursos</button></div>'
       +'<h3 class="rc-mas-t">Sigue leyendo</h3><div class="rc-grid">'+mas.map(rcTarjeta).join('')+'</div>';
@@ -3814,6 +3819,7 @@ function rcCompartir(b){
 (function(){
   var g=document.getElementById('rc-grid'); if(!g) return;
   g.innerHTML=rcLista_().map(rcTarjeta).join('');
+  [].forEach.call(document.querySelectorAll('.rc-f'),function(b){ var f=b.getAttribute('data-f'); if(f!=='todos'&&!g.querySelector('.rc-card[data-tipo="'+f+'"]')) b.hidden=true; });
   [].forEach.call(document.querySelectorAll('.rc-f'),function(b){ b.addEventListener('click',function(){ rcFiltrar(b.getAttribute('data-f')); }); });
   // tarjetas y enlaces internos (?r=...): se abren sin recargar la página
   document.addEventListener('click',function(e){

@@ -174,7 +174,7 @@ async function revisarAlto(v, H){
   };
   if (actual === 'guias' && win.rcAbrir) {
     general('Lista');
-    for (const a of doc.querySelectorAll('#rc-art .rc-doc')) { win.rcAbrir(a.getAttribute('data-r'), false); await esperar(250); general('Recurso ' + a.getAttribute('data-r')); }
+    for (const a of doc.querySelectorAll('#rc-art .rc-doc:not([data-oculto])')) { win.rcAbrir(a.getAttribute('data-r'), false); await esperar(250); general('Recurso ' + a.getAttribute('data-r')); }
     win.rcAbrir('guia-apps-script', false); await esperar(300);
   } else general('');
   // bloques que deben caber en el alto visible
