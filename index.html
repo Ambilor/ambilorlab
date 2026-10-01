@@ -103,13 +103,13 @@ try{if("scrollRestoration" in history)history.scrollRestoration="manual";if(loca
 @font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:400;font-display:swap;src:url("fuentes/jetbrains-mono-400.woff2") format("woff2")}
 @font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:500;font-display:swap;src:url("fuentes/jetbrains-mono-500.woff2") format("woff2")}
 @font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:600;font-display:swap;src:url("fuentes/jetbrains-mono-600.woff2") format("woff2")}
-/* Íconos (2026-10-01): solo los 35 que usa el sitio, de Tabler Icons 3.48.0 (licencia MIT).
+/* Íconos (2026-10-01): solo los 44 que usa el sitio, de Tabler Icons 3.48.0 (licencia MIT).
    Antes se descargaba la colección completa desde jsDelivr (@latest): una hoja de 212 KB que
    bloqueaba la página y una fuente de 504 KB. Ahora: fuentes/tabler-icons-sitio.woff2 (6 KB).
    Ícono nuevo: agregarlo con pyftsubset desde la fuente completa y sumar su regla aquí. */
-@font-face{font-family:"tabler-icons";font-style:normal;font-weight:400;font-display:block;src:url("fuentes/tabler-icons-sitio.woff2?v3.48.0") format("woff2")}
+@font-face{font-family:"tabler-icons";font-style:normal;font-weight:400;font-display:block;src:url("fuentes/tabler-icons-sitio.woff2?v3.48.0-44") format("woff2")}
 .ti{font-family:"tabler-icons"!important;speak:none;font-style:normal;font-weight:normal;font-variant:normal;text-transform:none;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-.ti-arrow-down:before{content:"\ea16"}.ti-arrow-up-right:before{content:"\ea24"}.ti-arrows-exchange:before{content:"\f1f4"}.ti-bolt:before{content:"\ea38"}.ti-brand-google:before{content:"\ec1f"}.ti-brand-instagram:before{content:"\ec20"}.ti-brand-linkedin:before{content:"\ec8c"}.ti-brand-python:before{content:"\ed01"}.ti-briefcase:before{content:"\ea46"}.ti-building-bank:before{content:"\ebe2"}.ti-building-warehouse:before{content:"\ebe3"}.ti-bulb:before{content:"\ea51"}.ti-certificate:before{content:"\ed76"}.ti-chart-bar:before{content:"\ea59"}.ti-chart-dots:before{content:"\ee2f"}.ti-circle-check:before{content:"\ea67"}.ti-code:before{content:"\ea77"}.ti-code-dots:before{content:"\f61a"}.ti-database:before{content:"\ea88"}.ti-database-search:before{content:"\fa18"}.ti-device-mobile-rotated:before{content:"\ecdb"}.ti-file-spreadsheet:before{content:"\f03e"}.ti-forms:before{content:"\ee8f"}.ti-git-compare:before{content:"\eab4"}.ti-language:before{content:"\ebbe"}.ti-layout-dashboard:before{content:"\f02c"}.ti-mail:before{content:"\eae5"}.ti-map-pin:before{content:"\eae8"}.ti-receipt:before{content:"\edfd"}.ti-repeat:before{content:"\eb72"}.ti-school:before{content:"\ecf7"}.ti-shopping-bag:before{content:"\f5f8"}.ti-sparkles:before{content:"\f6d7"}.ti-table:before{content:"\eba1"}.ti-trending-up:before{content:"\eb43"}
+.ti-arrow-down:before{content:"\ea16"}.ti-arrow-left:before{content:"\ea19"}.ti-arrow-right:before{content:"\ea1f"}.ti-arrow-up-right:before{content:"\ea24"}.ti-arrows-exchange:before{content:"\f1f4"}.ti-bolt:before{content:"\ea38"}.ti-brand-google:before{content:"\ec1f"}.ti-brand-instagram:before{content:"\ec20"}.ti-brand-linkedin:before{content:"\ec8c"}.ti-brand-python:before{content:"\ed01"}.ti-briefcase:before{content:"\ea46"}.ti-building-bank:before{content:"\ebe2"}.ti-building-warehouse:before{content:"\ebe3"}.ti-bulb:before{content:"\ea51"}.ti-certificate:before{content:"\ed76"}.ti-chart-bar:before{content:"\ea59"}.ti-chart-dots:before{content:"\ee2f"}.ti-check:before{content:"\ea5e"}.ti-circle-check:before{content:"\ea67"}.ti-clock:before{content:"\ea70"}.ti-code:before{content:"\ea77"}.ti-code-dots:before{content:"\f61a"}.ti-compass:before{content:"\ea79"}.ti-copy:before{content:"\ea7a"}.ti-database:before{content:"\ea88"}.ti-database-search:before{content:"\fa18"}.ti-device-mobile-rotated:before{content:"\ecdb"}.ti-file-spreadsheet:before{content:"\f03e"}.ti-forms:before{content:"\ee8f"}.ti-git-compare:before{content:"\eab4"}.ti-language:before{content:"\ebbe"}.ti-layout-dashboard:before{content:"\f02c"}.ti-list-numbers:before{content:"\ef11"}.ti-mail:before{content:"\eae5"}.ti-map-pin:before{content:"\eae8"}.ti-message-circle:before{content:"\eaed"}.ti-receipt:before{content:"\edfd"}.ti-repeat:before{content:"\eb72"}.ti-school:before{content:"\ecf7"}.ti-share:before{content:"\eb21"}.ti-shopping-bag:before{content:"\f5f8"}.ti-sparkles:before{content:"\f6d7"}.ti-table:before{content:"\eba1"}.ti-trending-up:before{content:"\eb43"}
 :root {
   --azul:#1F5C99;--azul-dark:#163f6b;--azul-bg:#EBF2FA;--negro:#111111;
   --gris-1:#444444;--gris-2:#6B6B6B;   /* 2026-10-01: gris-2 era #888 (contraste 3,5 sobre blanco); ahora 5,3 */
@@ -1156,8 +1156,8 @@ footer{margin-top:auto}
 /* Guias compactas en TODOS los dispositivos (2026-09-28): titulo, pestanas,
    diagrama y paso activo caben en la primera pantalla. Diagrama en formato
    horizontal compacto, paso sin espacio vacio y "Permite:" solo si hay alto. */
-#guias .home-h1{margin-bottom:.4rem}
-#guias .home-lead{margin-bottom:1rem;max-width:760px}
+#gp-guias .home-h1{margin-bottom:.4rem}
+#gp-guias .home-lead{margin-bottom:1rem;max-width:760px}
 .gp-tabs{margin-bottom:12px}
 .gvw{padding:12px 16px;margin-bottom:.8rem}
 .gvw-tc{display:grid;grid-template-columns:auto 1fr;column-gap:12px;align-items:center;text-align:left;padding:10px 14px}
@@ -1184,9 +1184,113 @@ body>section:not(#home)>.container{padding-top:1.6rem}
 /* celular en horizontal y ventanas bajas (hasta 560 px de alto): menú más bajo */
 @media (orientation:landscape) and (max-height:560px){ .nav-inner{height:44px} }
 
+/* ═══ RECURSOS (2026-10-01): biblioteca, artículo y guías ═══
+   La pestaña muestra una de tres cosas según la clase de #guias: rc-lista (las
+   tarjetas), rc-articulo (un recurso) o rc-guia (las guías paso a paso). Sin
+   JavaScript no hay clase y se ven las guías, como antes. */
+#guias .rc-lib,#guias .rc-art{display:none}
+#guias.rc-lista .rc-lib,#guias.rc-articulo .rc-art{display:block}
+#guias.rc-lista #gp-guias,#guias.rc-articulo #gp-guias{display:none}
+.rc-filtros{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+.rc-f{display:inline-flex;align-items:center;gap:6px;font-family:var(--sans);font-size:13px;font-weight:500;padding:7px 14px;border-radius:100px;border:1px solid var(--borde);background:var(--blanco);color:var(--gris-1);cursor:pointer;transition:border-color .2s,background .2s,color .2s}
+.rc-f i{font-size:15px}
+.rc-f:hover{border-color:var(--azul);color:var(--azul)}
+.rc-f.on{background:var(--azul);border-color:var(--azul);color:#fff}
+[data-theme="dark"] .rc-f:hover{border-color:var(--glow);color:var(--glow-2)}
+[data-theme="dark"] .rc-f.on,[data-theme="dark"] .rc-f.on:hover{background:var(--azul);border-color:var(--glow);color:#fff}
+.rc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,270px),1fr));gap:12px}
+.rc-card{display:flex;flex-direction:column;gap:8px;padding:16px;border:1px solid var(--borde);border-radius:12px;background:var(--blanco);color:var(--negro);text-decoration:none;transition:border-color .25s,box-shadow .25s,transform .25s var(--ease)}
+.rc-card:hover{border-color:var(--azul);box-shadow:0 10px 30px -18px rgba(31,92,153,.6)}
+[data-theme="dark"] .rc-card{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,0)),#0b0b16}
+/* al leer un recurso, la escena del fondo se atenúa para que no compita con el texto */
+body.rc-leyendo #i3Escena,body.rc-leyendo #i3CapaHada{opacity:.15;transition:opacity .4s}
+[data-theme="dark"] .rc-card:hover{border-color:#2A3A52}
+.rc-card.rc-oculta{display:none}
+.rc-card-t{font-size:15.5px;font-weight:600;line-height:1.35;letter-spacing:-.01em}
+.rc-card-d{font-size:13.5px;line-height:1.55;color:var(--gris-1);flex:1}
+.rc-card-pie{display:flex;align-items:center;justify-content:space-between;gap:8px;font-family:var(--mono);font-size:11.5px;color:var(--gris-1);padding-top:4px}
+.rc-card-pie i{font-size:13px;vertical-align:-2px;margin-right:4px}
+.rc-ir{color:var(--azul);font-weight:600}
+[data-theme="dark"] .rc-ir{color:var(--glow-2)}
+.rc-tipo{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--gris-1)}
+.rc-tipo i{font-size:15px}
+.rc-tipo--prompt i{color:#7A5AF8}.rc-tipo--tip i{color:#1A8A55}.rc-tipo--consejo i{color:#C27A12}.rc-tipo--guia i{color:var(--azul)}
+[data-theme="dark"] .rc-tipo--prompt i{color:#A38BFA}
+[data-theme="dark"] .rc-tipo--tip i{color:var(--ok-n)}
+[data-theme="dark"] .rc-tipo--consejo i{color:var(--warn-n)}
+[data-theme="dark"] .rc-tipo--guia i{color:var(--glow-2)}
+/* artículo: columna de lectura */
+.rc-migas{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;color:var(--gris-1);margin-bottom:14px;max-width:720px;margin-left:auto;margin-right:auto}
+.rc-volver{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;font-weight:600;color:var(--azul);background:none;border:0;padding:6px 0;cursor:pointer}
+.rc-volver i{font-size:15px}
+[data-theme="dark"] .rc-volver{color:var(--glow-2)}
+#gp-guias .rc-migas{margin-left:0}
+.rc-doc{display:none;max-width:720px;margin:0 auto}
+.rc-doc.on{display:block}
+.rc-doc-cab{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin-bottom:10px}
+.rc-min{font-family:var(--mono);font-size:11.5px;color:var(--gris-1)}
+.rc-min i{font-size:13px;vertical-align:-2px;margin-right:4px}
+.rc-h{font-size:clamp(24px,3.4vw,32px);font-weight:600;line-height:1.2;letter-spacing:-.02em;margin-bottom:.7rem;text-wrap:balance}
+.rc-bajada{font-size:16px;line-height:1.65;color:var(--gris-1);margin-bottom:1.4rem}
+.rc-doc h3{font-size:17px;font-weight:600;letter-spacing:-.01em;margin:1.7rem 0 .6rem}
+.rc-doc p{margin-bottom:.8rem}
+.rc-doc a{color:var(--azul)}
+[data-theme="dark"] .rc-doc a{color:var(--glow-2)}
+.rc-doc code{font-family:"JetBrains Mono",var(--mono);font-size:.88em;padding:1px 6px;border-radius:5px;background:var(--gris-4);border:1px solid var(--borde);overflow-wrap:anywhere}
+.rc-pasos,.rc-lista{margin:0 0 1rem 1.2rem;display:grid;gap:8px}
+.rc-pasos li,.rc-lista li{padding-left:4px;line-height:1.6}
+.rc-pasos li::marker{font-family:"JetBrains Mono",var(--mono);font-weight:600;color:var(--azul)}
+[data-theme="dark"] .rc-pasos li::marker{color:var(--glow-2)}
+.rc-prompt{border:1px solid var(--borde);border-radius:12px;overflow:hidden;margin:1rem 0 1.2rem;background:var(--gris-4)}
+.rc-prompt-cab{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 8px 8px 14px;border-bottom:1px solid var(--borde)}
+.rc-prompt-cab>span{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--gris-1)}
+.rc-prompt-cab>span i{font-size:15px;color:#7A5AF8}
+[data-theme="dark"] .rc-prompt-cab>span i{color:#A38BFA}
+.rc-copiar{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:142px;font-family:var(--sans);font-size:13px;font-weight:600;padding:8px 14px;border-radius:100px;border:1px solid var(--azul);background:var(--azul);color:#fff;cursor:pointer;transition:background .2s}
+.rc-copiar i{font-size:16px}
+.rc-copiar.ok{background:#1A7A4A;border-color:#1A7A4A}
+.rc-prompt pre{margin:0;padding:14px 16px;font-family:"JetBrains Mono",var(--mono);font-size:13px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--negro)}
+.rc-nota{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:12px;background:var(--azul-bg);margin:1rem 0}
+.rc-nota>i{font-size:20px;color:var(--azul);flex-shrink:0;margin-top:2px}
+.rc-nota p{margin:0;font-size:14px;line-height:1.6}
+.rc-nota--aviso{background:rgba(240,166,58,.12)}
+.rc-nota--aviso>i{color:#B06A0C}
+[data-theme="dark"] .rc-nota{background:#0d1424}
+[data-theme="dark"] .rc-nota>i{color:var(--glow-2)}
+[data-theme="dark"] .rc-nota--aviso{background:rgba(240,166,58,.1)}
+[data-theme="dark"] .rc-nota--aviso>i{color:var(--warn-n)}
+.rc-formula{margin:.6rem 0 1rem;padding:12px 14px;border-radius:10px;border:1px solid var(--borde);background:var(--gris-4)}
+.rc-formula code{border:0;background:none;padding:0;font-size:13.5px}
+.rc-tabla-w{overflow-x:auto;margin:1rem 0 1.2rem;border:1px solid var(--borde);border-radius:12px}
+.rc-tabla{width:100%;border-collapse:collapse;font-size:14px}
+.rc-tabla th,.rc-tabla td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--borde);vertical-align:top}
+.rc-tabla tr:last-child th,.rc-tabla tr:last-child td{border-bottom:0}
+.rc-tabla thead th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--gris-1);background:var(--gris-4)}
+.rc-tabla tbody th{font-weight:500;color:var(--gris-1)}
+.rc-cifra{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px;padding:14px 16px;margin:1rem 0;border-left:3px solid var(--azul);background:var(--azul-bg);border-radius:0 12px 12px 0}
+.rc-cifra b{font-size:26px;font-weight:700;letter-spacing:-.02em;color:var(--azul)}
+.rc-cifra span{font-size:14.5px;color:var(--gris-1)}
+[data-theme="dark"] .rc-cifra{background:#0d1424;border-color:var(--glow)}
+[data-theme="dark"] .rc-cifra b{color:var(--glow-2)}
+/* cierre: herramienta relacionada, compartir y más recursos */
+.rc-cierre{max-width:720px;margin:2rem auto 0}
+.rc-app{display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--borde);border-radius:14px;background:linear-gradient(135deg,var(--azul-bg),transparent)}
+.rc-app>i{font-size:26px;color:var(--azul);flex-shrink:0}
+[data-theme="dark"] .rc-app>i{color:var(--glow-2)}
+.rc-app b{display:block;font-size:15.5px;margin-bottom:4px}
+.rc-app p{font-size:14px;line-height:1.6;color:var(--gris-1);margin:0 0 10px}
+.rc-boton{display:inline-flex;align-items:center;justify-content:center;gap:6px;font-family:var(--sans);font-size:13.5px;font-weight:600;padding:9px 16px;border-radius:100px;border:1px solid var(--borde);background:var(--blanco);color:var(--negro);cursor:pointer;text-decoration:none;transition:border-color .2s}
+.rc-boton i{font-size:16px}
+.rc-boton:hover{border-color:var(--azul)}
+.rc-boton--pri{background:var(--azul);border-color:var(--azul);color:#fff}
+.rc-acc{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0}
+.rc-mas-t{font-size:15px;font-weight:600;margin:2rem 0 .8rem}
+#gp-guias>.rc-migas{grid-column:1/-1;grid-row:1}   /* en el formato tutorial ocupa el lugar del antetítulo */
+
 /* ════════════════════════════════════════════════════════════════════
-   GUÍAS: FORMATOS (2026-10-01)
-   Todas las reglas por tamaño de Guías, juntas y en su orden. Disposición:
+   RECURSOS Y GUÍAS: FORMATOS (2026-10-01)
+   Todas las reglas por tamaño de Recursos (lista y artículos) y de las guías
+   paso a paso, juntas y en su orden. Disposición de las guías:
      celular (< 640 px) ........ pestañas en 3 columnas, el paso con su vista
                                  arriba y el diagrama en una fila
      hasta 720 px ............... la vista del paso arriba y su texto debajo
@@ -1195,7 +1299,7 @@ body>section:not(#home)>.container{padding-top:1.6rem}
                                  pasos y diagrama) y el paso grande a la derecha
      horizontal bajo (≤ 560) .... el paso más bajo, vista al lado del texto
    Más los ajustes por alto (pantallas bajas: menos texto de apoyo). Un ajuste
-   nuevo de Guías se agrega aquí, no en otra parte.
+   nuevo de Recursos o de las guías se agrega aquí, no en otra parte.
    ════════════════════════════════════════════════════════════════════ */
 @media(max-width:520px){.gvw-cg{grid-template-columns:1fr}.gvw-cc{padding:6px 0}}
 @media(max-width:620px){.gp-vis{display:none}}
@@ -1219,7 +1323,7 @@ body>section:not(#home)>.container{padding-top:1.6rem}
 @media (max-height:860px){ .gvw-caps{display:none} }
 /* pantallas de menos de 800px de alto: el paso de la guia es lo principal y el
    diagrama de conexion (las pestanas ya dicen que conecta cada guia) se oculta */
-@media (max-height:800px){ #guias .gvw{display:none} }
+@media (max-height:800px){ #gp-guias .gvw{display:none} }
 /* celular: el diagrama en una fila (Apps Script → flechas → Sheets) */
 @media (max-width:639px){
   .gvw-cg{grid-template-columns:1fr 54px 1fr!important;gap:6px}
@@ -1231,12 +1335,12 @@ body>section:not(#home)>.container{padding-top:1.6rem}
   .gvw-tc .gvw-sub{font-size:11px}
   .gvw-caps{gap:5px}
   .gvw-cap{font-size:10.5px;padding:2px 8px}
-  #guias .gp-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
-  #guias .gp-tab{padding:8px 9px;min-width:0}
-  #guias .gp-tab-ey{display:none}
-  #guias .gp-tab-name{font-size:12px;line-height:1.3}
-  #guias .home-lead{display:none}   /* las pestañas ya dicen de qué trata cada guía */
-  #guias .home-h1{font-size:26px}
+  #gp-guias .gp-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+  #gp-guias .gp-tab{padding:8px 9px;min-width:0}
+  #gp-guias .gp-tab-ey{display:none}
+  #gp-guias .gp-tab-name{font-size:12px;line-height:1.3}
+  #gp-guias .home-lead{display:none}   /* las pestañas ya dicen de qué trata cada guía */
+  #gp-guias .home-h1{font-size:26px}
   .gp-modo-pasos .gp-vis>*{zoom:1}
   .gp-modo-pasos .gp-step.act{min-height:300px}
 }
@@ -1252,18 +1356,18 @@ body>section:not(#home)>.container{padding-top:1.6rem}
 /* 2026-09-28 iPhone SE con barra de Chrome (~375x553): Herramientas y Guias mas
    compactas para caber en la primera pantalla */
 @media (max-width:639px) and (max-height:580px){
-  #guias .home-h1{font-size:22px;margin-bottom:.3rem}
-  #guias .gp-tabs{margin-bottom:8px}
-  #guias .gp-tab{padding:6px 8px}
+  #gp-guias .home-h1{font-size:22px;margin-bottom:.3rem}
+  #gp-guias .gp-tabs{margin-bottom:8px}
+  #gp-guias .gp-tab{padding:6px 8px}
   .gp-prog{margin-bottom:8px}
   .gp-modo-pasos .gp-step.act{min-height:230px}
 }
 /* Guias en ventanas bajas: sin la bajada (las pestanas ya dicen de que trata
    cada guia) y el paso ocupa menos alto */
 @media (min-width:640px) and (max-height:680px){
-  #guias .home-lead{display:none}
-  #guias .gp-tab-ey{display:none}
-  #guias .gp-tab{padding-top:8px;padding-bottom:8px}
+  #gp-guias .home-lead{display:none}
+  #gp-guias .gp-tab-ey{display:none}
+  #gp-guias .gp-tab{padding-top:8px;padding-bottom:8px}
   .gp-modo-pasos .gp-vis>*{zoom:1.2}
   .gp-modo-pasos .gp-step.act{min-height:0;padding:12px}
 }
@@ -1283,56 +1387,74 @@ body>section:not(#home)>.container{padding-top:1.6rem}
    franjas a todo el ancho y se veia estirado. Solo CSS: la guia activa usa
    display:contents para que sus partes se ubiquen en la grilla. */
 @media (min-width:900px) and (min-aspect-ratio:9/10){
-  #guias .container{display:grid;grid-template-columns:minmax(240px,290px) minmax(0,1fr);column-gap:clamp(20px,2.6vw,36px);align-items:start}
-  #guias .home-eyebrow{grid-column:1/-1;grid-row:1}
-  #guias .home-h1{grid-column:1/-1;grid-row:2}
-  #guias .home-lead{grid-column:1/-1;grid-row:3;margin-bottom:1.2rem}
-  #guias .gp-panel.on.gp-modo-pasos{display:contents}
+  #gp-guias.container{display:grid;grid-template-columns:minmax(240px,290px) minmax(0,1fr);column-gap:clamp(20px,2.6vw,36px);align-items:start}
+  #gp-guias .home-eyebrow{grid-column:1/-1;grid-row:1}
+  #gp-guias .home-h1{grid-column:1/-1;grid-row:2}
+  #gp-guias .home-lead{grid-column:1/-1;grid-row:3;margin-bottom:1.2rem}
+  #gp-guias .gp-panel.on.gp-modo-pasos{display:contents}
   /* izquierda: guias, pasos en vertical (texto completo) y el diagrama de la
      guia en version compacta */
-  #guias .gp-tabs{grid-column:1;grid-row:4;display:flex;flex-direction:column;gap:6px;margin:0 0 16px}
-  #guias .gp-tab{flex:none;min-width:0;width:100%;padding:10px 14px}
-  #guias .gp-tab-ey{display:block}
-  #guias .gp-prog{grid-column:1;grid-row:5;flex-direction:column;gap:2px;margin:0;position:relative;align-self:start}
-  #guias .gp-prog::before{content:'';position:absolute;left:14px;top:16px;bottom:16px;width:2px;border-radius:2px;background:var(--borde)}
-  #guias .gp-prog li{flex:none}
-  #guias .gp-prog li::before{display:none}
-  #guias .gp-prog button{flex-direction:row;align-items:center;gap:12px;padding:6px 8px 6px 0;border-radius:10px;text-align:left}
-  #guias .gp-prog button:hover .gp-prog-t{color:var(--negro)}
-  #guias .gp-prog-n{flex:none;position:relative;z-index:1}
-  #guias .gp-prog-t{display:block;text-align:left;font-size:13px;line-height:1.35;padding:0;-webkit-line-clamp:unset}
-  #guias .gvw{grid-column:1;grid-row:6;margin:14px 0 0;padding:10px 12px;align-self:start}
-  #guias .gvw-cg{grid-template-columns:1fr 54px 1fr!important;gap:6px}
-  #guias .gvw-cc .gvw-lbl{display:none}
-  #guias .gvw-cc svg{width:54px;height:30px}
-  #guias .gvw-tc{grid-template-columns:1fr;text-align:center;padding:8px 6px;row-gap:2px}
-  #guias .gvw-tc>i{grid-row:auto;font-size:20px!important}
-  #guias .gvw-tc .gvw-name{font-size:12px}
-  #guias .gvw-tc .gvw-sub{font-size:11px}
-  #guias .gvw-caps{display:none}
+  #gp-guias .gp-tabs{grid-column:1;grid-row:4;display:flex;flex-direction:column;gap:6px;margin:0 0 16px}
+  #gp-guias .gp-tab{flex:none;min-width:0;width:100%;padding:10px 14px}
+  #gp-guias .gp-tab-ey{display:block}
+  #gp-guias .gp-prog{grid-column:1;grid-row:5;flex-direction:column;gap:2px;margin:0;position:relative;align-self:start}
+  #gp-guias .gp-prog::before{content:'';position:absolute;left:14px;top:16px;bottom:16px;width:2px;border-radius:2px;background:var(--borde)}
+  #gp-guias .gp-prog li{flex:none}
+  #gp-guias .gp-prog li::before{display:none}
+  #gp-guias .gp-prog button{flex-direction:row;align-items:center;gap:12px;padding:6px 8px 6px 0;border-radius:10px;text-align:left}
+  #gp-guias .gp-prog button:hover .gp-prog-t{color:var(--negro)}
+  #gp-guias .gp-prog-n{flex:none;position:relative;z-index:1}
+  #gp-guias .gp-prog-t{display:block;text-align:left;font-size:13px;line-height:1.35;padding:0;-webkit-line-clamp:unset}
+  #gp-guias .gvw{grid-column:1;grid-row:6;margin:14px 0 0;padding:10px 12px;align-self:start}
+  #gp-guias .gvw-cg{grid-template-columns:1fr 54px 1fr!important;gap:6px}
+  #gp-guias .gvw-cc .gvw-lbl{display:none}
+  #gp-guias .gvw-cc svg{width:54px;height:30px}
+  #gp-guias .gvw-tc{grid-template-columns:1fr;text-align:center;padding:8px 6px;row-gap:2px}
+  #gp-guias .gvw-tc>i{grid-row:auto;font-size:20px!important}
+  #gp-guias .gvw-tc .gvw-name{font-size:12px}
+  #gp-guias .gvw-tc .gvw-sub{font-size:11px}
+  #gp-guias .gvw-caps{display:none}
   /* derecha: el paso ocupa el alto del indice (su vista crece) y abajo los botones */
-  #guias .gp-modo-pasos .gp-step.act{grid-column:2;grid-row:4 / span 2;min-height:0;margin:0;align-self:stretch;
+  #gp-guias .gp-modo-pasos .gp-step.act{grid-column:2;grid-row:4 / span 2;min-height:0;margin:0;align-self:stretch;
     grid-template-columns:30px minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;grid-template-areas:"vis vis" "n t";gap:14px 12px;padding:16px;align-items:start}
-  #guias .gp-modo-pasos .gp-vis{min-height:clamp(170px,28svh,280px);align-self:stretch}
-  #guias .gp-modo-pasos .gp-vis>*{zoom:1.9}
-  #guias .gp-modo-pasos .gp-ncol{align-self:start}
-  #guias .gp-modo-pasos .gp-stitle{font-size:18px}
-  #guias .gp-modo-pasos .gp-sdesc{font-size:14.5px;line-height:1.6}
-  #guias .gp-ctrl{grid-column:2;grid-row:6;margin-top:12px;align-self:start}
+  #gp-guias .gp-modo-pasos .gp-vis{min-height:clamp(170px,28svh,280px);align-self:stretch}
+  #gp-guias .gp-modo-pasos .gp-vis>*{zoom:1.9}
+  #gp-guias .gp-modo-pasos .gp-ncol{align-self:start}
+  #gp-guias .gp-modo-pasos .gp-stitle{font-size:18px}
+  #gp-guias .gp-modo-pasos .gp-sdesc{font-size:14.5px;line-height:1.6}
+  #gp-guias .gp-ctrl{grid-column:2;grid-row:6;margin-top:12px;align-self:start}
 }
 /* ancho y bajo (iPad horizontal con barras, portatiles): indice mas compacto */
 @media (min-width:900px) and (min-aspect-ratio:9/10) and (max-height:760px){
-  #guias .home-lead{display:none}
-  #guias .home-h1{margin-bottom:.9rem}
-  #guias .gp-tab-ey{display:none}
-  #guias .gp-tab{padding:8px 12px}
-  #guias .gp-tabs{gap:5px;margin-bottom:12px}
-  #guias .gp-prog button{padding:3px 8px 3px 0}
-  #guias .gp-prog-n{width:26px;height:26px;font-size:11px}
-  #guias .gp-prog::before{left:12px}
-  #guias .gp-modo-pasos .gp-vis{min-height:150px}
+  #gp-guias .home-lead{display:none}
+  #gp-guias .home-h1{margin-bottom:.9rem}
+  #gp-guias .gp-tab-ey{display:none}
+  #gp-guias .gp-tab{padding:8px 12px}
+  #gp-guias .gp-tabs{gap:5px;margin-bottom:12px}
+  #gp-guias .gp-prog button{padding:3px 8px 3px 0}
+  #gp-guias .gp-prog-n{width:26px;height:26px;font-size:11px}
+  #gp-guias .gp-prog::before{left:12px}
+  #gp-guias .gp-modo-pasos .gp-vis{min-height:150px}
 }
-/* ═══ fin de GUÍAS: FORMATOS ═══ */
+/* Recursos: en táctil, filtros, volver, copiar y botones de 44 px */
+@media (pointer:coarse){
+  .rc-f,.rc-copiar,.rc-boton{min-height:44px}
+  .rc-volver{min-height:44px;padding:0 4px}
+}
+/* celular: el encabezado del prompt con el botón a lo ancho si no cabe */
+@media (max-width:420px){
+  .rc-prompt-cab{flex-wrap:wrap}
+  .rc-prompt pre{font-size:12.5px;padding:12px 13px}
+  .rc-app{flex-direction:column;gap:8px}
+  .rc-bajada{font-size:15px}
+}
+/* muy angosto (zoom 150 % en iPhone): la tabla comparativa cabe sin desplazarse */
+@media (max-width:360px){
+  .rc-tabla{table-layout:fixed;font-size:12.5px}
+  .rc-tabla th,.rc-tabla td{padding:7px 6px;overflow-wrap:anywhere}
+  .rc-tabla thead th{letter-spacing:0}
+}
+/* ═══ fin de RECURSOS Y GUÍAS: FORMATOS ═══ */
 
 /* escena 3D fija de fondo */
 #i3Escena{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:-1}
@@ -1610,10 +1732,10 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
 
 /* 2026-09-28: en todas las pestanas las tarjetas se enmarcan con el borde azul y el
    brillo del inicio: al pasar el mouse y en un recorrido breve al entrar (.marco-luz) */
-#about .ab2-perfil,#about .ab2-flujo li,#about .ab2-exp,#about .ab2-tools li,#product .pi-card,#product .pi-num,#product .alert-box,#product .al-demo,#product .pi-faq,#guias .gvw,#guias .gp-step,#guias .gp-tab:not(.on),#contact .ct-lista,#contact .cf-wrap{transition:border-color .45s var(--ease),box-shadow .45s var(--ease)}
-#about .ab2-perfil:hover,#about .ab2-flujo li:hover,#about .ab2-exp:hover,#about .ab2-tools li:hover,#product .pi-card:hover,#product .pi-num:hover,#product .alert-box:hover,#product .al-demo:hover,#product .pi-faq:hover,#guias .gvw:hover,#guias .gp-step:hover,#guias .gp-tab:not(.on):hover,#contact .ct-lista:hover,#contact .cf-wrap:hover,.marco-luz{
+#about .ab2-perfil,#about .ab2-flujo li,#about .ab2-exp,#about .ab2-tools li,#product .pi-card,#product .pi-num,#product .alert-box,#product .al-demo,#product .pi-faq,#gp-guias .gvw,#gp-guias .gp-step,#gp-guias .gp-tab:not(.on),#contact .ct-lista,#contact .cf-wrap{transition:border-color .45s var(--ease),box-shadow .45s var(--ease)}
+#about .ab2-perfil:hover,#about .ab2-flujo li:hover,#about .ab2-exp:hover,#about .ab2-tools li:hover,#product .pi-card:hover,#product .pi-num:hover,#product .alert-box:hover,#product .al-demo:hover,#product .pi-faq:hover,#gp-guias .gvw:hover,#gp-guias .gp-step:hover,#gp-guias .gp-tab:not(.on):hover,#contact .ct-lista:hover,#contact .cf-wrap:hover,.marco-luz{
   border-color:rgba(31,92,153,.55)!important;box-shadow:0 0 0 1px rgba(31,92,153,.22),0 0 32px -8px rgba(31,92,153,.35),0 20px 50px -30px rgba(18,48,77,.3)!important}
-[data-theme="dark"] #about .ab2-perfil:hover,[data-theme="dark"] #about .ab2-flujo li:hover,[data-theme="dark"] #about .ab2-exp:hover,[data-theme="dark"] #about .ab2-tools li:hover,[data-theme="dark"] #product .pi-card:hover,[data-theme="dark"] #product .pi-num:hover,[data-theme="dark"] #product .alert-box:hover,[data-theme="dark"] #product .al-demo:hover,[data-theme="dark"] #product .pi-faq:hover,[data-theme="dark"] #guias .gvw:hover,[data-theme="dark"] #guias .gp-step:hover,[data-theme="dark"] #guias .gp-tab:not(.on):hover,[data-theme="dark"] #contact .ct-lista:hover,[data-theme="dark"] #contact .cf-wrap:hover,[data-theme="dark"] .marco-luz{
+[data-theme="dark"] #about .ab2-perfil:hover,[data-theme="dark"] #about .ab2-flujo li:hover,[data-theme="dark"] #about .ab2-exp:hover,[data-theme="dark"] #about .ab2-tools li:hover,[data-theme="dark"] #product .pi-card:hover,[data-theme="dark"] #product .pi-num:hover,[data-theme="dark"] #product .alert-box:hover,[data-theme="dark"] #product .al-demo:hover,[data-theme="dark"] #product .pi-faq:hover,[data-theme="dark"] #gp-guias .gvw:hover,[data-theme="dark"] #gp-guias .gp-step:hover,[data-theme="dark"] #gp-guias .gp-tab:not(.on):hover,[data-theme="dark"] #contact .ct-lista:hover,[data-theme="dark"] #contact .cf-wrap:hover,[data-theme="dark"] .marco-luz{
   border-color:rgba(143,193,255,.5)!important;box-shadow:0 0 0 1px rgba(76,141,219,.3),0 0 42px -8px rgba(76,141,219,.5),0 30px 80px -30px rgba(0,0,0,.8)!important}
 
 /* boton para activar el giroscopio en iPhone/iPad (solo aparece donde hace falta) */
@@ -1895,7 +2017,7 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
       <li><a href="#" onclick="show('home')" id="nav-home">Inicio</a></li>
       <li><a href="#" onclick="show('about')" id="nav-about">Sobre mi</a></li>
       <li><a href="#" onclick="show('product')" id="nav-product">Herramientas</a></li>
-      <li><a href="#" onclick="show('guias')" id="nav-guias">Guias</a></li>
+      <li><a href="#" onclick="show('guias')" id="nav-guias">Recursos</a></li>
       <li><a href="#" onclick="show('contact')" id="nav-contact">Contacto</a></li>
     </ul>
     <div class="nav-ind" id="navInd"></div>
@@ -2473,7 +2595,305 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
 </section>
 
 <section id="guias">
-  <div class="container">
+  <!-- ═══ RECURSOS (2026-10-01): biblioteca y artículos ═══
+       Cada artículo vive aquí, en el HTML (Google lo lee y se puede enlazar con
+       ?r=slug). Las tarjetas de la lista se arman solas desde estos artículos:
+       un recurso nuevo = un <article> nuevo, con data-r (dirección), data-tipo
+       (prompt, tip, consejo), data-min (minutos de lectura) y data-gancho (el
+       resumen de la tarjeta). Las guías paso a paso siguen más abajo (#gp-guias). -->
+  <div class="container rc-lib" id="rc-lib">
+    <div class="home-eyebrow">Recursos</div>
+    <h2 class="home-h1">Prompts, tips y guías para tu negocio</h2>
+    <p class="home-lead">Ideas prácticas para ahorrar tiempo con IA, planillas y WhatsApp. Gratis y listas para usar.</p>
+    <div class="rc-filtros" role="group" aria-label="Filtrar recursos">
+      <button type="button" class="rc-f on" data-f="todos" aria-pressed="true">Todos</button>
+      <button type="button" class="rc-f" data-f="prompt" aria-pressed="false"><i class="ti ti-sparkles" aria-hidden="true"></i>Prompts de IA</button>
+      <button type="button" class="rc-f" data-f="tip" aria-pressed="false"><i class="ti ti-bulb" aria-hidden="true"></i>Tips</button>
+      <button type="button" class="rc-f" data-f="consejo" aria-pressed="false"><i class="ti ti-compass" aria-hidden="true"></i>Consejos</button>
+      <button type="button" class="rc-f" data-f="guia" aria-pressed="false"><i class="ti ti-list-numbers" aria-hidden="true"></i>Guías paso a paso</button>
+    </div>
+    <div class="rc-grid" id="rc-grid"></div>
+  </div>
+
+  <div class="container rc-art" id="rc-art">
+    <div class="rc-migas" role="navigation" aria-label="Estás en">
+      <button type="button" class="rc-volver" onclick="rcVolver()"><i class="ti ti-arrow-left" aria-hidden="true"></i>Recursos</button>
+      <span aria-hidden="true">/</span><span class="rc-migas-tipo"></span>
+    </div>
+
+    <!-- ── Prompt 1: reclamos por WhatsApp ── -->
+    <article class="rc-doc" data-r="prompt-reclamos-whatsapp" data-tipo="prompt" data-min="3" data-app="pedidoapp"
+      data-gancho="Un prompt para contestar a un cliente molesto en minutos, con una solución clara y sin perder el tono.">
+      <h2 class="rc-h">Prompt para responder reclamos de clientes sin perder la calma (ni al cliente)</h2>
+      <p class="rc-bajada">Un reclamo bien respondido puede dejarte un cliente más fiel que antes. Este prompt te da una respuesta lista para WhatsApp en menos de un minuto.</p>
+      <h3>Por qué funciona</h3>
+      <p>Cuando un cliente escribe molesto, lo difícil no es la solución: es encontrar las palabras sin sonar a la defensiva. La IA es buena justo en eso, si le das reglas claras: reconocer el problema, ofrecer una solución concreta y cerrar con una pregunta.</p>
+      <div class="rc-prompt">
+        <div class="rc-prompt-cab"><span><i class="ti ti-sparkles" aria-hidden="true"></i>Prompt</span><button type="button" class="rc-copiar" onclick="rcCopiar(this)"><i class="ti ti-copy" aria-hidden="true"></i><span>Copiar prompt</span></button></div>
+<pre>Actúa como encargado de atención al cliente de [nombre del negocio], un [rubro] en Chile.
+Te voy a pegar el mensaje de un cliente molesto. Escribe una respuesta para WhatsApp que:
+1. Parta reconociendo el problema concreto, sin excusas.
+2. Ofrezca una solución clara y con plazo. Elige solo entre estas opciones: [reposición / devolución / descuento en la próxima compra].
+3. Tenga máximo 5 líneas, con tono cercano y respetuoso, tuteando y sin exagerar con emojis.
+4. Termine con una pregunta que me permita cerrar el caso.
+No prometas nada que no esté en las opciones que te di.
+
+Mensaje del cliente:
+"[pega aquí el reclamo]"</pre>
+      </div>
+      <h3>Cómo usarlo</h3>
+      <ol class="rc-pasos">
+        <li>Cópialo y completa lo que está entre corchetes: tu negocio, tu rubro y las soluciones que de verdad puedes ofrecer.</li>
+        <li>Pégalo en ChatGPT, Claude o Gemini, junto con el mensaje del cliente.</li>
+        <li>Si la respuesta queda muy formal, pide: <em>"hazla más cercana"</em>. Si queda larga: <em>"en 3 líneas"</em>.</li>
+        <li>Revisa montos, fechas y nombres antes de enviar. La IA redacta; tú decides.</li>
+      </ol>
+      <div class="rc-nota"><i class="ti ti-bulb" aria-hidden="true"></i><p><b>Ejemplo de resultado:</b> "Hola, Camila. Tienes toda la razón: tu pedido debía llegar ayer y no llegó. Te lo enviamos hoy antes de las 18:00, sin costo de despacho. ¿Te acomoda recibirlo en la misma dirección?"</p></div>
+      <div class="rc-nota"><i class="ti ti-message-circle" aria-hidden="true"></i><p><b>Ahorra un paso más:</b> guarda tus mejores respuestas como respuestas rápidas en WhatsApp Business. Te explicamos cómo en <a href="?r=tip-respuestas-rapidas-whatsapp" data-r="tip-respuestas-rapidas-whatsapp">este tip</a>.</p></div>
+    </article>
+
+    <!-- ── Prompt 2: revisar la cartola ── -->
+    <article class="rc-doc" data-r="prompt-cartola-bancaria" data-tipo="prompt" data-min="4" data-app="conciliador"
+      data-gancho="Pega tus movimientos del mes y encuentra cobros duplicados, comisiones y suscripciones olvidadas.">
+      <h2 class="rc-h">Revisa tu cartola bancaria con IA y encuentra cobros raros en 2 minutos</h2>
+      <p class="rc-bajada">Comisiones que no esperabas, suscripciones que ya no usas, un cargo duplicado. Este prompt ordena tu mes y te dice qué revisar primero.</p>
+      <div class="rc-nota rc-nota--aviso"><i class="ti ti-building-bank" aria-hidden="true"></i><p><b>Antes de pegar:</b> borra el número de cuenta, tu RUT y cualquier dato personal. La IA solo necesita fecha, descripción y monto.</p></div>
+      <div class="rc-prompt">
+        <div class="rc-prompt-cab"><span><i class="ti ti-sparkles" aria-hidden="true"></i>Prompt</span><button type="button" class="rc-copiar" onclick="rcCopiar(this)"><i class="ti ti-copy" aria-hidden="true"></i><span>Copiar prompt</span></button></div>
+<pre>Te voy a pegar los movimientos de mi cartola bancaria del mes (fecha, descripción, cargo y abono).
+1. Agrupa los cargos por tipo (comisiones, suscripciones, proveedores, impuestos y otros) y suma cada grupo.
+2. Marca los cobros que parezcan duplicados: mismo monto y descripción parecida en menos de 5 días.
+3. Lista las comisiones y cargos del banco, con su total del mes.
+4. Señala los cargos que se repiten cada mes y que quizá ya no uso.
+Responde con una tabla por punto y, al final, un resumen de 3 líneas con lo que debería revisar primero.
+No inventes movimientos: si algo no se entiende, dilo.
+
+Movimientos:
+[pega aquí tus movimientos, sin número de cuenta ni RUT]</pre>
+      </div>
+      <h3>Cómo usarlo</h3>
+      <ol class="rc-pasos">
+        <li>Descarga la cartola del mes en Excel desde tu banco.</li>
+        <li>Copia solo las columnas de fecha, descripción, cargo y abono.</li>
+        <li>Pega el prompt y luego los movimientos.</li>
+        <li>Compara el total de cargos que te da la IA con el de tu cartola. Si no calza, pídele que revise: con listas largas se puede saltar filas.</li>
+      </ol>
+      <h3>Lo que no hace</h3>
+      <p>No reemplaza la conciliación: la IA mira el banco, pero no lo cruza con tus facturas ni con tu contabilidad. Sirve para detectar lo raro rápido; para cuadrar el mes completo necesitas comparar ambos lados.</p>
+    </article>
+
+    <!-- ── Prompt 3: gastos desde Gmail con Gemini (idea del Director, 2026-10-01) ── -->
+    <article class="rc-doc" data-r="prompt-gemini-gastos-gmail" data-tipo="prompt" data-min="5" data-app="conciliador"
+      data-gancho="Si usas Gemini con Gmail y Google Sheets, un solo prompt arma tu planilla de gastos del año, mes por mes y con dashboard incluido.">
+      <h2 class="rc-h">Tus gastos del año en una planilla, con Gemini, Gmail y Google Sheets</h2>
+      <p class="rc-bajada">¿Sabías que si tienes Gemini conectado a tu Gmail y a Google Drive puede encontrar los avisos de compra de tus bancos y ordenarlos por ti? Copias el prompt y obtienes tu resumen de gastos en un solo paso.</p>
+      <h3>Qué necesitas</h3>
+      <ul class="rc-lista">
+        <li><b>Gemini con acceso a Gmail y Drive.</b> En Gemini, revisa en la configuración que las apps de Google Workspace (Gmail, Drive y Documentos) estén activadas.</li>
+        <li><b>Avisos de tus bancos en el correo.</b> Gemini solo encuentra los movimientos que te llegaron por email: compras con tarjeta, transferencias, pagos automáticos.</li>
+        <li><b>Un par de minutos</b> para revisar el resultado.</li>
+      </ul>
+      <div class="rc-prompt">
+        <div class="rc-prompt-cab"><span><i class="ti ti-sparkles" aria-hidden="true"></i>Prompt para Gemini</span><button type="button" class="rc-copiar" onclick="rcCopiar(this)"><i class="ti ti-copy" aria-hidden="true"></i><span>Copiar prompt</span></button></div>
+<pre>Busca en mi Gmail todos los cargos/movimientos bancarios correspondientes a todo el año 2026, desde el 01/01/2026 hasta la fecha más reciente disponible.
+
+IMPORTANTE: búsqueda mensual obligatoria
+No realices una única búsqueda general para todo 2026.
+Debido al volumen de correos, debes dividir la búsqueda en consultas independientes por cada mes, para evitar que los resultados más recientes oculten meses anteriores.
+Realiza búsquedas separadas para:
+- Enero 2026: 01/01/2026–31/01/2026
+- Febrero 2026: 01/02/2026–28/02/2026
+- Marzo 2026: 01/03/2026–31/03/2026
+- Abril 2026: 01/04/2026–30/04/2026
+- Mayo 2026: 01/05/2026–31/05/2026
+- Junio 2026: 01/06/2026–30/06/2026
+- Julio 2026: 01/07/2026–31/07/2026
+- Agosto 2026: 01/08/2026–31/08/2026
+- Septiembre 2026: 01/09/2026–30/09/2026
+- Octubre 2026: 01/10/2026–31/10/2026
+- Noviembre 2026: 01/11/2026–30/11/2026
+- Diciembre 2026: 01/12/2026–31/12/2026
+Si el mes actual aún no ha terminado, procesa solamente hasta la fecha disponible.
+Para cada mes utiliza diferentes términos de búsqueda relacionados con movimientos bancarios, incluyendo cuando corresponda: cargo, compra, pago, débito, transferencia, transacción, movimiento, comprobante, tarjeta, banco, cobro y operación.
+No consideres completado un mes simplemente porque una búsqueda no devuelve resultados. Si una búsqueda entrega pocos resultados o ninguno, realiza búsquedas alternativas antes de pasar al siguiente mes.
+
+Datos a extraer
+Por cada movimiento crea una fila con:
+- Fecha
+- Monto
+- Moneda
+- Glosa original
+- Comercio/Beneficiario
+- Concepto
+- Subconcepto
+- Banco/Tarjeta
+- Tipo de movimiento
+- Últimos 4 dígitos
+- ID/Referencia
+- Fecha del correo
+- Fuente/enlace al correo
+- Confianza
+Conserva la glosa original y no inventes información.
+Clasifica automáticamente los gastos. Si no es posible determinar el concepto, utiliza "Por clasificar".
+Detecta duplicados, especialmente autorizaciones y confirmaciones correspondientes al mismo movimiento. Marca como "Revisar" los casos ambiguos, incompletos o posibles duplicados.
+
+Google Sheets
+Crea o actualiza un Google Sheets con estas hojas:
+
+1. Dashboard
+Incluye:
+- Total gastado
+- Cantidad de movimientos
+- Promedio mensual
+- Gasto del mes
+- Gráfico de gastos por mes
+- Gráfico por concepto
+- Top 10 comercios
+- Indicadores principales
+
+2. Movimientos
+Tabla completa y filtrable. Esta debe ser la fuente principal de datos.
+
+3. Tablas_Dinámicas
+Crea tablas dinámicas reales de Google Sheets para:
+- Gasto por mes
+- Gasto por concepto
+- Gasto por subconcepto
+- Gasto por comercio
+- Gasto por banco/tarjeta
+- Cantidad de movimientos por mes
+- Cantidad por concepto
+- Top 10 comercios por monto
+Utiliza estas tablas dinámicas como fuente de los gráficos del Dashboard.
+
+4. Revisar
+Incluye movimientos con baja confianza, posibles duplicados, información incompleta o clasificación "Por clasificar".
+
+Control de cobertura
+Antes de finalizar, verifica explícitamente que cada mes de 2026 haya sido buscado de forma independiente.
+Incluye en el Dashboard o en una sección de control un indicador de cobertura mensual:
+Enero ✓ | Febrero ✓ | Marzo ✓ | Abril ✓ | Mayo ✓ | Junio ✓ | Julio ✓ | Agosto ✓ | Septiembre ✓ | ...
+Si algún mes no pudo ser procesado completamente, indícalo claramente y no presentes el reporte como completo.
+No detengas la extracción después de procesar los meses recientes. Los meses antiguos tienen la misma prioridad que los recientes.
+Mantén el documento limpio, profesional y fácil de explorar.
+En el Dashboard agrega discretamente al pie: Desarrollado por Ambilor.Lab · 2026
+
+Al finalizar, indícame:
+- Cantidad total de movimientos
+- Total de cargos
+- Periodo efectivamente cubierto
+- Movimientos por mes
+- Meses pendientes
+- Cantidad pendiente de revisión</pre>
+      </div>
+      <h3>Cómo usarlo</h3>
+      <ol class="rc-pasos">
+        <li>Copia el prompt. Si quieres otro año, cambia 2026 y las fechas de la lista de meses.</li>
+        <li>Pégalo en Gemini, con tu cuenta de Google donde llegan los avisos del banco.</li>
+        <li>Cuando termine, mira primero la <b>cobertura mensual</b> del Dashboard: si un mes quedó pendiente, pídele que lo busque de nuevo. Después revisa la hoja <b>Revisar</b>, con los casos dudosos y los posibles duplicados.</li>
+        <li>Compara el total con tu cartola. La IA puede saltarse correos o leer mal un monto; tú tienes la última palabra.</li>
+      </ol>
+      <div class="rc-nota"><i class="ti ti-bulb" aria-hidden="true"></i><p><b>Por qué funciona:</b> con muchos correos, una sola búsqueda para todo el año trae sobre todo los meses recientes y se salta los antiguos. Por eso el prompt obliga a buscar <b>mes por mes</b> y a mostrar qué meses quedaron cubiertos. Además, guarda siempre la glosa original, no inventa datos y separa lo dudoso en su propia hoja.</p></div>
+      <div class="rc-nota rc-nota--aviso"><i class="ti ti-building-bank" aria-hidden="true"></i><p><b>Ojo:</b> lo que puede hacer Gemini con tu correo y tu Drive depende de tu plan y de tu cuenta, y va cambiando. Si no crea la planilla completa, pídele los movimientos en una tabla y pégalos en Google Sheets. Y recuerda: estás dándole acceso a tu correo, úsalo solo con tu propia cuenta.</p></div>
+    </article>
+
+    <!-- ── Tip 1: BUSCARX ── -->
+    <article class="rc-doc" data-r="tip-buscarx" data-tipo="tip" data-min="3" data-app="conciliador"
+      data-gancho="La fórmula que reemplaza a BUSCARV: busca hacia la izquierda, no se rompe y avisa cuando no encuentra.">
+      <h2 class="rc-h">BUSCARX: la fórmula que reemplaza a BUSCARV (y no se rompe)</h2>
+      <p class="rc-bajada">Si todavía usas BUSCARV, este cambio te va a ahorrar errores. BUSCARX funciona en Excel 365 y en Google Sheets.</p>
+      <h3>La fórmula</h3>
+      <div class="rc-formula"><code>=BUSCARX(lo_que_buscas; dónde_buscarlo; qué_devolver; "si no está")</code></div>
+      <p>Ejemplo: tienes una hoja <b>Productos</b> con el código en la columna A y el precio en la C. Para traer el precio del código que está en A2:</p>
+      <div class="rc-formula"><code>=BUSCARX(A2; Productos!A:A; Productos!C:C; "Sin precio")</code></div>
+      <div class="rc-tabla-w">
+        <table class="rc-tabla">
+          <thead><tr><th></th><th>BUSCARV</th><th>BUSCARX</th></tr></thead>
+          <tbody>
+            <tr><th>Buscar hacia la izquierda</th><td>No</td><td>Sí</td></tr>
+            <tr><th>Si insertas una columna</th><td>Se rompe</td><td>Sigue funcionando</td></tr>
+            <tr><th>Si no encuentra</th><td>#N/A</td><td>Tu mensaje</td></tr>
+            <tr><th>Coincidencia exacta</th><td>Hay que pedirla (FALSO)</td><td>Viene por defecto</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3>Errores comunes</h3>
+      <ul class="rc-lista">
+        <li><b>#¡VALOR!</b>: los dos rangos deben tener el mismo alto. Usa columnas completas (A:A y C:C) y no te preocupes.</li>
+        <li><b>Coma o punto y coma</b>: en Chile se separa con punto y coma (;). Si tu planilla está en inglés, usa comas y el nombre XLOOKUP.</li>
+        <li><b>Espacios invisibles</b>: si un código "igual" no aparece, prueba con <code>ESPACIOS(A2)</code> para limpiarlo.</li>
+      </ul>
+    </article>
+
+    <!-- ── Tip 2: respuestas rápidas ── -->
+    <article class="rc-doc" data-r="tip-respuestas-rapidas-whatsapp" data-tipo="tip" data-min="3" data-app="pedidoapp"
+      data-gancho="Escribe / y elige: horario, datos de pago, despacho. Las 5 respuestas rápidas que todo negocio necesita.">
+      <h2 class="rc-h">Respuestas rápidas de WhatsApp Business: contesta lo mismo en 2 segundos</h2>
+      <p class="rc-bajada">Si respondes el horario o los datos de transferencia diez veces al día, esto es para ti. Es gratis y ya viene en WhatsApp Business.</p>
+      <h3>Cómo crearlas</h3>
+      <ol class="rc-pasos">
+        <li>En WhatsApp Business, abre <b>Herramientas para la empresa</b> y luego <b>Respuestas rápidas</b>.</li>
+        <li>Toca <b>Agregar</b>, escribe el mensaje y ponle un atajo corto, por ejemplo <code>/pago</code>.</li>
+        <li>En cualquier chat, escribe <code>/</code> y elige la respuesta. Puedes editarla antes de enviar.</li>
+      </ol>
+      <h3>Las 5 que todo negocio debería tener</h3>
+      <ul class="rc-lista">
+        <li><code>/horario</code>: días y horas de atención, y cuándo respondes fuera de horario.</li>
+        <li><code>/pago</code>: tus datos de transferencia completos, para copiar y pegar.</li>
+        <li><code>/despacho</code>: comunas, costos y plazos de entrega.</li>
+        <li><code>/pedido</code>: el enlace donde el cliente arma su pedido solo.</li>
+        <li><code>/gracias</code>: un mensaje de cierre con una invitación a volver.</li>
+      </ul>
+      <div class="rc-nota"><i class="ti ti-bulb" aria-hidden="true"></i><p><b>Truco:</b> deja <b>[nombre]</b> dentro del mensaje y reemplázalo antes de enviar. Una respuesta rápida con el nombre del cliente no se siente automática.</p></div>
+    </article>
+
+    <!-- ── Consejo 1: conciliar cada semana ── -->
+    <article class="rc-doc" data-r="consejo-cuadrar-banco-semanal" data-tipo="consejo" data-min="4" data-app="conciliador"
+      data-gancho="Revisar 70 movimientos cada lunes es más fácil que 300 a fin de mes. Una rutina de 20 minutos.">
+      <h2 class="rc-h">Cuadra tu banco cada semana, no a fin de mes</h2>
+      <p class="rc-bajada">A fin de mes todo se junta: cientos de movimientos, diferencias que ya nadie recuerda y cobros que ya no alcanzas a reclamar. Una rutina corta cada semana lo cambia.</p>
+      <h3>Por qué cada semana</h3>
+      <ul class="rc-lista">
+        <li><b>Menos volumen:</b> si tienes 300 movimientos al mes, a la semana son unos 70. Se revisan en un rato.</li>
+        <li><b>Memoria fresca:</b> un pago de hace 5 días lo recuerdas; uno de hace 5 semanas, no.</li>
+        <li><b>Tiempo para reclamar:</b> un cobro duplicado detectado a tiempo se recupera más fácil.</li>
+        <li><b>Caja real:</b> sabes cuánta plata tienes de verdad, no la que crees tener.</li>
+      </ul>
+      <h3>La rutina de 20 minutos (cada lunes)</h3>
+      <ol class="rc-pasos">
+        <li>Descarga los movimientos de la semana.</li>
+        <li>Marca los que calzan con una factura, una boleta o un pedido.</li>
+        <li>Anota los que no calzan y por qué: falta el documento, el monto es distinto, no sabes qué es.</li>
+        <li>Revisa los pendientes de la semana anterior. Si un pendiente cumple dos semanas, resuélvelo antes de seguir.</li>
+      </ol>
+      <div class="rc-nota rc-nota--aviso"><i class="ti ti-compass" aria-hidden="true"></i><p><b>Señal de alerta:</b> si tus pendientes crecen cada semana, el problema no es de tiempo, es de proceso. Algo se está registrando mal o tarde.</p></div>
+    </article>
+
+    <!-- ── Consejo 2: cupones ── -->
+    <article class="rc-doc" data-r="consejo-cupones-margen" data-tipo="consejo" data-min="4" data-app="pedidoapp"
+      data-gancho="Un 20 % de descuento puede obligarte a vender el triple. Cómo armar cupones que suben las ventas sin regalar tu margen.">
+      <h2 class="rc-h">Cupones que venden (y cupones que solo regalan margen)</h2>
+      <p class="rc-bajada">Un descuento se siente como una buena idea hasta que haces la cuenta. Antes de lanzar tu próximo cupón, haz esta cuenta.</p>
+      <h3>La cuenta que casi nadie hace</h3>
+      <p>Vendes un producto a $10.000 y te deja $3.000 de ganancia (30 % de margen). Si le aplicas un cupón del 20 %, lo vendes a $8.000, pero tus costos siguen siendo $7.000: ahora ganas $1.000.</p>
+      <div class="rc-cifra"><b>3 veces más</b><span>tienes que vender para ganar lo mismo que sin el cupón.</span></div>
+      <h3>Cinco reglas para que el cupón trabaje para ti</h3>
+      <ol class="rc-pasos">
+        <li><b>Un objetivo por cupón:</b> primera compra, recuperar clientes que no vuelven o liquidar stock. No "porque sí".</li>
+        <li><b>Compra mínima:</b> "10 % desde $25.000" sube el valor de cada pedido en vez de solo bajarlo.</li>
+        <li><b>Vencimiento corto:</b> 7 a 14 días. Sin fecha límite, no hay urgencia.</li>
+        <li><b>Usos limitados:</b> los primeros 50, por ejemplo. Así controlas cuánto te cuesta.</li>
+        <li><b>Monto fijo en compras grandes:</b> "$3.000 de descuento" puede atraer igual que un 15 % y costarte menos.</li>
+      </ol>
+      <h3>Mide si funcionó</h3>
+      <p>Cuenta cuántas veces se usó y compara el valor promedio de los pedidos con y sin cupón. Si con cupón compran lo mismo que antes, solo pagaste por ventas que ya tenías.</p>
+    </article>
+
+    <!-- cierre de cada artículo: herramienta relacionada, compartir y más recursos (lo arma rcAbrir) -->
+    <div class="rc-cierre" id="rc-cierre"></div>
+  </div>
+
+  <div class="container gp-guias" id="gp-guias">
     <div class="home-eyebrow">Guias rapidas</div>
     <h2 class="home-h1">Los primeros pasos para...</h2>
     <p class="home-lead">Tres conexiones que cualquier equipo contable o financiero termina necesitando. Sin rodeos, paso a paso.</p>
@@ -3158,7 +3578,7 @@ function show(id){
   (function(){
     var RECORRIDO={about:'#about .ab2-perfil, #about .ab2-flujo li, #about .ab2-exp',
       product:'#product .prod-cab .alert-box, #ver-en-accion',
-      guias:'#guias .gp-panel.on .gvw, #guias .gp-panel.on .gp-step.act',
+      guias:'#guias.rc-lista #rc-grid .rc-card:not(.rc-oculta), #guias.rc-guia .gp-panel.on .gvw, #guias.rc-guia .gp-panel.on .gp-step.act',
       contact:'#contact .ct-lista, #contact .cf-wrap'};
     clearTimeout(window._marcoT);
     [].forEach.call(document.querySelectorAll('.marco-luz'),function(t){t.classList.remove('marco-luz');});
@@ -3295,6 +3715,137 @@ function showGP(id, btn) {
   btn.classList.add('on');
   document.getElementById('gp-'+id).classList.add('on');
 }
+
+// ═══ Recursos (2026-10-01) ═══
+// La pestaña #guias muestra la lista de recursos, un artículo (?r=slug) o las
+// guías paso a paso. Cada recurso tiene su dirección: ?r=prompt-reclamos-whatsapp
+// abre ese artículo directo (para enlazarlo desde Instagram). Las tarjetas se
+// arman desde los <article data-r> del HTML y desde RC_GUIAS.
+var RC_TIPOS={prompt:['Prompt de IA','ti-sparkles'],tip:['Tip','ti-bulb'],consejo:['Consejo','ti-compass'],guia:['Guía paso a paso','ti-list-numbers']};
+var RC_GUIAS=[
+  {r:'guia-apps-script',gp:'as',min:5,t:'Apps Script con Google Sheets: tu primera automatización',d:'Cinco pasos para crear un script que lee tu planilla, calcula y escribe el resultado solo.'},
+  {r:'guia-power-bi',gp:'pbi',min:5,t:'Conecta Excel con Power BI y arma tu primer reporte',d:'De una tabla de Excel a un tablero que se actualiza, paso a paso y sin programar.'},
+  {r:'guia-looker-studio',gp:'ds',min:5,t:'Google Sheets con Looker Studio: reportes que se actualizan solos',d:'Conecta tu planilla y crea un informe gratis que tu equipo puede ver cuando quiera.'}
+];
+var RC_APPS={
+  pedidoapp:{tab:'hpt-ped',ico:'ti-shopping-bag',t:'¿Quieres que tus pedidos se ordenen solos?',d:'PedidoApp recibe los pedidos de tus clientes en un formulario, con seguimiento, cupones y avisos por WhatsApp, todo dentro de Google Sheets.',b:'Ver PedidoApp en acción'},
+  conciliador:{tab:'hpt-v2',ico:'ti-arrows-exchange',t:'¿Quieres que la cuadratura se haga sola?',d:'El Conciliador Semiautomático cruza tu banco con tus registros en Google Sheets y te deja solo los pendientes que de verdad hay que mirar.',b:'Ver el Conciliador en acción'}
+};
+var RC_ABRIENDO=false;
+var RC_BASE={titulo:document.title,desc:(document.querySelector('meta[name="description"]')||{}).content||'',canon:(document.querySelector('link[rel="canonical"]')||{}).href||''};
+function rcDocs(){ return [].slice.call(document.querySelectorAll('#rc-art .rc-doc')); }
+function rcModo(m){ var s=document.getElementById('guias'); if(!s) return; s.classList.remove('rc-lista','rc-articulo','rc-guia'); s.classList.add('rc-'+m); document.body.classList.toggle('rc-leyendo',m==='articulo'); }
+function rcTipoHtml(tipo){ var t=RC_TIPOS[tipo]; return '<span class="rc-tipo rc-tipo--'+tipo+'"><i class="ti '+t[1]+'" aria-hidden="true"></i>'+t[0]+'</span>'; }
+function rcTarjeta(x){
+  return '<a class="rc-card" href="?r='+x.r+'" data-r="'+x.r+'" data-tipo="'+x.tipo+'">'+rcTipoHtml(x.tipo)
+    +'<span class="rc-card-t">'+x.t+'</span><span class="rc-card-d">'+x.d+'</span>'
+    +'<span class="rc-card-pie"><span><i class="ti ti-clock" aria-hidden="true"></i>'+x.min+' min</span><span class="rc-ir">'+(x.tipo==='guia'?'Ver guía →':'Leer →')+'</span></span></a>';
+}
+function rcLista_(){
+  return rcDocs().map(function(a){ return {r:a.getAttribute('data-r'),tipo:a.getAttribute('data-tipo'),min:a.getAttribute('data-min'),t:a.querySelector('.rc-h').textContent,d:a.getAttribute('data-gancho')}; })
+    .concat(RC_GUIAS.map(function(g){ return {r:g.r,tipo:'guia',min:g.min,t:g.t,d:g.d}; }));
+}
+function rcFiltrar(f){
+  [].forEach.call(document.querySelectorAll('.rc-f'),function(b){ var on=b.getAttribute('data-f')===f; b.classList.toggle('on',on); b.setAttribute('aria-pressed',on?'true':'false'); });
+  [].forEach.call(document.querySelectorAll('#rc-grid .rc-card'),function(c){ c.classList.toggle('rc-oculta',f!=='todos'&&c.getAttribute('data-tipo')!==f); });
+}
+function rcMeta(titulo,desc,url){
+  document.title=titulo;
+  var m=document.querySelector('meta[name="description"]'); if(m) m.setAttribute('content',desc);
+  var c=document.querySelector('link[rel="canonical"]'); if(c) c.setAttribute('href',url);
+}
+// abre un recurso por su dirección; empujar=false al venir del historial o de la carga
+function rcAbrir(r,empujar){
+  var doc=null; rcDocs().forEach(function(a){ var on=a.getAttribute('data-r')===r; a.classList.toggle('on',on); if(on) doc=a; });
+  var guia=null; RC_GUIAS.forEach(function(g){ if(g.r===r) guia=g; });
+  if(!doc&&!guia){ rcLista(); return false; }
+  if(!document.getElementById('guias').classList.contains('visible')){ RC_ABRIENDO=true; show('guias'); RC_ABRIENDO=false; }
+  if(guia){
+    rcModo('guia');
+    var tab=document.querySelector('.gp-tab[onclick*="\''+guia.gp+'\'"]'); if(tab) showGP(guia.gp,tab);
+    rcMeta(guia.t+' · Recursos · Ambilor.Lab',guia.d,RC_BASE.canon+'?r='+r);
+  } else {
+    rcModo('articulo');
+    var tipo=doc.getAttribute('data-tipo');
+    document.querySelector('#rc-art .rc-migas-tipo').textContent=RC_TIPOS[tipo][0];
+    if(!doc.querySelector('.rc-doc-cab')){
+      var cab=document.createElement('div'); cab.className='rc-doc-cab';
+      cab.innerHTML=rcTipoHtml(tipo)+'<span class="rc-min"><i class="ti ti-clock" aria-hidden="true"></i>'+doc.getAttribute('data-min')+' min de lectura</span>';
+      doc.insertBefore(cab,doc.firstChild);
+    }
+    var app=RC_APPS[doc.getAttribute('data-app')], todos=rcLista_().filter(function(x){ return x.r!==r&&x.tipo!=='guia'; });
+    var mas=todos.filter(function(x){ return x.tipo!==tipo; }).slice(0,1).concat(todos.filter(function(x){ return x.tipo===tipo; }).slice(0,1));
+    document.getElementById('rc-cierre').innerHTML=(app?'<aside class="rc-app"><i class="ti '+app.ico+'" aria-hidden="true"></i><div><b>'+app.t+'</b><p>'+app.d+'</p><button type="button" class="rc-boton rc-boton--pri" onclick="rcVerApp(\''+app.tab+'\')">'+app.b+'<i class="ti ti-arrow-right" aria-hidden="true"></i></button></div></aside>':'')
+      +'<div class="rc-acc"><button type="button" class="rc-boton" onclick="rcCompartir(this)"><i class="ti ti-share" aria-hidden="true"></i><span>Compartir</span></button><button type="button" class="rc-boton" onclick="rcVolver()"><i class="ti ti-arrow-left" aria-hidden="true"></i>Todos los recursos</button></div>'
+      +'<h3 class="rc-mas-t">Sigue leyendo</h3><div class="rc-grid">'+mas.map(rcTarjeta).join('')+'</div>';
+    rcMeta(doc.querySelector('.rc-h').textContent+' · Ambilor.Lab',doc.getAttribute('data-gancho'),RC_BASE.canon+'?r='+r);
+  }
+  if(empujar!==false){ try{ history.pushState({rc:r},'','?r='+r); }catch(e){} }
+  irArriba();
+  try{ if(window.gtag) gtag('event','page_view',{page_title:document.title,page_location:location.href}); }catch(e){}
+  return false;
+}
+function rcLista(){
+  rcDocs().forEach(function(a){ a.classList.remove('on'); });
+  rcModo('lista'); rcMeta(RC_BASE.titulo,RC_BASE.desc,RC_BASE.canon);
+}
+function rcVolver(){
+  if(history.state&&history.state.rc){ history.back(); return; }
+  rcLista(); try{ history.replaceState(null,'',location.pathname+'?p=recursos'); }catch(e){}
+  irArriba();
+}
+function rcVerApp(tab){ show('product'); var b=document.getElementById(tab); if(b) b.click(); }
+function rcCopiarTexto(t,ok){
+  function respaldo(){ var x=document.createElement('textarea'); x.value=t; x.setAttribute('readonly',''); x.style.cssText='position:fixed;top:0;left:0;opacity:0'; document.body.appendChild(x); x.select(); try{ document.execCommand('copy'); ok(); }catch(e){} document.body.removeChild(x); }
+  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok,respaldo); else respaldo();
+}
+function rcCopiar(b){
+  var pre=b.closest('.rc-prompt').querySelector('pre');
+  rcCopiarTexto(pre.textContent,function(){
+    var s=b.querySelector('span'), i=b.querySelector('i'); b.classList.add('ok'); s.textContent='Copiado'; i.className='ti ti-check';
+    clearTimeout(b._t); b._t=setTimeout(function(){ b.classList.remove('ok'); s.textContent='Copiar prompt'; i.className='ti ti-copy'; },2200);
+  });
+}
+function rcCompartir(b){
+  var url=location.href, t=document.title;
+  if(navigator.share){ navigator.share({title:t,url:url}).catch(function(){}); return; }
+  rcCopiarTexto(url,function(){ var s=b.querySelector('span'); s.textContent='Enlace copiado'; clearTimeout(b._t); b._t=setTimeout(function(){ s.textContent='Compartir'; },2200); });
+}
+(function(){
+  var g=document.getElementById('rc-grid'); if(!g) return;
+  g.innerHTML=rcLista_().map(rcTarjeta).join('');
+  [].forEach.call(document.querySelectorAll('.rc-f'),function(b){ b.addEventListener('click',function(){ rcFiltrar(b.getAttribute('data-f')); }); });
+  // tarjetas y enlaces internos (?r=...): se abren sin recargar la página
+  document.addEventListener('click',function(e){
+    var a=e.target.closest&&e.target.closest('a[data-r]'); if(!a||e.metaKey||e.ctrlKey||e.shiftKey) return;
+    e.preventDefault(); rcAbrir(a.getAttribute('data-r'));
+  });
+  // en las guías, volver a la lista de recursos
+  var ey=document.querySelector('#gp-guias .home-eyebrow');
+  if(ey){ var mg=document.createElement('div'); mg.className='rc-migas'; mg.setAttribute('role','navigation'); mg.setAttribute('aria-label','Estás en');
+    mg.innerHTML='<button type="button" class="rc-volver" onclick="rcVolver()"><i class="ti ti-arrow-left" aria-hidden="true"></i>Recursos</button><span aria-hidden="true">/</span><span>Guías paso a paso</span>';
+    ey.parentNode.replaceChild(mg,ey); }
+  rcModo('lista');
+  // el menú lleva a la lista; otra pestaña limpia la dirección del recurso
+  document.addEventListener('pestana',function(e){
+    if(e.detail==='guias'){ if(!RC_ABRIENDO){ rcLista(); var q0=new URLSearchParams(location.search); if(q0.has('r')){ q0.delete('r'); try{ history.replaceState(null,'',location.pathname+(q0.toString()?'?'+q0:'')); }catch(x){} } } }
+    else document.body.classList.remove('rc-leyendo');
+    if(e.detail!=='guias'){
+      // solo se quita lo propio de Recursos (?r=... o ?p=recursos); lo demás (?p=product&h=v2) queda
+      var q=new URLSearchParams(location.search), antes=q.toString();
+      q.delete('r'); if(q.get('p')==='recursos') q.delete('p');
+      if(q.toString()!==antes){ rcDocs().forEach(function(a){ a.classList.remove('on'); }); rcMeta(RC_BASE.titulo,RC_BASE.desc,RC_BASE.canon); try{ history.replaceState(null,'',location.pathname+(q.toString()?'?'+q:'')); }catch(x){} }
+    }
+  });
+  window.addEventListener('popstate',function(){
+    var r=new URLSearchParams(location.search).get('r');
+    if(r) rcAbrir(r,false); else if(document.getElementById('guias').classList.contains('visible')){ rcLista(); irArriba(); }
+  });
+  window.addEventListener('load',function(){
+    var q=new URLSearchParams(location.search), r=q.get('r');
+    if(r) rcAbrir(r,false); else if(q.get('p')==='recursos') show('guias');
+  });
+})();
 
 // Guías (2026-09-28): un paso a la vez, con barra de progreso numerada,
 // botones Anterior/Siguiente y deslizamiento con el dedo. Sin JS se ven
