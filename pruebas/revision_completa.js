@@ -29,6 +29,13 @@
      movimiento   con "reducir movimiento" la demo parte en pausa
      girar        girar el teléfono en plena página: la escena se rehace y
                   nada se sale de la pantalla
+     legible      tema oscuro y claro, celular y computador, 5 pestañas: ningún
+                  texto bajo 11 px ni con contraste bajo 4,5 (3 en letra grande)
+     zoom         letra agrandada (zoom de Safari al 125 % y 150 %, navegador
+                  al 150 % y 200 %): nada se sale de la pantalla ni se corta
+     recuperar    iOS quita las escenas 3D al cambiar de app o bloquear el
+                  teléfono: al recuperarlas se vuelven a dibujar (también en
+                  pausa) y no quedan en blanco
      primera      al abrir Herramientas en celular vertical, la escena con su
                   barra y el título de la etapa se ven sin desplazar; en Safari
                   de iOS 26 (barra de direcciones flotante, ~85 px sobre el
@@ -236,6 +243,82 @@ async function primera(b){
   }
   informe('Primera pantalla del celular (incluye Safari de iOS 26)', fallas);
 }
+// píxeles oscuros de la escena (fichas, textos, bordes): en blanco quedan solo los del panel
+async function trazos(p, el){
+  const r = await el.boundingBox();
+  const b64 = (await p.screenshot({ clip: r, timeout: 60000 })).toString('base64');
+  return p.evaluate(async b64 => {
+    const im = new Image(); im.src = 'data:image/png;base64,' + b64; await im.decode();
+    const c = document.createElement('canvas'); c.width = im.width; c.height = im.height; const g = c.getContext('2d'); g.drawImage(im, 0, 0);
+    const d = g.getImageData(0, 0, c.width, c.height * .7 | 0).data; let n = 0;
+    for (let i = 0; i < d.length; i += 4) if (d[i] + d[i + 1] + d[i + 2] < 560) n++;
+    return n;
+  }, b64);
+}
+async function recuperar(b){
+  const fallas = [];
+  const ctx = await contexto(b, movil(402, 814, { reducedMotion: 'reduce' }));   // en pausa: el peor caso
+  // se anota el contexto 3D de cada lienzo (pedirlo después crearía uno nuevo en los lienzos sin escena)
+  await ctx.addInitScript(() => { const o = HTMLCanvasElement.prototype.getContext; HTMLCanvasElement.prototype.getContext = function(t, a){ const r = o.call(this, t, a); if (r && /webgl/.test(t)) this.__gl = r; return r; }; });
+  const p = await ctx.newPage();
+  await p.goto(BASE + '/index.html?p=product'); await espera(2500);
+  for (const hp of ['v1', 'v2']) {
+    await p.evaluate(hp => { showHP(hp); window.scrollTo(0, 0); }, hp); await espera(2500);
+    const el = (await p.evaluateHandle(hp => [...document.querySelectorAll('#hp-' + hp + ' .al-demo__stage')].find(e => e.offsetHeight > 0), hp)).asElement();
+    const antes = await trazos(p, el);
+    await p.evaluate(() => { window.__ext = [...document.querySelectorAll('canvas')].filter(c => c.__gl).map(c => c.__gl.getExtension('WEBGL_lose_context')).filter(Boolean); window.__ext.forEach(e => e.loseContext()); });
+    await espera(800);
+    const perdida = await trazos(p, el);
+    await p.evaluate(() => window.__ext.forEach(e => e.restoreContext())); await espera(2500);
+    const despues = await trazos(p, el);
+    if (antes - perdida < 50) fallas.push(hp + ': la prueba no logró quitar la escena (revisar la prueba)');
+    else if (despues < antes - (antes - perdida) * .2) fallas.push(hp + ': la escena queda en blanco al recuperarse (' + despues + ' de ' + antes + ' trazos)');
+  }
+  await ctx.close(); informe('Escenas 3D al volver a la página (iOS las quita y las devuelve)', fallas);
+}
+async function legible(b){
+  const fallas = [];
+  for (const tema of ['dark', 'light']) for (const [w, h, t] of [[402, 814, 1], [1440, 900, 0]]) {
+    const ctx = await contexto(b, t ? movil(w, h, { reducedMotion: 'reduce' }) : { viewport: { width: w, height: h }, reducedMotion: 'reduce' });
+    await ctx.addInitScript(t => { try { localStorage.setItem('al-theme', t); } catch (e) {} }, tema);
+    const p = await ctx.newPage();
+    for (const tab of TABS) {
+      await p.goto(BASE + '/index.html?p=' + tab); await espera(1500);
+      const r = await p.evaluate(tema => {
+        const lum = c => { const m = c.match(/[\d.]+/g).map(Number), f = v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); }; return [.2126 * f(m[0]) + .7152 * f(m[1]) + .0722 * f(m[2]), m[3] === undefined ? 1 : m[3]]; };
+        const fondo = tema === 'dark' ? 'rgb(6,8,12)' : 'rgb(238,242,247)', mal = [], sec = document.querySelector('section.visible') || document.body;
+        for (const e of sec.querySelectorAll('*')) {
+          if (![...e.childNodes].some(n => n.nodeType === 3 && n.textContent.trim().length > 1)) continue;
+          const r = e.getBoundingClientRect(), cs = getComputedStyle(e);
+          if (!r.width || cs.visibility === 'hidden' || +cs.opacity === 0 || e.closest('[hidden],[aria-hidden="true"],.al-demo__stage,.gp-vis')) continue;   // ilustraciones aparte
+          if (e.matches('.demo-cambio button.on') || /transparent|rgba\(0, 0, 0, 0\)/.test(cs.webkitTextFillColor)) continue;
+          const fs = parseFloat(cs.fontSize), txt = '«' + e.textContent.trim().slice(0, 30) + '»';
+          if (fs < 11) mal.push(fs + ' px ' + txt);
+          let bg = null, img = false;
+          for (let a = e; a; a = a.parentElement) { const ca = getComputedStyle(a); if (ca.backgroundImage !== 'none' && !/^url/.test(ca.backgroundImage) && a !== document.body) { img = true; break; } if (lum(ca.backgroundColor)[1] > .6) { bg = ca.backgroundColor; break; } }
+          if (img) continue;
+          const l1 = lum(cs.color)[0], l2 = lum(bg || fondo)[0], cr = (Math.max(l1, l2) + .05) / (Math.min(l1, l2) + .05);
+          if (cr < (fs >= 18.6 || (fs >= 14 && +cs.fontWeight >= 700) ? 3 : 4.5)) mal.push('contraste ' + cr.toFixed(1) + ' ' + txt);
+        }
+        return mal;
+      }, tema);
+      if (r.length) fallas.push((tema === 'dark' ? 'oscuro' : 'claro') + ' ' + w + ' ' + tab + ': ' + r.slice(0, 3).join(', ') + (r.length > 3 ? ' (+' + (r.length - 3) + ')' : ''));
+    }
+    await ctx.close();
+  }
+  informe('Letra legible: tamaño y contraste en tema oscuro y claro', fallas);
+}
+async function zoom(b){
+  const ctx = await contexto(b, { viewport: { width: 1800, height: 1200 } }), p = await ctx.newPage(), fallas = [];
+  for (const id of TABS) {
+    await p.goto(BASE + '/revisar.html?tam=268x542,322x651,960x600,720x450'); await espera(500);   // iPhone al 150 % y 125 %, computador al 150 % y 200 %
+    await p.click('#tabs button[data-id="' + id + '"]');
+    await p.waitForFunction(() => !/Revisando/.test(document.getElementById('resumen').textContent), null, { timeout: 300000 });
+    const r = await p.evaluate(() => [...document.querySelectorAll('.disp')].map(d => d.querySelector('h2').textContent + ': ' + d.querySelector('.estado').innerText.replace(/\n/g, ' | ')).filter(t => /Se sale|cortado|horizontal/i.test(t)));
+    r.forEach(t => fallas.push(id + ' ' + t));
+  }
+  await ctx.close(); informe('Letra agrandada (zoom 125 % a 200 %): nada se sale ni se corta', fallas, ['con zoom puede no caber todo en una pantalla: eso se acepta (se desplaza)']);
+}
 async function girar(b){
   const fallas = [];
   const ctx = await contexto(b, movil(390, 664)), p = await ctx.newPage(), err = []; p.on('pageerror', e => err.push(e.message));
@@ -257,7 +340,7 @@ async function girar(b){
 (async () => {
   const srv = await servidor(); BASE = 'http://127.0.0.1:' + srv.address().port;
   const b = await PW.chromium.launch({ args: ARGS });
-  const pruebas = { encuadre, errores, estabilidad, cambio, tactil, memoria, sin3d, movimiento, girar, primera };
+  const pruebas = { encuadre, errores, estabilidad, cambio, tactil, memoria, sin3d, movimiento, girar, primera, recuperar, legible, zoom };
   const t0 = Date.now();
   for (const [n, f] of Object.entries(pruebas)) {
     if (SOLO.length && !SOLO.includes(n)) continue;
