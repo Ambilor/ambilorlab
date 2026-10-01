@@ -5056,7 +5056,9 @@ function resize(){
 }
 let zAlto = 1;
 new ResizeObserver(resize).observe(stage); resize();
-if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible = es[0].isIntersecting; }, { threshold:0.05 }).observe(stage);
+// 2026-10-01: el navegador puede entregar varios avisos juntos (al abrir la pestaña: "no visible" y
+// luego "visible"); vale el último. Antes se leía el primero y la escena quedaba creyéndose oculta.
+if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible = es[es.length - 1].isIntersecting; if (visible) needsRender = true; }, { threshold:0.05 }).observe(stage);
 // No renderizar con la pestana en segundo plano: la demo es un RAF perpetuo.
 document.addEventListener('visibilitychange', () => { visible = !document.hidden; needsRender = true; });
 
@@ -5396,7 +5398,7 @@ window.alDemoTarjetas = function(root, cfg){
   }
   new ResizeObserver(resize).observe(stage); resize();
   // fuera de pantalla (u oculta) la demo no dibuja y suelta sus lienzos; al volver se redibuja
-  if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible = es[0].isIntersecting; if (visible) needsRender = true; else soltarTodo(); }, { threshold:0.05 }).observe(stage);
+  if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible = es[es.length - 1].isIntersecting; if (visible) needsRender = true; else soltarTodo(); }, { threshold:0.05 }).observe(stage);
 
   let last = performance.now();
   function frame(now){

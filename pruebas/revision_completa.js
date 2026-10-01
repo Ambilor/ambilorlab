@@ -246,36 +246,38 @@ async function primera(b){
   }
   informe('Primera pantalla del celular (incluye Safari de iOS 26)', fallas);
 }
-// píxeles oscuros de la escena (fichas, textos, bordes): en blanco quedan solo los del panel
-async function trazos(p, el){
-  const r = await el.boundingBox();
-  const b64 = (await p.screenshot({ clip: r, timeout: 60000 })).toString('base64');
-  return p.evaluate(async b64 => {
-    const im = new Image(); im.src = 'data:image/png;base64,' + b64; await im.decode();
-    const c = document.createElement('canvas'); c.width = im.width; c.height = im.height; const g = c.getContext('2d'); g.drawImage(im, 0, 0);
-    const d = g.getImageData(0, 0, c.width, c.height * .7 | 0).data; let n = 0;
-    for (let i = 0; i < d.length; i += 4) if (d[i] + d[i + 1] + d[i + 2] < 560) n++;
-    return n;
-  }, b64);
-}
+// iOS quita los contextos 3D al cambiar de app; la prueba los quita y devuelve con
+// WEBGL_lose_context y cuenta los dibujos de cada escena después de devolverlos
 async function recuperar(b){
   const fallas = [];
   const ctx = await contexto(b, movil(402, 814, { reducedMotion: 'reduce' }));   // en pausa: el peor caso
-  // se anota el contexto 3D de cada lienzo (pedirlo después crearía uno nuevo en los lienzos sin escena)
-  await ctx.addInitScript(() => { const o = HTMLCanvasElement.prototype.getContext; HTMLCanvasElement.prototype.getContext = function(t, a){ const r = o.call(this, t, a); if (r && /webgl/.test(t)) this.__gl = r; return r; }; });
+  await ctx.addInitScript(() => {
+    const o = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function(t, a){
+      const r = o.call(this, t, a);
+      if (r && /webgl/.test(t) && !this.__gl) {
+        this.__gl = r; this.__dibujos = 0; const cv = this;
+        for (const m of ['drawElements', 'drawArrays', 'drawElementsInstanced', 'drawArraysInstanced']) if (r[m]) { const f = r[m].bind(r); r[m] = function(){ cv.__dibujos++; return f.apply(null, arguments); }; }
+      }
+      return r;
+    };
+  });
   const p = await ctx.newPage();
   await p.goto(BASE + '/index.html?p=product'); await espera(2500);
   for (const hp of ['v1', 'v2']) {
     await p.evaluate(hp => { showHP(hp); window.scrollTo(0, 0); }, hp); await espera(2500);
-    const el = (await p.evaluateHandle(hp => [...document.querySelectorAll('#hp-' + hp + ' .al-demo__stage')].find(e => e.offsetHeight > 0), hp)).asElement();
-    const antes = await trazos(p, el);
-    await p.evaluate(() => { window.__ext = [...document.querySelectorAll('canvas')].filter(c => c.__gl).map(c => c.__gl.getExtension('WEBGL_lose_context')).filter(Boolean); window.__ext.forEach(e => e.loseContext()); });
-    await espera(800);
-    const perdida = await trazos(p, el);
-    await p.evaluate(() => window.__ext.forEach(e => e.restoreContext())); await espera(2500);
-    const despues = await trazos(p, el);
-    if (antes - perdida < 50) fallas.push(hp + ': la prueba no logró quitar la escena (revisar la prueba)');
-    else if (despues < antes - (antes - perdida) * .2) fallas.push(hp + ': la escena queda en blanco al recuperarse (' + despues + ' de ' + antes + ' trazos)');
+    const r = await p.evaluate(async hp => {
+      const esc = [...document.querySelectorAll('#hp-' + hp + ' .al-demo__stage canvas')].find(c => c.__gl && c.offsetHeight > 0);
+      if (!esc) return { error: 'no hay escena 3D a la vista' };
+      const todos = [...document.querySelectorAll('canvas')].filter(c => c.__gl), ext = todos.map(c => c.__gl.getExtension('WEBGL_lose_context')).filter(Boolean);
+      ext.forEach(e => e.loseContext()); await new Promise(r => setTimeout(r, 800));
+      const perdido = esc.__gl.isContextLost();
+      esc.__dibujos = 0; ext.forEach(e => e.restoreContext()); await new Promise(r => setTimeout(r, 2500));
+      return { perdido, dibujos: esc.__dibujos };
+    }, hp);
+    if (r.error) fallas.push(hp + ': ' + r.error);
+    else if (!r.perdido) fallas.push(hp + ': la prueba no logró quitar la escena (revisar la prueba)');
+    else if (!r.dibujos) fallas.push(hp + ': al devolverla, la escena no se vuelve a dibujar (queda en blanco)');
   }
   await ctx.close(); informe('Escenas 3D al volver a la página (iOS las quita y las devuelve)', fallas);
 }
