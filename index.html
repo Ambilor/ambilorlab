@@ -219,7 +219,7 @@ footer{border-top:1px solid var(--borde);padding:1.5rem;text-align:center;font-f
 .gvw-caps{display:flex;gap:7px;flex-wrap:wrap;align-items:center;padding-top:12px;margin-top:8px;border-top:1px solid var(--borde)}
 .gvw-cap{font-size:11px;padding:3px 10px;border:1px solid var(--borde);border-radius:100px;color:var(--gris-1)}
 .gvw-tl{font-size:11px;color:var(--gris-2);text-align:center;padding:9px 0 0;margin-top:4px;border-top:1px solid var(--borde)}
-@media(max-width:520px){.gvw-cg{grid-template-columns:1fr}.gvw-cc{padding:6px 0}}
+
 @keyframes gvfr{to{stroke-dashoffset:-22}}
 @keyframes gvfl{to{stroke-dashoffset:22}}
 @keyframes gvgp{0%,100%{opacity:.12}50%{opacity:1}}
@@ -257,7 +257,6 @@ footer{border-top:1px solid var(--borde);padding:1.5rem;text-align:center;font-f
 .gp-btn-sm{font-size:8px;padding:3px 9px;border-radius:3px;border:none;cursor:pointer;font-weight:500}
 .gp-btn-primary{background:var(--azul);color:#fff}
 .gp-btn-ghost{background:#f1f3f4;color:#444}
-@media(max-width:620px){.gp-step{grid-template-columns:30px 1fr}.gp-vis{display:none}}
 
 /* La marca (4.4) exige respetar prefers-reduced-motion de forma explicita, y
    hasta 2026-09-27 no se respetaba: las 4 animaciones decorativas infinitas
@@ -1076,14 +1075,6 @@ nav{background:rgba(255,255,255,.95)!important}
 [data-theme="dark"] .gp-ctrl .gp-sig{background:var(--glow);border-color:var(--glow);color:#06080C}
 .gp-ctrl button:disabled{opacity:.3;cursor:default}
 .gp-cuenta{font-family:var(--mono);font-size:11px;color:var(--gris-2);white-space:nowrap}
-@media (max-width:300px){ .gp-cuenta{display:none} }   /* zoom al 150 %: Anterior y Siguiente caben */
-@media (max-width:720px){
-  .gp-modo-pasos .gp-step.act{grid-template-columns:28px 1fr;grid-template-areas:"vis vis" "n t";padding:12px;gap:12px 10px;align-items:start}
-  .gp-modo-pasos .gp-vis>*{zoom:1.2}
-  .gp-modo-pasos .gp-step.act{min-height:0}
-  .gp-prog-t{display:none}
-  .gp-ctrl button{padding:9px 13px}
-}
 
 /* 2026-09-28: Contacto compacto; desde tablet, canales y formulario lado a lado */
 .ct-grid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1fr);gap:16px;align-items:start;margin-bottom:2rem}
@@ -1123,14 +1114,7 @@ footer,[data-theme="dark"] footer{border-top:none}
 body{display:flex;flex-direction:column;min-height:100vh;min-height:100svh}
 body>section,body>nav,body>footer{min-width:0}
 footer{margin-top:auto}
-/* 2) Guias (tablet y escritorio): el paso activo con su vista mas grande y el
-      numero alineado con el titulo */
-@media (min-width:721px){
-  .gp-modo-pasos .gp-step.act{grid-template-columns:minmax(0,1.35fr) 30px minmax(0,1fr);padding:20px;gap:18px}
-  .gp-modo-pasos .gp-vis{min-height:190px}
-  .gp-modo-pasos .gp-vis>*{zoom:1.75}
-  .gp-modo-pasos .gp-ncol{align-self:center}
-}
+
 /* ════════════════════════════════════════════════════════════════════
    REGLAS FIJAS DE ENCUADRE (2026-09-28, Ambilor.Lab)
    1) Un solo ancho: todas las pestanas comparten el ancho y los margenes
@@ -1168,13 +1152,57 @@ footer{margin-top:auto}
 .gvw-caps{margin-top:10px;padding-top:10px}
 .gp-modo-pasos .gp-vis{min-height:0}
 .gp-modo-pasos .gp-step.act{padding:14px}
-@media (min-width:721px){ .gp-modo-pasos .gp-vis>*{zoom:1.5} }
+
+/* Sin encaje al desplazar (2026-09-28): el desplazamiento es libre en todos los
+   dispositivos y navegadores; la demo cabe entera por su tamano, no por encaje. */
+html{scroll-snap-type:none}
+/* mismo margen sobre el primer contenido en todas las pestanas (Sobre mi,
+   Herramientas, Guias, Contacto), en cualquier dispositivo y orientacion */
+body>section:not(#home)>.container{padding-top:1.6rem}
+/* Pantallas grandes (2026-09-28): el ancho del contenido crece con la pantalla
+   (1180 a 1440px, igual en todas las pestanas) y las escenas del inicio escalan
+   con el alto para ocupar ~85% de la pantalla, sin vacio abajo */
+:root{--hx-max:min(1440px, max(1180px, 72vw))}
+
+/* celular en horizontal y ventanas bajas (hasta 560 px de alto): menú más bajo */
+@media (orientation:landscape) and (max-height:560px){ .nav-inner{height:44px} }
+
+/* ════════════════════════════════════════════════════════════════════
+   GUÍAS: FORMATOS (2026-10-01)
+   Todas las reglas por tamaño de Guías, juntas y en su orden. Disposición:
+     celular (< 640 px) ........ pestañas en 3 columnas, el paso con su vista
+                                 arriba y el diagrama en una fila
+     hasta 720 px ............... la vista del paso arriba y su texto debajo
+     desde 721 px ............... vista | número | texto en una fila
+     ancho (≥ 900, no vertical) . formato tutorial: índice a la izquierda (guías,
+                                 pasos y diagrama) y el paso grande a la derecha
+     horizontal bajo (≤ 560) .... el paso más bajo, vista al lado del texto
+   Más los ajustes por alto (pantallas bajas: menos texto de apoyo). Un ajuste
+   nuevo de Guías se agrega aquí, no en otra parte.
+   ════════════════════════════════════════════════════════════════════ */
+@media(max-width:520px){.gvw-cg{grid-template-columns:1fr}.gvw-cc{padding:6px 0}}
+@media(max-width:620px){.gp-vis{display:none}}
+@media (max-width:300px){ .gp-cuenta{display:none} }   /* zoom al 150 %: Anterior y Siguiente caben */
+@media (max-width:720px){
+  .gp-modo-pasos .gp-step.act{grid-template-columns:28px 1fr;grid-template-areas:"vis vis" "n t";gap:12px 10px;align-items:start}
+  .gp-modo-pasos .gp-vis>*{zoom:1.2}
+  .gp-modo-pasos .gp-step.act{min-height:0}
+  .gp-prog-t{display:none}
+  .gp-ctrl button{padding:9px 13px}
+}
+/* tablet y computador: el paso activo con su vista más grande, el número
+   alineado con el título y alto fijo (el del paso más alto) para que no salte
+   al avanzar */
+@media (min-width:721px){
+  .gp-modo-pasos .gp-step.act{grid-template-columns:minmax(0,1.35fr) 30px minmax(0,1fr);gap:18px;min-height:215px}
+  .gp-modo-pasos .gp-vis{align-self:center}
+  .gp-modo-pasos .gp-vis>*{zoom:1.5}
+  .gp-modo-pasos .gp-ncol{align-self:center}
+}
 @media (max-height:860px){ .gvw-caps{display:none} }
 /* pantallas de menos de 800px de alto: el paso de la guia es lo principal y el
    diagrama de conexion (las pestanas ya dicen que conecta cada guia) se oculta */
 @media (max-height:800px){ #guias .gvw{display:none} }
-/* alto fijo del paso (el del paso mas alto) para que no salte al avanzar */
-@media (min-width:721px){ .gp-modo-pasos .gp-step.act{min-height:215px} .gp-modo-pasos .gp-vis{align-self:center} }
 /* celular: el diagrama en una fila (Apps Script → flechas → Sheets) */
 @media (max-width:639px){
   .gvw-cg{grid-template-columns:1fr 54px 1fr!important;gap:6px}
@@ -1213,7 +1241,6 @@ footer{margin-top:auto}
   .gp-prog{margin-bottom:8px}
   .gp-modo-pasos .gp-step.act{min-height:230px}
 }
-
 /* Guias en ventanas bajas: sin la bajada (las pestanas ya dicen de que trata
    cada guia) y el paso ocupa menos alto */
 @media (min-width:640px) and (max-height:680px){
@@ -1223,29 +1250,7 @@ footer{margin-top:auto}
   .gp-modo-pasos .gp-vis>*{zoom:1.2}
   .gp-modo-pasos .gp-step.act{min-height:0;padding:12px}
 }
-/* Sin encaje al desplazar (2026-09-28): el desplazamiento es libre en todos los
-   dispositivos y navegadores; la demo cabe entera por su tamano, no por encaje. */
-html{scroll-snap-type:none}
-/* mismo margen sobre el primer contenido en todas las pestanas (Sobre mi,
-   Herramientas, Guias, Contacto), en cualquier dispositivo y orientacion */
-body>section:not(#home)>.container{padding-top:1.6rem}
-/* Pantallas grandes (2026-09-28): el ancho del contenido crece con la pantalla
-   (1180 a 1440px, igual en todas las pestanas) y las escenas del inicio escalan
-   con el alto para ocupar ~85% de la pantalla, sin vacio abajo */
-:root{--hx-max:min(1440px, max(1180px, 72vw))}
-/* 2026-09-28: tambien desde 640px de ancho con alto suficiente (computador con la
-   ventana a la mitad, tablet vertical): antes el contenido quedaba chico y
-   sobraban 300-450px de vacio por escena */
-
-/* 2026-09-28: celular en horizontal (pantalla apaisada y baja). Todo lo
-   principal cabe en el alto visible: inicio compacto, demos en dos columnas
-   (escena a la izquierda, texto a la derecha) y el paso de Guias mas bajo. */
-/* 2026-09-28: hasta 560px de alto (antes 500): tambien ventanas bajas de iPad
-   en modo ventana y de computador, no solo el iPhone en horizontal */
 @media (orientation:landscape) and (max-height:560px){
-  /* Inicio */
-  .nav-inner{height:44px}
-
   /* Guias: el paso activo mas bajo */
   .gp-modo-pasos .gp-step.act{grid-template-columns:minmax(0,1.1fr) 30px minmax(0,1fr);grid-template-areas:"vis n t";padding:12px;gap:12px;align-items:center}
   .gp-modo-pasos .gp-vis{min-height:0}
@@ -1310,6 +1315,8 @@ body>section:not(#home)>.container{padding-top:1.6rem}
   #guias .gp-prog::before{left:12px}
   #guias .gp-modo-pasos .gp-vis{min-height:150px}
 }
+/* ═══ fin de GUÍAS: FORMATOS ═══ */
+
 /* escena 3D fija de fondo */
 #i3Escena{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:-1}
 /* el cubo acompanante va en su propia capa, sobre el contenido, para posarse en las tarjetas */
@@ -1435,7 +1442,11 @@ html.i3-encaje{scroll-snap-type:y mandatory}
 .i3-estatico .i3-ruta{display:none}
 
 /* ── Inicio 3D (2026-09-28): el recorrido de la pagina de prueba pasa al inicio.
-   Variables propias por tema; el resto usa las del sitio (--gris-*, --glow...). */
+   Variables propias por tema; el resto usa las del sitio (--gris-*, --glow...).
+   INICIO: FORMATOS (2026-10-01): los ajustes por tamaño de Inicio viven más
+   abajo en esta misma sección, en orden: ventanas de 340 px, ancho de la
+   estación (700/701 px), poco alto, celular horizontal (≤ 560 px de alto) y
+   celular bajo (640, 480 y 300 px de alto). Un ajuste nuevo va ahí. */
 :root,[data-theme="dark"]{--i3-fondo:#06080C;--i3-texto:#E8EDF5;--i3-vidrio:rgba(10,14,20,.72);--i3-vidrio-borde:rgba(143,193,255,.14)}
 [data-theme="light"]{--i3-fondo:#EEF2F7;--i3-texto:#12304D;--i3-vidrio:rgba(255,255,255,.78);--i3-vidrio-borde:rgba(31,92,153,.16)}
 #home.visible{animation:none}
@@ -1502,6 +1513,14 @@ html.i3-encaje{scroll-snap-type:y mandatory}
   #home .i3-h2{margin-bottom:.4rem}
   #home .i3-cuatro .i3-tarjeta{padding:.4rem .65rem}
   #home .i3-cuatro .i3-b{line-height:1.35}
+}
+/* horizontal muy bajo (iPhone girado con las barras de Chrome): "Para quien" cabe entero */
+@media (orientation:landscape) and (max-height:300px){
+  #home .i3-cuatro{gap:6px}
+  #home .i3-cuatro .i3-tarjeta{padding:.35rem .7rem}
+  #home .i3-quien{font-size:13px;margin-bottom:.1rem}
+  #home .i3-b{font-size:11.5px;line-height:1.35}
+  #home .i3-h2{margin-bottom:.35rem}
 }
 /* en Inicio el pie queda sobre la escena, al final del recorrido */
 body.i3-inicio>footer{position:relative;z-index:4;background:linear-gradient(transparent,var(--i3-fondo) 45%)}
@@ -1610,14 +1629,6 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
   .ab2-fn{grid-row:span 2;flex-direction:column;justify-content:flex-start;gap:4px;margin:0}
 }
 
-/* horizontal muy bajo (iPhone girado con las barras de Chrome): "Para quien" cabe entero */
-@media (orientation:landscape) and (max-height:300px){
-  #home .i3-cuatro{gap:6px}
-  #home .i3-cuatro .i3-tarjeta{padding:.35rem .7rem}
-  #home .i3-quien{font-size:13px;margin-bottom:.1rem}
-  #home .i3-b{font-size:11.5px;line-height:1.35}
-  #home .i3-h2{margin-bottom:.35rem}
-}
 
 /* ── Rueda del mouse en Inicio (2026-09-28): #home con overflow:hidden es un
    contenedor de scroll, y todo el recorrido 3D (fijo en pantalla) vive dentro.
