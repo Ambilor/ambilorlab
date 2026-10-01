@@ -1185,12 +1185,13 @@ body>section:not(#home)>.container{padding-top:1.6rem}
 @media (orientation:landscape) and (max-height:560px){ .nav-inner{height:44px} }
 
 /* ═══ RECURSOS (2026-10-01): biblioteca, artículo y guías ═══
-   La pestaña muestra una de tres cosas según la clase de #guias: rc-lista (las
-   tarjetas), rc-articulo (un recurso) o rc-guia (las guías paso a paso). Sin
+   La pestaña muestra una de tres cosas según la clase de #guias: rc-modo-lista
+   (las tarjetas), rc-modo-articulo (un recurso) o rc-modo-guia (las guías paso a
+   paso). Prefijo rc-modo- para no chocar con .rc-lista (las viñetas). Sin
    JavaScript no hay clase y se ven las guías, como antes. */
 #guias .rc-lib,#guias .rc-art{display:none}
-#guias.rc-lista .rc-lib,#guias.rc-articulo .rc-art{display:block}
-#guias.rc-lista #gp-guias,#guias.rc-articulo #gp-guias{display:none}
+#guias.rc-modo-lista .rc-lib,#guias.rc-modo-articulo .rc-art{display:block}
+#guias.rc-modo-lista #gp-guias,#guias.rc-modo-articulo #gp-guias{display:none}
 .rc-filtros{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
 .rc-f{display:inline-flex;align-items:center;gap:6px;font-family:var(--sans);font-size:13px;font-weight:500;padding:7px 14px;border-radius:100px;border:1px solid var(--borde);background:var(--blanco);color:var(--gris-1);cursor:pointer;transition:border-color .2s,background .2s,color .2s}
 .rc-f i{font-size:15px}
@@ -3581,7 +3582,7 @@ function show(id){
   (function(){
     var RECORRIDO={about:'#about .ab2-perfil, #about .ab2-flujo li, #about .ab2-exp',
       product:'#product .prod-cab .alert-box, #ver-en-accion',
-      guias:'#guias.rc-lista #rc-grid .rc-card:not(.rc-oculta), #guias.rc-guia .gp-panel.on .gvw, #guias.rc-guia .gp-panel.on .gp-step.act',
+      guias:'#guias.rc-modo-lista #rc-grid .rc-card:not(.rc-oculta), #guias.rc-modo-guia .gp-panel.on .gvw, #guias.rc-modo-guia .gp-panel.on .gp-step.act',
       contact:'#contact .ct-lista, #contact .cf-wrap'};
     clearTimeout(window._marcoT);
     [].forEach.call(document.querySelectorAll('.marco-luz'),function(t){t.classList.remove('marco-luz');});
@@ -3737,7 +3738,7 @@ var RC_APPS={
 var RC_ABRIENDO=false;
 var RC_BASE={titulo:document.title,desc:(document.querySelector('meta[name="description"]')||{}).content||'',canon:(document.querySelector('link[rel="canonical"]')||{}).href||''};
 function rcDocs(){ return [].slice.call(document.querySelectorAll('#rc-art .rc-doc:not([data-oculto])')); }
-function rcModo(m){ var s=document.getElementById('guias'); if(!s) return; s.classList.remove('rc-lista','rc-articulo','rc-guia'); s.classList.add('rc-'+m); document.body.classList.toggle('rc-leyendo',m==='articulo'); }
+function rcModo(m){ var s=document.getElementById('guias'); if(!s) return; s.classList.remove('rc-modo-lista','rc-modo-articulo','rc-modo-guia'); s.classList.add('rc-modo-'+m); document.body.classList.toggle('rc-leyendo',m==='articulo'); }
 function rcTipoHtml(tipo){ var t=RC_TIPOS[tipo]; return '<span class="rc-tipo rc-tipo--'+tipo+'"><i class="ti '+t[1]+'" aria-hidden="true"></i>'+t[0]+'</span>'; }
 function rcTarjeta(x){
   return '<a class="rc-card" href="?r='+x.r+'" data-r="'+x.r+'" data-tipo="'+x.tipo+'">'+rcTipoHtml(x.tipo)
