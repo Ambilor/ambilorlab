@@ -143,6 +143,9 @@ async function revisarAlto(v, H){
       if (!e.children.length && e.textContent.trim() && (cs.overflow === 'hidden' || cs.overflowX === 'hidden' || cs.textOverflow === 'ellipsis')) { const rg = doc.createRange(); rg.selectNodeContents(e); const tw = rg.getBoundingClientRect().width; if (tw > e.clientWidth + 2) cortados.add(e.textContent.trim().slice(0, 28)); }
     });
     if (fuera.size) av.push('Se sale de la pantalla: ' + [...fuera].slice(0, 3).join(', '));
+    // solo la pestaña activa a la vista (2026-10-01: una clase repetida dejaba Recursos visible en las demás)
+    const otras = [...doc.querySelectorAll('body>section')].filter(x => x.id !== actual && win.getComputedStyle(x).display !== 'none').map(x => x.id);
+    if (otras.length) av.push('Se ve otra pestaña a la vez: ' + otras.join(', '));
     // errores de código registrados por la página (sin contar límites de 3D por tener 6 vistas abiertas)
     const errores = (win.__errores || []).filter(m => !/webgl|context|ResizeObserver/i.test(m));
     if (errores.length) av.push('Error de código: ' + [...new Set(errores)].slice(0, 2).join(' · '));
@@ -174,7 +177,7 @@ async function revisarAlto(v, H){
   };
   if (actual === 'guias' && win.rcAbrir) {
     general('Lista');
-    for (const a of doc.querySelectorAll('#rc-art .rc-doc')) { win.rcAbrir(a.getAttribute('data-r'), false); await esperar(250); general('Recurso ' + a.getAttribute('data-r')); }
+    for (const a of doc.querySelectorAll('#rc-art .rc-doc:not([data-oculto])')) { win.rcAbrir(a.getAttribute('data-r'), false); await esperar(250); general('Recurso ' + a.getAttribute('data-r')); }
     win.rcAbrir('guia-apps-script', false); await esperar(300);
   } else general('');
   // bloques que deben caber en el alto visible

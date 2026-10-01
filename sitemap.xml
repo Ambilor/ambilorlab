@@ -13,18 +13,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://ambilor.github.io/ambilorlab/?r=prompt-reclamos-whatsapp</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://ambilor.github.io/ambilorlab/?r=prompt-cartola-bancaria</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://ambilor.github.io/ambilorlab/?r=prompt-gemini-gastos-gmail</loc>
     <lastmod>2026-10-01</lastmod>
     <changefreq>monthly</changefreq>
@@ -32,24 +20,6 @@
   </url>
   <url>
     <loc>https://ambilor.github.io/ambilorlab/?r=tip-buscarx</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://ambilor.github.io/ambilorlab/?r=tip-respuestas-rapidas-whatsapp</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://ambilor.github.io/ambilorlab/?r=consejo-cuadrar-banco-semanal</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://ambilor.github.io/ambilorlab/?r=consejo-cupones-margen</loc>
     <lastmod>2026-10-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

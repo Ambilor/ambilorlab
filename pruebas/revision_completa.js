@@ -95,7 +95,7 @@ const TAB = [[834, 1112, 'iPad vertical'], [1180, 820, 'iPad horizontal']].conca
 const WEB = [[1440, 900, 'computador'], [720, 860, 'computador a media pantalla']];
 const TABS = ['home', 'about', 'product', 'guias', 'contact'];
 // Recursos (2026-10-01): cada artículo (?r=...) se revisa también como una página más
-const ARTICULOS = [...fs.readFileSync(path.join(RAIZ, 'index.html'), 'utf8').matchAll(/<article class="rc-doc" data-r="([a-z0-9-]+)"/g)].map(m => m[1]);
+const ARTICULOS = [...fs.readFileSync(path.join(RAIZ, 'index.html'), 'utf8').matchAll(/<article class="rc-doc" data-r="([a-z0-9-]+)"(?! data-oculto)/g)].map(m => m[1]);
 const PAGINAS = TABS.map(t => '?p=' + t).concat(ARTICULOS.map(r => '?r=' + r));
 
 const resultados = [];
