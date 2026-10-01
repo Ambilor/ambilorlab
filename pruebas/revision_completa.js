@@ -244,7 +244,19 @@ async function primera(b){
     }
     await ctx.close();
   }
-  informe('Primera pantalla del celular (incluye Safari de iOS 26)', fallas);
+  // tablet horizontal (2026-10-01, reporte en iPad Pro 11): el recuadro completo de la demo
+  // (escena, texto y nota) cabe en el alto visible con las barras de Safari y de Chrome
+  for (const [w, h, t] of [[1194, 760, 'iPad Pro 11 horizontal (Safari)'], [1194, 710, 'iPad Pro 11 horizontal (Chrome)'], [1180, 750, 'iPad Air horizontal'], [1133, 680, 'iPad mini horizontal'], [1366, 950, 'iPad Pro 13 horizontal'], [1366, 900, 'iPad Pro 13 horizontal (Chrome)']]) {
+    const ctx = await contexto(b, movil(w, h)), p = await ctx.newPage();
+    await p.goto(BASE + '/index.html?p=product'); await espera(1500);
+    for (const hp of ['v1', 'v2', 'ped']) for (const d of ['accion', 'instala']) {
+      await p.evaluate(([hp, d]) => { showHP(hp); const bt = document.querySelector('#hp-' + hp + ' .demo-cambio button[data-d="' + d + '"]'); if (bt && !bt.classList.contains('on')) bt.click(); window.scrollTo(0, 0); }, [hp, d]); await espera(900);
+      const fin = await p.evaluate(() => { const e = [...document.querySelectorAll('#product .hp-panel.on .al-demo')].find(x => x.offsetHeight > 0); return e ? e.getBoundingClientRect().bottom : 0; });
+      if (fin > h + 1) fallas.push(t + ' ' + w + '×' + h + ' ' + hp + '/' + d + ': el recuadro de la demo queda ' + Math.round(fin - h) + ' px bajo el borde');
+    }
+    await ctx.close();
+  }
+  informe('Primera pantalla del celular (incluye Safari de iOS 26) y de la tablet horizontal', fallas);
 }
 // iOS quita los contextos 3D al cambiar de app; la prueba los quita y devuelve con
 // WEBGL_lose_context y cuenta los dibujos de cada escena después de devolverlos
