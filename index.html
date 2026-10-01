@@ -2007,6 +2007,7 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
 .hp-panel{display:none}
 .hp-panel.on{display:block}
 @media (max-width:520px){ .hp-tabs .gp-tab{padding:8px 6px} .hp-tabs .gp-tab-name{font-size:12.5px} .hp-prox{display:none} }
+@media (max-width:359px){ .hp-tabs{gap:4px} .hp-tabs .gp-tab{padding:8px 3px} .hp-tabs .gp-tab-name{font-size:11px} }   /* 320 px: los tres nombres caben enteros */
 /* Herramientas: "Ver en acción" y "Cómo se instala" comparten un lugar; el
    selector va donde estaba la etiqueta de cada demo y el cambio hace un fundido
    con desplazamiento suave, con la curva del sitio (2026-09-30). */
@@ -2065,7 +2066,11 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
   #product .demo-label{margin-bottom:.35rem}
   .al-demo{padding:12px 16px;border-radius:16px}
   .al-demo__grid{gap:10px}
-  .al-demo__stage{height:min(calc(100cqw + var(--al-barra)), calc(100svh - 250px))}   /* tope: ventanas anchas y bajas */
+  /* 2026-10-01: la escena mide el 90 % de su ancho más la barra, con tope para que el título de la etapa y sus primeras
+     líneas queden en la primera pantalla. En Safari de iOS 26 la barra de
+     direcciones flota SOBRE el final de la página (~85 px): con la escena
+     cuadrada el texto quedaba debajo de ella. */
+  .al-demo__stage{height:max(260px, min(calc(90cqw + var(--al-barra)), calc(100svh - 330px)))}
   .al-demo__copy{min-height:158px}   /* el paso más largo de las 6 demos (medido) */
   .al-demo__kicker{display:none}     /* la etapa ya la dicen el título y la barra */
   .al-demo__title{font-size:16px;line-height:1.3;margin-bottom:.3rem}
@@ -2165,35 +2170,33 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
    selector de demo). En táctil: botones de 44 px, segmentos de pasos con 44 px
    de alto de toque y selector de 40 px (48 de toque). Con mouse no cambia. */
 @media (pointer:coarse){
-  /* la barra en dos filas: arriba la línea de avance a todo el ancho (6
-     segmentos), abajo los botones de 44 px (← ▮▮ → a la izquierda, ↻ a la
-     derecha). La línea es indicador: se navega con los botones. */
-  .al-demo{--al-barra:84px}   /* 6 de margen + barra de 72 (línea 8 + 6 + botones 44 + relleno 14) + 6 */
-  .al-player{height:auto;flex-wrap:wrap;align-content:center;row-gap:6px;gap:8px;padding:6px 8px 8px;border-radius:14px}
+  /* la barra en una fila: ← ▮▮ → a la izquierda, la línea de avance al medio
+     (indicador: se navega con los botones) y ↻ a la derecha. Solo en pantallas
+     de menos de 360 px va en dos filas (la línea arriba), porque no cabe. */
+  .al-demo{--al-barra:68px}   /* 6 de margen + barra de 56 (botones 44 + relleno 12) + 6 */
+  .al-player{height:auto;align-content:center;gap:8px;padding:6px 8px;border-radius:14px}
   .al-demo .al-player .al-demo__btn{width:44px;height:44px;border-radius:11px;font-size:1rem}
-  .al-demo .al-player .al-demo__btn--rst{margin-left:auto}
   .al-demo .al-player .al-demo__btn--rst span{font-size:1.2rem}
-  .al-demo .al-player .al-demo__steps{order:-1;flex:0 0 100%;gap:4px;margin:0;pointer-events:none}
+  .al-demo .al-player .al-demo__steps{flex:1 1 auto;min-width:0;gap:4px;margin:0 4px;pointer-events:none}
   .al-demo .al-player .al-demo__steps>li{display:flex}   /* sin el alto de línea del elemento de lista */
   .al-demo .al-player .al-demo__step{padding:2px 0}
   .al-demo .al-player .al-demo__track{height:4px}
   .al-demo .al-player .al-demo__count{display:none}
+  .al-demo .al-player .al-demo__btn--rst{order:2}   /* ↻ al final, tras la línea de avance */
   .demo-cambio{padding:3px}
   .demo-cambio button{min-height:40px;padding:8px 16px;font-size:11px}
   .demo-cambio button::after{inset:-4px -2px}
   .demo-cambio i{top:3px;bottom:3px}
   #product .hp-tabs .gp-tab{min-height:44px}
 }
+@media (pointer:coarse) and (max-width:359px){
+  .al-demo{--al-barra:84px}   /* dos filas: línea 8 + 6 + botones 44 + relleno 14 */
+  .al-player{flex-wrap:wrap;row-gap:6px;padding:6px 8px 8px}
+  .al-demo .al-player .al-demo__steps{order:-1;flex:0 0 100%;margin:0}
+  .al-demo .al-player .al-demo__btn--rst{margin-left:auto}
+}
 @media (pointer:coarse) and (max-width:639px){
   .demo-cambio button{padding:8px 14px}
-}
-/* celular horizontal (poco alto): la barra en una sola fila, la línea de
-   avance entre los botones, para no quitarle alto a la escena */
-@media (pointer:coarse) and (orientation:landscape) and (max-height:560px){
-  .al-demo{--al-barra:68px}
-  .al-player{flex-wrap:nowrap;padding:6px 8px}
-  .al-demo .al-player .al-demo__steps{order:0;flex:1 1 auto;min-width:0;margin:0 4px}
-  .al-demo .al-player .al-demo__btn--rst{margin-left:0}
 }
 </style>
 </head>

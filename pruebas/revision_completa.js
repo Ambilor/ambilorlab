@@ -29,6 +29,10 @@
      movimiento   con "reducir movimiento" la demo parte en pausa
      girar        girar el teléfono en plena página: la escena se rehace y
                   nada se sale de la pantalla
+     primera      al abrir Herramientas en celular vertical, la escena con su
+                  barra y el título de la etapa se ven sin desplazar; en Safari
+                  de iOS 26 (barra de direcciones flotante, ~85 px sobre el
+                  final de la página) también las 2 primeras líneas del texto
    Límite conocido: aquí solo corre Chromium. Safari (WebKit) real, el
    giroscopio real y las barras que se esconden al desplazar se confirman en
    un iPhone/iPad (ver la lista en ESTANDAR_Diseno_Adaptable.md). */
@@ -207,6 +211,31 @@ async function movimiento(b){
   if (err.length) fallas.push('errores: ' + err[0]);
   await ctx.close(); informe('Reducir movimiento', fallas);
 }
+// iOS 26: Safari dibuja la página detrás de su barra flotante; la pantalla
+// completa menos la barra de estado, y ~85 px de abajo quedan tapados
+const IOS26 = [[402, 814, 'iPhone 17 Pro (iOS 26)'], [393, 793, 'iPhone 16 (iOS 26)'], [440, 896, 'iPhone Pro Max (iOS 26)']];
+async function primera(b){
+  const fallas = [];
+  for (const [w, h, t, tapa] of CEL_V.map(c => c.concat(0)).concat(IOS26.map(c => c.concat(85)))) {
+    const ctx = await contexto(b, movil(w, h)), p = await ctx.newPage();
+    await p.goto(BASE + '/index.html?p=product'); await espera(1500);
+    for (const hp of ['v1', 'v2', 'ped']) {
+      await p.evaluate(hp => { showHP(hp); window.scrollTo(0, 0); }, hp); await espera(700);
+      const r = await p.evaluate(() => {
+        const d = document.querySelector('#product .hp-panel.on .al-demo:not([hidden])'), q = s => d.querySelector(s).getBoundingClientRect();
+        const lh = parseFloat(getComputedStyle(d.querySelector('.al-demo__body')).lineHeight);
+        return { barra: q('.al-player').bottom, titulo: q('.al-demo__title').bottom, texto: q('.al-demo__body').top + 2 * lh };
+      });
+      const vis = h - tapa, mal = [];
+      if (r.barra > vis + 1) mal.push('la barra de la demo queda ' + Math.round(r.barra - vis) + ' px bajo el borde');
+      if (r.titulo > vis + 1) mal.push('el título de la etapa queda ' + Math.round(r.titulo - vis) + ' px bajo el borde');
+      if (tapa && r.texto > vis + 1) mal.push('el texto queda ' + Math.round(r.texto - vis) + ' px bajo la barra de Safari');
+      if (mal.length) fallas.push(t + ' ' + w + '×' + h + ' ' + hp + ': ' + mal.join(', '));
+    }
+    await ctx.close();
+  }
+  informe('Primera pantalla del celular (incluye Safari de iOS 26)', fallas);
+}
 async function girar(b){
   const fallas = [];
   const ctx = await contexto(b, movil(390, 664)), p = await ctx.newPage(), err = []; p.on('pageerror', e => err.push(e.message));
@@ -228,7 +257,7 @@ async function girar(b){
 (async () => {
   const srv = await servidor(); BASE = 'http://127.0.0.1:' + srv.address().port;
   const b = await PW.chromium.launch({ args: ARGS });
-  const pruebas = { encuadre, errores, estabilidad, cambio, tactil, memoria, sin3d, movimiento, girar };
+  const pruebas = { encuadre, errores, estabilidad, cambio, tactil, memoria, sin3d, movimiento, girar, primera };
   const t0 = Date.now();
   for (const [n, f] of Object.entries(pruebas)) {
     if (SOLO.length && !SOLO.includes(n)) continue;
