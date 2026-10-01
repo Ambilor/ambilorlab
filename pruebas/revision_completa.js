@@ -29,7 +29,8 @@
      movimiento   con "reducir movimiento" la demo parte en pausa
      girar        girar el teléfono en plena página: la escena se rehace y
                   nada se sale de la pantalla
-     legible      tema oscuro y claro, celular y computador, 5 pestañas: ningún
+     legible      tema oscuro y claro, celular y computador, 5 pestañas y cada
+                  artículo de Recursos (?r=...): ningún
                   texto bajo 11 px ni con contraste bajo 4,5 (3 en letra grande)
      zoom         letra agrandada (zoom de Safari al 125 % y 150 %, navegador
                   al 150 % y 200 %): nada se sale de la pantalla ni se corta
@@ -93,6 +94,9 @@ const CEL_H = [[844, 390, 'iPhone horizontal']].concat(COMPLETO ? [[664, 340, 'i
 const TAB = [[834, 1112, 'iPad vertical'], [1180, 820, 'iPad horizontal']].concat(COMPLETO ? [[744, 1060, 'iPad mini vertical'], [1024, 1292, 'iPad Pro vertical']] : []);
 const WEB = [[1440, 900, 'computador'], [720, 860, 'computador a media pantalla']];
 const TABS = ['home', 'about', 'product', 'guias', 'contact'];
+// Recursos (2026-10-01): cada artículo (?r=...) se revisa también como una página más
+const ARTICULOS = [...fs.readFileSync(path.join(RAIZ, 'index.html'), 'utf8').matchAll(/<article class="rc-doc" data-r="([a-z0-9-]+)"/g)].map(m => m[1]);
+const PAGINAS = TABS.map(t => '?p=' + t).concat(ARTICULOS.map(r => '?r=' + r));
 
 const resultados = [];
 function informe(nombre, fallas, notas){ resultados.push({ nombre, fallas, notas }); console.log((fallas.length ? '✗ ' : '✓ ') + nombre + (fallas.length ? '\n    ' + fallas.slice(0, 12).join('\n    ') : '') + (notas && notas.length ? '\n    · ' + notas.join('\n    · ') : '')); }
@@ -299,8 +303,9 @@ async function legible(b){
     const ctx = await contexto(b, t ? movil(w, h, { reducedMotion: 'reduce' }) : { viewport: { width: w, height: h }, reducedMotion: 'reduce' });
     await ctx.addInitScript(t => { try { localStorage.setItem('al-theme', t); } catch (e) {} }, tema);
     const p = await ctx.newPage();
-    for (const tab of TABS) {
-      await p.goto(BASE + '/index.html?p=' + tab); await espera(1500);
+    for (const q of PAGINAS) {
+      const tab = q.slice(3);
+      await p.goto(BASE + '/index.html' + q); await espera(1500);
       const r = await p.evaluate(tema => {
         const lum = c => { const m = c.match(/[\d.]+/g).map(Number), f = v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); }; return [.2126 * f(m[0]) + .7152 * f(m[1]) + .0722 * f(m[2]), m[3] === undefined ? 1 : m[3]]; };
         const fondo = tema === 'dark' ? 'rgb(6,8,12)' : 'rgb(238,242,247)', mal = [], sec = document.querySelector('section.visible') || document.body;
@@ -339,8 +344,9 @@ async function zoom(b){
 async function recursos(b){
   const fallas = [], ctx = await contexto(b, { viewport: { width: 1440, height: 900 } }), p = await ctx.newPage(), externos = [];
   p.on('request', r => { const u = r.url(); if (/fonts\.googleapis|fonts\.gstatic|icons-webfont/.test(u)) externos.push(u.slice(0, 80)); });
-  for (const tab of TABS) {
-    await p.goto(BASE + '/index.html?p=' + tab); await espera(1500);
+  for (const q of PAGINAS) {
+    const tab = q.slice(3);
+    await p.goto(BASE + '/index.html' + q); await espera(1500);
     const r = await p.evaluate(async () => {
       await document.fonts.ready;
       const sin = [...document.querySelectorAll('.ti')].filter(e => { const c = getComputedStyle(e, '::before').content; return !c || c === 'none' || c === 'normal' || c === '""'; }).map(e => e.className);

@@ -80,7 +80,7 @@ const GRUPO = A_MEDIDA.length ? 'medida' : PARAMS.has('ventana') ? 'ventana' : P
 const MODO_DIVIDIDA = GRUPO === 'dividida';
 const DISPOSITIVOS = { completa: COMPLETA, dividida: DIVIDIDA, ventana: VENTANA, medida: A_MEDIDA }[GRUPO];
 const NOMBRE_GRUPO = { completa: '', dividida: ' de pantalla dividida', ventana: ' de ventana iPad', medida: ' a medida' }[GRUPO];
-const PESTANAS = [['home','Inicio'],['about','Sobre mí'],['product','Herramientas'],['guias','Guías'],['contact','Contacto']];
+const PESTANAS = [['home','Inicio'],['about','Sobre mí'],['product','Herramientas'],['guias','Recursos'],['contact','Contacto']];
 const ALTO_VISTA = 330;   // alto en pantalla de cada vista previa
 let actual = 'home';
 
@@ -129,43 +129,54 @@ async function revisarAlto(v, H){
   const win = v.iframe.contentWindow, doc = v.iframe.contentDocument;
   const esperar = ms => new Promise(r => setTimeout(r, ms));
   win.show(actual); await esperar(700);
-  doc.querySelectorAll('.rv,.rv2').forEach(e => e.classList.add('in'));
   const W = v.w, sec = doc.getElementById(actual), avisos = [];
-  const fuera = new Set(), cortados = new Set();
-  sec.querySelectorAll('*').forEach(e => {
-    const r = e.getBoundingClientRect(); if (!r.width || !r.height) return;
-    const cs = win.getComputedStyle(e); if (cs.visibility === 'hidden' || cs.position === 'fixed' || cs.display === 'none') return;
-    if ((r.right > W + 1 || r.left < -1) && e.tagName !== 'CANVAS' && !e.closest('.hx-canvas')) fuera.add(e.className && typeof e.className === 'string' ? e.className.split(' ')[0] : e.tagName);
-    if (!e.children.length && e.textContent.trim() && (cs.overflow === 'hidden' || cs.overflowX === 'hidden' || cs.textOverflow === 'ellipsis')) { const rg = doc.createRange(); rg.selectNodeContents(e); const tw = rg.getBoundingClientRect().width; if (tw > e.clientWidth + 2) cortados.add(e.textContent.trim().slice(0, 28)); }
-  });
-  if (fuera.size) avisos.push('Se sale de la pantalla: ' + [...fuera].slice(0, 3).join(', '));
-  // errores de código registrados por la página (sin contar límites de 3D por tener 6 vistas abiertas)
-  const errores = (win.__errores || []).filter(m => !/webgl|context|ResizeObserver/i.test(m));
-  if (errores.length) avisos.push('Error de código: ' + [...new Set(errores)].slice(0, 2).join(' · '));
-  // alineación: nada debe salirse de la columna de contenido (regla 1: un solo ancho)
-  const desal = new Set();
-  sec.querySelectorAll('.container, .hx-wrap').forEach(c => {
-    const cr = c.getBoundingClientRect(), cs = win.getComputedStyle(c);
-    const izq = cr.left + parseFloat(cs.paddingLeft), der = cr.right - parseFloat(cs.paddingRight);
-    c.querySelectorAll(':scope > *, :scope > * > *').forEach(e => {
-      const r = e.getBoundingClientRect(), es = win.getComputedStyle(e);
-      if (!r.width || es.position === 'absolute' || es.position === 'fixed' || es.display === 'none') return;
-      if (r.left < izq - 1 || r.right > der + 1) desal.add(typeof e.className === 'string' && e.className ? e.className.split(' ')[0] : e.tagName);
+  // chequeo general de lo que está a la vista (en Recursos se repite para la lista,
+  // cada artículo y las guías; el aviso dice en cuál)
+  const general = (donde) => {
+    const av = [];
+    doc.querySelectorAll('.rv,.rv2').forEach(e => e.classList.add('in'));
+    const fuera = new Set(), cortados = new Set();
+    sec.querySelectorAll('*').forEach(e => {
+      const r = e.getBoundingClientRect(); if (!r.width || !r.height) return;
+      const cs = win.getComputedStyle(e); if (cs.visibility === 'hidden' || cs.position === 'fixed' || cs.display === 'none') return;
+      if ((r.right > W + 1 || r.left < -1) && e.tagName !== 'CANVAS' && !e.closest('.hx-canvas')) fuera.add(e.className && typeof e.className === 'string' ? e.className.split(' ')[0] : e.tagName);
+      if (!e.children.length && e.textContent.trim() && (cs.overflow === 'hidden' || cs.overflowX === 'hidden' || cs.textOverflow === 'ellipsis')) { const rg = doc.createRange(); rg.selectNodeContents(e); const tw = rg.getBoundingClientRect().width; if (tw > e.clientWidth + 2) cortados.add(e.textContent.trim().slice(0, 28)); }
     });
-  });
-  if (desal.size) avisos.push('Fuera de la columna de contenido: ' + [...desal].slice(0, 3).join(', '));
-  // proporción: ningún dibujo o imagen debe ser más alto que el 60% de la pantalla
-  const grandes = new Set();
-  sec.querySelectorAll('svg, img').forEach(e => {
-    const r = e.getBoundingClientRect();
-    if (r.height > H * 0.6 && r.width > 60) grandes.add((e.getAttribute('class') || e.tagName).split(' ')[0] + ' ' + Math.round(r.height) + 'px');
-  });
-  if (grandes.size) avisos.push('Dibujo demasiado grande: ' + [...grandes].slice(0, 3).join(', '));
-  // controles del cubo dentro del inicio
-  if (cortados.size) avisos.push('Texto cortado: ' + [...cortados].slice(0, 2).join(' · '));
-  const pie = doc.querySelector('footer').getBoundingClientRect();
-  const vacio = Math.round(H - (pie.bottom + win.scrollY));
-  if (vacio > 4) avisos.push('Vacío bajo el pie: ' + vacio + ' px');
+    if (fuera.size) av.push('Se sale de la pantalla: ' + [...fuera].slice(0, 3).join(', '));
+    // errores de código registrados por la página (sin contar límites de 3D por tener 6 vistas abiertas)
+    const errores = (win.__errores || []).filter(m => !/webgl|context|ResizeObserver/i.test(m));
+    if (errores.length) av.push('Error de código: ' + [...new Set(errores)].slice(0, 2).join(' · '));
+    // alineación: nada debe salirse de la columna de contenido (regla 1: un solo ancho)
+    const desal = new Set();
+    sec.querySelectorAll('.container, .hx-wrap').forEach(c => {
+      const cr = c.getBoundingClientRect(), cs = win.getComputedStyle(c);
+      const izq = cr.left + parseFloat(cs.paddingLeft), der = cr.right - parseFloat(cs.paddingRight);
+      c.querySelectorAll(':scope > *, :scope > * > *').forEach(e => {
+        const r = e.getBoundingClientRect(), es = win.getComputedStyle(e);
+        if (!r.width || es.position === 'absolute' || es.position === 'fixed' || es.display === 'none') return;
+        if (r.left < izq - 1 || r.right > der + 1) desal.add(typeof e.className === 'string' && e.className ? e.className.split(' ')[0] : e.tagName);
+      });
+    });
+    if (desal.size) av.push('Fuera de la columna de contenido: ' + [...desal].slice(0, 3).join(', '));
+    // proporción: ningún dibujo o imagen debe ser más alto que el 60% de la pantalla
+    const grandes = new Set();
+    sec.querySelectorAll('svg, img').forEach(e => {
+      const r = e.getBoundingClientRect();
+      if (r.height > H * 0.6 && r.width > 60) grandes.add((e.getAttribute('class') || e.tagName).split(' ')[0] + ' ' + Math.round(r.height) + 'px');
+    });
+    if (grandes.size) av.push('Dibujo demasiado grande: ' + [...grandes].slice(0, 3).join(', '));
+    // controles del cubo dentro del inicio
+    if (cortados.size) av.push('Texto cortado: ' + [...cortados].slice(0, 2).join(' · '));
+    const pie = doc.querySelector('footer').getBoundingClientRect();
+    const vacio = Math.round(H - (pie.bottom + win.scrollY));
+    if (vacio > 4) av.push('Vacío bajo el pie: ' + vacio + ' px');
+    av.forEach(x => avisos.push(donde ? donde + ': ' + x : x));
+  };
+  if (actual === 'guias' && win.rcAbrir) {
+    general('Lista');
+    for (const a of doc.querySelectorAll('#rc-art .rc-doc')) { win.rcAbrir(a.getAttribute('data-r'), false); await esperar(250); general('Recurso ' + a.getAttribute('data-r')); }
+    win.rcAbrir('guia-apps-script', false); await esperar(300);
+  } else general('');
   // bloques que deben caber en el alto visible
   const cabe = (nombre, alto) => { if (alto > H + 2) avisos.push(`${nombre} no cabe: ${Math.round(alto)} de ${H} px`); };
   // Inicio (recorrido 3D): cada bloque debe caber en el alto visible bajo la barra
@@ -182,7 +193,7 @@ async function revisarAlto(v, H){
   // vertical a buen tamaño) y se revisa que la demo completa quepa (regla de arriba).
   if (actual === 'product' && W >= 900 && W > H && H > 560) { win.scrollTo(0, 0); cabe('Encabezado + demo "Ver en acción"', doc.getElementById('ver-en-accion').getBoundingClientRect().bottom + win.scrollY); }
   if (actual === 'guias') { const g = doc.querySelector('.gp-panel.on'); if (g && g.querySelector('.gp-prog')) cabe('Paso de la guía', g.querySelector('.gp-ctrl').getBoundingClientRect().bottom - g.querySelector('.gp-prog').getBoundingClientRect().top); }
-  // Guías: desde el comienzo de la página hasta los botones del paso, en la primera pantalla
+  // Guías paso a paso (se abren desde Recursos): desde el comienzo de la página hasta los botones del paso, en la primera pantalla
   if (actual === 'guias' && H >= 500) {
     let peor = 0;
     for (const [i, panel] of [...doc.querySelectorAll('.gp-panel')].entries()) {
@@ -197,6 +208,7 @@ async function revisarAlto(v, H){
   win.scrollTo({ top: 150, behavior: 'instant' }); await esperar(700);
   if (Math.abs(win.scrollY - 150) > 25 && doc.documentElement.scrollHeight > H + 200) avisos.push('La página mueve sola el desplazamiento (pedido 150, quedó ' + Math.round(win.scrollY) + ')');
   win.scrollTo(0, 0);
+  if (actual === 'guias' && win.rcLista) win.rcLista();
   return avisos;
 }
 // Una revisión a la vez: si se cambia de pestaña o se pulsa "Volver a revisar"
