@@ -2699,29 +2699,24 @@ Movimientos:
       </ul>
       <div class="rc-prompt">
         <div class="rc-prompt-cab"><span><i class="ti ti-sparkles" aria-hidden="true"></i>Prompt para Gemini</span><button type="button" class="rc-copiar" onclick="rcCopiar(this)"><i class="ti ti-copy" aria-hidden="true"></i><span>Copiar prompt</span></button></div>
-<pre>Busca en mi Gmail todos los cargos/movimientos bancarios correspondientes a todo el año 2026, desde el 01/01/2026 hasta la fecha más reciente disponible.
+<pre>Busca en mi Gmail todos los cargos/movimientos bancarios de 2026, desde el 01/01/2026 hasta la fecha más reciente disponible.
 
-IMPORTANTE: búsqueda mensual obligatoria
-No realices una única búsqueda general para todo 2026.
-Debido al volumen de correos, debes dividir la búsqueda en consultas independientes por cada mes, para evitar que los resultados más recientes oculten meses anteriores.
-Realiza búsquedas separadas para:
+IMPORTANTE: búsqueda mensual obligatoria.
+No hagas una búsqueda general de todo 2026. Debido al límite de 3 búsquedas de Gmail por interacción, procesa MÁXIMO 3 meses por interacción, con una búsqueda independiente por cada mes.
+
+Si esta es la primera ejecución:
 - Enero 2026: 01/01/2026–31/01/2026
 - Febrero 2026: 01/02/2026–28/02/2026
 - Marzo 2026: 01/03/2026–31/03/2026
-- Abril 2026: 01/04/2026–30/04/2026
-- Mayo 2026: 01/05/2026–31/05/2026
-- Junio 2026: 01/06/2026–30/06/2026
-- Julio 2026: 01/07/2026–31/07/2026
-- Agosto 2026: 01/08/2026–31/08/2026
-- Septiembre 2026: 01/09/2026–30/09/2026
-- Octubre 2026: 01/10/2026–31/10/2026
-- Noviembre 2026: 01/11/2026–30/11/2026
-- Diciembre 2026: 01/12/2026–31/12/2026
-Si el mes actual aún no ha terminado, procesa solamente hasta la fecha disponible.
-Para cada mes utiliza diferentes términos de búsqueda relacionados con movimientos bancarios, incluyendo cuando corresponda: cargo, compra, pago, débito, transferencia, transacción, movimiento, comprobante, tarjeta, banco, cobro y operación.
-No consideres completado un mes simplemente porque una búsqueda no devuelve resultados. Si una búsqueda entrega pocos resultados o ninguno, realiza búsquedas alternativas antes de pasar al siguiente mes.
 
-Datos a extraer
+En ejecuciones posteriores continúa con los siguientes meses pendientes.
+Si el mes actual aún no termina, procesa solamente hasta la fecha disponible.
+No combines varios meses en una sola búsqueda.
+
+Para cada mes utiliza términos como: cargo, compra, pago, débito, transferencia, transacción, movimiento, comprobante, tarjeta, banco, cobro y operación.
+Si una búsqueda devuelve pocos resultados o ninguno, realiza búsquedas alternativas antes de considerar el mes procesado.
+
+DATOS A EXTRAER
 Por cada movimiento crea una fila con:
 - Fecha
 - Monto
@@ -2737,29 +2732,33 @@ Por cada movimiento crea una fila con:
 - Fecha del correo
 - Fuente/enlace al correo
 - Confianza
-Conserva la glosa original y no inventes información.
-Clasifica automáticamente los gastos. Si no es posible determinar el concepto, utiliza "Por clasificar".
-Detecta duplicados, especialmente autorizaciones y confirmaciones correspondientes al mismo movimiento. Marca como "Revisar" los casos ambiguos, incompletos o posibles duplicados.
+- Estado revisión
 
-Google Sheets
-Crea o actualiza un Google Sheets con estas hojas:
+Conserva la glosa original y no inventes información. Si un dato no aparece, déjalo vacío.
+Si no puede determinarse el concepto, utiliza "Por clasificar".
+Detecta duplicados, especialmente autorizaciones y confirmaciones del mismo movimiento. No cuentes duplicados en los totales y marca como "Revisar" los casos ambiguos, incompletos o posibles duplicados.
+
+GOOGLE SHEETS — OBLIGATORIO
+El resultado debe quedar en un Google Sheets, no solamente en el chat.
+Si ya existe el documento de este proyecto, ACTUALÍZALO. No crees otro ni borres información de ejecuciones anteriores.
+
+Debe contener estas hojas:
 
 1. Dashboard
-Incluye:
 - Total gastado
 - Cantidad de movimientos
 - Promedio mensual
-- Gasto del mes
+- Gasto mes actual
 - Gráfico de gastos por mes
 - Gráfico por concepto
 - Top 10 comercios
-- Indicadores principales
+- Control de cobertura
 
 2. Movimientos
-Tabla completa y filtrable. Esta debe ser la fuente principal de datos.
+Tabla completa y filtrable. Es la fuente principal de datos.
 
 3. Tablas_Dinámicas
-Crea tablas dinámicas reales de Google Sheets para:
+Crear tablas dinámicas REALES para:
 - Gasto por mes
 - Gasto por concepto
 - Gasto por subconcepto
@@ -2768,27 +2767,79 @@ Crea tablas dinámicas reales de Google Sheets para:
 - Cantidad de movimientos por mes
 - Cantidad por concepto
 - Top 10 comercios por monto
-Utiliza estas tablas dinámicas como fuente de los gráficos del Dashboard.
+
+Usar estas tablas como fuente de los gráficos.
 
 4. Revisar
-Incluye movimientos con baja confianza, posibles duplicados, información incompleta o clasificación "Por clasificar".
+Incluir movimientos con:
+- Baja confianza
+- Posibles duplicados
+- Información incompleta
+- "Por clasificar"
+- Estado "Revisar"
 
-Control de cobertura
-Antes de finalizar, verifica explícitamente que cada mes de 2026 haya sido buscado de forma independiente.
-Incluye en el Dashboard o en una sección de control un indicador de cobertura mensual:
-Enero ✓ | Febrero ✓ | Marzo ✓ | Abril ✓ | Mayo ✓ | Junio ✓ | Julio ✓ | Agosto ✓ | Septiembre ✓ | ...
-Si algún mes no pudo ser procesado completamente, indícalo claramente y no presentes el reporte como completo.
-No detengas la extracción después de procesar los meses recientes. Los meses antiguos tienen la misma prioridad que los recientes.
-Mantén el documento limpio, profesional y fácil de explorar.
-En el Dashboard agrega discretamente al pie: Desarrollado por Ambilor.Lab · 2026
+FORMATO NUMÉRICO
+"Monto" debe almacenarse como número real, NO como texto.
+Ejemplo:
+Valor: 2678570
+Formato visual: $2.678.570
 
-Al finalizar, indícame:
+Los KPI también deben ser valores numéricos o fórmulas, nunca texto.
+
+DASHBOARD
+Los gráficos NO pueden superponerse.
+
+Distribución recomendada:
+[KPI Total] [KPI Movimientos] [KPI Promedio] [KPI Mes actual]
+[Gráfico gasto por mes]
+[Gráfico por concepto] [Top 10 comercios]
+[Control de cobertura]
+
+Mantener el Dashboard limpio, profesional y fácil de explorar.
+
+CONTROL DE COBERTURA
+Mostrar el estado individual de cada mes:
+Enero ✓ | Febrero ✓ | Marzo ✓ | Abril ✓ | Mayo ✓ | Junio ✓ | Julio ✓ | Agosto ✓ | Septiembre ✓ | Octubre ✓ | Noviembre ✓ | Diciembre ✓
+
+Solo marcar ✓ los meses realmente buscados.
+Mes incompleto: ⚠ Pendiente.
+Mes futuro: — No disponible.
+
+Mostrar:
+"Cobertura 2026: X/12 meses procesados"
+
+No presentes el reporte como completo si existen meses pendientes.
+
+VALIDACIÓN FINAL
+Antes de terminar verifica:
+- Google Sheets creado/actualizado
+- Movimientos escritos en "Movimientos"
+- Monto numérico
+- KPI numéricos
+- Tablas dinámicas reales
+- Gráficos sin superposición
+- Duplicados controlados
+- Cobertura correcta
+
+No afirmes que 2026 está completo si no lo está.
+
+Al finalizar indícame:
+- Link al Google Sheets
+- Meses procesados
 - Cantidad total de movimientos
 - Total de cargos
+- Total acumulado
 - Periodo efectivamente cubierto
 - Movimientos por mes
 - Meses pendientes
-- Cantidad pendiente de revisión</pre>
+- Cantidad pendiente de revisión
+- Cantidad de posibles duplicados
+- Cantidad "Por clasificar"
+
+Si no puedes crear o actualizar el Google Sheets, indícalo claramente y no afirmes que fue creado.
+
+En el Dashboard agrega discretamente al pie:
+Desarrollado por Ambilor.Lab · 2026</pre>
       </div>
       <h3>Cómo usarlo</h3>
       <ol class="rc-pasos">
