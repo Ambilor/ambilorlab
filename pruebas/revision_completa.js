@@ -33,6 +33,9 @@
                   texto bajo 11 px ni con contraste bajo 4,5 (3 en letra grande)
      zoom         letra agrandada (zoom de Safari al 125 % y 150 %, navegador
                   al 150 % y 200 %): nada se sale de la pantalla ni se corta
+     recursos     íconos y fuentes propios: cada ícono tiene su dibujo, las
+                  fuentes cargan desde el sitio, ningún carácter del texto queda
+                  fuera de ellas y nada bloquea la página desde otro servidor
      recuperar    iOS quita las escenas 3D al cambiar de app o bloquear el
                   teléfono: al recuperarlas se vuelven a dibujar (también en
                   pausa) y no quedan en blanco
@@ -319,6 +322,30 @@ async function zoom(b){
   }
   await ctx.close(); informe('Letra agrandada (zoom 125 % a 200 %): nada se sale ni se corta', fallas, ['con zoom puede no caber todo en una pantalla: eso se acepta (se desplaza)']);
 }
+async function recursos(b){
+  const fallas = [], ctx = await contexto(b, { viewport: { width: 1440, height: 900 } }), p = await ctx.newPage(), externos = [];
+  p.on('request', r => { const u = r.url(); if (/fonts\.googleapis|fonts\.gstatic|icons-webfont/.test(u)) externos.push(u.slice(0, 80)); });
+  for (const tab of TABS) {
+    await p.goto(BASE + '/index.html?p=' + tab); await espera(1500);
+    const r = await p.evaluate(async () => {
+      await document.fonts.ready;
+      const sin = [...document.querySelectorAll('.ti')].filter(e => { const c = getComputedStyle(e, '::before').content; return !c || c === 'none' || c === 'normal' || c === '""'; }).map(e => e.className);
+      return { sin, fuentes: [...document.fonts].filter(f => f.status === 'loaded').map(f => f.family) };
+    });
+    if (r.sin.length) fallas.push(tab + ': íconos sin dibujo: ' + r.sin.slice(0, 4).join(', '));
+    if (!r.fuentes.includes('Inter')) fallas.push(tab + ': no cargó la fuente Inter');
+  }
+  if (externos.length) fallas.push('se piden fuentes o íconos a otro servidor: ' + externos[0]);
+  // cada carácter del sitio debe estar en las fuentes recortadas (si no, se ve con otra letra)
+  const { execSync } = require('child_process');
+  try {
+    const falta = execSync('python3 ' + JSON.stringify(path.join(__dirname, 'caracteres_fuentes.py')) + ' ' + JSON.stringify(RAIZ)).toString().trim();
+    const conocidos = '⊞⏰▮';   // símbolos que ninguna de las dos fuentes trae (también antes): los dibuja el sistema
+    const nuevos = [...falta].filter(c => !conocidos.includes(c));
+    if (nuevos.length) fallas.push('caracteres que no están en las fuentes recortadas: ' + nuevos.join(' ') + ' (regenerar con pyftsubset)');
+  } catch (e) { fallas.push('no se pudo revisar los caracteres (¿falta fontTools?): ' + e.message.split('\n')[0]); }
+  await ctx.close(); informe('Íconos y fuentes propios (sin esperar a otros servidores)', fallas);
+}
 async function girar(b){
   const fallas = [];
   const ctx = await contexto(b, movil(390, 664)), p = await ctx.newPage(), err = []; p.on('pageerror', e => err.push(e.message));
@@ -340,7 +367,7 @@ async function girar(b){
 (async () => {
   const srv = await servidor(); BASE = 'http://127.0.0.1:' + srv.address().port;
   const b = await PW.chromium.launch({ args: ARGS });
-  const pruebas = { encuadre, errores, estabilidad, cambio, tactil, memoria, sin3d, movimiento, girar, primera, recuperar, legible, zoom };
+  const pruebas = { encuadre, errores, estabilidad, cambio, tactil, memoria, sin3d, movimiento, girar, primera, recuperar, legible, zoom, recursos };
   const t0 = Date.now();
   for (const [n, f] of Object.entries(pruebas)) {
     if (SOLO.length && !SOLO.includes(n)) continue;

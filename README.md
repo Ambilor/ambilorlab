@@ -6,4 +6,5 @@ Sitio de Ambilor.Lab (automatización contable).
 - **Demos de Herramientas (modelo base para aplicativos nuevos)**: [DEMOS.md](DEMOS.md).
 - **Revisión completa antes de publicar**: `node pruebas/revision_completa.js` (ver el encabezado del archivo).
 - `pruebas/comparar_estilos.js`: compara la página antes y después de una limpieza o un reordenamiento de CSS, elemento por elemento (debe dar 0 diferencias).
+- `fuentes/`: Inter, JetBrains Mono y los 35 íconos de Tabler que usa el sitio, recortados (unos 150 KB en total). `pruebas/caracteres_fuentes.py` avisa si el texto usa un carácter que no está en ellas.
 - **Revisar el encuadre**: `revisar.html` (pantalla completa), `revisar.html?dividida` (Split View / media pantalla) y `revisar.html?ventana` (ventanas libres de iPad).

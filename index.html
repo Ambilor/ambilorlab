@@ -15,12 +15,12 @@ try{if("scrollRestoration" in history)history.scrollRestoration="manual";if(loca
 <link rel="canonical" href="https://ambilor.github.io/ambilorlab/" />
 
 <!-- Preconnect -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 <link rel="preconnect" href="https://www.googletagmanager.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- Fuentes propias (2026-10-01): Inter y JetBrains Mono servidas desde el sitio, recortadas a
+     los caracteres que se usan (~20 KB cada una). Antes la página esperaba la hoja de Google Fonts. -->
+<link rel="preload" href="fuentes/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fuentes/inter-600.woff2" as="font" type="font/woff2" crossorigin>
 
 <!-- Favicon -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%231F5C99'/><text x='16' y='23' font-size='17' font-weight='700' text-anchor='middle' fill='white' font-family='monospace'>A</text></svg>">
@@ -91,8 +91,25 @@ try{if("scrollRestoration" in history)history.scrollRestoration="manual";if(loca
 
   gtag('config', 'G-79ZEDG8W3S');
 </script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+
 <style>
+/* Fuentes (2026-10-01): Inter y JetBrains Mono (licencia OFL) desde fuentes/, con los
+   caracteres de la página (latín, español, flechas, ✓ ▶ ⚠ y líneas). Si se agrega texto con
+   caracteres nuevos (otro idioma, símbolos), regenerar con pyftsubset desde la fuente completa. */
+@font-face{font-family:"Inter";font-style:normal;font-weight:400;font-display:swap;src:url("fuentes/inter-400.woff2") format("woff2")}
+@font-face{font-family:"Inter";font-style:normal;font-weight:500;font-display:swap;src:url("fuentes/inter-500.woff2") format("woff2")}
+@font-face{font-family:"Inter";font-style:normal;font-weight:600;font-display:swap;src:url("fuentes/inter-600.woff2") format("woff2")}
+@font-face{font-family:"Inter";font-style:normal;font-weight:700;font-display:swap;src:url("fuentes/inter-700.woff2") format("woff2")}
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:400;font-display:swap;src:url("fuentes/jetbrains-mono-400.woff2") format("woff2")}
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:500;font-display:swap;src:url("fuentes/jetbrains-mono-500.woff2") format("woff2")}
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:600;font-display:swap;src:url("fuentes/jetbrains-mono-600.woff2") format("woff2")}
+/* Íconos (2026-10-01): solo los 35 que usa el sitio, de Tabler Icons 3.48.0 (licencia MIT).
+   Antes se descargaba la colección completa desde jsDelivr (@latest): una hoja de 212 KB que
+   bloqueaba la página y una fuente de 504 KB. Ahora: fuentes/tabler-icons-sitio.woff2 (6 KB).
+   Ícono nuevo: agregarlo con pyftsubset desde la fuente completa y sumar su regla aquí. */
+@font-face{font-family:"tabler-icons";font-style:normal;font-weight:400;font-display:block;src:url("fuentes/tabler-icons-sitio.woff2?v3.48.0") format("woff2")}
+.ti{font-family:"tabler-icons"!important;speak:none;font-style:normal;font-weight:normal;font-variant:normal;text-transform:none;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+.ti-arrow-down:before{content:"\ea16"}.ti-arrow-up-right:before{content:"\ea24"}.ti-arrows-exchange:before{content:"\f1f4"}.ti-bolt:before{content:"\ea38"}.ti-brand-google:before{content:"\ec1f"}.ti-brand-instagram:before{content:"\ec20"}.ti-brand-linkedin:before{content:"\ec8c"}.ti-brand-python:before{content:"\ed01"}.ti-briefcase:before{content:"\ea46"}.ti-building-bank:before{content:"\ebe2"}.ti-building-warehouse:before{content:"\ebe3"}.ti-bulb:before{content:"\ea51"}.ti-certificate:before{content:"\ed76"}.ti-chart-bar:before{content:"\ea59"}.ti-chart-dots:before{content:"\ee2f"}.ti-circle-check:before{content:"\ea67"}.ti-code:before{content:"\ea77"}.ti-code-dots:before{content:"\f61a"}.ti-database:before{content:"\ea88"}.ti-database-search:before{content:"\fa18"}.ti-device-mobile-rotated:before{content:"\ecdb"}.ti-file-spreadsheet:before{content:"\f03e"}.ti-forms:before{content:"\ee8f"}.ti-git-compare:before{content:"\eab4"}.ti-language:before{content:"\ebbe"}.ti-layout-dashboard:before{content:"\f02c"}.ti-mail:before{content:"\eae5"}.ti-map-pin:before{content:"\eae8"}.ti-receipt:before{content:"\edfd"}.ti-repeat:before{content:"\eb72"}.ti-school:before{content:"\ecf7"}.ti-shopping-bag:before{content:"\f5f8"}.ti-sparkles:before{content:"\f6d7"}.ti-table:before{content:"\eba1"}.ti-trending-up:before{content:"\eb43"}
 :root {
   --azul:#1F5C99;--azul-dark:#163f6b;--azul-bg:#EBF2FA;--negro:#111111;
   --gris-1:#444444;--gris-2:#6B6B6B;   /* 2026-10-01: gris-2 era #888 (contraste 3,5 sobre blanco); ahora 5,3 */
