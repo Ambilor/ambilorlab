@@ -49,7 +49,7 @@ Cada pantalla (en el sitio: cada sección y el menú; en las apps: cada vista y 
 10. **Movimiento reducido**: respetar `prefers-reduced-motion`.
 11. **Quieto al usarse** (2026-09-30): nada cambia de lugar al reproducir una demo, cambiar de demo o de pestaña, avanzar de paso o tocar un botón. Las transiciones desvanecen el contenido, no desplazan el recuadro; los textos que cambian reservan su alto; el contenido de lectura no se inclina con el giroscopio.
 12. **Memoria para Safari** (iPhone/iPad limitan la memoria de lienzos y los contextos 3D por página; al pasarse dejan escenas en blanco o recargan la página): como máximo **10 contextos 3D activos** y **150 MB de lienzos** con todo abierto. Lo que no se ve no ocupa memoria.
-13. **Altos reales**: se diseña y se prueba con lo que de verdad se ve en el celular, con las barras del navegador: 390 × 664 (iPhone), 375 × 553 (iPhone SE), 844 × 390 (horizontal). Los 844 px de alto de la ficha técnica no existen en la práctica.
+13. **Altos reales**: se diseña y se prueba con lo que de verdad se ve en el celular, con las barras del navegador: 390 × 664 (iPhone), 375 × 553 (iPhone SE), 844 × 390 (horizontal). Los 844 px de alto de la ficha técnica no existen en la práctica. En **Safari de iOS 26** la barra de direcciones flota sobre el final de la página: la página mide casi toda la pantalla (402 × 814 en un iPhone 17 Pro), pero los últimos **~85 px** quedan tapados. Lo importante de la primera pantalla debe quedar sobre esa franja.
 14. **Un solo motor no basta**: lo que se prueba en Chrome (Chromium) no garantiza Safari (WebKit). Lo propio de Safari se confirma en un dispositivo real (sección 6).
 
 ## 4. Cómo se verifica
