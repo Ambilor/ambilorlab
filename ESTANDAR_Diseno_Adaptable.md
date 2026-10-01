@@ -51,6 +51,9 @@ Cada pantalla (en el sitio: cada sección y el menú; en las apps: cada vista y 
 12. **Memoria para Safari** (iPhone/iPad limitan la memoria de lienzos y los contextos 3D por página; al pasarse dejan escenas en blanco o recargan la página): como máximo **10 contextos 3D activos** y **150 MB de lienzos** con todo abierto. Lo que no se ve no ocupa memoria.
 13. **Altos reales**: se diseña y se prueba con lo que de verdad se ve en el celular, con las barras del navegador: 390 × 664 (iPhone), 375 × 553 (iPhone SE), 844 × 390 (horizontal). Los 844 px de alto de la ficha técnica no existen en la práctica. En **Safari de iOS 26** la barra de direcciones flota sobre el final de la página: la página mide casi toda la pantalla (402 × 814 en un iPhone 17 Pro), pero los últimos **~85 px** quedan tapados. Lo importante de la primera pantalla debe quedar sobre esa franja.
 14. **Un solo motor no basta**: lo que se prueba en Chrome (Chromium) no garantiza Safari (WebKit). Lo propio de Safari se confirma en un dispositivo real (sección 6).
+15. **Escenas que vuelven** (2026-10-01): iOS quita las escenas 3D al cambiar de app o bloquear el teléfono. Al devolverlas, cada escena se vuelve a dibujar, también en pausa; nunca queda en blanco.
+16. **Letra legible**: ningún texto bajo **11 px** y contraste de al menos **4,5** (3 en letra grande, desde 18,6 px o 14 px en negrita), en **tema oscuro y claro**. Se exceptúan las ilustraciones (miniaturas de planillas, textos dentro de la escena 3D).
+17. **Letra agrandada**: con el zoom de Safari al 125 % y 150 % (equivale a 322 y 268 px de ancho) y el navegador del computador al 150 % y 200 %, nada se sale ni se corta. Que no quepa todo en una pantalla se acepta, porque se desplaza.
 
 ## 4. Cómo se verifica
 
@@ -60,7 +63,7 @@ Cada pantalla (en el sitio: cada sección y el menú; en las apps: cada vista y 
   - `revisar.html?ventana` → ventanas libres de iPad (Stage Manager), incluidas ventanas chicas en ancho y alto.
   - `revisar.html?tam=500x450,700x520` → tamaños a medida.
   - Se revisan las cinco pestañas (Inicio, Sobre mí, Herramientas, Guías, Contacto) y el resultado debe quedar **en verde** en todas.
-- **Sitio ambilorlab, revisión completa**: `node pruebas/revision_completa.js` (8 min; `--completo` suma tamaños). Además de `revisar.html`, prueba lo que el encuadre no ve: errores de JavaScript, estabilidad cuadro a cuadro (reproducir y cambiar de demo), que la página no se desplace al tocar, controles de 44 px, memoria para Safari, sin 3D, reducir movimiento y girar el teléfono. Debe terminar en "Todo en orden".
+- **Sitio ambilorlab, revisión completa**: `node pruebas/revision_completa.js` (8 min; `--completo` suma tamaños). Además de `revisar.html`, prueba lo que el encuadre no ve: errores de JavaScript, estabilidad cuadro a cuadro (reproducir y cambiar de demo), que la página no se desplace al tocar, controles de 44 px, memoria para Safari, sin 3D, reducir movimiento girar el teléfono, la primera pantalla con la barra flotante de iOS 26, escenas que vuelven, letra legible en ambos temas y letra agrandada. Debe terminar en "Todo en orden".
 - **PedidoApp**: `node simulacion/navegador/auditoria_adaptable.js` recorre la matriz completa (formulario, seguimiento y panel) y deja una captura por pantalla.
 - Siempre se miran a ojo, como mínimo, celular horizontal, iPad ⅓ y web a media pantalla, que son los casos más exigentes.
 - Cada PR con cambios de interfaz indica en su descripción que se revisó la matriz.
@@ -76,11 +79,12 @@ Cada pantalla (en el sitio: cada sección y el menú; en las apps: cada vista y 
 - [ ] `revisar.html` en verde (completa, `?dividida` y `?ventana`) o auditoría adaptable limpia, y capturas revisadas.
 - [ ] Sitio: `node pruebas/revision_completa.js` termina en "Todo en orden".
 - [ ] Controles de 44 px en táctil; nada se mueve al usarse; memoria dentro del límite.
+- [ ] Letra ≥ 11 px y contraste ≥ 4,5 en tema oscuro y claro; con zoom al 150 % nada se sale.
 - [ ] Si el cambio toca animaciones, 3D, alturas o gestos: revisado en un iPhone o iPad real (sección 6).
 
 ## 6. Revisión en dispositivo real (iPhone / iPad, Safari)
 
-Lo que ningún simulador confirma. Toma 5 minutos; se hace después de cambios en animaciones, demos, alturas o gestos.
+Lo que ningún simulador confirma. Toma unos 5 minutos; se hace después de cambios en animaciones, demos, alturas o gestos.
 
 1. **Abrir Herramientas en vertical**: el título, el selector y la escena con su barra se ven sin desplazar; nada salta al terminar de cargar.
 2. **Cambiar entre "Ver en acción" y "Cómo se instala"** varias veces: el recuadro y el texto de abajo no se mueven.
@@ -88,6 +92,7 @@ Lo que ningún simulador confirma. Toma 5 minutos; se hace después de cambios e
 4. **Abrir las tres herramientas y volver a la primera**: ninguna escena queda en blanco y la página no se recarga sola.
 5. **Desplazar la página** hacia abajo y hacia arriba: al esconderse y aparecer las barras de Safari nada se corta ni salta.
 6. **Girar el teléfono** en plena demo: se reacomoda en uno o dos segundos.
-7. **Inclinar el teléfono** en Herramientas: el contenido queda quieto (solo el fondo se mueve).
-8. **Inicio**: el recorrido 3D fluye y el texto se lee.
+7. **Cambiar de app y volver** (o bloquear y desbloquear el teléfono) con una demo en pausa: la escena sigue dibujada.
+8. **Inclinar el teléfono** en Herramientas: el contenido queda quieto (solo el fondo se mueve).
+9. **Inicio**: el recorrido 3D fluye y el texto se lee.
 Si algo falla: captura o video corto, y se corrige antes de dar el cambio por terminado.
