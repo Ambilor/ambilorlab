@@ -54,6 +54,7 @@ Cada pantalla (en el sitio: cada sección y el menú; en las apps: cada vista y 
 15. **Escenas que vuelven** (2026-10-01): iOS quita las escenas 3D al cambiar de app o bloquear el teléfono. Al devolverlas, cada escena se vuelve a dibujar, también en pausa; nunca queda en blanco.
 16. **Letra legible**: ningún texto bajo **11 px** y contraste de al menos **4,5** (3 en letra grande, desde 18,6 px o 14 px en negrita), en **tema oscuro y claro**. Se exceptúan las ilustraciones (miniaturas de planillas, textos dentro de la escena 3D).
 17. **Letra agrandada**: con el zoom de Safari al 125 % y 150 % (equivale a 322 y 268 px de ancho) y el navegador del computador al 150 % y 200 %, nada se sale ni se corta. Que no quepa todo en una pantalla se acepta, porque se desplaza.
+18. **Carga liviana** (2026-10-01): nada de otro servidor bloquea la primera pantalla. Fuentes e íconos se sirven desde el sitio, recortados a lo que se usa (`fuentes/`). Con 4G lento simulado, la primera pantalla aparece en 1,25 s; antes tardaba 1,84 s. Ícono o carácter nuevo: se regenera con `pyftsubset` (lo avisa `revision_completa.js`).
 
 ## 4. Cómo se verifica
 

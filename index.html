@@ -11,16 +11,16 @@ window.__errores=[];window.addEventListener("error",function(e){window.__errores
 try{if("scrollRestoration" in history)history.scrollRestoration="manual";if(location.hash)history.replaceState(null,"",location.pathname+location.search);}catch(e){}</script>
 <meta name="theme-color" content="#06080C" />
 <title>Ambilor Lab (Ambilor.Lab) · Automatización contable y financiera</title>
-<meta name="description" content="Ambilor Lab: herramientas de automatización contable y financiera para contadores, equipos financieros y PyMEs, dentro de Google Sheets. Conciliador Automático, conciliación bancaria y app de pedidos." />
+<meta name="description" content="Ambilor Lab: herramientas de automatización contable y financiera para contadores, equipos financieros y PyMEs, dentro de Google Sheets. Conciliador Semiautomático, conciliación bancaria y app de pedidos." />
 <link rel="canonical" href="https://ambilor.github.io/ambilorlab/" />
 
 <!-- Preconnect -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 <link rel="preconnect" href="https://www.googletagmanager.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- Fuentes propias (2026-10-01): Inter y JetBrains Mono servidas desde el sitio, recortadas a
+     los caracteres que se usan (~20 KB cada una). Antes la página esperaba la hoja de Google Fonts. -->
+<link rel="preload" href="fuentes/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fuentes/inter-600.woff2" as="font" type="font/woff2" crossorigin>
 
 <!-- Favicon -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%231F5C99'/><text x='16' y='23' font-size='17' font-weight='700' text-anchor='middle' fill='white' font-family='monospace'>A</text></svg>">
@@ -30,12 +30,12 @@ try{if("scrollRestoration" in history)history.scrollRestoration="manual";if(loca
 <meta property="og:site_name" content="Ambilor.Lab" />
 <meta property="og:title" content="Ambilor Lab (Ambilor.Lab) · Automatización contable y financiera" />
 <meta property="og:locale" content="es_CL" />
-<meta property="og:description" content="Ambilor Lab: herramientas de automatización contable y financiera para contadores, equipos financieros y PyMEs, dentro de Google Sheets. Conciliador Automático, conciliación bancaria y app de pedidos." />
+<meta property="og:description" content="Ambilor Lab: herramientas de automatización contable y financiera para contadores, equipos financieros y PyMEs, dentro de Google Sheets. Conciliador Semiautomático, conciliación bancaria y app de pedidos." />
 <meta property="og:url" content="https://ambilor.github.io/ambilorlab/" />
 <meta property="og:image" content="https://ambilor.github.io/ambilorlab/og-image.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Ambilor Lab (Ambilor.Lab) · Automatización contable y financiera" />
-<meta name="twitter:description" content="Ambilor Lab: herramientas de automatización contable y financiera para contadores, equipos financieros y PyMEs, dentro de Google Sheets. Conciliador Automático, conciliación bancaria y app de pedidos." />
+<meta name="twitter:description" content="Ambilor Lab: herramientas de automatización contable y financiera para contadores, equipos financieros y PyMEs, dentro de Google Sheets. Conciliador Semiautomático, conciliación bancaria y app de pedidos." />
 
 <!-- JSON-LD (2026-09-30): el sitio, la marca y su autor. "alternateName"
      cubre cómo se busca la marca ("Ambilor Lab", sin punto) y "sameAs" une el
@@ -91,8 +91,25 @@ try{if("scrollRestoration" in history)history.scrollRestoration="manual";if(loca
 
   gtag('config', 'G-79ZEDG8W3S');
 </script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+
 <style>
+/* Fuentes (2026-10-01): Inter y JetBrains Mono (licencia OFL) desde fuentes/, con los
+   caracteres de la página (latín, español, flechas, ✓ ▶ ⚠ y líneas). Si se agrega texto con
+   caracteres nuevos (otro idioma, símbolos), regenerar con pyftsubset desde la fuente completa. */
+@font-face{font-family:"Inter";font-style:normal;font-weight:400;font-display:swap;src:url("fuentes/inter-400.woff2") format("woff2")}
+@font-face{font-family:"Inter";font-style:normal;font-weight:500;font-display:swap;src:url("fuentes/inter-500.woff2") format("woff2")}
+@font-face{font-family:"Inter";font-style:normal;font-weight:600;font-display:swap;src:url("fuentes/inter-600.woff2") format("woff2")}
+@font-face{font-family:"Inter";font-style:normal;font-weight:700;font-display:swap;src:url("fuentes/inter-700.woff2") format("woff2")}
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:400;font-display:swap;src:url("fuentes/jetbrains-mono-400.woff2") format("woff2")}
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:500;font-display:swap;src:url("fuentes/jetbrains-mono-500.woff2") format("woff2")}
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:600;font-display:swap;src:url("fuentes/jetbrains-mono-600.woff2") format("woff2")}
+/* Íconos (2026-10-01): solo los 35 que usa el sitio, de Tabler Icons 3.48.0 (licencia MIT).
+   Antes se descargaba la colección completa desde jsDelivr (@latest): una hoja de 212 KB que
+   bloqueaba la página y una fuente de 504 KB. Ahora: fuentes/tabler-icons-sitio.woff2 (6 KB).
+   Ícono nuevo: agregarlo con pyftsubset desde la fuente completa y sumar su regla aquí. */
+@font-face{font-family:"tabler-icons";font-style:normal;font-weight:400;font-display:block;src:url("fuentes/tabler-icons-sitio.woff2?v3.48.0") format("woff2")}
+.ti{font-family:"tabler-icons"!important;speak:none;font-style:normal;font-weight:normal;font-variant:normal;text-transform:none;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+.ti-arrow-down:before{content:"\ea16"}.ti-arrow-up-right:before{content:"\ea24"}.ti-arrows-exchange:before{content:"\f1f4"}.ti-bolt:before{content:"\ea38"}.ti-brand-google:before{content:"\ec1f"}.ti-brand-instagram:before{content:"\ec20"}.ti-brand-linkedin:before{content:"\ec8c"}.ti-brand-python:before{content:"\ed01"}.ti-briefcase:before{content:"\ea46"}.ti-building-bank:before{content:"\ebe2"}.ti-building-warehouse:before{content:"\ebe3"}.ti-bulb:before{content:"\ea51"}.ti-certificate:before{content:"\ed76"}.ti-chart-bar:before{content:"\ea59"}.ti-chart-dots:before{content:"\ee2f"}.ti-circle-check:before{content:"\ea67"}.ti-code:before{content:"\ea77"}.ti-code-dots:before{content:"\f61a"}.ti-database:before{content:"\ea88"}.ti-database-search:before{content:"\fa18"}.ti-device-mobile-rotated:before{content:"\ecdb"}.ti-file-spreadsheet:before{content:"\f03e"}.ti-forms:before{content:"\ee8f"}.ti-git-compare:before{content:"\eab4"}.ti-language:before{content:"\ebbe"}.ti-layout-dashboard:before{content:"\f02c"}.ti-mail:before{content:"\eae5"}.ti-map-pin:before{content:"\eae8"}.ti-receipt:before{content:"\edfd"}.ti-repeat:before{content:"\eb72"}.ti-school:before{content:"\ecf7"}.ti-shopping-bag:before{content:"\f5f8"}.ti-sparkles:before{content:"\f6d7"}.ti-table:before{content:"\eba1"}.ti-trending-up:before{content:"\eb43"}
 :root {
   --azul:#1F5C99;--azul-dark:#163f6b;--azul-bg:#EBF2FA;--negro:#111111;
   --gris-1:#444444;--gris-2:#6B6B6B;   /* 2026-10-01: gris-2 era #888 (contraste 3,5 sobre blanco); ahora 5,3 */
@@ -484,7 +501,7 @@ nav.scrolled .nav-links a{font-size:12px}
 #instalacion{margin-top:2.5rem}
 
 /* ================================================================
-   DEMO 3D "VER EN ACCION" (three.js) - Conciliador Automatico V1
+   DEMO 3D "VER EN ACCION" (three.js) - Conciliador Semiautomático V1
    Adaptado desde ver-en-accion-conciliador.html al ancho real del
    sitio (--max:900px) y al dark mode.
    NOTA de diseno: el canvas 3D se mantiene en tema claro a
@@ -2058,7 +2075,7 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
     <div class="demo-par">
     <div class="demo-section on" data-d="accion" role="tabpanel">
       <div class="demo-label demo-cambio" role="tablist" aria-label="Demostraciones"><i aria-hidden="true"></i><button type="button" class="on" role="tab" aria-selected="true" data-d="accion">Ver en acción</button><button type="button" role="tab" aria-selected="false" data-d="instala">Cómo se instala</button></div>
-      <div class="al-demo" id="ver-en-accion" aria-label="Conciliador Automatico V1 en accion">
+      <div class="al-demo" id="ver-en-accion" aria-label="Conciliador Semiautomático V1 en acción">
         <div class="al-demo__grid">
           <div class="al-demo__copy">
             <p class="al-demo__kicker">El problema que resuelve</p>
@@ -2121,7 +2138,7 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
     </div>
     <div class="demo-section" data-d="instala" role="tabpanel" hidden id="instalacion">
       <div class="demo-label demo-cambio" role="tablist" aria-label="Demostraciones"><i aria-hidden="true"></i><button type="button" role="tab" aria-selected="false" data-d="accion">Ver en acción</button><button type="button" class="on" role="tab" aria-selected="true" data-d="instala">Cómo se instala</button></div>
-      <div class="al-demo" id="como-se-instala" aria-label="Cómo se instala el Conciliador Automático V1">
+      <div class="al-demo" id="como-se-instala" aria-label="Cómo se instala el Conciliador Semiautomático V1">
         <div class="al-demo__grid">
           <div class="al-demo__copy" aria-live="polite">
             <p class="al-demo__kicker">Paso 1: haz tu copia</p>
@@ -2248,7 +2265,7 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
     <div class="prod-cab">
       <div class="prod-cab-txt">
         <div class="prod-eyebrow"><span class="prox-badge">Próximamente</span></div>
-        <h2 class="prod-h1">Conciliador Automático V2</h2>
+        <h2 class="prod-h1">Conciliador Semiautomático V2</h2>
         <p class="prod-tagline">Cruza el banco contra tu contabilidad, en grupos y con avisos automáticos, dentro de tu propio Google Sheets.</p>
       </div>
       <div class="alert-box"><b>¿Qué suma al V1?</b> Dos fuentes a la vez (cartola contra libro mayor), grupos de varias partidas, reglas para explicar pendientes, correos automáticos e IA opcional.</div>
@@ -2257,7 +2274,7 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
     <div class="demo-par">
     <div class="demo-section on" data-d="accion" role="tabpanel">
       <div class="demo-label demo-cambio" role="tablist" aria-label="Demostraciones"><i aria-hidden="true"></i><button type="button" class="on" role="tab" aria-selected="true" data-d="accion">Ver en acción</button><button type="button" role="tab" aria-selected="false" data-d="instala">Cómo se instala</button></div>
-      <div class="al-demo al-demo--accion" id="v2-accion" aria-label="Conciliador Automático V2 en acción">
+      <div class="al-demo al-demo--accion" id="v2-accion" aria-label="Conciliador Semiautomático V2 en acción">
         <div class="al-demo__grid">
           <div class="al-demo__copy" aria-live="polite">
             <p class="al-demo__kicker"></p>
@@ -2283,7 +2300,7 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
     </div>
     <div class="demo-section" data-d="instala" role="tabpanel" hidden id="instalacion-v2">
       <div class="demo-label demo-cambio" role="tablist" aria-label="Demostraciones"><i aria-hidden="true"></i><button type="button" role="tab" aria-selected="false" data-d="accion">Ver en acción</button><button type="button" class="on" role="tab" aria-selected="true" data-d="instala">Cómo se instala</button></div>
-      <div class="al-demo al-demo--instala" id="v2-instala" aria-label="Cómo se instala el Conciliador Automático V2">
+      <div class="al-demo al-demo--instala" id="v2-instala" aria-label="Cómo se instala el Conciliador Semiautomático V2">
         <div class="al-demo__grid">
           <div class="al-demo__copy" aria-live="polite">
             <p class="al-demo__kicker"></p>
@@ -4362,7 +4379,7 @@ window.alDemoLinea = function(root, STEPS, o){
 };
 </script>
 <script>alConTHREE(function(){
-/* Demo 3D del Conciliador Automatico V1.
+/* Demo 3D del Conciliador Semiautomático V1.
    Adaptada de ver-en-accion-conciliador.html al sitio (ancho 660px, dark mode).
    El copy de los 6 pasos esta tambien en el HTML, asi que si three.js no carga
    o el navegador no tiene WebGL la seccion cae en .al-demo--no3d y muestra los
@@ -5039,7 +5056,9 @@ function resize(){
 }
 let zAlto = 1;
 new ResizeObserver(resize).observe(stage); resize();
-if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible = es[0].isIntersecting; }, { threshold:0.05 }).observe(stage);
+// 2026-10-01: el navegador puede entregar varios avisos juntos (al abrir la pestaña: "no visible" y
+// luego "visible"); vale el último. Antes se leía el primero y la escena quedaba creyéndose oculta.
+if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible = es[es.length - 1].isIntersecting; if (visible) needsRender = true; }, { threshold:0.05 }).observe(stage);
 // No renderizar con la pestana en segundo plano: la demo es un RAF perpetuo.
 document.addEventListener('visibilitychange', () => { visible = !document.hidden; needsRender = true; });
 
@@ -5379,7 +5398,7 @@ window.alDemoTarjetas = function(root, cfg){
   }
   new ResizeObserver(resize).observe(stage); resize();
   // fuera de pantalla (u oculta) la demo no dibuja y suelta sus lienzos; al volver se redibuja
-  if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible = es[0].isIntersecting; if (visible) needsRender = true; else soltarTodo(); }, { threshold:0.05 }).observe(stage);
+  if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible = es[es.length - 1].isIntersecting; if (visible) needsRender = true; else soltarTodo(); }, { threshold:0.05 }).observe(stage);
 
   let last = performance.now();
   function frame(now){
@@ -5414,7 +5433,7 @@ window.alDemoTarjetas = function(root, cfg){
 };
 </script>
 <script>
-/* Demos del Conciliador Automático V2 (2026-09-30). Pantallas dibujadas a
+/* Demos del Conciliador Semiautomático V2 (2026-09-30). Pantallas dibujadas a
    partir del panel real del V2: Resumen · Resultados · Sugerencias ·
    Historial · Configuración. */
 window.AL_DEMOS = window.AL_DEMOS || {};
