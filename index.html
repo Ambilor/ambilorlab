@@ -1287,6 +1287,19 @@ body.rc-leyendo #i3Escena,body.rc-leyendo #i3CapaHada{opacity:.15;transition:opa
 .rc-boton--pri{background:var(--azul);border-color:var(--azul);color:#fff}
 .rc-acc{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0}
 .rc-mas-t{font-size:15px;font-weight:600;margin:2rem 0 .8rem}
+/* Recursos: pestañas por IA dentro de un artículo (2026-10-06) */
+.rc-ias{display:flex;flex-wrap:wrap;gap:6px;padding:5px;border-radius:14px;background:var(--gris-4);border:1px solid var(--borde);margin:.6rem 0 .9rem}
+.rc-ia{flex:1 1 auto;font-family:var(--sans);font-size:13.5px;font-weight:600;padding:9px 14px;border-radius:10px;border:1px solid transparent;background:transparent;color:var(--gris-1);cursor:pointer;white-space:nowrap}
+@media (hover:hover){ .rc-ia:hover{color:var(--azul)} }
+.rc-ia.on{background:var(--blanco);color:var(--negro);border-color:var(--borde);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+@media (hover:hover){ [data-theme="dark"] .rc-ia:hover{color:var(--glow-2)} }
+[data-theme="dark"] .rc-ia.on{background:#1a1a2c;border-color:#2f2f48}
+.rc-ia-panel{display:none}
+.rc-ia-panel.on{display:block}
+.rc-res{display:grid;grid-template-columns:minmax(0,10.5em) minmax(0,1fr);margin:0 0 1rem;border:1px solid var(--borde);border-radius:12px;overflow:hidden;font-size:14px;line-height:1.55}
+.rc-res dt,.rc-res dd{margin:0;padding:9px 12px;border-bottom:1px solid var(--borde)}
+.rc-res dt{font-weight:600;color:var(--gris-1);background:var(--gris-4)}
+.rc-res dt:nth-last-of-type(1),.rc-res dd:last-child{border-bottom:0}
 #gp-guias>.rc-migas{grid-column:1/-1;grid-row:1}   /* en el formato tutorial ocupa el lugar del antetítulo */
 
 /* ════════════════════════════════════════════════════════════════════
@@ -1440,11 +1453,14 @@ body.rc-leyendo #i3Escena,body.rc-leyendo #i3CapaHada{opacity:.15;transition:opa
 }
 /* Recursos: en táctil, filtros, volver, copiar y botones de 44 px */
 @media (pointer:coarse){
-  .rc-f,.rc-copiar,.rc-boton{min-height:44px}
+  .rc-f,.rc-copiar,.rc-boton,.rc-ia{min-height:44px}
   .rc-volver{min-height:44px;padding:0 4px}
 }
 /* celular: el encabezado del prompt con el botón a lo ancho si no cabe */
 @media (max-width:420px){
+  .rc-res{grid-template-columns:1fr}
+  .rc-res dt{border-bottom:0;padding-bottom:2px}
+  .rc-res dd{padding-top:4px}
   .rc-prompt-cab{flex-wrap:wrap}
   .rc-prompt pre{font-size:12.5px;padding:12px 13px}
   .rc-app{flex-direction:column;gap:8px}
@@ -2688,18 +2704,26 @@ Movimientos:
 
     <!-- ── Prompt 3: gastos desde Gmail con Gemini (idea del Director, 2026-10-01) ── -->
     <article class="rc-doc" data-r="prompt-gemini-gastos-gmail" data-tipo="prompt" data-min="5" data-app="conciliador"
-      data-gancho="Con Gemini Pro conectado a Gmail y Google Sheets, un prompt arma tu planilla de gastos de 3 meses en 3 meses, con dashboard incluido.">
-      <h2 class="rc-h">Tus gastos del año en una planilla, con Gemini, Gmail y Google Sheets</h2>
-      <p class="rc-bajada">¿Sabías que si tienes Gemini conectado a tu Gmail y a Google Drive puede encontrar los avisos de compra de tus bancos y ordenarlos por ti? Copias el prompt, eliges 3 meses y obtienes tu planilla de gastos con dashboard. Repites con los meses siguientes y todo el año queda en el mismo archivo.</p>
+      data-gancho="Con Gemini, ChatGPT o Claude conectados a tu Gmail, un prompt arma tu planilla de gastos de 3 meses en 3 meses, con dashboard incluido.">
+      <h2 class="rc-h">Tus gastos del año en una planilla, con IA y Gmail</h2>
+      <p class="rc-bajada">¿Sabías que si tu IA está conectada a tu Gmail puede encontrar los avisos de compra de tus bancos y ordenarlos por ti? Funciona con Gemini, ChatGPT y Claude: eliges tu IA, copias su prompt, indicas 3 meses y obtienes tu planilla de gastos con dashboard. Repites con los meses siguientes y todo el año queda en el mismo archivo.</p>
       <h3>Qué necesitas</h3>
       <ul class="rc-lista">
-        <li><b>El modelo Pro de Gemini.</b> Elígelo antes de pegar el prompt: los otros modelos no generan el archivo de Google Sheets.</li>
-        <li><b>Gemini con acceso a Gmail y Drive.</b> En Gemini, revisa en la configuración que las apps de Google Workspace (Gmail, Drive y Documentos) estén activadas.</li>
-        <li><b>Avisos de tus bancos en el correo.</b> Gemini solo encuentra los movimientos que te llegaron por email: compras con tarjeta, transferencias, pagos automáticos.</li>
+        <li><b>Una IA conectada a tu Gmail.</b> En Gemini, activa las apps de Google Workspace (Gmail, Drive y Documentos) en la configuración. En ChatGPT o Claude, conecta Gmail en su configuración.</li>
+        <li><b>En Gemini, el modelo Pro.</b> Elígelo antes de pegar el prompt: los otros modelos no generan el archivo de Google Sheets.</li>
+        <li><b>Avisos de tus bancos en el correo.</b> La IA solo encuentra los movimientos que te llegaron por email: compras con tarjeta, transferencias, pagos automáticos.</li>
         <li><b>Un par de minutos</b> para revisar el resultado.</li>
       </ul>
-      <div class="rc-prompt">
-        <div class="rc-prompt-cab"><span><i class="ti ti-sparkles" aria-hidden="true"></i>Prompt para Gemini</span><button type="button" class="rc-copiar" onclick="rcCopiar(this)"><i class="ti ti-copy" aria-hidden="true"></i><span>Copiar prompt</span></button></div>
+      <h3>Elige tu IA</h3>
+      <div class="rc-ias" role="tablist" aria-label="Elige tu IA">
+        <button type="button" role="tab" class="rc-ia on" aria-selected="true" data-ia="gemini" onclick="rcIA(this)">Gemini</button>
+        <button type="button" role="tab" class="rc-ia" aria-selected="false" data-ia="excel" onclick="rcIA(this)">ChatGPT o Claude</button>
+        <button type="button" role="tab" class="rc-ia" aria-selected="false" data-ia="otra" onclick="rcIA(this)">Otra IA</button>
+      </div>
+      <div class="rc-ia-panel on" role="tabpanel" data-ia="gemini">
+        <dl class="rc-res"><dt>Resultado</dt><dd>Un Google Sheets en tu Drive, con Dashboard, Movimientos, Tablas_Dinámicas y Revisar.</dd><dt>Tablas dinámicas</dt><dd>Reales, de Google Sheets, como fuente de los gráficos.</dd><dt>Para seguir</dt><dd>Conversación nueva con los 3 meses siguientes: actualiza el mismo Sheet.</dd><dt>Requisito</dt><dd>Modelo Pro y apps de Google Workspace activadas.</dd></dl>
+        <div class="rc-prompt">
+          <div class="rc-prompt-cab"><span><i class="ti ti-sparkles" aria-hidden="true"></i>Prompt para Gemini</span><button type="button" class="rc-copiar" onclick="rcCopiar(this)"><i class="ti ti-copy" aria-hidden="true"></i><span>Copiar prompt</span></button></div>
 <pre>Procesa SOLO estos 3 meses de 2026 en esta interacción:
 [JULIO + AGOSTO + SEPTIEMBRE]
 
@@ -2790,17 +2814,117 @@ Al finalizar entrega:
 - Movimientos a revisar
 
 Si no puedes crear o actualizar el Google Sheets, dilo explícitamente y NO afirmes que fue creado.</pre>
+        </div>
+      </div>
+      <div class="rc-ia-panel" role="tabpanel" data-ia="excel">
+        <dl class="rc-res"><dt>Resultado</dt><dd>Un archivo Excel (.xlsx) para descargar, con Dashboard, Movimientos, Resumen y Revisar. Puedes subirlo a tu Drive.</dd><dt>Tablas dinámicas</dt><dd>En su lugar, resúmenes con fórmulas que leen la hoja Movimientos.</dd><dt>Para seguir</dt><dd>Conversación nueva con los 3 meses siguientes, adjuntando el Excel anterior.</dd><dt>Requisito</dt><dd>Gmail conectado y un plan que permita crear archivos.</dd></dl>
+        <div class="rc-prompt">
+          <div class="rc-prompt-cab"><span><i class="ti ti-sparkles" aria-hidden="true"></i>Prompt para ChatGPT o Claude</span><button type="button" class="rc-copiar" onclick="rcCopiar(this)"><i class="ti ti-copy" aria-hidden="true"></i><span>Copiar prompt</span></button></div>
+<pre>Revisa mi Gmail y arma un registro de mis cargos y movimientos bancarios de estos 3 meses de 2026:
+[JULIO + AGOSTO + SEPTIEMBRE]
+
+BÚSQUEDA
+Haz UNA búsqueda independiente por cada mes. NO combines meses.
+Usa términos como: cargo, compra, pago, débito, transferencia, transacción, movimiento, comprobante, tarjeta, banco, cobro y operación.
+Si tienes un límite de búsquedas, procesa solo los meses que alcances y dime cuáles quedaron pendientes.
+
+DATOS (una fila por movimiento)
+Fecha | Monto | Moneda | Glosa original | Comercio/Beneficiario | Concepto | Subconcepto | Banco/Tarjeta | Tipo de movimiento | Últimos 4 dígitos | ID/Referencia | Fecha correo | Enlace | Confianza | Estado revisión
+No inventes datos. Si falta información, déjala vacía.
+Sin clasificación: "Por clasificar".
+Detecta duplicados (por ejemplo, autorización y confirmación del mismo cargo), márcalos "Revisar" y no los cuentes dos veces.
+"Monto" debe ser NUMÉRICO, no texto.
+Valor: 2678570
+Formato visual: $2.678.570
+
+ARCHIVO EXCEL — OBLIGATORIO
+Entrega el resultado como un archivo Excel (.xlsx) descargable, NO solamente en el chat.
+Si te adjunto el Excel de una revisión anterior, agrega los movimientos nuevos a ese archivo y no borres lo anterior.
+
+Hojas:
+1. Dashboard
+2. Movimientos
+3. Resumen
+4. Revisar
+
+Movimientos: tabla completa, con filtros y encabezado fijo.
+
+Resumen: gasto por mes, por concepto, por subconcepto, por comercio y por banco/tarjeta; cantidad por mes y por concepto; top 10 comercios. Usa fórmulas (SUMAR.SI, CONTAR.SI) que lean la hoja Movimientos.
+
+Dashboard:
+- Total gastado
+- Cantidad de movimientos
+- Promedio mensual
+- Gasto mes actual
+Los KPI deben ser fórmulas, nunca texto.
+Gráficos: gasto por mes, gasto por concepto y top 10 comercios, tomando los datos de Resumen. NO superponer gráficos.
+Cobertura: los 12 meses de 2026, con ✓ SOLO en los meses realmente buscados. Los demás quedan "Pendiente".
+
+Revisar: movimientos con baja confianza, posibles duplicados, información incompleta o "Por clasificar".
+
+VALIDACIÓN FINAL
+Antes de terminar verifica: archivo creado, movimientos escritos, monto numérico, KPI con fórmulas, gráficos sin superposición, duplicados controlados y cobertura correcta.
+NO afirmes que 2026 está completo.
+
+Al finalizar entrega:
+- Archivo Excel descargable
+- Meses procesados
+- Movimientos encontrados
+- Total acumulado
+- Meses pendientes
+- Movimientos a revisar
+Si no puedes crear el archivo, dilo explícitamente y NO afirmes que fue creado.</pre>
+        </div>
+      </div>
+      <div class="rc-ia-panel" role="tabpanel" data-ia="otra">
+        <dl class="rc-res"><dt>Resultado</dt><dd>Lo mejor que pueda: Google Sheets, Excel o una tabla CSV para pegar en una planilla.</dd><dt>Tablas dinámicas</dt><dd>Si la herramienta las permite; si no, fórmulas.</dd><dt>Para seguir</dt><dd>Conversación nueva adjuntando el archivo anterior.</dd><dt>Requisito</dt><dd>Acceso a tu Gmail. Al terminar, te dice qué no pudo hacer.</dd></dl>
+        <div class="rc-prompt">
+          <div class="rc-prompt-cab"><span><i class="ti ti-sparkles" aria-hidden="true"></i>Prompt para otra IA</span><button type="button" class="rc-copiar" onclick="rcCopiar(this)"><i class="ti ti-copy" aria-hidden="true"></i><span>Copiar prompt</span></button></div>
+<pre>Revisa mi Gmail y arma un registro de mis cargos y movimientos bancarios de estos meses de 2026:
+[JULIO + AGOSTO + SEPTIEMBRE]
+
+BÚSQUEDA
+Haz una búsqueda independiente por cada mes. No combines meses.
+Usa términos como: cargo, compra, pago, débito, transferencia, transacción, movimiento, comprobante, tarjeta, banco, cobro y operación.
+Si tienes un límite de búsquedas, procesa solo los meses que alcances y dime cuáles quedaron pendientes.
+
+DATOS (una fila por movimiento)
+Fecha | Monto | Moneda | Glosa original | Comercio/Beneficiario | Concepto | Subconcepto | Banco/Tarjeta | Tipo de movimiento | Últimos 4 dígitos | ID/Referencia | Fecha correo | Enlace | Confianza | Estado revisión
+No inventes datos: si falta algo, déjalo vacío. Sin clasificación: "Por clasificar".
+Detecta duplicados, márcalos "Revisar" y no los sumes dos veces.
+"Monto" debe ser numérico, no texto (valor 2678570, formato $2.678.570).
+
+DÓNDE DEJAR EL RESULTADO (usa la primera opción que puedas)
+1. Si puedes crear o editar Google Sheets: crea o actualiza el Sheet de este proyecto, sin borrar lo anterior.
+2. Si no, entrega un archivo Excel (.xlsx) descargable.
+3. Si tampoco puedes crear archivos, entrega la tabla en formato CSV para pegarla en una planilla.
+Si te adjunto el archivo de una revisión anterior, agrega los movimientos nuevos a ese archivo.
+
+HOJAS
+- Movimientos: la tabla completa, con filtros y encabezado fijo.
+- Resumen: gasto por mes, por concepto, por banco/tarjeta y top 10 comercios. Usa tablas dinámicas reales si la herramienta lo permite; si no, tablas con fórmulas (SUMAR.SI, CONTAR.SI).
+- Dashboard: total gastado, cantidad de movimientos, promedio mensual y gasto del mes actual (valores o fórmulas, nunca texto), más gráficos de gasto por mes, por concepto y top 10 comercios, sin superponerse.
+- Revisar: movimientos con baja confianza, posibles duplicados, datos incompletos o "Por clasificar".
+- Cobertura: los 12 meses de 2026, con ✓ solo en los que realmente buscaste; los demás, "Pendiente".
+
+AL TERMINAR, dime:
+- Dónde quedó el resultado (link o archivo)
+- Meses procesados y meses pendientes
+- Movimientos encontrados, total acumulado y movimientos a revisar
+- Qué de lo pedido NO pudiste hacer (por ejemplo, tablas dinámicas reales o gráficos)
+No afirmes que creaste algo que no creaste. No afirmes que 2026 está completo.</pre>
+        </div>
       </div>
       <h3>Cómo usarlo</h3>
       <ol class="rc-pasos">
-        <li>Copia el prompt y cambia <code>[JULIO + AGOSTO + SEPTIEMBRE]</code> por los 3 meses que quieres procesar, por ejemplo <em>ENERO + FEBRERO + MARZO</em>.</li>
-        <li>En Gemini, elige el modelo <b>Pro</b> y pega el prompt. Con los otros modelos no se genera el archivo.</li>
-        <li>Cuando termine, abre el link al Google Sheets que te entrega y revisa la <b>cobertura</b>: solo los meses buscados quedan con ✓.</li>
-        <li>Repite en una conversación nueva con los 3 meses siguientes. El prompt pide actualizar el mismo Sheet sin borrar lo anterior, así que el año completo queda en un solo archivo.</li>
+        <li>Elige la pestaña de tu IA, copia el prompt y cambia <code>[JULIO + AGOSTO + SEPTIEMBRE]</code> por los 3 meses que quieres procesar, por ejemplo <em>ENERO + FEBRERO + MARZO</em>.</li>
+        <li>Pégalo en tu IA. En Gemini, elige antes el modelo <b>Pro</b>.</li>
+        <li>Abre el resultado (el Sheet o el Excel) y revisa la <b>cobertura</b>: solo los meses buscados quedan con ✓.</li>
+        <li>Repite en una conversación nueva con los 3 meses siguientes. En Gemini se actualiza el mismo Sheet; en las otras IA, adjunta el archivo anterior.</li>
         <li>Revisa la hoja <b>Revisar</b> y compara el total con tu cartola. La IA puede saltarse correos o leer mal un monto; tú tienes la última palabra.</li>
       </ol>
-      <div class="rc-nota"><i class="ti ti-bulb" aria-hidden="true"></i><p><b>Por qué funciona:</b> Gemini hace un número limitado de búsquedas en Gmail por conversación, y una sola búsqueda para todo el año trae sobre todo los meses recientes. Por eso el prompt procesa <b>3 meses a la vez, con una búsqueda por mes</b>, actualiza siempre el mismo Sheet y marca qué meses quedaron cubiertos. Además, exige montos numéricos, no inventa datos y separa lo dudoso en su propia hoja.</p></div>
-      <div class="rc-nota rc-nota--aviso"><i class="ti ti-building-bank" aria-hidden="true"></i><p><b>Ojo:</b> lo que puede hacer Gemini con tu correo y tu Drive depende de tu plan y de tu cuenta, y va cambiando. Si te dice que no pudo crear o actualizar el Google Sheets, revisa que estés usando el modelo Pro y vuelve a intentarlo. Y recuerda: estás dándole acceso a tu correo, úsalo solo con tu propia cuenta.</p></div>
+      <div class="rc-nota"><i class="ti ti-bulb" aria-hidden="true"></i><p><b>Por qué funciona:</b> las IA hacen un número limitado de búsquedas en Gmail por conversación, y una sola búsqueda para todo el año trae sobre todo los meses recientes. Por eso el prompt procesa <b>3 meses a la vez, con una búsqueda por mes</b>, mantiene un solo archivo y marca qué meses quedaron cubiertos. Además, exige montos numéricos, no inventa datos y separa lo dudoso en su propia hoja.</p></div>
+      <div class="rc-nota rc-nota--aviso"><i class="ti ti-building-bank" aria-hidden="true"></i><p><b>Ojo:</b> lo que cada IA puede hacer con tu correo y tus archivos depende de tu plan y va cambiando. Si te dice que no pudo crear el archivo, revisa que Gmail esté conectado (y en Gemini, que uses el modelo Pro) y vuelve a intentarlo. Y recuerda: estás dándole acceso a tu correo, úsalo solo con tu propia cuenta.</p></div>
     </article>
 
     <!-- ── Tip 1: BUSCARX ── -->
@@ -3803,6 +3927,12 @@ function rcVolver(){
   irArriba();
 }
 function rcVerApp(tab){ show('product'); var b=document.getElementById(tab); if(b) b.click(); }
+// pestañas por IA dentro de un artículo (Gemini / ChatGPT o Claude / Otra IA)
+function rcIA(b){
+  var art=b.closest('.rc-doc'), ia=b.getAttribute('data-ia');
+  [].forEach.call(art.querySelectorAll('.rc-ia'),function(x){ var on=x===b; x.classList.toggle('on',on); x.setAttribute('aria-selected',on?'true':'false'); });
+  [].forEach.call(art.querySelectorAll('.rc-ia-panel'),function(p){ p.classList.toggle('on',p.getAttribute('data-ia')===ia); });
+}
 function rcCopiarTexto(t,ok){
   function respaldo(){ var x=document.createElement('textarea'); x.value=t; x.setAttribute('readonly',''); x.style.cssText='position:fixed;top:0;left:0;opacity:0'; document.body.appendChild(x); x.select(); try{ document.execCommand('copy'); ok(); }catch(e){} document.body.removeChild(x); }
   if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok,respaldo); else respaldo();
