@@ -103,13 +103,13 @@ try{if("scrollRestoration" in history)history.scrollRestoration="manual";if(loca
 @font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:400;font-display:swap;src:url("fuentes/jetbrains-mono-400.woff2") format("woff2")}
 @font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:500;font-display:swap;src:url("fuentes/jetbrains-mono-500.woff2") format("woff2")}
 @font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:600;font-display:swap;src:url("fuentes/jetbrains-mono-600.woff2") format("woff2")}
-/* Íconos (2026-10-01): solo los 50 que usa el sitio, de Tabler Icons 3.48.0 (licencia MIT).
+/* Íconos (2026-10-01): solo los 54 que usa el sitio, de Tabler Icons 3.48.0 (licencia MIT).
    Antes se descargaba la colección completa desde jsDelivr (@latest): una hoja de 212 KB que
    bloqueaba la página y una fuente de 504 KB. Ahora: fuentes/tabler-icons-sitio.woff2 (6 KB).
    Ícono nuevo: agregarlo con pyftsubset desde la fuente completa y sumar su regla aquí. */
-@font-face{font-family:"tabler-icons";font-style:normal;font-weight:400;font-display:block;src:url("fuentes/tabler-icons-sitio.woff2?v3.48.0-50") format("woff2")}
+@font-face{font-family:"tabler-icons";font-style:normal;font-weight:400;font-display:block;src:url("fuentes/tabler-icons-sitio.woff2?v3.48.0-54") format("woff2")}
 .ti{font-family:"tabler-icons"!important;speak:none;font-style:normal;font-weight:normal;font-variant:normal;text-transform:none;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-.ti-arrow-down:before{content:"\ea16"}.ti-arrow-left:before{content:"\ea19"}.ti-arrow-right:before{content:"\ea1f"}.ti-arrow-up:before{content:"\ea25"}.ti-arrow-up-right:before{content:"\ea24"}.ti-arrows-exchange:before{content:"\f1f4"}.ti-bolt:before{content:"\ea38"}.ti-brand-google:before{content:"\ec1f"}.ti-brand-instagram:before{content:"\ec20"}.ti-brand-linkedin:before{content:"\ec8c"}.ti-brand-python:before{content:"\ed01"}.ti-briefcase:before{content:"\ea46"}.ti-building-bank:before{content:"\ebe2"}.ti-building-warehouse:before{content:"\ebe3"}.ti-bulb:before{content:"\ea51"}.ti-calendar:before{content:"\ea53"}.ti-certificate:before{content:"\ed76"}.ti-chart-bar:before{content:"\ea59"}.ti-chart-dots:before{content:"\ee2f"}.ti-check:before{content:"\ea5e"}.ti-circle-check:before{content:"\ea67"}.ti-clipboard-check:before{content:"\ea6c"}.ti-clock:before{content:"\ea70"}.ti-code:before{content:"\ea77"}.ti-code-dots:before{content:"\f61a"}.ti-compass:before{content:"\ea79"}.ti-copy:before{content:"\ea7a"}.ti-database:before{content:"\ea88"}.ti-database-search:before{content:"\fa18"}.ti-device-mobile-rotated:before{content:"\ecdb"}.ti-download:before{content:"\ea96"}.ti-eye:before{content:"\ea9a"}.ti-file-spreadsheet:before{content:"\f03e"}.ti-forms:before{content:"\ee8f"}.ti-git-compare:before{content:"\eab4"}.ti-language:before{content:"\ebbe"}.ti-layout-dashboard:before{content:"\f02c"}.ti-list-numbers:before{content:"\ef11"}.ti-lock:before{content:"\eae2"}.ti-mail:before{content:"\eae5"}.ti-map-pin:before{content:"\eae8"}.ti-message-circle:before{content:"\eaed"}.ti-receipt:before{content:"\edfd"}.ti-repeat:before{content:"\eb72"}.ti-school:before{content:"\ecf7"}.ti-share:before{content:"\eb21"}.ti-shopping-bag:before{content:"\f5f8"}.ti-sparkles:before{content:"\f6d7"}.ti-table:before{content:"\eba1"}.ti-trending-up:before{content:"\eb43"}
+.ti-arrow-down:before{content:"\ea16"}.ti-arrow-left:before{content:"\ea19"}.ti-arrow-right:before{content:"\ea1f"}.ti-arrow-up:before{content:"\ea25"}.ti-arrow-up-right:before{content:"\ea24"}.ti-arrows-exchange:before{content:"\f1f4"}.ti-bolt:before{content:"\ea38"}.ti-brand-google:before{content:"\ec1f"}.ti-brand-instagram:before{content:"\ec20"}.ti-brand-linkedin:before{content:"\ec8c"}.ti-brand-python:before{content:"\ed01"}.ti-briefcase:before{content:"\ea46"}.ti-building-bank:before{content:"\ebe2"}.ti-building-warehouse:before{content:"\ebe3"}.ti-bulb:before{content:"\ea51"}.ti-calendar:before{content:"\ea53"}.ti-certificate:before{content:"\ed76"}.ti-chart-bar:before{content:"\ea59"}.ti-chart-dots:before{content:"\ee2f"}.ti-check:before{content:"\ea5e"}.ti-circle-check:before{content:"\ea67"}.ti-clipboard-check:before{content:"\ea6c"}.ti-clock:before{content:"\ea70"}.ti-code:before{content:"\ea77"}.ti-code-dots:before{content:"\f61a"}.ti-columns:before{content:"\eb83"}.ti-compass:before{content:"\ea79"}.ti-copy:before{content:"\ea7a"}.ti-database:before{content:"\ea88"}.ti-database-search:before{content:"\fa18"}.ti-device-mobile-rotated:before{content:"\ecdb"}.ti-download:before{content:"\ea96"}.ti-eye:before{content:"\ea9a"}.ti-file-spreadsheet:before{content:"\f03e"}.ti-forms:before{content:"\ee8f"}.ti-git-compare:before{content:"\eab4"}.ti-language:before{content:"\ebbe"}.ti-layout-dashboard:before{content:"\f02c"}.ti-list-numbers:before{content:"\ef11"}.ti-lock:before{content:"\eae2"}.ti-mail:before{content:"\eae5"}.ti-map-pin:before{content:"\eae8"}.ti-message-circle:before{content:"\eaed"}.ti-receipt:before{content:"\edfd"}.ti-repeat:before{content:"\eb72"}.ti-school:before{content:"\ecf7"}.ti-search:before{content:"\eb1c"}.ti-share:before{content:"\eb21"}.ti-shopping-bag:before{content:"\f5f8"}.ti-sparkles:before{content:"\f6d7"}.ti-table:before{content:"\eba1"}.ti-target:before{content:"\eb35"}.ti-trending-up:before{content:"\eb43"}.ti-x:before{content:"\eb55"}
 :root {
   --azul:#1F5C99;--azul-dark:#163f6b;--azul-bg:#EBF2FA;--negro:#111111;
   --gris-1:#444444;--gris-2:#6B6B6B;   /* 2026-10-01: gris-2 era #888 (contraste 3,5 sobre blanco); ahora 5,3 */
@@ -1361,6 +1361,37 @@ body.rc-leyendo #i3Escena,body.rc-leyendo #i3CapaHada{opacity:.15;transition:opa
 .rc-nota-corta{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--gris-1);padding:10px 14px;border-radius:12px;background:var(--gris-4)}
 .rc-nota-corta i{font-size:18px;color:var(--azul);flex-shrink:0}
 [data-theme="dark"] .rc-nota-corta i{color:var(--glow-2)}
+/* BUSCARX (2026-10-06): antes / ahora, hoja de ejemplo, ventajas y errores */
+.rc-vs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:1.2rem 0 .4rem}
+.rc-vs-c{display:flex;flex-direction:column;gap:8px;padding:14px;border-radius:16px;border:1px solid var(--borde);min-width:0}
+.rc-vs-mal{background:rgba(217,48,37,.06);border-color:rgba(217,48,37,.25)}
+.rc-vs-bien{background:rgba(24,128,56,.07);border-color:rgba(24,128,56,.3)}
+.rc-vs-et{display:inline-flex;align-items:center;gap:6px;font-family:"JetBrains Mono",var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.rc-vs-mal .rc-vs-et{color:#B3261E}.rc-vs-bien .rc-vs-et{color:#137333}
+[data-theme="dark"] .rc-vs-mal .rc-vs-et{color:#F2685F}[data-theme="dark"] .rc-vs-bien .rc-vs-et{color:var(--ok-n)}
+.rc-vs-c code{font-size:12.5px;line-height:1.5;padding:8px 10px;border-radius:10px;overflow-wrap:anywhere}
+.rc-vs-c small{font-size:12.5px;color:var(--gris-1);line-height:1.4}
+.rc-hoja{display:grid;grid-template-columns:28px 1fr 1.6fr 1fr;font-size:12.5px;margin:10px 12px 0;border:1px solid #E2E3E3;border-radius:6px;overflow:hidden}
+.rc-hoja span{padding:7px 8px;border-right:1px solid #E2E3E3;border-bottom:1px solid #E2E3E3;white-space:nowrap;overflow:hidden;color:#202124}
+.rc-hoja .c{background:#F8F9FA;color:#5F6368;text-align:center;font-size:11px;padding:7px 2px}
+.rc-hoja .t{font-weight:600;background:#E6F4EA}
+.rc-hoja .n{text-align:right;font-variant-numeric:tabular-nums}
+.rc-hoja .hit{background:#EAF2FF}
+.rc-hoja .sel{box-shadow:inset 0 0 0 2px #1A73E8;font-weight:600}
+.rc-hoja-res{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;padding:12px;font-size:13px;color:#3C4043}
+.rc-hoja-res i{color:#1A73E8}
+.rc-ventajas{list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:.4rem 0 1rem;padding:0}
+.rc-ventajas li{display:flex;flex-direction:column;gap:6px;padding:14px 12px;border-radius:14px;border:1px solid var(--borde);background:var(--blanco)}
+[data-theme="dark"] .rc-ventajas li{background:rgba(255,255,255,.03)}
+.rc-ventajas i{font-size:22px;color:#188038}
+[data-theme="dark"] .rc-ventajas i{color:var(--ok-n)}
+.rc-ventajas b{font-size:14px;line-height:1.3}
+.rc-ventajas small{font-size:12px;color:var(--gris-1);line-height:1.35}
+.rc-err{list-style:none;display:grid;gap:8px;margin:.4rem 0 1rem;padding:0}
+.rc-err li{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:12px;padding:10px 12px;border-radius:12px;background:var(--gris-4);border:1px solid var(--borde)}
+.rc-err code{font-size:12.5px;white-space:nowrap}
+.rc-err span{font-size:13.5px;line-height:1.45;color:var(--gris-1)}
+.rc-formula-caja pre{font-size:14px}
 #gp-guias>.rc-migas{grid-column:1/-1;grid-row:1}   /* en el formato tutorial ocupa el lugar del antetítulo */
 
 /* ════════════════════════════════════════════════════════════════════
@@ -1521,6 +1552,7 @@ body.rc-leyendo #i3Escena,body.rc-leyendo #i3CapaHada{opacity:.15;transition:opa
 @media (max-width:420px){
   .rc-pasos-v{grid-template-columns:repeat(2,minmax(0,1fr))}
   .rc-res li{padding:10px}
+  .rc-ventajas{grid-template-columns:repeat(2,minmax(0,1fr))}
   .rc-vista-kpis{gap:6px;padding:10px}
   .rc-vista-kpis div{padding:7px 8px}
   .rc-vista-kpis b{font-size:13px}
@@ -1531,7 +1563,10 @@ body.rc-leyendo #i3Escena,body.rc-leyendo #i3CapaHada{opacity:.15;transition:opa
   .rc-bajada{font-size:15px}
 }
 /* tablet angosta: pasos en dos columnas */
-@media (min-width:421px) and (max-width:640px){ .rc-pasos-v{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (min-width:421px) and (max-width:640px){ .rc-pasos-v,.rc-ventajas{grid-template-columns:repeat(2,minmax(0,1fr))} }
+/* celular angosto: antes y ahora uno bajo el otro; errores con el código arriba */
+@media (max-width:480px){ .rc-vs{grid-template-columns:1fr} }
+@media (max-width:360px){ .rc-err li{grid-template-columns:1fr;gap:4px} .rc-hoja{font-size:11.5px;grid-template-columns:22px 1fr 1.4fr 1fr} .rc-hoja span{padding:6px 5px} }
 /* muy angosto (zoom 150 % en iPhone): la tabla comparativa cabe sin desplazarse */
 @media (max-width:360px){
   .rc-res{grid-template-columns:1fr}
@@ -3047,30 +3082,54 @@ No afirmes que creaste algo que no creaste. No afirmes que 2026 está completo.<
     </article>
 
     <!-- ── Tip 1: BUSCARX ── -->
-    <article class="rc-doc" data-r="tip-buscarx" data-tipo="tip" data-min="3" data-app="conciliador"
+    <article class="rc-doc" data-r="tip-buscarx" data-tipo="tip" data-min="2" data-app="conciliador"
       data-gancho="La fórmula que reemplaza a BUSCARV: busca hacia la izquierda, no se rompe y avisa cuando no encuentra.">
       <h2 class="rc-h">BUSCARX: la fórmula que reemplaza a BUSCARV (y no se rompe)</h2>
-      <p class="rc-bajada">Si todavía usas BUSCARV, este cambio te va a ahorrar errores. BUSCARX funciona en Excel 365 y en Google Sheets.</p>
-      <h3>La fórmula</h3>
-      <div class="rc-formula"><code>=BUSCARX(lo_que_buscas; dónde_buscarlo; qué_devolver; "si no está")</code></div>
-      <p>Ejemplo: tienes una hoja <b>Productos</b> con el código en la columna A y el precio en la C. Para traer el precio del código que está en A2:</p>
-      <div class="rc-formula"><code>=BUSCARX(A2; Productos!A:A; Productos!C:C; "Sin precio")</code></div>
-      <div class="rc-tabla-w">
-        <table class="rc-tabla">
-          <thead><tr><th></th><th>BUSCARV</th><th>BUSCARX</th></tr></thead>
-          <tbody>
-            <tr><th>Buscar hacia la izquierda</th><td>No</td><td>Sí</td></tr>
-            <tr><th>Si insertas una columna</th><td>Se rompe</td><td>Sigue funcionando</td></tr>
-            <tr><th>Si no encuentra</th><td>#N/A</td><td>Tu mensaje</td></tr>
-            <tr><th>Coincidencia exacta</th><td>Hay que pedirla (FALSO)</td><td>Viene por defecto</td></tr>
-          </tbody>
-        </table>
+      <p class="rc-bajada">Busca un dato en otra tabla y te trae lo que necesitas. Funciona en Excel y en Google Sheets.</p>
+      <div class="rc-vs">
+        <div class="rc-vs-c rc-vs-mal"><span class="rc-vs-et"><i class="ti ti-x" aria-hidden="true"></i>Antes</span><code>=BUSCARV(A2;Productos!A:C;3;FALSO)</code><small>Cuenta columnas: si insertas una, se rompe.</small></div>
+        <div class="rc-vs-c rc-vs-bien"><span class="rc-vs-et"><i class="ti ti-check" aria-hidden="true"></i>Ahora</span><code>=BUSCARX(A2;Productos!A:A;Productos!C:C)</code><small>Apunta a las columnas: siempre trae la correcta.</small></div>
       </div>
-      <h3>Errores comunes</h3>
-      <ul class="rc-lista">
-        <li><b>#¡VALOR!</b>: los dos rangos deben tener el mismo alto. Usa columnas completas (A:A y C:C) y no te preocupes.</li>
-        <li><b>Coma o punto y coma</b>: en Chile se separa con punto y coma (;). Si tu planilla está en inglés, usa comas y el nombre XLOOKUP.</li>
-        <li><b>Espacios invisibles</b>: si un código "igual" no aparece, prueba con <code>ESPACIOS(A2)</code> para limpiarlo.</li>
+      <h3>Cómo funciona</h3>
+      <div class="rc-flujo" aria-label="Cómo funciona BUSCARX">
+        <div class="rc-nodo"><span class="rc-nodo-i" style="--c:#1A73E8"><i class="ti ti-search" aria-hidden="true"></i></span><b>Lo que buscas</b><small><code>A2</code></small></div>
+        <i class="ti ti-arrow-right rc-flecha" aria-hidden="true"></i>
+        <div class="rc-nodo"><span class="rc-nodo-i" style="--c:#7C5CF0"><i class="ti ti-table" aria-hidden="true"></i></span><b>Dónde buscarlo</b><small><code>A:A</code> en Productos</small></div>
+        <i class="ti ti-arrow-right rc-flecha" aria-hidden="true"></i>
+        <div class="rc-nodo"><span class="rc-nodo-i" style="--c:#188038"><i class="ti ti-circle-check" aria-hidden="true"></i></span><b>Qué devolver</b><small><code>C:C</code> en Productos</small></div>
+      </div>
+      <figure class="rc-vista" aria-hidden="true">
+        <div class="rc-vista-app">
+          <div class="rc-vista-cab"><span class="rc-vista-ico"><i class="ti ti-table"></i></span>Productos<span class="rc-vista-tab">fx =BUSCARX(…)</span></div>
+          <div class="rc-hoja">
+            <span class="c"></span><span class="c">A</span><span class="c">B</span><span class="c">C</span>
+            <span class="c">1</span><span class="t">Código</span><span class="t">Nombre</span><span class="t">Precio</span>
+            <span class="c">2</span><span>P-101</span><span>Pan amasado</span><span class="n">$1.200</span>
+            <span class="c">3</span><span class="hit">P-205</span><span class="hit">Queque de nuez</span><span class="hit n sel">$6.500</span>
+            <span class="c">4</span><span>P-318</span><span>Café en grano</span><span class="n">$8.990</span>
+          </div>
+          <div class="rc-hoja-res"><span>Buscas <b>P-205</b></span><i class="ti ti-arrow-right"></i><span>BUSCARX trae <b>$6.500</b></span></div>
+        </div>
+      </figure>
+      <figcaption class="rc-vista-pie">Ejemplo: el precio del código P-205</figcaption>
+      <h3>Tu fórmula</h3>
+      <div class="rc-seg" role="tablist" aria-label="Elige tu planilla" style="--n:3;--i:0"><span class="rc-seg-pastilla" aria-hidden="true"></span><button type="button" role="tab" class="rc-ia on" aria-selected="true" data-ia="excel" onclick="rcIA(this)">Excel</button><button type="button" role="tab" class="rc-ia" aria-selected="false" data-ia="ingles" onclick="rcIA(this)">Excel en inglés</button><button type="button" role="tab" class="rc-ia" aria-selected="false" data-ia="sheets" onclick="rcIA(this)">Google Sheets</button></div>
+      <div class="rc-ia-paneles"><div class="rc-ia-panel on" role="tabpanel" data-ia="excel"><p class="rc-ia-nota"><i class="ti ti-table" aria-hidden="true"></i><span>Excel 365 o 2021 en adelante, en español. Separa con punto y coma.</span></p><div class="rc-prompt rc-formula-caja"><div class="rc-prompt-cab"><span><i class="ti ti-table" aria-hidden="true"></i>Fórmula para Excel</span><button type="button" class="rc-copiar" onclick="rcCopiar(this)"><i class="ti ti-copy" aria-hidden="true"></i><span>Copiar fórmula</span></button></div>
+<pre>=BUSCARX(A2;Productos!A:A;Productos!C:C;"Sin precio")</pre></div></div><div class="rc-ia-panel" role="tabpanel" data-ia="ingles"><p class="rc-ia-nota"><i class="ti ti-table" aria-hidden="true"></i><span>Excel en inglés: se llama XLOOKUP y separa con coma.</span></p><div class="rc-prompt rc-formula-caja"><div class="rc-prompt-cab"><span><i class="ti ti-table" aria-hidden="true"></i>Fórmula para Excel en inglés</span><button type="button" class="rc-copiar" onclick="rcCopiar(this)"><i class="ti ti-copy" aria-hidden="true"></i><span>Copiar fórmula</span></button></div>
+<pre>=XLOOKUP(A2,Productos!A:A,Productos!C:C,"Sin precio")</pre></div></div><div class="rc-ia-panel" role="tabpanel" data-ia="sheets"><p class="rc-ia-nota"><i class="ti ti-table" aria-hidden="true"></i><span>Google Sheets en español. Si marca error, cambia ; por ,</span></p><div class="rc-prompt rc-formula-caja"><div class="rc-prompt-cab"><span><i class="ti ti-table" aria-hidden="true"></i>Fórmula para Google Sheets</span><button type="button" class="rc-copiar" onclick="rcCopiar(this)"><i class="ti ti-copy" aria-hidden="true"></i><span>Copiar fórmula</span></button></div>
+<pre>=BUSCARX(A2;Productos!A:A;Productos!C:C;"Sin precio")</pre></div></div></div>
+      <h3>Por qué es mejor</h3>
+      <ul class="rc-ventajas">
+        <li><i class="ti ti-arrow-left" aria-hidden="true"></i><b>Busca a la izquierda</b><small>BUSCARV no puede</small></li>
+        <li><i class="ti ti-columns" aria-hidden="true"></i><b>No se rompe</b><small>si insertas columnas</small></li>
+        <li><i class="ti ti-message-circle" aria-hidden="true"></i><b>Avisa si no está</b><small>con tu mensaje, no #N/A</small></li>
+        <li><i class="ti ti-target" aria-hidden="true"></i><b>Exacta por defecto</b><small>sin escribir FALSO</small></li>
+      </ul>
+      <h3>Si algo falla</h3>
+      <ul class="rc-err">
+        <li><code>#¡VALOR!</code><span>Los dos rangos deben tener el mismo alto: usa columnas completas (A:A y C:C).</span></li>
+        <li><code>; o ,</code><span>En español se separa con punto y coma; en inglés, con coma.</span></li>
+        <li><code>ESPACIOS(A2)</code><span>Si un código "igual" no aparece, tiene espacios invisibles: límpialo así.</span></li>
       </ul>
     </article>
 
