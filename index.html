@@ -103,13 +103,13 @@ try{if("scrollRestoration" in history)history.scrollRestoration="manual";if(loca
 @font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:400;font-display:swap;src:url("fuentes/jetbrains-mono-400.woff2") format("woff2")}
 @font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:500;font-display:swap;src:url("fuentes/jetbrains-mono-500.woff2") format("woff2")}
 @font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:600;font-display:swap;src:url("fuentes/jetbrains-mono-600.woff2") format("woff2")}
-/* Íconos (2026-10-01): solo los 44 que usa el sitio, de Tabler Icons 3.48.0 (licencia MIT).
+/* Íconos (2026-10-01): solo los 50 que usa el sitio, de Tabler Icons 3.48.0 (licencia MIT).
    Antes se descargaba la colección completa desde jsDelivr (@latest): una hoja de 212 KB que
    bloqueaba la página y una fuente de 504 KB. Ahora: fuentes/tabler-icons-sitio.woff2 (6 KB).
    Ícono nuevo: agregarlo con pyftsubset desde la fuente completa y sumar su regla aquí. */
-@font-face{font-family:"tabler-icons";font-style:normal;font-weight:400;font-display:block;src:url("fuentes/tabler-icons-sitio.woff2?v3.48.0-44") format("woff2")}
+@font-face{font-family:"tabler-icons";font-style:normal;font-weight:400;font-display:block;src:url("fuentes/tabler-icons-sitio.woff2?v3.48.0-50") format("woff2")}
 .ti{font-family:"tabler-icons"!important;speak:none;font-style:normal;font-weight:normal;font-variant:normal;text-transform:none;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-.ti-arrow-down:before{content:"\ea16"}.ti-arrow-left:before{content:"\ea19"}.ti-arrow-right:before{content:"\ea1f"}.ti-arrow-up-right:before{content:"\ea24"}.ti-arrows-exchange:before{content:"\f1f4"}.ti-bolt:before{content:"\ea38"}.ti-brand-google:before{content:"\ec1f"}.ti-brand-instagram:before{content:"\ec20"}.ti-brand-linkedin:before{content:"\ec8c"}.ti-brand-python:before{content:"\ed01"}.ti-briefcase:before{content:"\ea46"}.ti-building-bank:before{content:"\ebe2"}.ti-building-warehouse:before{content:"\ebe3"}.ti-bulb:before{content:"\ea51"}.ti-certificate:before{content:"\ed76"}.ti-chart-bar:before{content:"\ea59"}.ti-chart-dots:before{content:"\ee2f"}.ti-check:before{content:"\ea5e"}.ti-circle-check:before{content:"\ea67"}.ti-clock:before{content:"\ea70"}.ti-code:before{content:"\ea77"}.ti-code-dots:before{content:"\f61a"}.ti-compass:before{content:"\ea79"}.ti-copy:before{content:"\ea7a"}.ti-database:before{content:"\ea88"}.ti-database-search:before{content:"\fa18"}.ti-device-mobile-rotated:before{content:"\ecdb"}.ti-file-spreadsheet:before{content:"\f03e"}.ti-forms:before{content:"\ee8f"}.ti-git-compare:before{content:"\eab4"}.ti-language:before{content:"\ebbe"}.ti-layout-dashboard:before{content:"\f02c"}.ti-list-numbers:before{content:"\ef11"}.ti-mail:before{content:"\eae5"}.ti-map-pin:before{content:"\eae8"}.ti-message-circle:before{content:"\eaed"}.ti-receipt:before{content:"\edfd"}.ti-repeat:before{content:"\eb72"}.ti-school:before{content:"\ecf7"}.ti-share:before{content:"\eb21"}.ti-shopping-bag:before{content:"\f5f8"}.ti-sparkles:before{content:"\f6d7"}.ti-table:before{content:"\eba1"}.ti-trending-up:before{content:"\eb43"}
+.ti-arrow-down:before{content:"\ea16"}.ti-arrow-left:before{content:"\ea19"}.ti-arrow-right:before{content:"\ea1f"}.ti-arrow-up:before{content:"\ea25"}.ti-arrow-up-right:before{content:"\ea24"}.ti-arrows-exchange:before{content:"\f1f4"}.ti-bolt:before{content:"\ea38"}.ti-brand-google:before{content:"\ec1f"}.ti-brand-instagram:before{content:"\ec20"}.ti-brand-linkedin:before{content:"\ec8c"}.ti-brand-python:before{content:"\ed01"}.ti-briefcase:before{content:"\ea46"}.ti-building-bank:before{content:"\ebe2"}.ti-building-warehouse:before{content:"\ebe3"}.ti-bulb:before{content:"\ea51"}.ti-calendar:before{content:"\ea53"}.ti-certificate:before{content:"\ed76"}.ti-chart-bar:before{content:"\ea59"}.ti-chart-dots:before{content:"\ee2f"}.ti-check:before{content:"\ea5e"}.ti-circle-check:before{content:"\ea67"}.ti-clipboard-check:before{content:"\ea6c"}.ti-clock:before{content:"\ea70"}.ti-code:before{content:"\ea77"}.ti-code-dots:before{content:"\f61a"}.ti-compass:before{content:"\ea79"}.ti-copy:before{content:"\ea7a"}.ti-database:before{content:"\ea88"}.ti-database-search:before{content:"\fa18"}.ti-device-mobile-rotated:before{content:"\ecdb"}.ti-download:before{content:"\ea96"}.ti-eye:before{content:"\ea9a"}.ti-file-spreadsheet:before{content:"\f03e"}.ti-forms:before{content:"\ee8f"}.ti-git-compare:before{content:"\eab4"}.ti-language:before{content:"\ebbe"}.ti-layout-dashboard:before{content:"\f02c"}.ti-list-numbers:before{content:"\ef11"}.ti-lock:before{content:"\eae2"}.ti-mail:before{content:"\eae5"}.ti-map-pin:before{content:"\eae8"}.ti-message-circle:before{content:"\eaed"}.ti-receipt:before{content:"\edfd"}.ti-repeat:before{content:"\eb72"}.ti-school:before{content:"\ecf7"}.ti-share:before{content:"\eb21"}.ti-shopping-bag:before{content:"\f5f8"}.ti-sparkles:before{content:"\f6d7"}.ti-table:before{content:"\eba1"}.ti-trending-up:before{content:"\eb43"}
 :root {
   --azul:#1F5C99;--azul-dark:#163f6b;--azul-bg:#EBF2FA;--negro:#111111;
   --gris-1:#444444;--gris-2:#6B6B6B;   /* 2026-10-01: gris-2 era #888 (contraste 3,5 sobre blanco); ahora 5,3 */
@@ -1251,6 +1251,9 @@ body.rc-leyendo #i3Escena,body.rc-leyendo #i3CapaHada{opacity:.15;transition:opa
 .rc-copiar{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:142px;font-family:var(--sans);font-size:13px;font-weight:600;padding:8px 14px;border-radius:100px;border:1px solid var(--azul);background:var(--azul);color:#fff;cursor:pointer;transition:background .2s}
 .rc-copiar i{font-size:16px}
 .rc-copiar.ok{background:#1A7A4A;border-color:#1A7A4A}
+.rc-prompt.plegado pre{max-height:300px;overflow:hidden;-webkit-mask-image:linear-gradient(180deg,#000 60%,transparent);mask-image:linear-gradient(180deg,#000 60%,transparent)}
+.rc-ver{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;font-family:var(--sans);font-size:13px;font-weight:600;padding:10px;border:0;border-top:1px solid var(--borde);background:none;color:var(--azul);cursor:pointer}
+[data-theme="dark"] .rc-ver{color:var(--glow-2)}
 .rc-prompt pre{margin:0;padding:14px 16px;font-family:"JetBrains Mono",var(--mono);font-size:13px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--negro)}
 .rc-nota{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:12px;background:var(--azul-bg);margin:1rem 0}
 .rc-nota>i{font-size:20px;color:var(--azul);flex-shrink:0;margin-top:2px}
@@ -1287,19 +1290,77 @@ body.rc-leyendo #i3Escena,body.rc-leyendo #i3CapaHada{opacity:.15;transition:opa
 .rc-boton--pri{background:var(--azul);border-color:var(--azul);color:#fff}
 .rc-acc{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0}
 .rc-mas-t{font-size:15px;font-weight:600;margin:2rem 0 .8rem}
-/* Recursos: pestañas por IA dentro de un artículo (2026-10-06) */
-.rc-ias{display:flex;flex-wrap:wrap;gap:6px;padding:5px;border-radius:14px;background:var(--gris-4);border:1px solid var(--borde);margin:.6rem 0 .9rem}
-.rc-ia{flex:1 1 auto;font-family:var(--sans);font-size:13.5px;font-weight:600;padding:9px 14px;border-radius:10px;border:1px solid transparent;background:transparent;color:var(--gris-1);cursor:pointer;white-space:nowrap}
-@media (hover:hover){ .rc-ia:hover{color:var(--azul)} }
-.rc-ia.on{background:var(--blanco);color:var(--negro);border-color:var(--borde);box-shadow:0 1px 3px rgba(0,0,0,.08)}
-@media (hover:hover){ [data-theme="dark"] .rc-ia:hover{color:var(--glow-2)} }
-[data-theme="dark"] .rc-ia.on{background:#1a1a2c;border-color:#2f2f48}
+/* Recursos: artículo visual (2026-10-06). Selector de IA deslizable estilo iOS:
+   una cápsula de vidrio con una pastilla que se desliza con resorte a la opción
+   elegida (--i = posición, --n = cantidad). También se cambia deslizando el dedo
+   sobre el prompt. */
+.rc-seg{position:relative;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));padding:4px;margin:.6rem 0 1rem;border-radius:999px;background:rgba(118,118,128,.14);border:1px solid rgba(0,0,0,.06);-webkit-backdrop-filter:blur(18px) saturate(1.6);backdrop-filter:blur(18px) saturate(1.6)}
+[data-theme="dark"] .rc-seg{background:rgba(118,118,128,.2);border-color:rgba(255,255,255,.08)}
+.rc-seg-pastilla{position:absolute;top:4px;bottom:4px;left:4px;width:calc((100% - 8px) / var(--n));border-radius:999px;background:var(--blanco);box-shadow:0 3px 10px rgba(0,0,0,.12),0 0 0 .5px rgba(0,0,0,.04);transform:translateX(calc(100% * var(--i)));transition:transform .5s cubic-bezier(.32,1.45,.48,1)}
+[data-theme="dark"] .rc-seg-pastilla{background:linear-gradient(180deg,rgba(255,255,255,.2),rgba(255,255,255,.1));box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 4px 14px rgba(0,0,0,.4)}
+.rc-ia{position:relative;z-index:1;min-width:0;font-family:var(--sans);font-size:13.5px;font-weight:600;padding:8px 6px;border:0;border-radius:999px;background:none;color:var(--gris-1);cursor:pointer;white-space:nowrap;transition:color .3s}
+.rc-ia.on{color:var(--negro)}
+.rc-ia:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
+.rc-ia-paneles{touch-action:pan-y}
 .rc-ia-panel{display:none}
-.rc-ia-panel.on{display:block}
-.rc-res{display:grid;grid-template-columns:minmax(0,10.5em) minmax(0,1fr);margin:0 0 1rem;border:1px solid var(--borde);border-radius:12px;overflow:hidden;font-size:14px;line-height:1.55}
-.rc-res dt,.rc-res dd{margin:0;padding:9px 12px;border-bottom:1px solid var(--borde)}
-.rc-res dt{font-weight:600;color:var(--gris-1);background:var(--gris-4)}
-.rc-res dt:nth-last-of-type(1),.rc-res dd:last-child{border-bottom:0}
+.rc-ia-panel.on{display:block;animation:rc-entra .35s var(--ease)}
+@keyframes rc-entra{from{opacity:0;transform:translateX(var(--rc-dir,12px))}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){ .rc-seg-pastilla{transition:none} .rc-ia-panel.on{animation:none} }
+/* resultado de cada IA en tres íconos */
+.rc-res{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 10px;padding:0}
+.rc-res li{display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:12px;border-radius:14px;background:var(--gris-4);border:1px solid var(--borde)}
+.rc-res i{font-size:22px;color:var(--azul)}
+[data-theme="dark"] .rc-res i{color:var(--glow-2)}
+.rc-res span{font-size:12.5px;line-height:1.35;color:var(--gris-1)}
+.rc-res b{display:block;font-size:14px;color:var(--negro)}
+.rc-ia-nota{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--gris-1);margin:0 0 .2rem}
+.rc-ia-nota i{color:#7A5AF8;font-size:16px}
+[data-theme="dark"] .rc-ia-nota i{color:#A38BFA}
+/* cómo funciona: Gmail → IA → Planilla */
+.rc-flujo{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin:1.2rem 0 1rem;padding:16px;border-radius:18px;border:1px solid var(--borde);background:linear-gradient(135deg,var(--azul-bg),transparent)}
+.rc-nodo{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;min-width:0}
+.rc-nodo-i{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:var(--c);color:#fff;box-shadow:0 8px 20px -8px var(--c)}
+.rc-nodo-i i{font-size:26px}
+.rc-nodo b{font-size:14.5px}
+.rc-nodo small{font-size:12px;color:var(--gris-1);line-height:1.3}
+.rc-flecha{font-size:20px;color:var(--gris-1);flex-shrink:0;margin-top:16px}
+/* requisitos como etiquetas */
+.rc-chips{list-style:none;display:flex;flex-wrap:wrap;gap:8px;margin:0 0 .5rem;padding:0}
+.rc-chips li{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;padding:7px 12px;border-radius:999px;border:1px solid var(--borde);background:var(--blanco);color:var(--gris-1)}
+.rc-chips i{font-size:16px;color:var(--azul)}
+[data-theme="dark"] .rc-chips li{background:rgba(255,255,255,.03)}
+[data-theme="dark"] .rc-chips i{color:var(--glow-2)}
+/* pasos como tarjetas */
+.rc-pasos-v{list-style:none;counter-reset:rcp;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:.4rem 0 1.4rem;padding:0}
+.rc-pasos-v li{counter-increment:rcp;position:relative;display:flex;flex-direction:column;gap:6px;padding:14px 12px 12px;border-radius:14px;border:1px solid var(--borde);background:var(--blanco)}
+[data-theme="dark"] .rc-pasos-v li{background:rgba(255,255,255,.03)}
+.rc-pasos-v li::before{content:counter(rcp);position:absolute;top:10px;right:12px;font-family:"JetBrains Mono",var(--mono);font-size:12px;font-weight:600;color:var(--gris-1)}
+.rc-pasos-v i{font-size:22px;color:var(--azul)}
+[data-theme="dark"] .rc-pasos-v i{color:var(--glow-2)}
+.rc-pasos-v b{font-size:14px;line-height:1.3}
+.rc-pasos-v small{font-size:12px;color:var(--gris-1);line-height:1.35}
+.rc-pasos-v code{font-size:11px;padding:1px 4px;overflow-wrap:anywhere}
+/* vista previa del resultado (ilustración, como la app real) */
+.rc-vista{margin:0;padding:18px;border-radius:20px;background:linear-gradient(135deg,rgba(124,92,240,.18),rgba(76,141,219,.14))}
+.rc-vista-app{background:#fff;color:#202124;border-radius:14px;overflow:hidden;box-shadow:0 20px 40px -20px rgba(0,0,0,.45)}
+.rc-vista-cab{display:flex;align-items:center;gap:10px;padding:10px 12px;font-size:14px;font-weight:600;border-bottom:1px solid #E8EAED}
+.rc-vista-ico{width:24px;height:28px;border-radius:4px;background:#0F9D58;color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px}
+.rc-vista-tab{margin-left:auto;font-size:11px;font-weight:600;color:#137333;background:#E6F4EA;padding:3px 8px;border-radius:999px}
+.rc-vista-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:12px}
+.rc-vista-kpis div{background:#F6F8FB;border:1px solid #E8EBF0;border-radius:10px;padding:8px 10px;min-width:0}
+.rc-vista-kpis small{display:block;font-size:11px;color:#5F6368}
+.rc-vista-kpis b{font-size:15px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rc-vista-graf{display:flex;align-items:flex-end;gap:16px;height:80px;margin:0 12px;padding:0 8px;border-bottom:1px solid #E8EAED}
+.rc-vista-graf span{flex:1;border-radius:6px 6px 2px 2px;background:linear-gradient(180deg,#9C84F8,#5B8DEF)}
+.rc-vista-meses{display:flex;gap:16px;margin:0 12px;padding:4px 8px 0}
+.rc-vista-meses span{flex:1;text-align:center;font-size:11px;color:#5F6368}
+.rc-vista-cob{display:flex;flex-wrap:wrap;gap:4px;padding:10px 12px 12px}
+.rc-vista-cob span{font-size:11px;padding:2px 7px;border-radius:999px;background:#F1F3F4;color:#5F6368}
+.rc-vista-cob .si{background:#E6F4EA;color:#137333;font-weight:600}
+.rc-vista-pie{font-family:"JetBrains Mono",var(--mono);font-size:11.5px;color:var(--gris-1);text-align:center;margin:8px 0 1rem}
+.rc-nota-corta{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--gris-1);padding:10px 14px;border-radius:12px;background:var(--gris-4)}
+.rc-nota-corta i{font-size:18px;color:var(--azul);flex-shrink:0}
+[data-theme="dark"] .rc-nota-corta i{color:var(--glow-2)}
 #gp-guias>.rc-migas{grid-column:1/-1;grid-row:1}   /* en el formato tutorial ocupa el lugar del antetítulo */
 
 /* ════════════════════════════════════════════════════════════════════
@@ -1453,21 +1514,33 @@ body.rc-leyendo #i3Escena,body.rc-leyendo #i3CapaHada{opacity:.15;transition:opa
 }
 /* Recursos: en táctil, filtros, volver, copiar y botones de 44 px */
 @media (pointer:coarse){
-  .rc-f,.rc-copiar,.rc-boton,.rc-ia{min-height:44px}
+  .rc-f,.rc-copiar,.rc-boton,.rc-ia,.rc-ver{min-height:44px}
   .rc-volver{min-height:44px;padding:0 4px}
 }
 /* celular: el encabezado del prompt con el botón a lo ancho si no cabe */
 @media (max-width:420px){
-  .rc-res{grid-template-columns:1fr}
-  .rc-res dt{border-bottom:0;padding-bottom:2px}
-  .rc-res dd{padding-top:4px}
+  .rc-pasos-v{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .rc-res li{padding:10px}
+  .rc-vista-kpis{gap:6px;padding:10px}
+  .rc-vista-kpis div{padding:7px 8px}
+  .rc-vista-kpis b{font-size:13px}
+  .rc-flujo{padding:12px 8px}
   .rc-prompt-cab{flex-wrap:wrap}
   .rc-prompt pre{font-size:12.5px;padding:12px 13px}
   .rc-app{flex-direction:column;gap:8px}
   .rc-bajada{font-size:15px}
 }
+/* tablet angosta: pasos en dos columnas */
+@media (min-width:421px) and (max-width:640px){ .rc-pasos-v{grid-template-columns:repeat(2,minmax(0,1fr))} }
 /* muy angosto (zoom 150 % en iPhone): la tabla comparativa cabe sin desplazarse */
 @media (max-width:360px){
+  .rc-res{grid-template-columns:1fr}
+  .rc-res li{flex-direction:row;align-items:center}
+  .rc-flujo{flex-direction:column}
+  .rc-flujo{align-items:center}
+  .rc-flecha{transform:rotate(90deg);margin-top:0}
+  .rc-vista-kpis{grid-template-columns:1fr}
+  .rc-ia{font-size:12px;padding:8px 0;letter-spacing:-.01em}
   .rc-tabla{table-layout:fixed;font-size:12.5px}
   .rc-tabla th,.rc-tabla td{padding:7px 6px;overflow-wrap:anywhere}
   .rc-tabla thead th{letter-spacing:0}
@@ -2703,27 +2776,25 @@ Movimientos:
     </article>
 
     <!-- ── Prompt 3: gastos desde Gmail con Gemini (idea del Director, 2026-10-01) ── -->
-    <article class="rc-doc" data-r="prompt-gemini-gastos-gmail" data-tipo="prompt" data-min="5" data-app="conciliador"
-      data-gancho="Con Gemini, ChatGPT o Claude conectados a tu Gmail, un prompt arma tu planilla de gastos de 3 meses en 3 meses, con dashboard incluido.">
+    <article class="rc-doc" data-r="prompt-gemini-gastos-gmail" data-tipo="prompt" data-min="3" data-app="conciliador"
+      data-gancho="Con Gemini, ChatGPT o Claude conectados a tu Gmail, un prompt arma tu planilla de gastos con dashboard.">
       <h2 class="rc-h">Tus gastos del año en una planilla, con IA y Gmail</h2>
-      <p class="rc-bajada">¿Sabías que si tu IA está conectada a tu Gmail puede encontrar los avisos de compra de tus bancos y ordenarlos por ti? Funciona con Gemini, ChatGPT y Claude: eliges tu IA, copias su prompt, indicas 3 meses y obtienes tu planilla de gastos con dashboard. Repites con los meses siguientes y todo el año queda en el mismo archivo.</p>
-      <h3>Qué necesitas</h3>
-      <ul class="rc-lista">
-        <li><b>Una IA conectada a tu Gmail.</b> En Gemini, activa las apps de Google Workspace (Gmail, Drive y Documentos) en la configuración. En ChatGPT o Claude, conecta Gmail en su configuración.</li>
-        <li><b>En Gemini, el modelo Pro.</b> Elígelo antes de pegar el prompt: los otros modelos no generan el archivo de Google Sheets.</li>
-        <li><b>Avisos de tus bancos en el correo.</b> La IA solo encuentra los movimientos que te llegaron por email: compras con tarjeta, transferencias, pagos automáticos.</li>
-        <li><b>Un par de minutos</b> para revisar el resultado.</li>
+      <p class="rc-bajada">Tu IA lee los avisos de tu banco en Gmail y te arma una planilla de gastos con dashboard.</p>
+      <div class="rc-flujo" aria-label="Cómo funciona">
+        <div class="rc-nodo"><span class="rc-nodo-i" style="--c:#EA4335"><i class="ti ti-mail" aria-hidden="true"></i></span><b>Gmail</b><small>Avisos de tu banco</small></div>
+        <i class="ti ti-arrow-right rc-flecha" aria-hidden="true"></i>
+        <div class="rc-nodo"><span class="rc-nodo-i" style="--c:#7C5CF0"><i class="ti ti-sparkles" aria-hidden="true"></i></span><b>Tu IA</b><small>3 meses por vez</small></div>
+        <i class="ti ti-arrow-right rc-flecha" aria-hidden="true"></i>
+        <div class="rc-nodo"><span class="rc-nodo-i" style="--c:#188038"><i class="ti ti-table" aria-hidden="true"></i></span><b>Planilla</b><small>Con dashboard</small></div>
+      </div>
+      <ul class="rc-chips">
+        <li><i class="ti ti-mail" aria-hidden="true"></i>Gmail conectado a tu IA</li>
+        <li><i class="ti ti-building-bank" aria-hidden="true"></i>Avisos del banco en tu correo</li>
+        <li><i class="ti ti-sparkles" aria-hidden="true"></i>En Gemini, modelo Pro</li>
       </ul>
       <h3>Elige tu IA</h3>
-      <div class="rc-ias" role="tablist" aria-label="Elige tu IA">
-        <button type="button" role="tab" class="rc-ia on" aria-selected="true" data-ia="gemini" onclick="rcIA(this)">Gemini</button>
-        <button type="button" role="tab" class="rc-ia" aria-selected="false" data-ia="excel" onclick="rcIA(this)">ChatGPT o Claude</button>
-        <button type="button" role="tab" class="rc-ia" aria-selected="false" data-ia="otra" onclick="rcIA(this)">Otra IA</button>
-      </div>
-      <div class="rc-ia-panel on" role="tabpanel" data-ia="gemini">
-        <dl class="rc-res"><dt>Resultado</dt><dd>Un Google Sheets en tu Drive, con Dashboard, Movimientos, Tablas_Dinámicas y Revisar.</dd><dt>Tablas dinámicas</dt><dd>Reales, de Google Sheets, como fuente de los gráficos.</dd><dt>Para seguir</dt><dd>Conversación nueva con los 3 meses siguientes: actualiza el mismo Sheet.</dd><dt>Requisito</dt><dd>Modelo Pro y apps de Google Workspace activadas.</dd></dl>
-        <div class="rc-prompt">
-          <div class="rc-prompt-cab"><span><i class="ti ti-sparkles" aria-hidden="true"></i>Prompt para Gemini</span><button type="button" class="rc-copiar" onclick="rcCopiar(this)"><i class="ti ti-copy" aria-hidden="true"></i><span>Copiar prompt</span></button></div>
+      <div class="rc-seg" role="tablist" aria-label="Elige tu IA" style="--n:4;--i:0"><span class="rc-seg-pastilla" aria-hidden="true"></span><button type="button" role="tab" class="rc-ia on" aria-selected="true" data-ia="gemini" onclick="rcIA(this)">Gemini</button><button type="button" role="tab" class="rc-ia" aria-selected="false" data-ia="chatgpt" onclick="rcIA(this)">ChatGPT</button><button type="button" role="tab" class="rc-ia" aria-selected="false" data-ia="claude" onclick="rcIA(this)">Claude</button><button type="button" role="tab" class="rc-ia" aria-selected="false" data-ia="otra" onclick="rcIA(this)">Otra</button></div>
+      <div class="rc-ia-paneles"><div class="rc-ia-panel on" role="tabpanel" data-ia="gemini"><ul class="rc-res"><li><i class="ti ti-file-spreadsheet" aria-hidden="true"></i><span><b>Google Sheets</b>en tu Drive</span></li><li><i class="ti ti-chart-bar" aria-hidden="true"></i><span><b>Tablas dinámicas</b>reales</span></li><li><i class="ti ti-repeat" aria-hidden="true"></i><span><b>Mismo archivo</b>al repetir</span></li></ul><p class="rc-ia-nota"><i class="ti ti-sparkles" aria-hidden="true"></i><span>Usa el modelo <b>Pro</b>: los otros no generan el archivo.</span></p><div class="rc-prompt"><div class="rc-prompt-cab"><span><i class="ti ti-sparkles" aria-hidden="true"></i>Prompt para Gemini</span><button type="button" class="rc-copiar" onclick="rcCopiar(this)"><i class="ti ti-copy" aria-hidden="true"></i><span>Copiar prompt</span></button></div>
 <pre>Procesa SOLO estos 3 meses de 2026 en esta interacción:
 [JULIO + AGOSTO + SEPTIEMBRE]
 
@@ -2813,13 +2884,7 @@ Al finalizar entrega:
 - Meses pendientes
 - Movimientos a revisar
 
-Si no puedes crear o actualizar el Google Sheets, dilo explícitamente y NO afirmes que fue creado.</pre>
-        </div>
-      </div>
-      <div class="rc-ia-panel" role="tabpanel" data-ia="excel">
-        <dl class="rc-res"><dt>Resultado</dt><dd>Un archivo Excel (.xlsx) para descargar, con Dashboard, Movimientos, Resumen y Revisar. Puedes subirlo a tu Drive.</dd><dt>Tablas dinámicas</dt><dd>En su lugar, resúmenes con fórmulas que leen la hoja Movimientos.</dd><dt>Para seguir</dt><dd>Conversación nueva con los 3 meses siguientes, adjuntando el Excel anterior.</dd><dt>Requisito</dt><dd>Gmail conectado y un plan que permita crear archivos.</dd></dl>
-        <div class="rc-prompt">
-          <div class="rc-prompt-cab"><span><i class="ti ti-sparkles" aria-hidden="true"></i>Prompt para ChatGPT o Claude</span><button type="button" class="rc-copiar" onclick="rcCopiar(this)"><i class="ti ti-copy" aria-hidden="true"></i><span>Copiar prompt</span></button></div>
+Si no puedes crear o actualizar el Google Sheets, dilo explícitamente y NO afirmes que fue creado.</pre></div></div><div class="rc-ia-panel" role="tabpanel" data-ia="chatgpt"><ul class="rc-res"><li><i class="ti ti-download" aria-hidden="true"></i><span><b>Excel (.xlsx)</b>para descargar</span></li><li><i class="ti ti-chart-bar" aria-hidden="true"></i><span><b>Resúmenes</b>con fórmulas</span></li><li><i class="ti ti-repeat" aria-hidden="true"></i><span><b>Adjunta el Excel</b>al repetir</span></li></ul><p class="rc-ia-nota"><i class="ti ti-sparkles" aria-hidden="true"></i><span>Conecta Gmail en la configuración de ChatGPT.</span></p><div class="rc-prompt"><div class="rc-prompt-cab"><span><i class="ti ti-sparkles" aria-hidden="true"></i>Prompt para ChatGPT</span><button type="button" class="rc-copiar" onclick="rcCopiar(this)"><i class="ti ti-copy" aria-hidden="true"></i><span>Copiar prompt</span></button></div>
 <pre>Revisa mi Gmail y arma un registro de mis cargos y movimientos bancarios de estos 3 meses de 2026:
 [JULIO + AGOSTO + SEPTIEMBRE]
 
@@ -2873,13 +2938,61 @@ Al finalizar entrega:
 - Total acumulado
 - Meses pendientes
 - Movimientos a revisar
-Si no puedes crear el archivo, dilo explícitamente y NO afirmes que fue creado.</pre>
-        </div>
-      </div>
-      <div class="rc-ia-panel" role="tabpanel" data-ia="otra">
-        <dl class="rc-res"><dt>Resultado</dt><dd>Lo mejor que pueda: Google Sheets, Excel o una tabla CSV para pegar en una planilla.</dd><dt>Tablas dinámicas</dt><dd>Si la herramienta las permite; si no, fórmulas.</dd><dt>Para seguir</dt><dd>Conversación nueva adjuntando el archivo anterior.</dd><dt>Requisito</dt><dd>Acceso a tu Gmail. Al terminar, te dice qué no pudo hacer.</dd></dl>
-        <div class="rc-prompt">
-          <div class="rc-prompt-cab"><span><i class="ti ti-sparkles" aria-hidden="true"></i>Prompt para otra IA</span><button type="button" class="rc-copiar" onclick="rcCopiar(this)"><i class="ti ti-copy" aria-hidden="true"></i><span>Copiar prompt</span></button></div>
+Si no puedes crear el archivo, dilo explícitamente y NO afirmes que fue creado.</pre></div></div><div class="rc-ia-panel" role="tabpanel" data-ia="claude"><ul class="rc-res"><li><i class="ti ti-download" aria-hidden="true"></i><span><b>Excel (.xlsx)</b>para descargar</span></li><li><i class="ti ti-chart-bar" aria-hidden="true"></i><span><b>Resúmenes</b>con fórmulas</span></li><li><i class="ti ti-repeat" aria-hidden="true"></i><span><b>Adjunta el Excel</b>al repetir</span></li></ul><p class="rc-ia-nota"><i class="ti ti-sparkles" aria-hidden="true"></i><span>Conecta Gmail en la configuración de Claude.</span></p><div class="rc-prompt"><div class="rc-prompt-cab"><span><i class="ti ti-sparkles" aria-hidden="true"></i>Prompt para Claude</span><button type="button" class="rc-copiar" onclick="rcCopiar(this)"><i class="ti ti-copy" aria-hidden="true"></i><span>Copiar prompt</span></button></div>
+<pre>Revisa mi Gmail y arma un registro de mis cargos y movimientos bancarios de estos 3 meses de 2026:
+[JULIO + AGOSTO + SEPTIEMBRE]
+
+BÚSQUEDA
+Haz UNA búsqueda independiente por cada mes. NO combines meses.
+Usa términos como: cargo, compra, pago, débito, transferencia, transacción, movimiento, comprobante, tarjeta, banco, cobro y operación.
+Si tienes un límite de búsquedas, procesa solo los meses que alcances y dime cuáles quedaron pendientes.
+
+DATOS (una fila por movimiento)
+Fecha | Monto | Moneda | Glosa original | Comercio/Beneficiario | Concepto | Subconcepto | Banco/Tarjeta | Tipo de movimiento | Últimos 4 dígitos | ID/Referencia | Fecha correo | Enlace | Confianza | Estado revisión
+No inventes datos. Si falta información, déjala vacía.
+Sin clasificación: "Por clasificar".
+Detecta duplicados (por ejemplo, autorización y confirmación del mismo cargo), márcalos "Revisar" y no los cuentes dos veces.
+"Monto" debe ser NUMÉRICO, no texto.
+Valor: 2678570
+Formato visual: $2.678.570
+
+ARCHIVO EXCEL — OBLIGATORIO
+Entrega el resultado como un archivo Excel (.xlsx) descargable, NO solamente en el chat.
+Si te adjunto el Excel de una revisión anterior, agrega los movimientos nuevos a ese archivo y no borres lo anterior.
+
+Hojas:
+1. Dashboard
+2. Movimientos
+3. Resumen
+4. Revisar
+
+Movimientos: tabla completa, con filtros y encabezado fijo.
+
+Resumen: gasto por mes, por concepto, por subconcepto, por comercio y por banco/tarjeta; cantidad por mes y por concepto; top 10 comercios. Usa fórmulas (SUMAR.SI, CONTAR.SI) que lean la hoja Movimientos.
+
+Dashboard:
+- Total gastado
+- Cantidad de movimientos
+- Promedio mensual
+- Gasto mes actual
+Los KPI deben ser fórmulas, nunca texto.
+Gráficos: gasto por mes, gasto por concepto y top 10 comercios, tomando los datos de Resumen. NO superponer gráficos.
+Cobertura: los 12 meses de 2026, con ✓ SOLO en los meses realmente buscados. Los demás quedan "Pendiente".
+
+Revisar: movimientos con baja confianza, posibles duplicados, información incompleta o "Por clasificar".
+
+VALIDACIÓN FINAL
+Antes de terminar verifica: archivo creado, movimientos escritos, monto numérico, KPI con fórmulas, gráficos sin superposición, duplicados controlados y cobertura correcta.
+NO afirmes que 2026 está completo.
+
+Al finalizar entrega:
+- Archivo Excel descargable
+- Meses procesados
+- Movimientos encontrados
+- Total acumulado
+- Meses pendientes
+- Movimientos a revisar
+Si no puedes crear el archivo, dilo explícitamente y NO afirmes que fue creado.</pre></div></div><div class="rc-ia-panel" role="tabpanel" data-ia="otra"><ul class="rc-res"><li><i class="ti ti-table" aria-hidden="true"></i><span><b>Sheets, Excel o CSV</b>lo que pueda</span></li><li><i class="ti ti-chart-bar" aria-hidden="true"></i><span><b>Tablas dinámicas</b>si puede</span></li><li><i class="ti ti-eye" aria-hidden="true"></i><span><b>Te avisa</b>qué no pudo hacer</span></li></ul><p class="rc-ia-nota"><i class="ti ti-sparkles" aria-hidden="true"></i><span>Necesita acceso a tu Gmail.</span></p><div class="rc-prompt"><div class="rc-prompt-cab"><span><i class="ti ti-sparkles" aria-hidden="true"></i>Prompt para otra IA</span><button type="button" class="rc-copiar" onclick="rcCopiar(this)"><i class="ti ti-copy" aria-hidden="true"></i><span>Copiar prompt</span></button></div>
 <pre>Revisa mi Gmail y arma un registro de mis cargos y movimientos bancarios de estos meses de 2026:
 [JULIO + AGOSTO + SEPTIEMBRE]
 
@@ -2912,19 +3025,25 @@ AL TERMINAR, dime:
 - Meses procesados y meses pendientes
 - Movimientos encontrados, total acumulado y movimientos a revisar
 - Qué de lo pedido NO pudiste hacer (por ejemplo, tablas dinámicas reales o gráficos)
-No afirmes que creaste algo que no creaste. No afirmes que 2026 está completo.</pre>
-        </div>
-      </div>
+No afirmes que creaste algo que no creaste. No afirmes que 2026 está completo.</pre></div></div></div>
       <h3>Cómo usarlo</h3>
-      <ol class="rc-pasos">
-        <li>Elige la pestaña de tu IA, copia el prompt y cambia <code>[JULIO + AGOSTO + SEPTIEMBRE]</code> por los 3 meses que quieres procesar, por ejemplo <em>ENERO + FEBRERO + MARZO</em>.</li>
-        <li>Pégalo en tu IA. En Gemini, elige antes el modelo <b>Pro</b>.</li>
-        <li>Abre el resultado (el Sheet o el Excel) y revisa la <b>cobertura</b>: solo los meses buscados quedan con ✓.</li>
-        <li>Repite en una conversación nueva con los 3 meses siguientes. En Gemini se actualiza el mismo Sheet; en las otras IA, adjunta el archivo anterior.</li>
-        <li>Revisa la hoja <b>Revisar</b> y compara el total con tu cartola. La IA puede saltarse correos o leer mal un monto; tú tienes la última palabra.</li>
+      <ol class="rc-pasos-v">
+        <li><i class="ti ti-copy" aria-hidden="true"></i><b>Elige tu IA y copia</b></li>
+        <li><i class="ti ti-calendar" aria-hidden="true"></i><b>Cambia los 3 meses</b><small><code>[JULIO + AGOSTO + SEPTIEMBRE]</code></small></li>
+        <li><i class="ti ti-clipboard-check" aria-hidden="true"></i><b>Revisa la cobertura</b><small>✓ solo en los meses buscados</small></li>
+        <li><i class="ti ti-repeat" aria-hidden="true"></i><b>Repite</b><small>con los 3 meses siguientes</small></li>
       </ol>
-      <div class="rc-nota"><i class="ti ti-bulb" aria-hidden="true"></i><p><b>Por qué funciona:</b> las IA hacen un número limitado de búsquedas en Gmail por conversación, y una sola búsqueda para todo el año trae sobre todo los meses recientes. Por eso el prompt procesa <b>3 meses a la vez, con una búsqueda por mes</b>, mantiene un solo archivo y marca qué meses quedaron cubiertos. Además, exige montos numéricos, no inventa datos y separa lo dudoso en su propia hoja.</p></div>
-      <div class="rc-nota rc-nota--aviso"><i class="ti ti-building-bank" aria-hidden="true"></i><p><b>Ojo:</b> lo que cada IA puede hacer con tu correo y tus archivos depende de tu plan y va cambiando. Si te dice que no pudo crear el archivo, revisa que Gmail esté conectado (y en Gemini, que uses el modelo Pro) y vuelve a intentarlo. Y recuerda: estás dándole acceso a tu correo, úsalo solo con tu propia cuenta.</p></div>
+      <figure class="rc-vista" aria-hidden="true">
+        <div class="rc-vista-app">
+          <div class="rc-vista-cab"><span class="rc-vista-ico"><i class="ti ti-table"></i></span>Mis gastos 2026<span class="rc-vista-tab">Dashboard</span></div>
+          <div class="rc-vista-kpis"><div><small>Total gastado</small><b>$1.284.560</b></div><div><small>Movimientos</small><b>87</b></div><div><small>Promedio mensual</small><b>$428.187</b></div></div>
+          <div class="rc-vista-graf"><span style="height:70%"></span><span style="height:95%"></span><span style="height:80%"></span></div>
+          <div class="rc-vista-meses"><span>Jul</span><span>Ago</span><span>Sep</span></div>
+          <div class="rc-vista-cob"><span>Ene</span><span>Feb</span><span>Mar</span><span>Abr</span><span>May</span><span>Jun</span><span class="si">Jul ✓</span><span class="si">Ago ✓</span><span class="si">Sep ✓</span><span>Oct</span><span>Nov</span><span>Dic</span></div>
+        </div>
+      </figure>
+      <figcaption class="rc-vista-pie">Así se ve el resultado · datos de ejemplo</figcaption>
+      <p class="rc-nota-corta"><i class="ti ti-lock" aria-hidden="true"></i>Compara el total con tu cartola y úsalo solo con tu propia cuenta.</p>
     </article>
 
     <!-- ── Tip 1: BUSCARX ── -->
@@ -3927,12 +4046,28 @@ function rcVolver(){
   irArriba();
 }
 function rcVerApp(tab){ show('product'); var b=document.getElementById(tab); if(b) b.click(); }
-// pestañas por IA dentro de un artículo (Gemini / ChatGPT o Claude / Otra IA)
-function rcIA(b){
-  var art=b.closest('.rc-doc'), ia=b.getAttribute('data-ia');
-  [].forEach.call(art.querySelectorAll('.rc-ia'),function(x){ var on=x===b; x.classList.toggle('on',on); x.setAttribute('aria-selected',on?'true':'false'); });
-  [].forEach.call(art.querySelectorAll('.rc-ia-panel'),function(p){ p.classList.toggle('on',p.getAttribute('data-ia')===ia); });
+// selector de IA (Gemini / ChatGPT / Claude / Otra): la pastilla se desliza a la
+// opción elegida; también se cambia deslizando el dedo sobre el prompt o con las flechas
+function rcIA(b,dir){
+  var art=b.closest('.rc-doc'), seg=b.closest('.rc-seg'), bs=[].slice.call(seg.querySelectorAll('.rc-ia')), i=bs.indexOf(b), ia=b.getAttribute('data-ia');
+  var antes=bs.indexOf(seg.querySelector('.rc-ia.on'));
+  seg.style.setProperty('--i',i);
+  bs.forEach(function(x){ var on=x===b; x.classList.toggle('on',on); x.setAttribute('aria-selected',on?'true':'false'); x.tabIndex=on?0:-1; });
+  [].forEach.call(art.querySelectorAll('.rc-ia-panel'),function(p){ var on=p.getAttribute('data-ia')===ia; if(on) p.style.setProperty('--rc-dir',(dir||(i>=antes?1:-1))*14+'px'); p.classList.toggle('on',on); });
 }
+// prompts largos: se muestran plegados con "Ver prompt completo" (copiar siempre copia todo)
+function rcVer(b){ var c=b.closest('.rc-prompt'), ab=c.classList.toggle('plegado'); b.innerHTML=ab?'Ver prompt completo <i class="ti ti-arrow-down" aria-hidden="true"></i>':'Ver menos <i class="ti ti-arrow-up" aria-hidden="true"></i>'; b.setAttribute('aria-expanded',ab?'false':'true'); }
+(function(){ [].forEach.call(document.querySelectorAll('.rc-prompt'),function(c){ var pre=c.querySelector('pre'); if(!pre||pre.textContent.split(String.fromCharCode(10)).length<=16) return; c.classList.add('plegado'); var b=document.createElement('button'); b.type='button'; b.className='rc-ver'; b.setAttribute('aria-expanded','false'); b.onclick=function(){ rcVer(b); }; b.innerHTML='Ver prompt completo <i class="ti ti-arrow-down" aria-hidden="true"></i>'; c.appendChild(b); }); })();
+function rcIAMover(seg,d){ var bs=[].slice.call(seg.querySelectorAll('.rc-ia')), i=bs.indexOf(seg.querySelector('.rc-ia.on'))+d; if(i>=0&&i<bs.length){ rcIA(bs[i],d); return bs[i]; } }
+(function(){
+  [].forEach.call(document.querySelectorAll('.rc-seg'),function(seg){
+    seg.addEventListener('keydown',function(e){ var d=e.key==='ArrowRight'?1:(e.key==='ArrowLeft'?-1:0); if(!d) return; e.preventDefault(); var b=rcIAMover(seg,d); if(b) b.focus(); });
+    var pan=seg.parentNode.querySelector('.rc-ia-paneles'), x0=null, y0=0;
+    if(!pan) return;
+    pan.addEventListener('touchstart',function(e){ x0=e.touches[0].clientX; y0=e.touches[0].clientY; },{passive:true});
+    pan.addEventListener('touchend',function(e){ if(x0===null) return; var dx=e.changedTouches[0].clientX-x0, dy=e.changedTouches[0].clientY-y0; x0=null; if(Math.abs(dx)>60&&Math.abs(dy)<40) rcIAMover(seg,dx<0?1:-1); },{passive:true});
+  });
+})();
 function rcCopiarTexto(t,ok){
   function respaldo(){ var x=document.createElement('textarea'); x.value=t; x.setAttribute('readonly',''); x.style.cssText='position:fixed;top:0;left:0;opacity:0'; document.body.appendChild(x); x.select(); try{ document.execCommand('copy'); ok(); }catch(e){} document.body.removeChild(x); }
   if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok,respaldo); else respaldo();
@@ -7998,7 +8133,7 @@ window.addEventListener('load', function(){ var h = new URLSearchParams(location
    que se desplazan de lado). ── */
 (function(){
   var ORDEN=['home','about','product','guias','contact'];
-  var PROPIOS='input,textarea,select,.gp-step,.al-demo,.hx-cubo-zona,.hx-canvas,[data-sin-deslizar]';
+  var PROPIOS='input,textarea,select,.gp-step,.al-demo,.hx-cubo-zona,.hx-canvas,.rc-ia-paneles,.rc-seg,[data-sin-deslizar]';   // .rc-ia-paneles y .rc-seg: deslizar cambia de IA
   var x0=null,y0=0,t0=0;
   function actual(){ var v=document.querySelector('section.visible'); return v?ORDEN.indexOf(v.id):-1; }
   function desplazableDeLado(el){
