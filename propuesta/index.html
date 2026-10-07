@@ -2291,11 +2291,6 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
 .p-vel.on{opacity:1}
 @media (prefers-reduced-motion:reduce){ .p-lente::before{animation:none} .p-vel,.p-corte{display:none} }
 
-/* ════ PROPUESTA E: recorridos guiados por el desplazamiento ════════════════════ */
-.p-pin{position:relative}
-.p-pin.on>.al-demo{position:sticky;top:var(--p-top,64px)}
-.p-guia{position:absolute;left:50%;bottom:calc(var(--al-barra,48px) + 10px);translate:-50% 0;z-index:5;pointer-events:none;padding:5px 12px;border-radius:999px;background:rgba(10,18,30,.78);color:#E8EDF5;font:500 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;opacity:0;transition:opacity .4s ease;white-space:nowrap}
-.p-pin.on .p-guia.on{opacity:1}
 </style>
 </head>
 
@@ -5369,7 +5364,7 @@ window.alDemoLinea = function(root, STEPS, o){
     if (!S) return;
     const e = o.sim(L.T) || {}, p = S.prev;
     // la etiqueta solo dice el modo; lo que ocurre se ve en la escena
-    const modo = L.playing ? 'Automático' : (root._pGuiado ? 'Recorrido' : 'Manual');
+    const modo = L.playing ? 'Automático' : 'Manual';
     if (modo !== p.modo) S.q.fase.textContent = modo;
     const prog = e.prog == null ? (e.ok ? 1 : 0) : e.prog;
     if (prog !== p.prog) { S.q.bar.style.transform = 'scaleX(' + prog.toFixed(3) + ')'; S.q.bar.parentNode.classList.toggle('on', e.prog != null); }
@@ -5407,7 +5402,7 @@ window.alDemoLinea = function(root, STEPS, o){
     L.setStep(i); L.sucio = true;
   };
   L.setPlaying = p => {
-    L.playing = p; if (p) root._pGuiado = false;
+    L.playing = p;
     if (playBtn) { playBtn.textContent = p ? '▮▮' : '▶'; playBtn.setAttribute('aria-label', p ? 'Pausar' : 'Reproducir'); }
     root.classList.toggle('al-demo--manual', !p);
     // al volver a automático sigue desde donde quedó (si terminó, vuelve a empezar)
@@ -8728,55 +8723,6 @@ window.addEventListener('load', function(){ var h = new URLSearchParams(location
   });
 
 
-  /* ════ PROPUESTA E: el desplazamiento guía el recorrido ════
-     Mientras bajas por un demo, este queda fijo en pantalla y el avance de la página mueve
-     su línea de tiempo: la cámara viaja paso a paso. Al terminar, la página sigue. Si se toca
-     reproducir, vuelve a correr solo. Solo cuando el demo cabe entero en la pantalla. */
-  function recorridos(){
-    if (reduce) return;
-    var nav = document.querySelector('nav'), topNav = nav ? nav.getBoundingClientRect().height + 10 : 64;
-    [].forEach.call(document.querySelectorAll('.al-demo'), function(d){
-      var w = d.parentNode;
-      if (!w.classList.contains('p-pin')) {
-        w = document.createElement('div'); w.className = 'p-pin'; d.parentNode.insertBefore(w, d); w.appendChild(d);
-        var g = document.createElement('div'); g.className = 'p-guia'; g.textContent = 'Desplaza para recorrer ↓';
-        var st = d.querySelector('.al-demo__stage'); if (st) st.appendChild(g);
-        d._pGuia = g;
-      }
-      var L = d._L;
-      if (!L || !d.offsetParent) { w.classList.remove('on'); w.style.height = ''; return; }
-      var h = d.offsetHeight, cabe = h <= innerHeight - topNav - 8;
-      w.classList.toggle('on', cabe);
-      w.style.setProperty('--p-top', topNav + 'px');
-      w.style.height = cabe ? (h + Math.round(innerHeight * 0.5 * L.STEPS.length)) + 'px' : '';
-    });
-  }
-  var pinActivo = null;
-  if (!reduce) (function guia(){
-    [].forEach.call(document.querySelectorAll('.p-pin.on'), function(w){
-      var d = w.firstElementChild, L = d && d._L; if (!L || !d.offsetParent) return;
-      var r = w.getBoundingClientRect(), recorrido = w.offsetHeight - d.offsetHeight, top = parseFloat(w.style.getPropertyValue('--p-top')) || 64;
-      var u = (top - r.top) / Math.max(1, recorrido);
-      var dentro = u > -0.02 && u < 1.02;
-      if (d._pGuia) d._pGuia.classList.toggle('on', dentro && u < 0.08);
-      if (!dentro) { d._pU = null; return; }
-      u = Math.min(1, Math.max(0, u));
-      if (d._pU == null) { d._pU = u; return; }            // al entrar no salta: espera el primer movimiento
-      if (Math.abs(u - d._pU) < 0.0005) return;          // sin desplazamiento: si alguien tocó reproducir, que siga solo
-      d._pU = u;
-      if (L.playing) L.setPlaying(false);
-      d._pGuiado = true;
-      var meta = u * (L.DUR - 0.05);
-      L.T += (meta - L.T) * 0.18;                          // inercia: la cámara llega suave, no a saltos
-      if (Math.abs(meta - L.T) < 0.002) L.T = meta;
-      L.setStep(L.stepOf(L.T)); L.sucio = true;
-    });
-    requestAnimationFrame(guia);
-  })();
-  addEventListener('resize', function(){ setTimeout(recorridos, 50); });
-  document.addEventListener('click', function(e){ if (e.target.closest && e.target.closest('#product')) setTimeout(recorridos, 600); });
-  if (!reduce && 'ResizeObserver' in window) { var roR = new ResizeObserver(function(){ clearTimeout(roR._t); roR._t = setTimeout(recorridos, 120); }); [].forEach.call(document.querySelectorAll('.al-demo'), function(d){ roR.observe(d); }); }
-
   /* engancha el cambio de pestaña sin tocar show() */
   var showOrig = window.show;
   if (typeof showOrig === 'function') {
@@ -8784,7 +8730,7 @@ window.addEventListener('load', function(){ var h = new URLSearchParams(location
       var r = showOrig.apply(this, arguments);
       corte(id);
       if (id === 'about') sobreMi();
-      if (id === 'product') { setTimeout(trazos, 50); demos(); setTimeout(recorridos, 400); }
+      if (id === 'product') { setTimeout(trazos, 50); demos(); }
       if (id === 'guias') setTimeout(recursos, 30);
       if (id === 'home') { portada(); setTimeout(descifrar, 1100); }
       tituloDe(id);
@@ -8794,7 +8740,7 @@ window.addEventListener('load', function(){ var h = new URLSearchParams(location
   function alInicio(){
     var v = document.querySelector('section.visible'); var id = v && v.id;
     tituloDe(id);
-    if (id === 'home') { portada(); setTimeout(descifrar, 1100); } else if (id === 'about') sobreMi(); else if (id === 'product') { trazos(); demos(); setTimeout(recorridos, 400); } else if (id === 'guias') recursos();
+    if (id === 'home') { portada(); setTimeout(descifrar, 1100); } else if (id === 'about') sobreMi(); else if (id === 'product') { trazos(); demos(); } else if (id === 'guias') recursos();
   }
   // la portada espera a que la página termine de cargar (el 3D ocupa el primer segundo);
   // si tarda más de 3 s, se muestra sin animación

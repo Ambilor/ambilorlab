@@ -87,7 +87,4 @@ function camara(t){
   camera.lookAt(_m);
 }
 """ + s[c:]
-    # 5 · etiqueta "Recorrido" cuando el desplazamiento guía el demo
-    rep("    const modo = L.playing ? 'Automático' : 'Manual';", "    const modo = L.playing ? 'Automático' : (root._pGuiado ? 'Recorrido' : 'Manual');")
-    rep("    L.playing = p;\n", "    L.playing = p; if (p) root._pGuiado = false;\n")
     return s
