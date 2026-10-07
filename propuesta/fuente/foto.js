@@ -48,6 +48,9 @@ window.alFoto = (function(){
   //   Android: 412 × 915, esquinas de 40, cámara perforada; barra de estado de 32 y Chrome arriba (56).
   function modelo(){
     var ua = navigator.userAgent, w = Math.min(screen.width, screen.height), h = Math.max(screen.width, screen.height);
+    // pantallas chicas (iPhone SE, Android compactos): el teléfono del visitante ya es el marco; la app va sola,
+    // a todo el ancho, para que se vea grande sin desbordar
+    if (h <= 700 && equipo() === 'cel') return { tipo: 'chico' };
     if (/iPhone/.test(ua)) return w <= 390 && h <= 844 ? { tipo: 'iphone', muesca: true, w: 390, h: 844, r: 47 } : { tipo: 'iphone', w: 402, h: 874, r: 55 };
     if (/iPad/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) return { tipo: 'ipad', w: 834, h: 1194, r: 18 };
     return equipo() === 'tablet' ? { tipo: 'tableta', w: 800, h: 1280, r: 20 } : { tipo: 'android', w: 412, h: 915, r: 40 };
@@ -79,7 +82,8 @@ window.alFoto = (function(){
     return r;
   }
   // proporción del cuadro en táctil (la usa el CSS de la propuesta): la del equipo completo
-  if (equipo() !== 'pc') {
+  if (equipo() !== 'pc' && modelo().tipo === 'chico') { document.documentElement.style.setProperty('--p-ar-v', '0.8'); document.documentElement.style.setProperty('--p-ar-h', '1.2632'); document.documentElement.classList.add('p-chico'); }
+  else if (equipo() !== 'pc') {
     var _v = medidas(true, 3.84, 4.8, true), _h = medidas(false, 4.8, 3.8, true);
     document.documentElement.style.setProperty('--p-ar-v', (_v.OW / _v.OH).toFixed(4));
     document.documentElement.style.setProperty('--p-ar-h', (_h.OW / _h.OH).toFixed(4));
@@ -259,6 +263,11 @@ window.alFoto = (function(){
   function plana(T, escena, o){
     var g = new T.Group(); escena.add(g);
     var pantalla = new T.Group(); g.add(pantalla);
+    if (equipo() !== 'pc' && modelo().tipo === 'chico') {
+      g.userData = { plano: true, pantalla: pantalla, SW: o.ventana.w, SH: o.ventana.h, ext: { w: o.ventana.w, h: o.ventana.h, cy: 0 },
+        sombraVentana: { material: {} }, caja: { x: 0, y: 0, w: o.ventana.w, h: o.ventana.h } };
+      g.visible = false; return g;
+    }
     if (equipo() !== 'pc') {
       var mc = marco(T, g, pantalla, o), d = mc.d;
       g.userData = { plano: true, pleno: true, pantalla: pantalla, SW: d.SW, SH: d.SH, ventanaY: d.appY, ventanaX: d.appX, marco: mc, ext: mc.ext,
