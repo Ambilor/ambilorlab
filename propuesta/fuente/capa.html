@@ -231,4 +231,19 @@
 .p-resumen__otra{border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff}
 .p-resumen__cta{background:#3d7fd6;color:#fff;border:0}
 @media (max-width:420px){ .p-resumen ol button{min-height:32px;font-size:12.5px} .p-resumen{padding:12px} }
+
+/* ════ PROPUESTA K: de un vistazo, en todos los formatos: nombre, demo y explicación ═══════════════ */
+/* encabezado centrado y compacto (nombre y una línea de qué hace), el selector de demo centrado, el demo
+   y su título; "¿Qué es…?" pasa abajo, después del demo */
+#product .hp-tabs{margin-bottom:12px!important}
+#product .hp-panel .prod-cab{display:block!important;text-align:center;margin:0 auto .7rem!important;max-width:680px}
+#product .prod-cab .prod-eyebrow{justify-content:center;display:flex;margin-bottom:.35rem}
+#product .prod-h1{font-size:clamp(20px,2.6vw,30px)!important;line-height:1.18!important;margin:0 0 .35rem!important;letter-spacing:-.01em}
+#product .prod-cab .prod-tagline{display:block!important;font-size:clamp(13px,1.3vw,15px)!important;line-height:1.45!important;margin:0 auto!important;max-width:580px;opacity:.82}
+#product .prod-cab .alert-box{display:none!important}
+#product .demo-label{display:flex!important;justify-content:center;margin:0 auto .4rem!important;width:max-content;max-width:100%}
+#product .prod-cel{display:block!important;margin:1.4rem auto 2rem!important;max-width:680px}
+#product .prod-cel .prod-tagline{display:none!important}
+@media (pointer:fine){ #product .al-demo__stage{height:max(300px, min(56cqw, calc(100svh - 390px)))!important} }
+@media (pointer:coarse){ #product .al-demo{padding:10px 12px!important} }
 </style>

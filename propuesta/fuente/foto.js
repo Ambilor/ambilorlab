@@ -203,7 +203,7 @@ window.alFoto = (function(){
     var solo = !(m.tipo === 'iphone' && vert); if (solo) { oscuro.visible = true; claro.visible = false; }   // la barra de estado va sobre el navegador
     var vis = d.corte != null ? { w: FW, h: FH / 2 - d.corte, cy: (FH / 2 + d.corte) / 2 } : { w: FW, h: FH, cy: 0 };
     document.documentElement.style.setProperty(vert ? '--p-ar-v' : '--p-ar-h', (vis.w / vis.h).toFixed(4));
-    return { d: d, ext: vis, zoom: m.tipo === 'iphone' || m.tipo === 'android' ? (vert ? 1 : 0.82) : 0.8,
+    return { d: d, ext: vis, zoom: 1,   // sin acercamiento al tocar: el demo quieto se entiende mejor
       // en el iPhone la barra de estado va sobre la página: blanca sobre fondo oscuro, negra sobre claro
       tono: function(cx){ if (solo) return; try { var p = cx.getImageData(Math.round(cx.canvas.width / 2), 3, 1, 1).data, lum = (0.3 * p[0] + 0.59 * p[1] + 0.11 * p[2]) / 255; var os = p[3] > 10 && lum > 0.6; claro.visible = !os; oscuro.visible = os; } catch (er) {} } };
   }
@@ -280,12 +280,12 @@ window.alFoto = (function(){
     var cl = function(v, a, b){ return Math.max(a, Math.min(b, v)); }, lerp = function(a, b, t){ return a + (b - a) * t; };
     var ease = function(x){ x = cl(x, 0, 1); return x < 0.5 ? 4*x*x*x : 1 - Math.pow(-2*x + 2, 3) / 2; };
     var dt = o.dt, tactil = equipo() !== 'pc';
-    if (tactil && u.plano) {   // en celular y tablet: el equipo completo, y al tocar la cámara se acerca al dedo
+    if (tactil && u.plano) {   // en celular y tablet: el equipo completo y quieto (el acercamiento distraía de lo que se explica)
       var tg0 = Math.tan(cam.fov * Math.PI / 360), e0 = u.ext || o.vent;
       var lejos0 = Math.max(e0.h / 2 / tg0, e0.w / 2 / (tg0 * cam.aspect)), cerca0 = lejos0 * (u.marco ? u.marco.zoom : 1);
       st.z += (o.quiere - st.z) * (1 - Math.exp(-dt * 3.2));
       if (o.foco) { var kq = 1 - Math.exp(-dt * 4.5); st.x += (cl(o.foco.x, -u.SW * 0.3, u.SW * 0.3) - st.x) * kq; st.y += (cl(o.foco.y, -u.SH * 0.3, u.SH * 0.3) - st.y) * kq; }
-      var z0 = ease(st.z);
+      var z0 = (u.marco && u.marco.zoom < 1) ? ease(st.z) : 0;
       var cy0 = e0.cy || 0; cam.position.set(lerp(0, st.x, z0), lerp(cy0, st.y, z0), lerp(lejos0, cerca0, z0));
       cam.lookAt(cam.position.x, cam.position.y, 0); return;
     }
@@ -297,7 +297,7 @@ window.alFoto = (function(){
     var cj = u.caja, tg = Math.tan(cam.fov * Math.PI / 360), as = cam.aspect, v = o.vert;
     var aparatoD = Math.max(cj.h * (v ? 1.2 : 1.38) / 2 / tg, cj.w * (v ? 1.06 : 1.22) / 2 / (tg * as));
     var fh = u.plano ? 1.04 : (v ? 1.1 : 1.24), fw = u.plano ? 1.03 : (v ? 1.06 : 1.1);   // sin aparato: la app de borde a borde
-    var ventanaD = Math.max(o.vent.h * fh / 2 / tg, o.vent.w * fw / 2 / (tg * as)), cerca = ventanaD * 0.68;
+    var ventanaD = Math.max(o.vent.h * fh / 2 / tg, o.vent.w * fw / 2 / (tg * as)), cerca = ventanaD * 0.84;   // acercamiento suave: el foco acompaña sin hacer perder el hilo
     var z = ease(st.z), a = ease(st.a), px = o.px || { x: 0, y: 0 };
     var mx = lerp(lerp(0, st.x, z), cj.x, a) + px.x * 0.12, my = lerp(lerp(-o.vent.h * (v || u.plano ? 0 : 0.06), st.y, z), cj.y - cj.h * 0.07, a) + px.y * 0.08;
     cam.position.set(mx, my, lerp(lerp(ventanaD, cerca, z), aparatoD, a) * (1 - Math.sin(o.T * 0.3) * 0.008));
