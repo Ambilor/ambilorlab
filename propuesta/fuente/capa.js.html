@@ -311,6 +311,17 @@
   });
 
 
+  // I · etiqueta translúcida con la etapa sobre el demo (el texto del paso queda abajo, más discreto)
+  function etiquetas(){
+    document.querySelectorAll('#product .al-demo').forEach(function(d){
+      var st = d.querySelector('.al-demo__stage'), k = d.querySelector('.al-demo__kicker'); if (!st || !k || st.querySelector('.p-paso')) return;
+      var e = document.createElement('div'); e.className = 'p-paso'; e.setAttribute('aria-hidden', 'true'); st.appendChild(e);
+      var poner = function(){ var t = k.textContent.trim(); if (t === e.textContent) return; e.classList.add('cambia'); setTimeout(function(){ e.textContent = t; e.classList.remove('cambia'); }, 180); };
+      poner(); new MutationObserver(poner).observe(k, { childList: true, characterData: true, subtree: true });
+    });
+  }
+  etiquetas(); window.addEventListener('load', etiquetas); setInterval(etiquetas, 2000);
+
   /* engancha el cambio de pestaña sin tocar show() */
   var showOrig = window.show;
   if (typeof showOrig === 'function') {

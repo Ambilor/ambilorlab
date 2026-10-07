@@ -2175,29 +2175,37 @@ window.alFoto = (function(){
     var r2 = c.createRadialGradient(w * 0.85, h * 0.9, 0, w * 0.85, h * 0.9, Math.max(w, h) * 0.5); r2.addColorStop(0, 'rgba(20,170,150,.35)'); r2.addColorStop(1, 'rgba(20,170,150,0)'); c.fillStyle = r2; c.fillRect(0, 0, w, h);
   }
   // ── Marco del equipo del visitante (celular y tablet) ──────────────────────────────────────────────
-  // De frente, sin inclinación, con las medidas de su pantalla: iPhone (titanio, isla dinámica o muesca,
-  // barra de estado e indicador de inicio), iPad (bisel parejo, cámara en el bisel, barra de estado) o
-  // Android (cámara perforada). Las proporciones salen de las medidas reales en puntos (p. ej. iPhone 16 Pro:
-  // 402 × 874, esquinas de 55, isla de 125 × 37; iPad Pro 11: 834 × 1210, esquinas de 18).
+  // De frente, con las medidas reales en puntos (pt) de cada equipo. El panel se abre en el navegador, así
+  // que se ve como una página en Safari (o Chrome en Android): barra de estado, barra del navegador con la
+  // dirección e indicador de inicio. La app llena el ancho de la página; lo que sobra abajo es página en blanco.
+  //   iPhone 16 Pro: 402 × 874, esquinas de 55, isla de 125 × 37 a 11 del borde, barra de estado de 54.
+  //   iPhone con muesca (12 a 14): 390 × 844, esquinas de 47, muesca de 162 × 32.
+  //   iPad Pro 11: 834 × 1194, esquinas de 18, bisel de unos 28; barra de estado de 24 y Safari arriba (50).
+  //   Android: 412 × 915, esquinas de 40, cámara perforada; barra de estado de 32 y Chrome arriba (56).
   function modelo(){
     var ua = navigator.userAgent, w = Math.min(screen.width, screen.height), h = Math.max(screen.width, screen.height);
-    if (/iPhone/.test(ua)) return { tipo: 'iphone', muesca: w <= 390 && h <= 844 };
-    if (/iPad/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) return { tipo: 'ipad' };
-    return { tipo: equipo() === 'tablet' ? 'tableta' : 'android' };
+    if (/iPhone/.test(ua)) return w <= 390 && h <= 844 ? { tipo: 'iphone', muesca: true, w: 390, h: 844, r: 47 } : { tipo: 'iphone', w: 402, h: 874, r: 55 };
+    if (/iPad/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) return { tipo: 'ipad', w: 834, h: 1194, r: 18 };
+    return equipo() === 'tablet' ? { tipo: 'tableta', w: 800, h: 1280, r: 20 } : { tipo: 'android', w: 412, h: 915, r: 40 };
   }
-  // insets de la pantalla alrededor de la app (barra de estado, isla, indicador de inicio) y del marco
-  function medidas(vert, PW, PH){
-    var m = modelo(), S = Math.min(PW, PH), r = { m: m, top: 0, bot: 0, side: 0 };
+  // geometría en pt del equipo según la orientación: pantalla, franjas de sistema y bisel
+  function especie(m, vert){
+    var e = { W: vert ? m.w : m.h, H: vert ? m.h : m.w, r: m.r, top: 0, bot: 0, side: 0 };
     if (m.tipo === 'iphone') {
-      if (vert) { r.top = 0.134 * PW; r.bot = 0.085 * PW; } else { r.side = 0.154 * PH; r.bot = 0.052 * PH; }
-      r.radio = 0.137 * S; r.bisel = 0.026 * S; r.canto = 0.014 * S;
-    } else if (m.tipo === 'ipad') {
-      r.top = 0.034 * S; r.bot = 0.03 * S; r.radio = 0.026 * S; r.bisel = 0.045 * S; r.canto = 0.009 * S;
-    } else {
-      r.top = 0.07 * S; r.bot = 0.035 * S; r.radio = m.tipo === 'android' ? 0.09 * S : 0.035 * S; r.bisel = m.tipo === 'android' ? 0.024 * S : 0.04 * S; r.canto = 0.01 * S;
-    }
-    r.SW = PW + 2 * r.side; r.SH = PH + r.top + r.bot;
-    r.OW = r.SW + 2 * r.bisel; r.OH = r.SH + 2 * r.bisel;
+      e.bisel = 4.5; e.canto = 2.2;
+      if (vert) { e.top = m.muesca ? 47 : 54; e.bot = 96; }        // Safari compacto abajo (dirección + botones) e indicador
+      else { e.side = 62; e.top = 40; e.bot = 21; }                // horizontal: sin barra de estado; dirección arriba
+    } else if (m.tipo === 'ipad') { e.bisel = 26; e.canto = 2.5; e.top = 24 + 50; e.bot = 20; }
+    else { e.bisel = m.tipo === 'android' ? 5 : 22; e.canto = 2; e.top = 32 + 56; e.bot = 24; }
+    return e;
+  }
+  // medidas en unidades del demo: la app llena el ancho útil (o el alto, si así cabe mejor)
+  function medidas(vert, PW, PH){
+    var m = modelo(), e = especie(m, vert), cw = e.W - 2 * e.side, chh = e.H - e.top - e.bot;
+    var u = Math.max(PW / cw, PH / chh);   // unidades por pt
+    var r = { m: m, e: e, u: u, top: e.top * u, bot: e.bot * u, side: e.side * u, radio: e.r * u, bisel: (e.bisel + e.canto) * u, canto: e.canto * u };
+    r.SW = e.W * u; r.SH = e.H * u; r.OW = r.SW + 2 * r.bisel; r.OH = r.SH + 2 * r.bisel;
+    r.appY = r.SH / 2 - r.top - PH / 2;   // la app, arriba de la página (bajo las barras)
     return r;
   }
   // proporción del cuadro en táctil (la usa el CSS de la propuesta): la del equipo completo
@@ -2206,89 +2214,129 @@ window.alFoto = (function(){
     document.documentElement.style.setProperty('--p-ar-v', (_v.OW / _v.OH).toFixed(4));
     document.documentElement.style.setProperty('--p-ar-h', (_h.OW / _h.OH).toFixed(4));
   }
-  function senal(c, x, y, u, col){ c.fillStyle = col; for (var i = 0; i < 4; i++) { var hh = u * (0.35 + i * 0.22); rr(c, x + i * u * 0.32, y + u * 0.5 - hh, u * 0.22, hh, u * 0.06); c.fill(); } }
-  function wifi(c, x, y, u, col){ c.strokeStyle = col; c.fillStyle = col; c.lineCap = 'round'; c.lineWidth = u * 0.16;
-    for (var i = 1; i <= 2; i++) { c.beginPath(); c.arc(x, y + u * 0.42, u * (0.25 + i * 0.28), Math.PI * 1.25, Math.PI * 1.75); c.stroke(); }
-    c.beginPath(); c.arc(x, y + u * 0.42, u * 0.13, 0, 7); c.fill(); }
-  function bateria(c, x, y, u, col){ c.strokeStyle = col; c.globalAlpha = 0.45; c.lineWidth = u * 0.08; rr(c, x, y - u * 0.3, u * 1.25, u * 0.62, u * 0.17); c.stroke();
-    c.globalAlpha = 1; c.fillStyle = col; rr(c, x + u * 0.12, y - u * 0.18, u * 1.01, u * 0.38, u * 0.09); c.fill();
-    c.globalAlpha = 0.45; rr(c, x + u * 1.31, y - u * 0.1, u * 0.08, u * 0.22, u * 0.03); c.fill(); c.globalAlpha = 1; }
+  // íconos de la barra de estado, dibujados en pt (como los de iOS): x, y = esquina izquierda, centro vertical
+  function senal(c, x, y, P, col){ c.fillStyle = col; [4, 6.3, 8.6, 11].forEach(function(h, i){ rr(c, x + P(i * 4.6), y + P(5.5 - h), P(3.1), P(h), P(1)); c.fill(); }); return P(17); }
+  function wifi(c, x, y, P, col){
+    var cx = x + P(8), by = y + P(5.4);
+    c.fillStyle = col;
+    [[10.6, 7.9], [7.2, 4.6], [3.6, 0]].forEach(function(r){ c.beginPath(); c.arc(cx, by, P(r[0]), Math.PI * 1.25, Math.PI * 1.75); if (r[1]) c.arc(cx, by, P(r[1]), Math.PI * 1.75, Math.PI * 1.25, true); else c.lineTo(cx, by); c.closePath(); c.fill(); });
+    return P(16);
+  }
+  function bateria(c, x, y, P, col, pct){
+    c.strokeStyle = col; c.globalAlpha = 0.4; c.lineWidth = P(1); rr(c, x + P(0.5), y - P(6), P(24), P(12), P(3.8)); c.stroke();
+    c.fillStyle = col; rr(c, x + P(25.4), y - P(2), P(1.6), P(4), P(0.8)); c.fill(); c.globalAlpha = 1;
+    rr(c, x + P(2.5), y - P(4), P(20), P(8), P(2.2)); c.fill();
+    return P(27);
+  }
+  function fuenteSF(px, peso){ return (peso || 600) + ' ' + Math.round(px) + 'px -apple-system, "SF Pro Text", "Helvetica Neue", Inter, sans-serif'; }
   function marco(T, g, pantalla, o){
-    var vert = o.vert, PW = o.ventana.w, PH = o.ventana.h, d = medidas(vert, PW, PH), m = d.m;
-    var pad = 0.02 * Math.min(PW, PH), FW = d.OW + 2 * pad, FH = d.OH + 2 * pad;
-    var k = 1600 / Math.max(FW, FH), cw = Math.round(FW * k), ch = Math.round(FH * k);
-    var X = function(v){ return v * k; };
+    var vert = o.vert, PW = o.ventana.w, PH = o.ventana.h, d = medidas(vert, PW, PH), m = d.m, e = d.e;
+    var pad = 0.012 * Math.max(d.OW, d.OH), FW = d.OW + 2 * pad, FH = d.OH + 2 * pad;
+    var k = 2048 / Math.max(FW, FH), cw = Math.round(FW * k), ch = Math.round(FH * k);
+    var X = function(v){ return v * k; }, P = function(pt){ return pt * d.u * k; };   // unidades → px · pt → px
     var ox = X(pad), oy = X(pad), OW = X(d.OW), OH = X(d.OH), bz = X(d.bisel), Ro = X(d.radio + d.bisel);
     var sx = ox + bz, sy = oy + bz, SW = X(d.SW), SH = X(d.SH), Ri = X(d.radio);
-    var metal = m.tipo === 'iphone' ? ['#77746f', '#c9c5be', '#a29e98', '#d8d4cd', '#6c6965'] : (m.tipo === 'ipad' ? ['#5b5e63', '#b8bbc0', '#8e9196', '#c9ccd0', '#55585c'] : ['#2a2c30', '#5d6066', '#3a3d42', '#62656b', '#25272a']);
-    // cuerpo: canto metálico, vidrio negro y el hueco de la pantalla
+    var metal = m.tipo === 'iphone' ? ['#6f6c67', '#cfcbc4', '#9d9993', '#dcd8d1', '#6a6762'] : (m.tipo === 'ipad' ? ['#7d8086', '#d3d6da', '#a6a9ae', '#dcdfe2', '#76797e'] : ['#2a2c30', '#5d6066', '#3a3d42', '#62656b', '#25272a']);
     var cuerpo = lienzo(T, cw, ch, function(c){
-      // botones laterales (asoman del canto)
-      c.fillStyle = metal[1];
-      var bot = function(x, y, w, h){ rr(c, x, y, w, h, Math.min(w, h) / 2); c.fill(); };
-      var bw = X(pad) * 0.9;
-      if (m.tipo === 'iphone') {
-        if (vert) { bot(ox - bw + 2, oy + OH * 0.17, bw, OH * 0.05); bot(ox - bw + 2, oy + OH * 0.25, bw, OH * 0.09); bot(ox - bw + 2, oy + OH * 0.36, bw, OH * 0.09); bot(ox + OW - 2, oy + OH * 0.27, bw, OH * 0.14); bot(ox + OW - 2, oy + OH * 0.62, bw, OH * 0.07); }
-        else { bot(ox + OW * 0.17, oy - bw + 2, OW * 0.05, bw); bot(ox + OW * 0.25, oy - bw + 2, OW * 0.09, bw); bot(ox + OW * 0.36, oy - bw + 2, OW * 0.09, bw); bot(ox + OW * 0.27, oy + OH - 2, OW * 0.14, bw); bot(ox + OW * 0.62, oy + OH - 2, OW * 0.07, bw); }
-      } else if (m.tipo === 'ipad') {
-        if (vert) { bot(ox + OW * 0.78, oy - bw + 2, OW * 0.09, bw); bot(ox + OW - 2, oy + OH * 0.08, bw, OH * 0.05); bot(ox + OW - 2, oy + OH * 0.14, bw, OH * 0.05); }
-        else { bot(ox - bw + 2, oy + OH * 0.1, bw, OH * 0.09); bot(ox + OW * 0.08, oy - bw + 2, OW * 0.05, bw); bot(ox + OW * 0.14, oy - bw + 2, OW * 0.05, bw); }
-      } else { bot(ox + OW - 2, oy + OH * 0.22, bw, OH * 0.12); bot(ox + OW - 2, oy + OH * 0.38, bw, OH * 0.07); }
+      // botones laterales (asoman del canto), en pt sobre el lado largo
+      c.fillStyle = metal[2];
+      var largo = function(t0, t1, lado){   // tramo del lado largo (fracciones) en el canto izquierdo (-1) o derecho (1)
+        var g0 = (vert ? OH : OW) * t0, g1 = (vert ? OH : OW) * (t1 - t0), bw = X(pad) * 0.95;
+        if (vert) rr(c, lado < 0 ? ox - bw + 3 : ox + OW - 3, oy + g0, bw, g1, bw / 2);
+        else rr(c, ox + g0, lado < 0 ? oy - bw + 3 : oy + OH - 3, g1, bw, bw / 2);
+        c.fill();
+      };
+      if (m.tipo === 'iphone') { largo(0.195, 0.235, -1); largo(0.27, 0.335, -1); largo(0.355, 0.42, -1); largo(0.27, 0.375, 1); largo(0.6, 0.655, 1); }
+      else if (m.tipo === 'ipad') { if (vert) { largo(0.06, 0.11, 1); largo(0.12, 0.17, 1); } else { largo(0.06, 0.11, -1); largo(0.12, 0.17, -1); } }
+      else { largo(0.22, 0.32, 1); largo(0.36, 0.42, 1); }
       var l = c.createLinearGradient(ox, oy, ox + OW, oy + OH);
       metal.forEach(function(col, i){ l.addColorStop(i / (metal.length - 1), col); });
       c.fillStyle = l; rr(c, ox, oy, OW, OH, Ro); c.fill();
-      var e = X(d.canto);
-      c.fillStyle = 'rgba(255,255,255,.35)'; rr(c, ox + e * 0.35, oy + e * 0.35, OW - e * 0.7, OH - e * 0.7, Ro - e * 0.35); c.fill();
-      c.fillStyle = '#0a0b0d'; rr(c, ox + e, oy + e, OW - 2 * e, OH - 2 * e, Ro - e); c.fill();
-      // cámara frontal en el bisel (iPad)
-      if (m.tipo === 'ipad') { c.fillStyle = '#1c2a3a'; c.beginPath(); if (vert) c.arc(ox + bz / 2 + e / 2, oy + OH / 2, bz * 0.13, 0, 7); else c.arc(ox + OW / 2, oy + bz / 2 + e / 2, bz * 0.13, 0, 7); c.fill(); }
+      var ec = X(d.canto);
+      c.strokeStyle = 'rgba(255,255,255,.45)'; c.lineWidth = Math.max(1, ec * 0.25); rr(c, ox + ec * 0.3, oy + ec * 0.3, OW - ec * 0.6, OH - ec * 0.6, Ro - ec * 0.3); c.stroke();
+      c.fillStyle = '#050506'; rr(c, ox + ec, oy + ec, OW - 2 * ec, OH - 2 * ec, Ro - ec); c.fill();
+      if (m.tipo === 'ipad') {   // cámara frontal en el bisel del lado largo (como el iPad Pro actual)
+        c.fillStyle = '#16202b'; c.beginPath();
+        if (vert) c.arc(ox + ec + (bz - ec) / 2, oy + OH / 2, (bz - ec) * 0.16, 0, 7); else c.arc(ox + OW / 2, oy + ec + (bz - ec) / 2, (bz - ec) * 0.16, 0, 7);
+        c.fill();
+      }
       c.globalCompositeOperation = 'destination-out'; rr(c, sx, sy, SW, SH, Ri); c.fill();
     });
-    // encima de la app: barra de estado, isla o muesca, cámara perforada, indicador de inicio y brillo del vidrio
+    // encima de la app: barras del sistema y del navegador, isla o muesca, indicador de inicio y brillo del vidrio
     var capa = function(col){ return lienzo(T, cw, ch, function(c){
       c.save(); rr(c, sx, sy, SW, SH, Ri); c.clip();
-      var W = vert ? SW : SH;   // el lado corto de la pantalla, para escalar
-      var negro = '#000';
-      if (m.tipo === 'iphone') {
-        if (vert) {
-          var iw = W * 0.31, ih = W * 0.092, iy = sy + W * 0.027;
-          c.fillStyle = negro;
-          if (m.muesca) { rr(c, sx + SW / 2 - W * 0.21, sy - ih, W * 0.42, ih * 2.05, ih * 0.6); c.fill(); }
-          else { rr(c, sx + SW / 2 - iw / 2, iy, iw, ih, ih / 2); c.fill(); }
-          var yc = iy + ih / 2;
-          c.fillStyle = col; c.font = '600 ' + Math.round(W * 0.045) + 'px -apple-system, "SF Pro Text", Inter, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
-          c.fillText('9:41', sx + W * 0.17, yc);
-          var u = W * 0.042; senal(c, sx + W * 0.7, yc - u * 0.5, u, col); wifi(c, sx + W * 0.8, yc - u * 0.55, u, col); bateria(c, sx + W * 0.85, yc, u, col);
-          c.fillStyle = '#111'; rr(c, sx + SW / 2 - W * 0.18, sy + SH - X(d.bot) / 2 - W * 0.007, W * 0.36, W * 0.013, W * 0.007); c.fill();
-        } else {
-          var lw = W * 0.092, lh = W * 0.31; c.fillStyle = negro;
-          if (m.muesca) { rr(c, sx - lw, sy + SH / 2 - W * 0.21, lw * 2.05, W * 0.42, lw * 0.6); c.fill(); }
-          else { rr(c, sx + W * 0.027, sy + SH / 2 - lh / 2, lw, lh, lw / 2); c.fill(); }
-          c.fillStyle = '#111'; rr(c, sx + SW / 2 - W * 0.32, sy + SH - X(d.bot) / 2 - W * 0.007, W * 0.64, W * 0.013, W * 0.007); c.fill();
-        }
+      var px = function(pt){ return sx + P(pt); }, py = function(pt){ return sy + P(pt); };
+      var gris = 'rgba(246,246,248,.97)', azul = '#0a84ff', tinta = '#1c1c1e';
+      var direccion = function(x, y, w, h, tam){   // campo de dirección con candado
+        c.fillStyle = 'rgba(118,118,128,.14)'; rr(c, x, y, w, h, h * 0.3); c.fill();
+        c.fillStyle = tinta; c.font = fuenteSF(P(tam), 500); c.textAlign = 'center'; c.textBaseline = 'middle';
+        c.fillText('script.google.com', x + w / 2 + P(6), y + h / 2 + P(0.5));
+        var lw = c.measureText('script.google.com').width; c.fillStyle = '#3c3c43';
+        rr(c, x + w / 2 - lw / 2 - P(9), y + h / 2 - P(1.5), P(8), P(6.5), P(1.5)); c.fill();
+        c.strokeStyle = '#3c3c43'; c.lineWidth = P(1.4); c.beginPath(); c.arc(x + w / 2 - lw / 2 - P(5), y + h / 2 - P(2), P(2.6), Math.PI, 0); c.stroke();
+      };
+      var flecha = function(x, y, dir, col2){ c.strokeStyle = col2; c.lineWidth = P(2.2); c.lineCap = 'round'; c.lineJoin = 'round'; c.beginPath(); c.moveTo(x + dir * P(4), y - P(7)); c.lineTo(x - dir * P(4), y); c.lineTo(x + dir * P(4), y + P(7)); c.stroke(); };
+      var compartir = function(x, y, col2){ c.strokeStyle = col2; c.lineWidth = P(1.8); c.lineCap = 'round'; c.beginPath(); c.moveTo(x - P(6), y - P(2)); c.lineTo(x - P(8), y - P(2)); c.lineTo(x - P(8), y + P(9)); c.lineTo(x + P(8), y + P(9)); c.lineTo(x + P(8), y - P(2)); c.lineTo(x + P(6), y - P(2)); c.moveTo(x, y + P(3)); c.lineTo(x, y - P(10)); c.moveTo(x - P(4), y - P(6)); c.lineTo(x, y - P(10)); c.lineTo(x + P(4), y - P(6)); c.stroke(); };
+      var pestanas = function(x, y, col2){ c.strokeStyle = col2; c.lineWidth = P(1.8); rr(c, x - P(7), y - P(5), P(12), P(12), P(2.5)); c.stroke(); c.beginPath(); c.moveTo(x - P(3), y - P(9)); c.lineTo(x + P(5), y - P(9)); c.quadraticCurveTo(x + P(9), y - P(9), x + P(9), y - P(5)); c.lineTo(x + P(9), y + P(3)); c.stroke(); };
+      var libro = function(x, y, col2){ c.strokeStyle = col2; c.lineWidth = P(1.8); c.beginPath(); c.moveTo(x, y - P(6)); c.quadraticCurveTo(x - P(5), y - P(9), x - P(10), y - P(8)); c.lineTo(x - P(10), y + P(7)); c.quadraticCurveTo(x - P(5), y + P(6), x, y + P(9)); c.quadraticCurveTo(x + P(5), y + P(6), x + P(10), y + P(7)); c.lineTo(x + P(10), y - P(8)); c.quadraticCurveTo(x + P(5), y - P(9), x, y - P(6)); c.lineTo(x, y + P(9)); c.stroke(); };
+      var inicio = function(ancho, color){ c.fillStyle = color; rr(c, sx + SW / 2 - P(ancho / 2), sy + SH - P(8) - P(5), P(ancho), P(5), P(2.5)); c.fill(); };
+      var estadoDer = function(xd, y, col2, sen){ var x = xd - P(27); bateria(c, x, y, P, col2); x -= P(6 + 16); wifi(c, x, y, P, col2); if (sen) { x -= P(6 + 17); senal(c, x, y, P, col2); } };
+      if (m.tipo === 'iphone' && vert) {
+        var ih = 37, iw = 125, iy = 11, yc = py(iy + ih / 2);
+        c.fillStyle = '#000';
+        if (m.muesca) { var nw = 162, nh = 32; rr(c, px(e.W / 2 - nw / 2), sy - P(10), P(nw), P(nh + 10), P(20)); c.fill(); yc = py(23); }
+        else { rr(c, px(e.W / 2 - iw / 2), py(iy), P(iw), P(ih), P(ih / 2)); c.fill(); }
+        c.fillStyle = col; c.font = fuenteSF(P(17), 600); c.textAlign = 'center'; c.textBaseline = 'middle';
+        c.fillText('9:41', px(e.W * 0.165), yc + P(0.5));
+        estadoDer(px(e.W - 26), yc, col, true);
+        // Safari compacto: dirección y botones, sobre una barra translúcida
+        var by = e.H - e.bot;
+        c.fillStyle = gris; c.fillRect(sx, py(by), SW, SH - P(by)); c.fillStyle = 'rgba(60,60,67,.18)'; c.fillRect(sx, py(by), SW, Math.max(1, P(0.5)));
+        direccion(px(12), py(by + 6), P(e.W - 24), P(36), 15);
+        var fy = py(by + 6 + 36 + 17), xs = [0.1, 0.3, 0.5, 0.7, 0.9].map(function(f){ return px(e.W * f); });
+        flecha(xs[0], fy, 1, azul); flecha(xs[1], fy, -1, 'rgba(10,132,255,.35)'); compartir(xs[2], fy, azul); libro(xs[3], fy, azul); pestanas(xs[4], fy, azul);
+        inicio(140, '#000');
+      } else if (m.tipo === 'iphone') {
+        c.fillStyle = '#000';
+        if (m.muesca) { rr(c, sx - P(10), py(e.H / 2 - 81), P(42), P(162), P(20)); c.fill(); }
+        else { rr(c, px(11), py(e.H / 2 - 62.5), P(37), P(125), P(18.5)); c.fill(); }
+        c.fillStyle = gris; c.fillRect(sx, sy, SW, P(e.top)); c.fillStyle = 'rgba(60,60,67,.18)'; c.fillRect(sx, py(e.top), SW, Math.max(1, P(0.5)));
+        direccion(px(e.W / 2 - 150), py(5), P(300), P(30), 14);
+        inicio(210, '#000');
       } else {
-        var sb = X(d.top), yc2 = sy + sb / 2, f = Math.round(sb * 0.5);
-        c.fillStyle = col; c.font = '600 ' + f + 'px -apple-system, "SF Pro Text", Inter, sans-serif'; c.textBaseline = 'middle'; c.textAlign = 'left';
-        c.fillText(m.tipo === 'ipad' ? '9:41   lun 7 oct' : '9:41', sx + sb * 0.7, yc2);
-        var u2 = f * 0.95; wifi(c, sx + SW - sb * 0.7 - u2 * 3.4, yc2 - u2 * 0.55, u2, col); bateria(c, sx + SW - sb * 0.7 - u2 * 1.4, yc2, u2, col);
-        if (m.tipo !== 'ipad') { senal(c, sx + SW - sb * 0.7 - u2 * 5.2, yc2 - u2 * 0.5, u2, col); c.fillStyle = negro; c.beginPath(); c.arc(sx + SW / 2, yc2, sb * 0.28, 0, 7); c.fill(); }
-        c.fillStyle = '#111'; rr(c, sx + SW / 2 - W * 0.12, sy + SH - X(d.bot) / 2 - W * 0.006, W * 0.24, W * 0.012, W * 0.006); c.fill();
+        // tablet o Android: barra de estado y barra del navegador arriba
+        var ipad = m.tipo === 'ipad', sb = ipad ? 24 : 32;
+        c.fillStyle = gris; c.fillRect(sx, sy, SW, P(e.top)); c.fillStyle = 'rgba(60,60,67,.18)'; c.fillRect(sx, py(e.top), SW, Math.max(1, P(0.5)));
+        var ys = py(sb / 2 + (ipad ? 1 : 2));
+        c.fillStyle = tinta; c.textAlign = 'left'; c.textBaseline = 'middle';
+        if (ipad) { c.font = fuenteSF(P(14), 600); c.fillText('9:41', px(20), ys); var tw = c.measureText('9:41').width; c.font = fuenteSF(P(14), 500); c.fillText('lun 7 oct', px(20) + tw + P(6), ys); estadoDer(px(e.W - 20), ys, tinta, false); }
+        else { c.font = fuenteSF(P(14), 500); c.fillText('9:41', px(18), ys); estadoDer(px(e.W - 16), ys, tinta, true); c.fillStyle = '#000'; c.beginPath(); c.arc(px(e.W / 2), ys, P(6), 0, 7); c.fill(); }
+        var ty = sb + (e.top - sb) / 2;
+        if (ipad) {
+          direccion(px(e.W / 2 - Math.min(170, e.W * 0.22)), py(ty - 17), P(Math.min(340, e.W * 0.44)), P(34), 14);
+          flecha(px(26), py(ty), 1, azul); flecha(px(58), py(ty), -1, 'rgba(10,132,255,.35)');
+          compartir(px(e.W - 92), py(ty), azul); c.strokeStyle = azul; c.lineWidth = P(2); c.beginPath(); c.moveTo(px(e.W - 60), py(ty - 8)); c.lineTo(px(e.W - 60), py(ty + 8)); c.moveTo(px(e.W - 68), py(ty)); c.lineTo(px(e.W - 52), py(ty)); c.stroke(); pestanas(px(e.W - 28), py(ty), azul);
+        } else {
+          direccion(px(14), py(ty - 20), P(e.W - 28 - 64), P(40), 15);
+          c.fillStyle = tinta; [0, 1, 2].forEach(function(i){ c.beginPath(); c.arc(px(e.W - 24), py(ty - 6 + i * 6), P(1.7), 0, 7); c.fill(); });
+          rr(c, px(e.W - 58), py(ty - 9), P(18), P(18), P(4)); c.strokeStyle = tinta; c.lineWidth = P(1.8); c.stroke();
+        }
+        inicio(ipad ? 200 : 110, '#111');
       }
-      var gl = c.createLinearGradient(sx, sy, sx + SW, sy + SH); gl.addColorStop(0, 'rgba(255,255,255,.06)'); gl.addColorStop(0.42, 'rgba(255,255,255,0)'); gl.addColorStop(0.5, 'rgba(255,255,255,.05)'); gl.addColorStop(0.58, 'rgba(255,255,255,0)');
+      var gl = c.createLinearGradient(sx, sy, sx + SW, sy + SH); gl.addColorStop(0, 'rgba(255,255,255,.05)'); gl.addColorStop(0.42, 'rgba(255,255,255,0)'); gl.addColorStop(0.5, 'rgba(255,255,255,.04)'); gl.addColorStop(0.58, 'rgba(255,255,255,0)');
       c.fillStyle = gl; c.fillRect(sx, sy, SW, SH);
       c.restore();
     }); };
     var MB = T.MeshBasicMaterial, mat = function(map){ return new MB({ map: map, transparent: true, depthWrite: false, toneMapped: false }); };
-    var cy = 0;   // el centro de la pantalla es el origen
-    var plano = function(mt, z, orden){ var me = new T.Mesh(new T.PlaneGeometry(FW, FH), mt); me.position.set(0, cy, z); me.renderOrder = orden; me.frustumCulled = false; g.add(me); return me; };
-    // pantalla apagada detrás de la app (se ve en los fundidos)
-    var fondo = new T.Mesh(new T.PlaneGeometry(d.SW, d.SH), new MB({ color: 0x000000, toneMapped: false })); fondo.position.z = -0.02; fondo.renderOrder = 0; pantalla.add(fondo);
+    var plano = function(mt, z, orden){ var me = new T.Mesh(new T.PlaneGeometry(FW, FH), mt); me.position.z = z; me.renderOrder = orden; me.frustumCulled = false; g.add(me); return me; };
+    var fondo = new T.Mesh(new T.PlaneGeometry(d.SW, d.SH), new MB({ color: 0xffffff, toneMapped: false })); fondo.position.z = -0.02; fondo.renderOrder = 0; pantalla.add(fondo);
     plano(mat(cuerpo), 0.05, 40);
-    var claro = plano(mat(capa('#ffffff')), 0.06, 41), oscuro = plano(mat(capa('#111111')), 0.06, 41); oscuro.visible = false;
-    if (o.vert) document.documentElement.style.setProperty('--p-ar-v', (FW / FH).toFixed(4)); else document.documentElement.style.setProperty('--p-ar-h', (FW / FH).toFixed(4));
-    return { d: d, ext: { w: FW, h: FH },
-      // el color de la barra de estado sigue a la app: texto blanco sobre fondo oscuro, negro sobre claro
-      tono: function(cx){ try { var p = cx.getImageData(Math.round(cx.canvas.width / 2), 3, 1, 1).data, lum = (0.3 * p[0] + 0.59 * p[1] + 0.11 * p[2]) / 255; var os = p[3] > 10 && lum > 0.6; claro.visible = !os; oscuro.visible = os; } catch (e) {} } };
+    var claro = plano(mat(capa('#ffffff')), 0.06, 41), oscuro = plano(mat(capa('#000000')), 0.06, 41); oscuro.visible = false;
+    var solo = !(m.tipo === 'iphone' && vert); if (solo) { oscuro.visible = true; claro.visible = false; }   // la barra de estado va sobre el navegador
+    document.documentElement.style.setProperty(vert ? '--p-ar-v' : '--p-ar-h', (FW / FH).toFixed(4));
+    return { d: d, ext: { w: FW, h: FH }, zoom: m.tipo === 'iphone' || m.tipo === 'android' ? (vert ? 0.66 : 0.82) : 0.8,
+      // en el iPhone la barra de estado va sobre la página: blanca sobre fondo oscuro, negra sobre claro
+      tono: function(cx){ if (solo) return; try { var p = cx.getImageData(Math.round(cx.canvas.width / 2), 3, 1, 1).data, lum = (0.3 * p[0] + 0.59 * p[1] + 0.11 * p[2]) / 255; var os = p[3] > 10 && lum > 0.6; claro.visible = !os; oscuro.visible = os; } catch (er) {} } };
   }
   // Ventana de frente, sin aparato: en computador (ventana angosta) con su sombra; en celular y tablet,
   // dentro del marco del equipo del visitante, a pantalla completa.
@@ -2297,7 +2345,7 @@ window.alFoto = (function(){
     var pantalla = new T.Group(); g.add(pantalla);
     if (equipo() !== 'pc') {
       var mc = marco(T, g, pantalla, o), d = mc.d;
-      g.userData = { plano: true, pleno: true, pantalla: pantalla, SW: d.SW, SH: d.SH, ventanaY: (d.bot - d.top) / 2, marco: mc, ext: mc.ext,
+      g.userData = { plano: true, pleno: true, pantalla: pantalla, SW: d.SW, SH: d.SH, ventanaY: d.appY, marco: mc, ext: mc.ext,
         sombraVentana: { material: {} }, caja: { x: 0, y: 0, w: mc.ext.w, h: mc.ext.h } };
       g.visible = false; return g;
     }
@@ -2363,11 +2411,14 @@ window.alFoto = (function(){
     var cl = function(v, a, b){ return Math.max(a, Math.min(b, v)); }, lerp = function(a, b, t){ return a + (b - a) * t; };
     var ease = function(x){ x = cl(x, 0, 1); return x < 0.5 ? 4*x*x*x : 1 - Math.pow(-2*x + 2, 3) / 2; };
     var dt = o.dt, tactil = equipo() !== 'pc';
-    if (tactil && u.plano) {   // en celular y tablet la app se usa quieta: sin zoom, sin alejarse, de borde a borde
-      var tg0 = Math.tan(cam.fov * Math.PI / 360);
-      var e0 = u.ext || o.vent;
-      cam.position.set(0, 0, Math.max(e0.h / 2 / tg0, e0.w / 2 / (tg0 * cam.aspect)));
-      cam.lookAt(0, 0, 0); return;
+    if (tactil && u.plano) {   // en celular y tablet: el equipo completo, y al tocar la cámara se acerca al dedo
+      var tg0 = Math.tan(cam.fov * Math.PI / 360), e0 = u.ext || o.vent;
+      var lejos0 = Math.max(e0.h / 2 / tg0, e0.w / 2 / (tg0 * cam.aspect)), cerca0 = lejos0 * (u.marco ? u.marco.zoom : 1);
+      st.z += (o.quiere - st.z) * (1 - Math.exp(-dt * 3.2));
+      if (o.foco) { var kq = 1 - Math.exp(-dt * 4.5); st.x += (cl(o.foco.x, -u.SW * 0.3, u.SW * 0.3) - st.x) * kq; st.y += (cl(o.foco.y, -u.SH * 0.3, u.SH * 0.3) - st.y) * kq; }
+      var z0 = ease(st.z);
+      cam.position.set(lerp(0, st.x, z0), lerp(0, st.y, z0), lerp(lejos0, cerca0, z0));
+      cam.lookAt(cam.position.x, cam.position.y, 0); return;
     }
     st.z += (o.quiere - st.z) * (1 - Math.exp(-dt * 3.2));
     if (o.foco) { var kp = 1 - Math.exp(-dt * 4.5), lx = u.SW * 0.2, ly = u.SH * 0.2;
@@ -2575,6 +2626,30 @@ window.alFoto = (function(){
 }
 @media (pointer:coarse) and (orientation:landscape){
   .al-demo--player .al-demo__stage canvas{aspect-ratio:var(--p-ar-h,1.26);max-height:calc(100svh - var(--al-barra) - 72px)}
+}
+
+/* ════ PROPUESTA I: el demo manda; el texto acompaña ═══════════════════════════════ */
+/* el demo arriba, centrado y a todo el ancho; el texto del paso va debajo, como subtítulo; la etapa se
+   lee en una etiqueta translúcida sobre el demo (.p-paso, la pone capa.js) */
+#product .al-demo{display:block!important}
+#product .al-demo__grid{display:flex!important;flex-direction:column;gap:12px}
+#product .al-demo__stage{order:-1!important;grid-column:auto!important;grid-row:auto!important;align-self:center!important;width:100%!important;max-width:1000px!important;margin:0 auto!important}
+@media (pointer:fine){ #product .al-demo__stage{height:max(300px, min(56cqw, calc(100svh - 210px)))!important} }
+#product .al-demo__copy{order:1;text-align:center;max-width:680px;margin:0 auto!important;min-height:0!important;padding:0!important}
+#product .al-demo__kicker,#product .al-demo__stats,#product .al-demo__map{display:none!important}
+#product .al-demo__title{font-size:clamp(15px,1.5vw,18px)!important;line-height:1.35!important;margin:0 0 .25rem!important;opacity:.92}
+#product .al-demo__body{font-size:clamp(12.5px,1.1vw,14px)!important;line-height:1.5!important;opacity:.68;margin:0 auto!important}
+#product .al-demo__extra{display:flex;justify-content:center}
+#product .al-demo__note{grid-column:auto!important;grid-row:auto!important;text-align:center;opacity:.55;margin-top:.6rem!important}
+.p-paso{position:absolute;left:12px;top:10px;z-index:5;pointer-events:none;padding:5px 11px;border-radius:999px;
+  background:rgba(10,18,30,.42);-webkit-backdrop-filter:blur(10px) saturate(1.3);backdrop-filter:blur(10px) saturate(1.3);
+  color:rgba(255,255,255,.92);font:600 10.5px/1.2 var(--mono,monospace);letter-spacing:.08em;text-transform:uppercase;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);transition:opacity .35s ease,transform .35s ease;white-space:nowrap;max-width:calc(100% - 24px);overflow:hidden;text-overflow:ellipsis}
+.p-paso.cambia{opacity:0;transform:translateY(-4px)}
+@media (pointer:coarse){   /* en celular y tablet, fuera del equipo: centrada justo encima del demo */
+  #product .al-demo__stage{overflow:visible!important;margin-top:30px!important}
+  .p-paso{top:-30px;left:50%;transform:translateX(-50%)}
+  .p-paso.cambia{transform:translate(-50%,-4px)}
 }
 </style>
 </head>
@@ -9235,6 +9310,17 @@ window.addEventListener('load', function(){ var h = new URLSearchParams(location
     };
   });
 
+
+  // I · etiqueta translúcida con la etapa sobre el demo (el texto del paso queda abajo, más discreto)
+  function etiquetas(){
+    document.querySelectorAll('#product .al-demo').forEach(function(d){
+      var st = d.querySelector('.al-demo__stage'), k = d.querySelector('.al-demo__kicker'); if (!st || !k || st.querySelector('.p-paso')) return;
+      var e = document.createElement('div'); e.className = 'p-paso'; e.setAttribute('aria-hidden', 'true'); st.appendChild(e);
+      var poner = function(){ var t = k.textContent.trim(); if (t === e.textContent) return; e.classList.add('cambia'); setTimeout(function(){ e.textContent = t; e.classList.remove('cambia'); }, 180); };
+      poner(); new MutationObserver(poner).observe(k, { childList: true, characterData: true, subtree: true });
+    });
+  }
+  etiquetas(); window.addEventListener('load', etiquetas); setInterval(etiquetas, 2000);
 
   /* engancha el cambio de pestaña sin tocar show() */
   var showOrig = window.show;

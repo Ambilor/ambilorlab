@@ -182,4 +182,28 @@
 @media (pointer:coarse) and (orientation:landscape){
   .al-demo--player .al-demo__stage canvas{aspect-ratio:var(--p-ar-h,1.26);max-height:calc(100svh - var(--al-barra) - 72px)}
 }
+
+/* ════ PROPUESTA I: el demo manda; el texto acompaña ═══════════════════════════════ */
+/* el demo arriba, centrado y a todo el ancho; el texto del paso va debajo, como subtítulo; la etapa se
+   lee en una etiqueta translúcida sobre el demo (.p-paso, la pone capa.js) */
+#product .al-demo{display:block!important}
+#product .al-demo__grid{display:flex!important;flex-direction:column;gap:12px}
+#product .al-demo__stage{order:-1!important;grid-column:auto!important;grid-row:auto!important;align-self:center!important;width:100%!important;max-width:1000px!important;margin:0 auto!important}
+@media (pointer:fine){ #product .al-demo__stage{height:max(300px, min(56cqw, calc(100svh - 210px)))!important} }
+#product .al-demo__copy{order:1;text-align:center;max-width:680px;margin:0 auto!important;min-height:0!important;padding:0!important}
+#product .al-demo__kicker,#product .al-demo__stats,#product .al-demo__map{display:none!important}
+#product .al-demo__title{font-size:clamp(15px,1.5vw,18px)!important;line-height:1.35!important;margin:0 0 .25rem!important;opacity:.92}
+#product .al-demo__body{font-size:clamp(12.5px,1.1vw,14px)!important;line-height:1.5!important;opacity:.68;margin:0 auto!important}
+#product .al-demo__extra{display:flex;justify-content:center}
+#product .al-demo__note{grid-column:auto!important;grid-row:auto!important;text-align:center;opacity:.55;margin-top:.6rem!important}
+.p-paso{position:absolute;left:12px;top:10px;z-index:5;pointer-events:none;padding:5px 11px;border-radius:999px;
+  background:rgba(10,18,30,.42);-webkit-backdrop-filter:blur(10px) saturate(1.3);backdrop-filter:blur(10px) saturate(1.3);
+  color:rgba(255,255,255,.92);font:600 10.5px/1.2 var(--mono,monospace);letter-spacing:.08em;text-transform:uppercase;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);transition:opacity .35s ease,transform .35s ease;white-space:nowrap;max-width:calc(100% - 24px);overflow:hidden;text-overflow:ellipsis}
+.p-paso.cambia{opacity:0;transform:translateY(-4px)}
+@media (pointer:coarse){   /* en celular y tablet, fuera del equipo: centrada justo encima del demo */
+  #product .al-demo__stage{overflow:visible!important;margin-top:30px!important}
+  .p-paso{top:-30px;left:50%;transform:translateX(-50%)}
+  .p-paso.cambia{transform:translate(-50%,-4px)}
+}
 </style>
