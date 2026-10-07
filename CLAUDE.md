@@ -10,4 +10,5 @@
 - Fuentes e íconos viven en `fuentes/`, recortados. No volver a enlazar Google Fonts ni la colección completa de íconos: un ícono o carácter nuevo se agrega regenerando con `pyftsubset`.
 - Recurso nuevo: un `<article class="rc-doc" data-r data-tipo data-min data-gancho data-app>` dentro de `#rc-art`; la tarjeta se arma sola. Sumar su `?r=` a `sitemap.xml`.
 - **Animación y microinteracciones**: usar la skill `ui-animation` (`.claude/skills/ui-animation`, ver su `PROCEDENCIA.md`). Solo recetas CSS / Web Animations API (el sitio no usa framework); siempre dentro de las reglas de este archivo y del estándar adaptable.
+- `propuesta/` es una copia de prueba para comparar cambios visuales con la versión publicada (noindex, fuera de robots, no se enlaza). Se arma copiando `index.html` y agregando su bloque "PROPUESTA DE MOVIMIENTO"; lo aprobado se lleva a `index.html` con las reglas de siempre y la copia se borra.
 - `revisar.html` es una herramienta interna: no se enlaza en el menú y mantiene `noindex`.
