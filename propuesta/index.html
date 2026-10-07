@@ -2202,20 +2202,18 @@ window.alFoto = (function(){
   // medidas en unidades del demo: la app llena el ancho útil (o el alto, si así cabe mejor)
   function medidas(vert, PW, PH){
     var m = modelo(), e = especie(m, vert), cw = e.W - 2 * e.side, chh = e.H - e.top - e.bot;
-    var u = Math.max(PW / cw, PH / chh);   // unidades por pt
+    // celular vertical: la app usa todo el ancho de la pantalla (su margen interno de los lados queda fuera)
+    var ancho = vert && (m.tipo === 'iphone' || m.tipo === 'android') ? 1.09 : 1;
+    var u = Math.max(PW / (cw * ancho), PH / chh);   // unidades por pt
     var r = { m: m, e: e, u: u, top: e.top * u, bot: e.bot * u, side: e.side * u, radio: e.r * u, bisel: (e.bisel + e.canto) * u, canto: e.canto * u };
     r.SW = e.W * u; r.SH = e.H * u; r.OW = r.SW + 2 * r.bisel; r.OH = r.SH + 2 * r.bisel;
     r.appY = r.SH / 2 - r.top - PH / 2;   // la app, arriba de la página (bajo las barras)
-    // celular vertical: como en las fotos de producto, el teléfono a todo el ancho y cortado bajo la app
-    // (lo de abajo es página en blanco); se ve desde el borde superior hasta un poco bajo el fin de la app
-    if (vert && (m.tipo === 'iphone' || m.tipo === 'android')) r.corte = r.appY - PH / 2 - 0.05 * PW;
     return r;
   }
   // proporción del cuadro en táctil (la usa el CSS de la propuesta): la del equipo completo
   if (equipo() !== 'pc') {
     var _v = medidas(true, 3.84, 4.8), _h = medidas(false, 4.8, 3.8);
-    document.documentElement.style.setProperty('--p-ar-v', (_v.corte != null ? _v.OW / (_v.OH / 2 - _v.corte) : _v.OW / _v.OH).toFixed(4));
-    if (_v.corte != null) document.documentElement.classList.add('p-corte-cel');
+    document.documentElement.style.setProperty('--p-ar-v', (_v.OW / _v.OH).toFixed(4));
     document.documentElement.style.setProperty('--p-ar-h', (_h.OW / _h.OH).toFixed(4));
   }
   // íconos de la barra de estado, dibujados en pt (como los de iOS): x, y = esquina izquierda, centro vertical
@@ -2337,7 +2335,7 @@ window.alFoto = (function(){
     plano(mat(cuerpo), 0.05, 40);
     var claro = plano(mat(capa('#ffffff')), 0.06, 41), oscuro = plano(mat(capa('#000000')), 0.06, 41); oscuro.visible = false;
     var solo = !(m.tipo === 'iphone' && vert); if (solo) { oscuro.visible = true; claro.visible = false; }   // la barra de estado va sobre el navegador
-    var vis = d.corte != null ? { w: FW, h: FH / 2 - d.corte, cy: (FH / 2 + d.corte) / 2 } : { w: FW, h: FH, cy: 0 };
+    var vis = { w: FW, h: FH, cy: 0 };
     document.documentElement.style.setProperty(vert ? '--p-ar-v' : '--p-ar-h', (vis.w / vis.h).toFixed(4));
     return { d: d, ext: vis, zoom: 1,   // sin acercamiento al tocar: el demo quieto se entiende mejor
       // en el iPhone la barra de estado va sobre la página: blanca sobre fondo oscuro, negra sobre claro
@@ -2645,10 +2643,10 @@ window.AL_NOTAS = {
   .al-demo--player .al-demo__stage{height:auto!important;padding-bottom:var(--al-barra)}
   .al-demo--player .al-demo__stage canvas{height:auto!important;aspect-ratio:var(--p-ar-v,.8);max-height:calc(100svh - 150px);-webkit-mask-image:none;mask-image:none}
 }
-/* celular vertical: el teléfono a todo el ancho del cuadro, cortado bajo la app y desvanecido abajo */
-@media (pointer:coarse) and (orientation:portrait){
-  .p-corte-cel #product .al-demo__stage{margin-left:-10px!important;margin-right:-10px!important;width:calc(100% + 20px)!important;max-width:none!important}
-  .p-corte-cel .al-demo--player .al-demo__stage canvas{max-height:none;-webkit-mask-image:linear-gradient(#000 86%,transparent);mask-image:linear-gradient(#000 86%,transparent)}
+/* celular vertical: el teléfono completo (con todo su borde), lo más grande que quepa en la pantalla */
+@media (pointer:coarse) and (orientation:portrait) and (max-width:600px){
+  #product .al-demo{padding-left:6px!important;padding-right:6px!important}
+  .al-demo--player .al-demo__stage canvas{max-height:calc(100svh - 190px)}
 }
 @media (pointer:coarse) and (orientation:landscape){
   .al-demo--player .al-demo__stage canvas{aspect-ratio:var(--p-ar-h,1.26);max-height:calc(100svh - var(--al-barra) - 72px)}

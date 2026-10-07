@@ -179,10 +179,10 @@
   .al-demo--player .al-demo__stage{height:auto!important;padding-bottom:var(--al-barra)}
   .al-demo--player .al-demo__stage canvas{height:auto!important;aspect-ratio:var(--p-ar-v,.8);max-height:calc(100svh - 150px);-webkit-mask-image:none;mask-image:none}
 }
-/* celular vertical: el teléfono a todo el ancho del cuadro, cortado bajo la app y desvanecido abajo */
-@media (pointer:coarse) and (orientation:portrait){
-  .p-corte-cel #product .al-demo__stage{margin-left:-10px!important;margin-right:-10px!important;width:calc(100% + 20px)!important;max-width:none!important}
-  .p-corte-cel .al-demo--player .al-demo__stage canvas{max-height:none;-webkit-mask-image:linear-gradient(#000 86%,transparent);mask-image:linear-gradient(#000 86%,transparent)}
+/* celular vertical: el teléfono completo (con todo su borde), lo más grande que quepa en la pantalla */
+@media (pointer:coarse) and (orientation:portrait) and (max-width:600px){
+  #product .al-demo{padding-left:6px!important;padding-right:6px!important}
+  .al-demo--player .al-demo__stage canvas{max-height:calc(100svh - 190px)}
 }
 @media (pointer:coarse) and (orientation:landscape){
   .al-demo--player .al-demo__stage canvas{aspect-ratio:var(--p-ar-h,1.26);max-height:calc(100svh - var(--al-barra) - 72px)}
