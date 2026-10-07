@@ -1,75 +1,16 @@
 # Cambios al motor de los demos, solo para la copia propuesta/.
 # F · estilo "grabación de pantalla pro": las ventanas de cada paso se ven dentro de la pantalla
-#     de una foto de estudio (notebook; tablet en el formato vertical) sobre un fondo degradado de
+#     de una foto de estudio (notebook; en el formato vertical, la ventana sola de frente) sobre un fondo degradado de
 #     marca; la cámara hace zoom automático hacia el cursor mientras interactúa y se aleja entre pasos.
 # Además: tomas de cine en "Ver en acción" del V1 (curvas y viajes en arco), sobre el mismo fondo.
 APARATO = r"""
-  // ── aparato fotográfico (propuesta): fotos de estudio generadas con IA (Higgsfield · Z Image) ──
-  // propuesta/img/notebook.webp y tablet.webp: pantalla en negro, reflejos verdes quitados y bordes difuminados
-  // (fuente/preparar.py y quad.py). La pantalla de la foto está en perspectiva: una homografía lleva el
-  // plano de la pantalla (x, y en unidades del demo) a sus cuatro esquinas en la foto, y así las
-  // ventanas, el cursor y los clics quedan pegados al vidrio.
-  // q: esquinas de la pantalla (sup-izq, sup-der, inf-der, inf-izq, px de la foto) · caja: el aparato completo, para encuadrar
-  // prop: ancho/alto de la pantalla real · radio: esquinas redondeadas de la pantalla (fracción del ancho)
-  const FOTOS = {
-    notebook: { src: 'img/notebook.webp', w: 2048, h: 1536, prop: 1.6, radio: 0.008,
-      q: [[441.5, 394.1], [1438.0, 433.9], [1485.4, 1040.3], [460.0, 1063.1]], caja: [410, 346, 1933, 1280] },
-    tablet: { src: 'img/tablet.webp', w: 1536, h: 2048, prop: 0.72, radio: 0.035,
-      q: [[239.9, 373.2], [1001.4, 419.7], [1289.8, 1619.2], [476.6, 1679.2]], caja: [174, 312, 1336, 1761] } };
-  function homografia(de, a){   // 4 pares de puntos → matriz 3×3 (h22 = 1)
-    const A = [], B = [];
-    for (let i = 0; i < 4; i++) { const [x, y] = de[i], [u, v] = a[i];
-      A.push([x, y, 1, 0, 0, 0, -u*x, -u*y]); B.push(u); A.push([0, 0, 0, x, y, 1, -v*x, -v*y]); B.push(v); }
-    for (let c = 0; c < 8; c++) {   // Gauss con pivoteo
-      let p = c; for (let r = c + 1; r < 8; r++) if (Math.abs(A[r][c]) > Math.abs(A[p][c])) p = r;
-      [A[c], A[p]] = [A[p], A[c]]; [B[c], B[p]] = [B[p], B[c]];
-      for (let r = 0; r < 8; r++) if (r !== c) { const f = A[r][c] / A[c][c]; for (let k = c; k < 8; k++) A[r][k] -= f * A[c][k]; B[r] -= f * B[c]; }
-    }
-    return B.map((v, i) => v / A[i][i]).concat(1);
-  }
-  const rr = (c, x, y, w, h, r) => { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); };
-  const lienzo = (w, h, f) => { const c = document.createElement('canvas'); c.width = w; c.height = h; f(c.getContext('2d'), w, h); const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; return t; };
-  // horizontal: notebook; vertical: tablet. La ventana del paso va centrada en la pantalla.
-  function aparato(vert, PW, PH){
-    const FOTO = vert ? FOTOS.tablet : FOTOS.notebook;
-    const g = new THREE.Group(); scene.add(g);
-    const SH = vert ? PW * 1.06 / FOTO.prop : PH * 1.06, SW = SH * FOTO.prop;
-    const q = FOTO.q, cx = (q[0][0] + q[1][0] + q[2][0] + q[3][0]) / 4, cy = (q[0][1] + q[1][1] + q[2][1] + q[3][1]) / 4;
-    const k = SH / (((q[3][1] - q[0][1]) + (q[2][1] - q[1][1])) / 2);   // unidades por píxel de la foto
-    const W = (x, y) => [(x - cx) * k, -(y - cy) * k];
-    // la foto
-    const tex = new THREE.TextureLoader().load(FOTO.src, () => { needsRender = true; });
-    tex.encoding = THREE.sRGBEncoding; tex.anisotropy = ANISO;
-    const foto = new THREE.Mesh(new THREE.PlaneGeometry(FOTO.w * k, FOTO.h * k), new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, toneMapped: false }));
-    foto.position.set((FOTO.w / 2 - cx) * k, -(FOTO.h / 2 - cy) * k, -0.02); foto.renderOrder = -1; g.add(foto);
-    // la pantalla: grupo con matriz proyectiva (homografía) en vez de posición/rotación
-    const H = homografia([[-SW/2, SH/2], [SW/2, SH/2], [SW/2, -SH/2], [-SW/2, -SH/2]], q.map(p => W(p[0], p[1])));
-    const pantalla = new THREE.Group(); pantalla.matrixAutoUpdate = false;
-    pantalla.matrix.set(H[0], H[1], 0, H[2],  H[3], H[4], 0, H[5],  0, 0, 1, 0,  H[6], H[7], 0, H[8]);
-    g.add(pantalla);
-    // escritorio: degradado de marca con un halo, como fondo de pantalla
-    const fondo = new THREE.Mesh(new THREE.PlaneGeometry(SW, SH), new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, transparent: true, toneMapped: false, depthWrite: false, map: lienzo(vert ? 320 : 512, vert ? 444 : 320, (c, w, h) => {
-      const l = c.createLinearGradient(0, 0, w, h); l.addColorStop(0, '#0d2742'); l.addColorStop(0.55, '#16477a'); l.addColorStop(1, '#0b3340'); c.fillStyle = l; c.fillRect(0, 0, w, h);
-      const r = c.createRadialGradient(w * 0.3, h * 0.25, 0, w * 0.3, h * 0.25, w * 0.6); r.addColorStop(0, 'rgba(110,170,240,.45)'); r.addColorStop(1, 'rgba(110,170,240,0)'); c.fillStyle = r; c.fillRect(0, 0, w, h);
-      const r2 = c.createRadialGradient(w * 0.85, h * 0.9, 0, w * 0.85, h * 0.9, w * 0.5); r2.addColorStop(0, 'rgba(20,170,150,.35)'); r2.addColorStop(1, 'rgba(20,170,150,0)'); c.fillStyle = r2; c.fillRect(0, 0, w, h);
-      c.globalCompositeOperation = 'destination-in'; c.fillStyle = '#000'; rr(c, 0, 0, w, h, FOTO.radio * w); c.fill();   // esquinas de la pantalla
-    }) }));
-    fondo.position.z = -0.01; fondo.renderOrder = 1; fondo.frustumCulled = false; pantalla.add(fondo);
-    // sombra suave de la ventana sobre el escritorio
-    const vs = new THREE.Mesh(new THREE.PlaneGeometry(PW + 0.7, PH + 0.7), new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, transparent: true, depthWrite: false, toneMapped: false, map: lienzo(256, 256, (c, w, h) => {
-      c.filter = 'blur(14px)'; c.fillStyle = 'rgba(0,8,20,.75)'; c.fillRect(36, 40, w - 72, h - 72); }) }));
-    vs.position.set(0, -0.08, -0.005); vs.renderOrder = 2; vs.frustumCulled = false; pantalla.add(vs);
-    // brillo del vidrio: franja diagonal muy tenue sobre toda la pantalla
-    const brillo = new THREE.Mesh(new THREE.PlaneGeometry(SW, SH), new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, transparent: true, depthWrite: false, toneMapped: false, map: lienzo(256, 256, (c, w, h) => {
-      const l = c.createLinearGradient(0, 0, w, h); l.addColorStop(0, 'rgba(255,255,255,.07)'); l.addColorStop(0.38, 'rgba(255,255,255,0)'); l.addColorStop(0.5, 'rgba(255,255,255,.06)'); l.addColorStop(0.62, 'rgba(255,255,255,0)'); c.fillStyle = l; c.fillRect(0, 0, w, h); }) }));
-    brillo.position.z = 0.06; brillo.renderOrder = 30; brillo.frustumCulled = false; pantalla.add(brillo);
-    const [x0, y0] = W(FOTO.caja[0], FOTO.caja[1]), [x1, y1] = W(FOTO.caja[2], FOTO.caja[3]);
-    Object.assign(g.userData, { pantalla, sombraVentana: vs, caja: { x: (x0 + x1) / 2, y: (y0 + y1) / 2, w: x1 - x0, h: y0 - y1 }, SW, SH });
-    g.visible = false; return g;
-  }
-"""
+  // aparato fotográfico compartido (fuente/foto.js): notebook en horizontal; en vertical, la ventana sola
+  function aparato(vert, PW, PH){ return alFoto.crear(THREE, scene, { vert, ventana: { w: PW, h: PH }, anis: ANISO, listo: () => { needsRender = true; } }); }"""
+import os
+FOTO_JS = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'foto.js'), encoding='utf-8').read()
 
 def aplicar(s):
+    s = s.replace('</head>', '<script>\n' + FOTO_JS + '</script>\n</head>', 1)
     def rep(a, b, n=1):
         nonlocal s
         c = s.count(a); assert c == n, (c, a[:90]); s = s.replace(a, b)
@@ -111,25 +52,7 @@ def aplicar(s):
       const cf = J.CURSOR[ip];
       let quiere = 0;
       if (cf && cursor.visible) { const k = cf.keys; quiere = clamp((lt - k[0][0] + 0.15) / 0.35) * (1 - clamp((lt - k[k.length - 1][0] - 0.9) / 0.4)); }
-      const kz = 1 - Math.exp(-dt * 3.2), kp = 1 - Math.exp(-dt * 4.5);
-      SS.z += (quiere - SS.z) * kz;
-      // el aparato completo se ve al empezar y en un alejamiento breve al cambiar de paso; el resto del
-      // tiempo la ventana llena el cuadro para que se lea
-      const verAparato = T < 1.4 ? 1 : (ip > 0 && lt < 0.55 ? 0.4 : 0);
-      SS.a += (verAparato - SS.a) * (1 - Math.exp(-dt * (verAparato > SS.a ? 5 : 2.4)));
-      const u = J.disp.userData, cj = u.caja, tg = Math.tan(camera.fov * Math.PI / 360);
-      if (cursor.visible) {   // el encuadre sigue al cursor sin salirse de la pantalla
-        const lx = u.SW * 0.2, ly = u.SH * 0.2;
-        SS.x += (clamp(cursor.position.x, -lx, lx) - SS.x) * kp; SS.y += (clamp(cursor.position.y, -ly, ly) - SS.y) * kp;
-      }
-      const z = ease(SS.z);
-      // tres encuadres (abajo queda la barra de controles): aparato completo · ventana · acercamiento al cursor
-      const aparatoD = Math.max(cj.h * (J.vert ? 1.2 : 1.38) / 2 / tg, cj.w * (J.vert ? 1.06 : 1.22) / 2 / (tg * camera.aspect));
-      const ventanaD = Math.max(J.PH * (J.vert ? 1.36 : 1.24) / 2 / tg, J.PW * (J.vert ? 1.02 : 1.1) / 2 / (tg * camera.aspect)), cerca = ventanaD * 0.68;
-      const a = ease(SS.a);
-      const mx = lerp(lerp(0, SS.x, z), cj.x, a) + PX.x * 0.12, my = lerp(lerp(-J.PH * (J.vert ? 0.125 : 0.06), SS.y, z), cj.y - cj.h * 0.07, a) + PX.y * 0.08;
-      camera.position.set(mx, my, lerp(lerp(ventanaD, cerca, z), aparatoD, a) * (1 - Math.sin(T * 0.3) * 0.008));
-      camera.lookAt(mx, my, 0);""" + s[b:]
+      alFoto.camara(camera, J.disp.userData, SS, { T, dt, ip, lt, quiere, foco: cursor.visible ? cursor.position : null, vent: { w: J.PW, h: J.PH }, vert: J.vert, px: PX });""" + s[b:]
 
     # ── "Ver en acción" del V1 ─────────────────────────────────────────────────
     rep("AL3D.ambiente(scene, { z:-4.5, y:-0.85 });\nAL3D.piso(scene, { y:-3.95 });",
@@ -168,4 +91,55 @@ function camara(t){
     rep("ring.rotation.copy(card.rotation);", "ring.rotation.set(0, 0, 0);")
     rep("  const basic = (opts) => new THREE.MeshBasicMaterial(Object.assign({ transparent:true, side:THREE.DoubleSide, depthWrite:false }, opts));",
         "  const basic = (opts) => new THREE.MeshBasicMaterial(Object.assign({ transparent:true, side:THREE.DoubleSide, depthWrite:false, toneMapped:false }, opts));")
+    # 7 · "Ver en acción" del V1 dentro del aparato del visitante: la escena 3D se dibuja como imagen en la
+    #     pantalla (homografía) y por fuera va la misma cámara de grabación que en los otros demos
+    rep("\n\nfunction resize(){", """
+
+// propuesta: la escena se dibuja en la pantalla de un aparato fotográfico (fuente/foto.js); en celular, directa
+const PANT = (() => {
+  const fuera = new THREE.Scene(), camF = new THREE.PerspectiveCamera(35, 1, 0.1, 200);
+  const RTC = renderer.capabilities.isWebGL2 && THREE.WebGLMultisampleRenderTarget ? THREE.WebGLMultisampleRenderTarget : THREE.WebGLRenderTarget;
+  const rt = new RTC(2, 2, { format: THREE.RGBAFormat }); if (rt.samples !== undefined) rt.samples = 4; rt.texture.encoding = THREE.sRGBEncoding;
+  const disp = {}, st = { z: 0, x: 0, y: 0, a: 1 }, v3 = new THREE.Vector3(), tam = new THREE.Vector2();
+  let D = null, vert = false;
+  function armar(v){
+    const g = alFoto.crear(THREE, fuera, { vert: v, alto: 4, anis: ANISO, listo: () => { needsRender = true; } }), u = g.userData;
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(u.SW, u.SH), new THREE.MeshBasicMaterial({ map: rt.texture, alphaMap: u.esquinas, transparent: true, depthWrite: false, toneMapped: false, side: THREE.DoubleSide }));
+    m.renderOrder = 5; m.frustumCulled = false; u.pantalla.add(m);
+    u.fondo = u.escritorio(); return g;
+  }
+  return {
+    // devuelve la proporción con que se dibuja la escena: la de la pantalla del aparato, o la del lienzo
+    usar(w, h){
+      vert = w / h < 1.2;
+      if (D) D.visible = false;
+      D = alFoto.elegir(vert) ? (disp[vert] || (disp[vert] = armar(vert))) : null;
+      if (D) D.visible = true;
+      scene.background = D ? D.userData.fondo : null;
+      camera.fov = D ? 28 : 35;   // en la pantalla, la escena algo más cerca para que se lea
+      camF.aspect = w / h; camF.updateProjectionMatrix();
+      return D ? D.userData.SW / D.userData.SH : w / h;
+    },
+    dibujar(t, dt){
+      if (!D) { renderer.render(scene, camera); return; }
+      const u = D.userData;
+      renderer.getDrawingBufferSize(tam);   // la imagen de la pantalla, con margen para el acercamiento
+      const alto = Math.min(2048, Math.round(tam.y * 1.3)), ancho = Math.min(2560, Math.round(alto * u.SW / u.SH));
+      if (rt.width !== ancho || rt.height !== alto) rt.setSize(ancho, alto);
+      renderer.setRenderTarget(rt); renderer.clear(); renderer.render(scene, camera); renderer.setRenderTarget(null);
+      // el cursor de la corrección manual, llevado al vidrio: la cámara se acerca y lo sigue
+      let foco = null;
+      if (cursor.visible) { cursor.getWorldPosition(v3).project(camera); v3.set(v3.x * u.SW / 2, v3.y * u.SH / 2, 0); D.updateMatrixWorld(true); u.pantalla.localToWorld(v3); foco = v3; }
+      const i = stepOf(t);
+      alFoto.camara(camF, u, st, { T: t, dt, ip: i, lt: t - STEPS[i].a, quiere: foco ? 1 : 0, foco, vent: { w: u.SW, h: u.SH }, vert, px: PX });
+      renderer.render(fuera, camF);
+    }
+  };
+})();
+
+function resize(){""")
+    rep("  camera.aspect = w / h; camera.updateProjectionMatrix();\n  // recuadro más alto que ancho (vertical)",
+        "  camera.aspect = PANT.usar(w, h); camera.updateProjectionMatrix();\n  // recuadro más alto que ancho (vertical)")
+    rep("updateTable(t, ps.pres); updateCube(t); updateExport(t);\n    renderer.render(scene, camera);",
+        "updateTable(t, ps.pres); updateCube(t); updateExport(t);\n    PANT.dibujar(t, dt);")
     return s
