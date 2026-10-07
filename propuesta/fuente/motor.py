@@ -142,4 +142,10 @@ def aplicar(s):
     #     cuadros por segundo, el celular lo mostraba en cámara lenta)
     rep("    const dt = Math.min(0.05, (now - last) / 1000); last = now;\n    if (PX.update(dt)) needsRender = true;\n    const mueve = L.tick(dt, visible);",
         "    const dt = Math.min(0.12, (now - last) / 1000); last = now;\n    if (PX.update(dt)) needsRender = true;\n    const mueve = L.tick(dt, visible);")
+    # 10 · App de Pedidos, diseño vertical en celular y tablet: el catálogo y el pedido del cliente a pantalla
+    #      completa (la pantalla ya es la de un teléfono: no se dibuja otro adentro); sin etiquetas flotantes
+    rep("    const cel = (g, top = 18) => { g.clearRect(0, 0, CW, CH); g.fillStyle = '#f4f7fb'; rr(g, 0, 0, CW, CH, 34); g.fill(); return celular(g, 150 + (top - 18)*0.25, top, 500 - (top - 18)*0.5, 982 - top); };\n    const flota = (g, x, y, s, ink, size, h, align) => {",
+        "    const TELEFONO = !!(window.alFoto && alFoto.tactil());   // propuesta: en celular y tablet, a pantalla completa\n"
+        "    const cel = (g, top = 18) => { g.clearRect(0, 0, CW, CH); if (TELEFONO) { g.fillStyle = '#ffffff'; g.fillRect(0, 0, CW, CH); return { x: 48, y: 82, w: CW - 96, h: CH - 110 }; } g.fillStyle = '#f4f7fb'; rr(g, 0, 0, CW, CH, 34); g.fill(); return celular(g, 150 + (top - 18)*0.25, top, 500 - (top - 18)*0.5, 982 - top); };\n"
+        "    const flota = (g, x, y, s, ink, size, h, align) => { if (TELEFONO) return;")
     return s
