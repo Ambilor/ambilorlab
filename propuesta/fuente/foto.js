@@ -62,7 +62,8 @@ window.alFoto = (function(){
     var FOTO = elegir(o.vert), MB = T.MeshBasicMaterial;
     if (!FOTO) return plana(T, escena, o);
     var g = new T.Group(); escena.add(g);
-    var SH = o.ventana ? (FOTO.prop < 1 ? o.ventana.w * 1.06 / FOTO.prop : o.ventana.h * 1.06) : o.alto, SW = SH * FOTO.prop;
+    // con ventana, la app va a pantalla completa: la pantalla tiene el alto de la ventana (o su ancho, si es más angosta)
+    var SH = o.ventana ? Math.max(o.ventana.h, o.ventana.w / FOTO.prop) : o.alto, SW = SH * FOTO.prop;
     var q = FOTO.q, cx = (q[0][0] + q[1][0] + q[2][0] + q[3][0]) / 4, cy = (q[0][1] + q[1][1] + q[2][1] + q[3][1]) / 4;
     var k = SH / (((q[3][1] - q[0][1]) + (q[2][1] - q[1][1])) / 2);   // unidades por píxel de la foto
     var W = function(x, y){ return [(x - cx) * k, -(y - cy) * k]; };
@@ -81,11 +82,9 @@ window.alFoto = (function(){
     // esquinas redondeadas de la pantalla (para lo que se dibuje encima de ella)
     var esquinas = lienzo(T, ancho, alto, function(c, w, h){ c.fillStyle = '#fff'; rr(c, 0, 0, w, h, FOTO.radio * w); c.fill(); });
     var u = { pantalla: pantalla, SW: SW, SH: SH, esquinas: esquinas, escritorio: function(){ return lienzo(T, ancho, alto, escritorio); } };
-    if (o.ventana) {
-      // escritorio y sombra suave de la ventana
-      plano(SW, SH, mate(lienzo(T, ancho, alto, function(c, w, h){ escritorio(c, w, h); c.globalCompositeOperation = 'destination-in'; rr(c, 0, 0, w, h, FOTO.radio * w); c.fill(); })), -0.01, 1);
-      u.sombraVentana = plano(o.ventana.w + 0.7, o.ventana.h + 0.7, mate(lienzo(T, 256, 256, function(c, w, h){ c.filter = 'blur(14px)'; c.fillStyle = 'rgba(0,8,20,.75)'; c.fillRect(36, 40, w - 72, h - 72); })), -0.005, 2);
-      u.sombraVentana.position.y = -0.08;
+    if (o.ventana) {   // la ventana del paso se estira a lo ancho de la pantalla con su propio borde (ver el motor)
+      u.pleno = true; u.ventanaY = SH / 2 - o.ventana.h / 2;   // arriba, como una app
+      u.sombraVentana = { material: {} };
     }
     // brillo del vidrio: franja diagonal muy tenue sobre toda la pantalla
     plano(SW, SH, mate(lienzo(T, 256, 256, function(c, w, h){
