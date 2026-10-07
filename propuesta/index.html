@@ -2186,6 +2186,54 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
   .prop-flujo li::after{opacity:1!important;translate:0 0!important}
   .prop-traza path,.prop-traza line,.prop-traza circle,.prop-traza rect,.prop-traza polyline{stroke-dasharray:none;stroke-dashoffset:0;animation:none}
 }
+
+/* ════ PROPUESTA B: cambios que se ven (2026-10-07) ════════════════════════════ */
+/* B1 · fondo vivo: aurora de la marca que se mueve lento (design-dna: "visual effects") */
+.prop-aurora{position:fixed;inset:-25%;z-index:0;pointer-events:none;opacity:.6;mix-blend-mode:screen;
+  background:radial-gradient(38% 32% at 18% 28%,rgba(31,92,153,.6),transparent 70%),radial-gradient(32% 28% at 82% 18%,rgba(42,128,225,.38),transparent 70%),radial-gradient(42% 38% at 62% 88%,rgba(7,140,126,.30),transparent 70%),radial-gradient(28% 28% at 12% 88%,rgba(106,91,199,.34),transparent 70%);
+  filter:blur(40px);animation:prop-aurora 26s ease-in-out infinite alternate}
+@keyframes prop-aurora{to{transform:translate3d(7%,-5%,0) rotate(10deg) scale(1.1)}}
+[data-theme="light"] .prop-aurora{opacity:.35;mix-blend-mode:multiply;filter:blur(60px) saturate(.6)}
+/* B2 · grano de película muy suave */
+.prop-grano{position:fixed;inset:0;z-index:9998;pointer-events:none;opacity:.07;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+/* B3 · luz que sigue al mouse por toda la página */
+.prop-luz{position:fixed;left:0;top:0;width:640px;height:640px;margin:-320px 0 0 -320px;border-radius:50%;pointer-events:none;z-index:1;background:radial-gradient(circle,rgba(76,141,219,.20),transparent 62%);mix-blend-mode:screen;opacity:0;transition:opacity .4s ease}
+.prop-luz.on{opacity:1}
+/* B4 · títulos de cada pestaña: grandes, con degradado de marca y brillo al entrar */
+.ct-h,.prod-h1,#guias .home-h1{font-size:clamp(30px,5.2vw,60px)!important;line-height:1.02!important;letter-spacing:-.04em!important;font-weight:700!important;
+  background:linear-gradient(100deg,#F4F7FC 0%,#F4F7FC 40%,#8FC1FF 50%,#F4F7FC 60%,#9DB8DA 100%)!important;background-size:250% 100%!important;background-position:100% 0!important;
+  -webkit-background-clip:text!important;background-clip:text!important;-webkit-text-fill-color:transparent!important;color:transparent!important;animation:none!important}
+[data-theme="light"] :is(.ct-h,.prod-h1,#guias .home-h1){background-image:linear-gradient(100deg,#0B1F35 0%,#0B1F35 40%,#2a80e1 50%,#0B1F35 60%,#1F5C99 100%)!important}
+.prop-brillo{animation:prop-brillo 1.6s cubic-bezier(.19,1,.22,1) .35s both!important}
+@keyframes prop-brillo{from{background-position:100% 0}to{background-position:0 0}}
+/* B5 · tarjetas con profundidad: se inclinan hacia el mouse (lo calcula el script) */
+.prop-3d{transform-style:preserve-3d;transition:transform .5s cubic-bezier(.22,1,.36,1),box-shadow .4s ease}
+.prop-3d.prop-sobre{transition:transform .08s linear,box-shadow .3s ease;box-shadow:0 30px 60px -30px rgba(0,0,0,.7),0 0 0 1px rgba(143,193,255,.28),0 0 40px -10px rgba(76,141,219,.45)}
+/* B6 · Inicio: botones magnéticos y cinta de palabras clave */
+.i3-btn{transition:transform .2s,border-color .2s,color .2s,scale .16s var(--e-press),translate .35s cubic-bezier(.22,1,.36,1)}
+.prop-cinta{position:relative;margin:clamp(14px,3vh,28px) auto 0;max-width:min(900px,92vw);overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.prop-cinta div{display:flex;gap:28px;width:max-content;animation:prop-cinta 32s linear infinite;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#8FA7C6}
+.prop-cinta span{display:inline-flex;align-items:center;gap:28px;white-space:nowrap}
+.prop-cinta span::after{content:'◆';font-size:8px;color:var(--glow,#4C8DDB)}
+@keyframes prop-cinta{to{transform:translateX(-50%)}}
+@media (max-height:700px){.prop-cinta{display:none}}
+/* B4b · título de portada: degradado de marca y halo de luz */
+#home .i3-titulo{filter:drop-shadow(0 0 34px rgba(76,141,219,.38))}
+#home .i3-titulo .prop-palabra{background:linear-gradient(180deg,#FFFFFF 25%,#A9CCF5 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;padding-bottom:.04em}
+[data-theme="light"] #home .i3-titulo .prop-palabra{background-image:linear-gradient(180deg,#0B1F35 30%,#1F5C99 100%)}
+/* B7 · Herramientas: cada bloque sube y crece mientras bajas (scroll-driven, sin JS) */
+@supports (animation-timeline: view()){
+  #product :is(.pi-grid4>*,.pi-nums,.pi-faq,.prod-cab>*,.al-demo){animation:prop-sube linear both;animation-timeline:view();animation-range:entry 0% cover 28%}
+  @keyframes prop-sube{from{opacity:0;transform:translateY(46px) scale(.94)}to{opacity:1;transform:none}}
+}
+/* B8 · Contacto: campos que se encienden al escribir */
+.cf-field{transition:border-color .2s ease,box-shadow .3s ease}
+.cf-field:focus{border-color:#4C8DDB!important;box-shadow:0 0 0 3px rgba(76,141,219,.28),0 0 34px -6px rgba(76,141,219,.65)!important;outline:none}
+@media (prefers-reduced-motion:reduce){
+  .prop-aurora,.prop-cinta div{animation:none!important}
+  .prop-luz{display:none}
+  #product :is(.pi-grid4>*,.pi-nums,.pi-faq,.prod-cab>*,.al-demo){animation:none!important}
+}
 </style>
 </head>
 
@@ -8303,7 +8351,6 @@ window.addEventListener('load', function(){ var h = new URLSearchParams(location
     var h = document.querySelector('#home .i3-titulo'); if (!h || h.dataset.prop) return;
     h.dataset.prop = '1';
     var raiz = document.documentElement;
-    if (reduce || !h.animate || !raiz.classList.contains('prop-intro')) { raiz.classList.remove('prop-intro'); return; }
     var palabras = [];
     [].slice.call(h.childNodes).forEach(function(n){
       if (n.nodeType !== 3) return;
@@ -8315,6 +8362,7 @@ window.addEventListener('load', function(){ var h = new URLSearchParams(location
       });
       h.replaceChild(frag, n);
     });
+    if (reduce || !h.animate || !raiz.classList.contains('prop-intro')) { raiz.classList.remove('prop-intro'); return; }
     var punto = h.querySelector('.i3-p');
     raiz.classList.remove('prop-intro');   // desde aquí lo esconde el fill:'backwards' de cada animación
     palabras.forEach(function(s, i){
@@ -8384,6 +8432,70 @@ window.addEventListener('load', function(){ var h = new URLSearchParams(location
     }, { passive: true });
   }
 
+
+  /* ════ PROPUESTA B ════ */
+  var fino = window.matchMedia && matchMedia('(hover: hover) and (pointer: fine)').matches;
+  // B1-B3 · fondo vivo, grano y luz del mouse
+  (function(){
+    var a = document.createElement('div'); a.className = 'prop-aurora'; document.body.insertBefore(a, document.body.firstChild);
+    var g = document.createElement('div'); g.className = 'prop-grano'; document.body.appendChild(g);
+    if (!fino || reduce) return;
+    var l = document.createElement('div'); l.className = 'prop-luz'; document.body.appendChild(l);
+    var x = innerWidth / 2, y = innerHeight / 2, tx = x, ty = y, vivo = false;
+    addEventListener('pointermove', function(e){ tx = e.clientX; ty = e.clientY; l.classList.add('on'); if (!vivo) { vivo = true; requestAnimationFrame(paso); } }, { passive: true });
+    document.addEventListener('pointerleave', function(){ l.classList.remove('on'); });
+    function paso(){ x += (tx - x) * .14; y += (ty - y) * .14; l.style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)'; if (Math.abs(tx - x) + Math.abs(ty - y) > .5) requestAnimationFrame(paso); else vivo = false; }
+  })();
+  // B4 · títulos grandes: palabra a palabra y brillo al mostrar su pestaña
+  function tituloDe(id){
+    var h = { contact: '#contact .ct-h', product: '#product .prod-h1', guias: '#guias .home-h1' }[id];
+    var el = h && [].filter.call(document.querySelectorAll(h), function(x){ return x.offsetParent; })[0]; if (!el) return;
+    el.classList.remove('prop-brillo'); void el.offsetWidth; el.classList.add('prop-brillo');
+    if (reduce || !el.animate || el.dataset.propSplit) return;
+    el.dataset.propSplit = '1';
+    el.animate([{ opacity: 0, transform: 'translateY(.25em)', filter: 'blur(10px)' }, { opacity: 1, transform: 'none', filter: 'blur(0)' }], { duration: 900, easing: EXPO, fill: 'backwards' });
+  }
+  // B5 · tarjetas que se inclinan hacia el mouse
+  if (fino && !reduce) {
+    var SEL = '.ab2-perfil,.ab2-flujo li,.ab2-exp,.rc-card,.pi-grid4>*,.ct-lista,.cf-wrap,.pi-nums';
+    document.addEventListener('pointermove', function(e){
+      var c = e.target.closest && e.target.closest(SEL); if (!c) return;
+      var r = c.getBoundingClientRect(), px = (e.clientX - r.left) / r.width - .5, py = (e.clientY - r.top) / r.height - .5;
+      var k = Math.min(8, 2400 / Math.max(r.width, 300));
+      c.classList.add('prop-3d', 'prop-sobre');
+      c.style.transform = 'perspective(900px) rotateX(' + (-py * k).toFixed(2) + 'deg) rotateY(' + (px * k).toFixed(2) + 'deg) translateZ(0)';
+    }, { passive: true });
+    document.addEventListener('pointerout', function(e){
+      var c = e.target.closest && e.target.closest(SEL); if (!c || (e.relatedTarget && c.contains(e.relatedTarget))) return;
+      c.classList.remove('prop-sobre'); c.style.transform = '';
+    });
+  }
+  // B6 · Inicio: cinta de palabras clave, efecto "descifrar" y botones magnéticos
+  (function(){
+    var est = document.querySelector('#home .i3-centro'); if (!est) return;
+    var pal = ['Conciliación bancaria', 'Google Sheets', 'Excel', 'Apps Script', 'Looker Studio', 'Reportes automáticos', 'Cierre mensual', 'Sin software caro'];
+    var c = document.createElement('div'); c.className = 'prop-cinta'; c.setAttribute('aria-hidden', 'true');
+    var fila = pal.concat(pal).map(function(t){ return '<span>' + t + '</span>'; }).join('');
+    c.innerHTML = '<div>' + fila + '</div>';
+    var pista = est.querySelector('.i3-pista'); est.insertBefore(c, pista ? pista.nextSibling : null);
+    if (fino && !reduce) [].forEach.call(document.querySelectorAll('.i3-btn'), function(b){
+      b.addEventListener('pointermove', function(e){ var r = b.getBoundingClientRect(); b.style.translate = ((e.clientX - r.left - r.width / 2) * .25).toFixed(1) + 'px ' + ((e.clientY - r.top - r.height / 2) * .35).toFixed(1) + 'px'; });
+      b.addEventListener('pointerleave', function(){ b.style.translate = ''; });
+    });
+  })();
+  function descifrar(){
+    var w = document.querySelectorAll('#home .i3-titulo .prop-palabra'); var el = w[w.length - 1];
+    if (!el || reduce || el.dataset.cifra) return; el.dataset.cifra = '1';
+    var fin = el.textContent, abc = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$%#', t0 = performance.now(), dur = 900;
+    el.style.width = el.getBoundingClientRect().width + 'px'; el.style.textAlign = 'left';
+    (function paso(now){
+      var u = Math.min(1, (now - t0) / dur), n = Math.floor(u * fin.length), out = '';
+      for (var i = 0; i < fin.length; i++) out += i < n ? fin[i] : abc[(Math.random() * abc.length) | 0];
+      el.textContent = out;
+      if (u < 1) requestAnimationFrame(paso); else { el.textContent = fin; el.style.width = ''; }
+    })(t0);
+  }
+
   /* engancha el cambio de pestaña sin tocar show() */
   var showOrig = window.show;
   if (typeof showOrig === 'function') {
@@ -8392,13 +8504,15 @@ window.addEventListener('load', function(){ var h = new URLSearchParams(location
       if (id === 'about') sobreMi();
       if (id === 'product') setTimeout(trazos, 50);
       if (id === 'guias') setTimeout(recursos, 30);
-      if (id === 'home') portada();
+      if (id === 'home') { portada(); setTimeout(descifrar, 1100); }
+      tituloDe(id);
       return r;
     };
   }
   function alInicio(){
     var v = document.querySelector('section.visible'); var id = v && v.id;
-    if (id === 'home') portada(); else if (id === 'about') sobreMi(); else if (id === 'product') trazos(); else if (id === 'guias') recursos();
+    tituloDe(id);
+    if (id === 'home') { portada(); setTimeout(descifrar, 1100); } else if (id === 'about') sobreMi(); else if (id === 'product') trazos(); else if (id === 'guias') recursos();
   }
   // la portada espera a que la página termine de cargar (el 3D ocupa el primer segundo);
   // si tarda más de 3 s, se muestra sin animación
