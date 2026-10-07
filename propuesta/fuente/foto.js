@@ -202,12 +202,6 @@ window.alFoto = (function(){
         else { rr(c, x - P(8), y - P(9), P(16), P(18), P(3)); c.moveTo(x - P(4), y - P(3)); c.lineTo(x + P(4), y - P(3)); c.moveTo(x - P(4), y + P(2)); c.lineTo(x + P(4), y + P(2)); }
         c.stroke();
       };
-      if (d.tab && o.menu) {   // celular: la barra de pestañas de la app, sobre la del navegador
-        var ty0 = e.H - e.bot - d.tab;
-        c.fillStyle = 'rgba(250,250,252,.98)'; c.fillRect(sx, py(ty0), SW, P(d.tab)); c.fillStyle = 'rgba(60,60,67,.18)'; c.fillRect(sx, py(ty0), SW, Math.max(1, P(0.5)));
-        o.menu.forEach(function(it, i){ var x = px(e.W * (i + 0.5) / o.menu.length), on = i === 0, col2 = on ? '#1f5c99' : '#8e8e93';
-          icono(x, py(ty0 + 20), i, col2); c.fillStyle = col2; c.font = fuenteSF(P(10), on ? 600 : 500); c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(it, x, py(ty0 + 41)); });
-      }
       if (d.lado > 1) {        // tablet horizontal: barra lateral de Safari
         var lw = P(d.lado), ly = py(e.top);
         c.fillStyle = '#f2f2f7'; c.fillRect(sx, ly, lw, SH - P(e.top)); c.fillStyle = 'rgba(60,60,67,.2)'; c.fillRect(sx + lw - Math.max(1, P(0.5)), ly, Math.max(1, P(0.5)), SH - P(e.top));
@@ -224,17 +218,41 @@ window.alFoto = (function(){
       c.fillStyle = gl; c.fillRect(sx, sy, SW, SH);
       c.restore();
     }); };
+    // barra de pestañas de la app (celular): en su propia capa, porque solo va en las pantallas del panel
+    var barraTab = function(){ return lienzo(T, cw, ch, function(c){
+      c.save(); rr(c, sx, sy, SW, SH, Ri); c.clip();
+      var px = function(pt){ return sx + P(pt); }, py = function(pt){ return sy + P(pt); };
+      var icono = function(x, y, t, col2){   // íconos simples de línea, en pt
+        c.strokeStyle = col2; c.fillStyle = col2; c.lineWidth = P(1.8); c.lineCap = 'round'; c.lineJoin = 'round'; c.beginPath();
+        if (t === 0) { rr(c, x - P(9), y - P(8), P(18), P(16), P(3)); c.stroke(); c.beginPath(); c.moveTo(x - P(5), y + P(3)); c.lineTo(x - P(5), y - P(1)); c.moveTo(x, y + P(3)); c.lineTo(x, y - P(4)); c.moveTo(x + P(5), y + P(3)); c.lineTo(x + P(5), y + P(1)); }
+        else if (t === 1) { for (var q = 0; q < 3; q++) { c.moveTo(x - P(8), y - P(6) + P(q * 6)); c.lineTo(x + P(8), y - P(6) + P(q * 6)); } }
+        else if (t === 2) { c.arc(x, y, P(8), 0, 7); c.moveTo(x, y - P(4)); c.lineTo(x, y); c.lineTo(x + P(3), y + P(3)); }
+        else if (t === 3) { c.arc(x, y, P(3.2), 0, 7); c.moveTo(x + P(8), y); c.arc(x, y, P(8), 0, 7); }
+        else { rr(c, x - P(8), y - P(9), P(16), P(18), P(3)); c.moveTo(x - P(4), y - P(3)); c.lineTo(x + P(4), y - P(3)); c.moveTo(x - P(4), y + P(2)); c.lineTo(x + P(4), y + P(2)); }
+        c.stroke();
+      };
+      if (d.tab && o.menu) {   // celular: la barra de pestañas de la app, sobre la del navegador
+        var ty0 = e.H - e.bot - d.tab;
+        c.fillStyle = 'rgba(250,250,252,.98)'; c.fillRect(sx, py(ty0), SW, P(d.tab)); c.fillStyle = 'rgba(60,60,67,.18)'; c.fillRect(sx, py(ty0), SW, Math.max(1, P(0.5)));
+        o.menu.forEach(function(it, i){ var x = px(e.W * (i + 0.5) / o.menu.length), on = i === 0, col2 = on ? '#1f5c99' : '#8e8e93';
+          icono(x, py(ty0 + 20), i, col2); c.fillStyle = col2; c.font = fuenteSF(P(10), on ? 600 : 500); c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(it, x, py(ty0 + 41)); });
+      }
+      c.restore();
+    }); };
     var MB = T.MeshBasicMaterial, mat = function(map){ return new MB({ map: map, transparent: true, depthWrite: false, toneMapped: false }); };
     var plano = function(mt, z, orden){ var me = new T.Mesh(new T.PlaneGeometry(FW, FH), mt); me.position.z = z; me.renderOrder = orden; me.frustumCulled = false; g.add(me); return me; };
     var fondo = new T.Mesh(new T.PlaneGeometry(d.SW, d.SH), new MB({ color: 0xffffff, toneMapped: false })); fondo.position.z = -0.02; fondo.renderOrder = 0; pantalla.add(fondo);
     plano(mat(cuerpo), 0.05, 40);
     var claro = plano(mat(capa('#ffffff')), 0.06, 41), oscuro = plano(mat(capa('#000000')), 0.06, 41); oscuro.visible = false;
     var solo = !(m.tipo === 'iphone' && vert); if (solo) { oscuro.visible = true; claro.visible = false; }   // la barra de estado va sobre el navegador
+    var tabs = d.tab && o.menu ? plano(mat(barraTab()), 0.055, 41) : null;
     var vis = { w: FW, h: FH, cy: 0 };
     document.documentElement.style.setProperty(vert ? '--p-ar-v' : '--p-ar-h', (vis.w / vis.h).toFixed(4));
     return { d: d, ext: vis, zoom: 1,   // sin acercamiento al tocar: el demo quieto se entiende mejor
       // en el iPhone la barra de estado va sobre la página: blanca sobre fondo oscuro, negra sobre claro
-      tono: function(cx){ if (solo) return; try { var p = cx.getImageData(Math.round(cx.canvas.width / 2), 3, 1, 1).data, lum = (0.3 * p[0] + 0.59 * p[1] + 0.11 * p[2]) / 255; var os = p[3] > 10 && lum > 0.6; claro.visible = !os; oscuro.visible = os; } catch (er) {} } };
+      // y la barra de pestañas va solo en las pantallas del panel (cabecera de color), no en las del cliente
+      tono: function(cx){ if (solo && !tabs) return; try { var p = cx.getImageData(Math.round(cx.canvas.width / 2), 3, 1, 1).data, lum = (0.3 * p[0] + 0.59 * p[1] + 0.11 * p[2]) / 255; var os = p[3] > 10 && lum > 0.6;
+        if (!solo) { claro.visible = !os; oscuro.visible = os; } if (tabs) tabs.visible = !os; } catch (er) {} } };
   }
   // Ventana de frente, sin aparato: en computador (ventana angosta) con su sombra; en celular y tablet,
   // dentro del marco del equipo del visitante, a pantalla completa.
