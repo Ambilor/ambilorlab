@@ -6,20 +6,37 @@
 APARATO = r"""
   // ── aparato 3D (propuesta): laptop de aluminio con reflejos de estudio, o teléfono en el formato vertical ──
   const pmrem = new THREE.PMREMGenerator(renderer);
-  scene.environment = (() => {   // estudio para los reflejos: fondo azul de marca con tres cajas de luz
-    const env = new THREE.Scene();
-    env.add(new THREE.Mesh(new THREE.SphereGeometry(20, 32, 16), new THREE.MeshBasicMaterial({ color: 0x0f2338, side: THREE.BackSide })));
-    const luz = (w, h, x, y, z, c) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: c, side: THREE.DoubleSide })); m.position.set(x, y, z); m.lookAt(0, 0, 0); env.add(m); };
-    luz(14, 5, -6, 9, 8, 0xffffff); luz(4, 12, 12, 2, 4, 0xbfd6f5); luz(10, 3, 0, -6, 12, 0x4c8ddb); luz(6, 6, -10, 3, -8, 0x35b37e);
+  // Estudio fotográfico para los reflejos: RoomEnvironment de three.js (MIT, © three.js authors;
+  // viene de model-viewer de Google). Es la iluminación de los visores de productos.
+  scene.environment = (() => {
+    const env = new THREE.Scene(), geo = new THREE.BoxGeometry(); geo.deleteAttribute('uv');
+    const sala = new THREE.MeshStandardMaterial({ side: THREE.BackSide }), caja = new THREE.MeshStandardMaterial();
+    const luzP = new THREE.PointLight(0xffffff, 5.0, 28, 2); luzP.position.set(0.418, 16.199, 0.3); env.add(luzP);
+    const m = (mat, p, r, e) => { const o = new THREE.Mesh(geo, mat); o.position.set(p[0], p[1], p[2]); if (r) o.rotation.set(0, r, 0); o.scale.set(e[0], e[1], e[2]); env.add(o); };
+    m(sala, [-0.757, 13.219, 0.717], 0, [31.713, 28.305, 28.591]);
+    m(caja, [-10.906, 2.009, 1.846], -0.195, [2.328, 7.905, 4.651]); m(caja, [-5.607, -0.754, -0.758], 0.994, [1.970, 1.534, 3.955]);
+    m(caja, [6.167, 0.857, 7.803], 0.561, [3.927, 6.285, 3.687]);   m(caja, [-2.017, 0.018, 6.124], 0.333, [2.002, 4.566, 2.064]);
+    m(caja, [2.291, -0.756, -2.621], -0.286, [1.546, 1.552, 1.496]); m(caja, [-2.193, -0.369, -5.547], 0.516, [3.875, 3.487, 2.986]);
+    const area = k => { const mm = new THREE.MeshBasicMaterial(); mm.color.setScalar(k); return mm; };
+    m(area(50), [-16.116, 14.37, 8.208], 0, [0.1, 2.428, 2.739]); m(area(50), [-16.109, 18.021, -8.207], 0, [0.1, 2.425, 2.751]);
+    m(area(17), [14.904, 12.198, -1.832], 0, [0.15, 4.265, 6.331]); m(area(43), [-0.462, 8.89, 14.52], 0, [4.38, 5.441, 0.088]);
+    m(area(20), [3.235, 11.486, -12.541], 0, [2.5, 2.0, 0.1]);     m(area(100), [0, 20, 0], 0, [1.0, 0.1, 1.0]);
     const t = pmrem.fromScene(env, 0.04).texture; pmrem.dispose(); return t;
   })();
+  // mapeo de tonos de cine para el aparato (la interfaz no lo usa: sus materiales van sin tone mapping)
+  renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+  // aluminio cepillado: rugosidad con vetas horizontales finas, para que el metal no se vea de cartón
+  const veta = (() => { const c = document.createElement('canvas'); c.width = 512; c.height = 512; const g = c.getContext('2d');
+    g.fillStyle = 'rgb(120,120,120)'; g.fillRect(0, 0, 512, 512);
+    for (let i = 0; i < 2600; i++) { const y = Math.random() * 512, v = 95 + Math.random() * 60 | 0; g.fillStyle = 'rgba(' + v + ',' + v + ',' + v + ',.55)'; g.fillRect(0, y, 512, 0.6 + Math.random()); }
+    const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(2, 2); return t; })();
   function aparato(vert, PW, PH){
     const g = new THREE.Group(); scene.add(g);
-    const alu = new THREE.MeshStandardMaterial({ color: 0x6b7586, metalness: 0.92, roughness: 0.3, envMapIntensity: 1.0 });
-    const aluOsc = new THREE.MeshStandardMaterial({ color: 0x3a4454, metalness: 0.85, roughness: 0.38, envMapIntensity: 0.9 });
-    const vidrioNegro = new THREE.MeshStandardMaterial({ color: 0x05070a, metalness: 0.2, roughness: 0.08, envMapIntensity: 1.4 });
-    const tecla = new THREE.MeshStandardMaterial({ color: 0x0b0e13, metalness: 0.05, roughness: 0.6, envMapIntensity: 0.25 });
-    const pozo = new THREE.MeshStandardMaterial({ color: 0x2a313c, metalness: 0.7, roughness: 0.45, envMapIntensity: 0.6 });
+    const alu = new THREE.MeshPhysicalMaterial({ color: 0x9aa3b0, metalness: 1.0, roughness: 0.42, roughnessMap: veta, clearcoat: 0.25, clearcoatRoughness: 0.35, envMapIntensity: 1.0 });
+    const aluOsc = new THREE.MeshPhysicalMaterial({ color: 0x4a5260, metalness: 1.0, roughness: 0.45, roughnessMap: veta, envMapIntensity: 0.9 });
+    const vidrioNegro = new THREE.MeshPhysicalMaterial({ color: 0x030405, metalness: 0.0, roughness: 0.05, clearcoat: 1.0, clearcoatRoughness: 0.03, reflectivity: 0.6, envMapIntensity: 1.2 });
+    const tecla = new THREE.MeshStandardMaterial({ color: 0x0a0c10, metalness: 0.0, roughness: 0.75, envMapIntensity: 0.03 });
+    const pozo = new THREE.MeshStandardMaterial({ color: 0x1a1f27, metalness: 0.6, roughness: 0.6, envMapIntensity: 0.35 });
     const rr = (w, h, r) => { const x = -w/2, y = -h/2, sh = new THREE.Shape(); sh.moveTo(x + r, y); sh.lineTo(x + w - r, y); sh.quadraticCurveTo(x + w, y, x + w, y + r); sh.lineTo(x + w, y + h - r); sh.quadraticCurveTo(x + w, y + h, x + w - r, y + h); sh.lineTo(x + r, y + h); sh.quadraticCurveTo(x, y + h, x, y + h - r); sh.lineTo(x, y + r); sh.quadraticCurveTo(x, y, x + r, y); return sh; };
     const losa = (w, h, r, d, mat, bisel) => new THREE.Mesh(new THREE.ExtrudeGeometry(rr(w, h, r), { depth: d, bevelEnabled: true, bevelThickness: bisel || 0.02, bevelSize: bisel || 0.02, bevelSegments: 4, curveSegments: 14 }), mat);
     const pantalla = new THREE.Group();   // marco de la pantalla: aquí viven las ventanas de cada paso
@@ -33,13 +50,13 @@ APARATO = r"""
       const MENTON = 0.2, INC = 0.13, BX = PW + 1.0, BZ = 3.2;
       const bisagraY = -PH/2 - MENTON;
       const tapa = new THREE.Group(); tapa.position.set(0, bisagraY, 0); tapa.rotation.x = -INC; g.add(tapa);
-      const tapaAlu = losa(PW + 0.34, PH + MENTON + 0.2, 0.18, 0.05, alu, 0.025); tapaAlu.position.set(0, (PH + MENTON + 0.2)/2 - 0.03, -0.12); tapa.add(tapaAlu);
+      const tapaAlu = losa(PW + 0.34, PH + MENTON + 0.2, 0.18, 0.035, alu, 0.02); tapaAlu.position.set(0, (PH + MENTON + 0.2)/2 - 0.03, -0.12); tapa.add(tapaAlu);
       const marco = losa(PW + 0.26, PH + MENTON + 0.12, 0.14, 0.008, vidrioNegro, 0.006); marco.position.set(0, (PH + MENTON + 0.12)/2, -0.028); tapa.add(marco);
       const cam = new THREE.Mesh(new THREE.CircleGeometry(0.022, 20), new THREE.MeshStandardMaterial({ color: 0x1b2430, metalness: 0.3, roughness: 0.15 })); cam.position.set(0, PH + MENTON + 0.035, -0.012); tapa.add(cam);
       pantalla.position.set(0, MENTON + PH/2, 0); tapa.add(pantalla);
       const bis = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, PW * 0.78, 24), aluOsc); bis.rotation.z = Math.PI/2; bis.position.set(0, bisagraY - 0.02, -0.06); g.add(bis);
-      const base = losa(BX, BZ, 0.22, 0.09, alu, 0.03); base.rotation.x = -Math.PI/2; base.position.set(0, bisagraY - 0.14, 0.02 + BZ/2 - 0.12); g.add(base);
-      const topY = bisagraY - 0.14 + 0.09 + 0.03;   // cara superior de la base
+      const base = losa(BX, BZ, 0.22, 0.07, alu, 0.03); base.rotation.x = -Math.PI/2; base.position.set(0, bisagraY - 0.14, 0.02 + BZ/2 - 0.12); g.add(base);
+      const topY = bisagraY - 0.14 + 0.07 + 0.03;   // cara superior de la base
       const hueco = new THREE.Mesh(new THREE.PlaneGeometry(BX - 0.7, 1.42), pozo); hueco.rotation.x = -Math.PI/2; hueco.position.set(0, topY + 0.001, 0.92); g.add(hueco);
       // teclado: 5 filas de teclas y la barra espaciadora (una sola malla instanciada)
       const filas = [14, 14, 13, 12, 1], paso = (BX - 0.9) / 14, tg = new THREE.BoxGeometry(paso * 0.82, 0.03, 0.22);
@@ -52,6 +69,11 @@ APARATO = r"""
       });
       [-1, 1].forEach(l => { for (let i = 0; i < 3; i++) { dm.position.set(l * (2.2 + i) * paso, topY + 0.016, 0.38 + 4 * 0.27); dm.scale.set(1, 1, 1); dm.updateMatrix(); inst.setMatrixAt(k++, dm.matrix); } });
       inst.count = k; g.add(inst);
+      // sombra suave de la pantalla sobre el teclado y oclusión entre teclas (degradado oscuro junto a la bisagra)
+      const sc = document.createElement('canvas'); sc.width = 4; sc.height = 128; const sg = sc.getContext('2d'), sgr = sg.createLinearGradient(0, 0, 0, 128);
+      sgr.addColorStop(0, 'rgba(0,0,0,.55)'); sgr.addColorStop(0.5, 'rgba(0,0,0,.18)'); sgr.addColorStop(1, 'rgba(0,0,0,0)'); sg.fillStyle = sgr; sg.fillRect(0, 0, 4, 128);
+      const somb = new THREE.Mesh(new THREE.PlaneGeometry(BX - 0.1, 1.2), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(sc), transparent: true, depthWrite: false, toneMapped: false }));
+      somb.rotation.x = -Math.PI/2; somb.position.set(0, topY + 0.035, 0.62); somb.renderOrder = 3; g.add(somb);
       const pad = losa(1.7, 1.05, 0.08, 0.004, new THREE.MeshStandardMaterial({ color: 0x9aa6b8, metalness: 0.7, roughness: 0.22 }), 0.004); pad.rotation.x = -Math.PI/2; pad.position.set(0, topY - 0.002, 2.45); g.add(pad);
       // rejillas de parlantes a los lados del teclado
       const rc = document.createElement('canvas'); rc.width = 64; rc.height = 256; const rg = rc.getContext('2d'); rg.fillStyle = '#1a1f27';
@@ -80,8 +102,8 @@ def aplicar(s):
     # 1 · sin sala blanca ni niebla: el fondo lo pone la página (degradado); luces para el aparato
     rep("  AL3D.ambiente(scene, { z:-4.5 });\n  AL3D.piso(scene, { y:-2.35 });",
         "  scene.fog = null;   // propuesta: sin sala; el fondo degradado lo pone la página\n"
-        "  scene.add(new THREE.HemisphereLight(0xdfe8f5, 0x0d1520, 0.55));\n"
-        "  { const sol = new THREE.DirectionalLight(0xffffff, 0.65); sol.position.set(-3, 5, 6); scene.add(sol); }\n"
+        "  scene.add(new THREE.HemisphereLight(0xdfe8f5, 0x0d1520, 0.15));\n"
+        "  { const sol = new THREE.DirectionalLight(0xffffff, 0.8); sol.position.set(-4, 7, 5); scene.add(sol); }\n"
         "  const SS = { z: 0, x: 0, y: 0, t0: 0 };   // estado del zoom automático (como Screen Studio)\n"
         + APARATO)
     # 2 · cada formato (horizontal / vertical) arma su aparato y lo muestra al usarse
@@ -165,4 +187,6 @@ function camara(t){
     rep("    const sombraCard = J.sombraCard;\n", "    const sombraCard = J.sombraCard;\n    J.disp.updateMatrixWorld(true);\n")
     rep("    cursor.position.copy(tmp); cursor.rotation.copy(card.rotation);", "    cursor.position.copy(tmp); card.getWorldQuaternion(cursor.quaternion);")
     rep("ring.rotation.copy(card.rotation);", "card.getWorldQuaternion(ring.quaternion);")
+    rep("  const basic = (opts) => new THREE.MeshBasicMaterial(Object.assign({ transparent:true, side:THREE.DoubleSide, depthWrite:false }, opts));",
+        "  const basic = (opts) => new THREE.MeshBasicMaterial(Object.assign({ transparent:true, side:THREE.DoubleSide, depthWrite:false, toneMapped:false }, opts));")
     return s
