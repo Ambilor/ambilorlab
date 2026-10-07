@@ -277,4 +277,10 @@
 /* sin desenfoque en ningún equipo: ni al deslizar, ni al cambiar de pestaña o de demo */
 .p-vel,.p-corte{display:none!important}
 .demo-par .entrando :is(.al-demo__stage>canvas,.al-sim,.al-demo__copy),.demo-par .saliendo :is(.al-demo__stage>canvas,.al-sim,.al-demo__copy){filter:none!important}
+
+/* pantallas chicas (iPhone SE): la app sola, a todo el ancho y con el alto que deja la pantalla */
+@media (pointer:coarse) and (orientation:portrait){
+  .p-chico #product .al-demo{padding-left:4px!important;padding-right:4px!important}
+  .p-chico .al-demo--player .al-demo__stage canvas{max-height:calc(100svh - 120px)}
+}
 </style>
