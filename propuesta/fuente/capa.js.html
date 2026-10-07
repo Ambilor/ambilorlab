@@ -244,7 +244,8 @@
   }
 
   // D4 · cámara de cine y pasada de imagen para las escenas 3D de los demos
-  if (!reduce && typeof window.alConTHREE === 'function') window.alConTHREE(function(){
+  // (en celular y tablet no: ahí la app se usa quieta, como en el propio equipo)
+  if (!reduce && !(window.alFoto && alFoto.tactil()) && typeof window.alConTHREE === 'function') window.alConTHREE(function(){
     var T = window.THREE; if (!T || !T.WebGLRenderer || T.WebGLRenderer.prototype.__pCine) return;
     var proto = T.WebGLRenderer.prototype, render0 = proto.render; proto.__pCine = true;
     var VS = 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }';
