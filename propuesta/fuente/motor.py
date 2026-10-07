@@ -16,11 +16,15 @@ APARATO = r"""
     g.save(); g.globalAlpha = a * (1 - p) * 0.9; g.strokeStyle = '#3d7fd6'; g.lineWidth = 5;
     g.beginPath(); g.arc(k0[1], k0[2], r, 0, Math.PI * 2); g.stroke(); g.restore();
   }
-  function aparato(vert, PW, PH){ return alFoto.crear(THREE, scene, { vert, ventana: { w: PW, h: PH }, anis: ANISO, listo: () => { needsRender = true; } }); }
+  // pestañas de la app (barra inferior en el celular), solo en los demos del panel; en los de instalación se
+  // ven Drive y Apps Script, que no las tienen
+  const MENU = /instala/.test(root.id) ? null : /^ped/.test(root.id) ? ['Pedidos','Catálogo','Reportes','Clientes','Ajustes']
+    : /^v2/.test(root.id) ? ['Resumen','Resultados','Sugerencias','Historial','Ajustes'] : ['Resumen','Resultados','Ajustes','Historial','Config.'];
+  function aparato(vert, PW, PH){ return alFoto.crear(THREE, scene, { vert, ventana: { w: PW, h: PH }, menu: MENU, anis: ANISO, listo: () => { needsRender = true; } }); }
   // pantalla completa: la tarjeta cubre toda la pantalla del aparato; fuera de su dibujo la textura repite el
   // borde (ClampToEdge), así la barra superior y el fondo de la app llegan de lado a lado sin deformar la letra
   function pantallaCompleta(m, u, PW, PH){
-    const geo = new THREE.PlaneGeometry(u.SW, u.SH); geo.translate(0, -u.ventanaY, 0);
+    const geo = new THREE.PlaneGeometry(u.SW, u.SH); geo.translate(-(u.ventanaX || 0), -u.ventanaY, 0);
     const p = geo.attributes.position, uv = geo.attributes.uv;
     for (let i = 0; i < p.count; i++) uv.setXY(i, p.getX(i) / PW + 0.5, p.getY(i) / PH + 0.5);
     m.geometry.dispose(); m.geometry = geo;
@@ -97,8 +101,8 @@ def aplicar(s):
       tomarLienzo(c);
       J.DRAW[i](c.g, Math.max(0, t - s.a)); if (dist === 0) notaPaso(c.g, i, Math.max(0, t - s.a)); c.tx.needsUpdate = true;
       const e = ease(ein), sx = dist === 0 ? (1 - e) * 0.35 : -ease(sale) * 0.35;
-      c.m.position.set(sx * (J.disp.userData.marco ? 0 : J.disp.userData.pleno ? 0.25 : 1), J.disp.userData.ventanaY || 0, dist === 0 ? 0.004 : 0.002);
-      if (dist === 0 && J.disp.userData.marco) J.disp.userData.marco.tono(c.g);   // barra de estado: blanca u oscura según la app
+      c.m.position.set(sx * (J.disp.userData.marco ? 0 : J.disp.userData.pleno ? 0.25 : 1) + (J.disp.userData.ventanaX || 0), J.disp.userData.ventanaY || 0, dist === 0 ? 0.004 : 0.002);
+      if (dist === 0 && J.disp.userData.marco && J.tonoPaso !== i && t - s.a > 0.2) { J.tonoPaso = i; J.disp.userData.marco.tono(c.g); }   // barra de estado según la app (una vez por paso: leer píxeles es caro en Safari)
       c.m.rotation.set(0, 0, 0);
       c.m.material.opacity = dist === 0 ? e : 1 - ease(sale);
       if (dist === 0) J.disp.userData.sombraVentana.material.opacity = 0.9 * e;
@@ -134,4 +138,8 @@ def aplicar(s):
         "    if (L.playing && visible) { L.T += dt; if (L.T >= DUR) { L.T = DUR - 0.001; L.setPlaying(false); root.classList.add('al-demo--fin'); } L.sucio = true; }")
     rep("    if (p && L.T >= DUR - 0.02) L.T = 0;\n", "    if (p && L.T >= DUR - 0.02) L.T = 0;\n    if (p) root.classList.remove('al-demo--fin');\n")
     rep("    L.T = L.playing ? STEPS[i].a + 0.001 : STEPS[i].b - HOLD;\n", "    L.T = L.playing ? STEPS[i].a + 0.001 : STEPS[i].b - HOLD; root.classList.remove('al-demo--fin');\n")
+    # 9 · el tiempo del demo corre al ritmo real aunque el equipo dibuje menos cuadros (antes, con pocos
+    #     cuadros por segundo, el celular lo mostraba en cámara lenta)
+    rep("    const dt = Math.min(0.05, (now - last) / 1000); last = now;\n    if (PX.update(dt)) needsRender = true;\n    const mueve = L.tick(dt, visible);",
+        "    const dt = Math.min(0.12, (now - last) / 1000); last = now;\n    if (PX.update(dt)) needsRender = true;\n    const mueve = L.tick(dt, visible);")
     return s

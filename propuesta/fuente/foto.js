@@ -64,19 +64,23 @@ window.alFoto = (function(){
     return e;
   }
   // medidas en unidades del demo: la app llena el ancho útil (o el alto, si así cabe mejor)
-  function medidas(vert, PW, PH){
-    var m = modelo(), e = especie(m, vert), cw = e.W - 2 * e.side, chh = e.H - e.top - e.bot;
+  function medidas(vert, PW, PH, pestanas){
+    var m = modelo(), e = especie(m, vert), tel = m.tipo === 'iphone' || m.tipo === 'android', tab = vert && tel && pestanas ? 56 : 0;
+    var cw = e.W - 2 * e.side, chh = e.H - e.top - e.bot - tab;
     // celular vertical: la app usa todo el ancho de la pantalla (su margen interno de los lados queda fuera)
     var ancho = vert && (m.tipo === 'iphone' || m.tipo === 'android') ? 1.09 : 1;
     var u = Math.max(PW / (cw * ancho), PH / chh);   // unidades por pt
-    var r = { m: m, e: e, u: u, top: e.top * u, bot: e.bot * u, side: e.side * u, radio: e.r * u, bisel: (e.bisel + e.canto) * u, canto: e.canto * u };
+    // tablet horizontal: la pantalla es más ancha que la app; como en Safari de iPad, la barra lateral llena el resto
+    var lado = !vert && !tel ? Math.max(0, cw - PW / u) : 0;
+    var r = { m: m, e: e, u: u, top: e.top * u, bot: e.bot * u, side: e.side * u, radio: e.r * u, bisel: (e.bisel + e.canto) * u, canto: e.canto * u, tab: tab, lado: lado };
     r.SW = e.W * u; r.SH = e.H * u; r.OW = r.SW + 2 * r.bisel; r.OH = r.SH + 2 * r.bisel;
     r.appY = r.SH / 2 - r.top - PH / 2;   // la app, arriba de la página (bajo las barras)
+    r.appX = lado * u / 2;                 // a la derecha de la barra lateral, si la hay
     return r;
   }
   // proporción del cuadro en táctil (la usa el CSS de la propuesta): la del equipo completo
   if (equipo() !== 'pc') {
-    var _v = medidas(true, 3.84, 4.8), _h = medidas(false, 4.8, 3.8);
+    var _v = medidas(true, 3.84, 4.8, true), _h = medidas(false, 4.8, 3.8, true);
     document.documentElement.style.setProperty('--p-ar-v', (_v.OW / _v.OH).toFixed(4));
     document.documentElement.style.setProperty('--p-ar-h', (_h.OW / _h.OH).toFixed(4));
   }
@@ -96,9 +100,9 @@ window.alFoto = (function(){
   }
   function fuenteSF(px, peso){ return (peso || 600) + ' ' + Math.round(px) + 'px -apple-system, "SF Pro Text", "Helvetica Neue", Inter, sans-serif'; }
   function marco(T, g, pantalla, o){
-    var vert = o.vert, PW = o.ventana.w, PH = o.ventana.h, d = medidas(vert, PW, PH), m = d.m, e = d.e;
+    var vert = o.vert, PW = o.ventana.w, PH = o.ventana.h, d = medidas(vert, PW, PH, o.menu), m = d.m, e = d.e;
     var pad = 0.012 * Math.max(d.OW, d.OH), FW = d.OW + 2 * pad, FH = d.OH + 2 * pad;
-    var k = 2048 / Math.max(FW, FH), cw = Math.round(FW * k), ch = Math.round(FH * k);
+    var k = (equipo() === 'cel' ? 1536 : 2048) / Math.max(FW, FH), cw = Math.round(FW * k), ch = Math.round(FH * k);
     var X = function(v){ return v * k; }, P = function(pt){ return pt * d.u * k; };   // unidades → px · pt → px
     var ox = X(pad), oy = X(pad), OW = X(d.OW), OH = X(d.OH), bz = X(d.bisel), Ro = X(d.radio + d.bisel);
     var sx = ox + bz, sy = oy + bz, SW = X(d.SW), SH = X(d.SH), Ri = X(d.radio);
@@ -189,6 +193,33 @@ window.alFoto = (function(){
         }
         inicio(ipad ? 200 : 110, '#111');
       }
+      var icono = function(x, y, t, col2){   // íconos simples de línea, en pt
+        c.strokeStyle = col2; c.fillStyle = col2; c.lineWidth = P(1.8); c.lineCap = 'round'; c.lineJoin = 'round'; c.beginPath();
+        if (t === 0) { rr(c, x - P(9), y - P(8), P(18), P(16), P(3)); c.stroke(); c.beginPath(); c.moveTo(x - P(5), y + P(3)); c.lineTo(x - P(5), y - P(1)); c.moveTo(x, y + P(3)); c.lineTo(x, y - P(4)); c.moveTo(x + P(5), y + P(3)); c.lineTo(x + P(5), y + P(1)); }
+        else if (t === 1) { for (var q = 0; q < 3; q++) { c.moveTo(x - P(8), y - P(6) + P(q * 6)); c.lineTo(x + P(8), y - P(6) + P(q * 6)); } }
+        else if (t === 2) { c.arc(x, y, P(8), 0, 7); c.moveTo(x, y - P(4)); c.lineTo(x, y); c.lineTo(x + P(3), y + P(3)); }
+        else if (t === 3) { c.arc(x, y, P(3.2), 0, 7); c.moveTo(x + P(8), y); c.arc(x, y, P(8), 0, 7); }
+        else { rr(c, x - P(8), y - P(9), P(16), P(18), P(3)); c.moveTo(x - P(4), y - P(3)); c.lineTo(x + P(4), y - P(3)); c.moveTo(x - P(4), y + P(2)); c.lineTo(x + P(4), y + P(2)); }
+        c.stroke();
+      };
+      if (d.tab && o.menu) {   // celular: la barra de pestañas de la app, sobre la del navegador
+        var ty0 = e.H - e.bot - d.tab;
+        c.fillStyle = 'rgba(250,250,252,.98)'; c.fillRect(sx, py(ty0), SW, P(d.tab)); c.fillStyle = 'rgba(60,60,67,.18)'; c.fillRect(sx, py(ty0), SW, Math.max(1, P(0.5)));
+        o.menu.forEach(function(it, i){ var x = px(e.W * (i + 0.5) / o.menu.length), on = i === 0, col2 = on ? '#1f5c99' : '#8e8e93';
+          icono(x, py(ty0 + 20), i, col2); c.fillStyle = col2; c.font = fuenteSF(P(10), on ? 600 : 500); c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(it, x, py(ty0 + 41)); });
+      }
+      if (d.lado > 1) {        // tablet horizontal: barra lateral de Safari
+        var lw = P(d.lado), ly = py(e.top);
+        c.fillStyle = '#f2f2f7'; c.fillRect(sx, ly, lw, SH - P(e.top)); c.fillStyle = 'rgba(60,60,67,.2)'; c.fillRect(sx + lw - Math.max(1, P(0.5)), ly, Math.max(1, P(0.5)), SH - P(e.top));
+        var fila = function(y, txt2, ico, on, gris2){ if (on) { c.fillStyle = 'rgba(10,132,255,.12)'; rr(c, px(10), py(y - 15), lw - P(20), P(30), P(8)); c.fill(); }
+          icono(px(30), py(y), ico, on ? azul : '#0a84ff'); c.fillStyle = gris2 ? '#8e8e93' : tinta; c.font = fuenteSF(P(15), on ? 600 : 400); c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillText(txt2, px(50), py(y)); };
+        var y0 = e.top + 30;
+        fila(y0, '3 pestañas', 0, false); fila(y0 + 36, 'Privado', 4, false);
+        c.fillStyle = '#8e8e93'; c.font = fuenteSF(P(12), 600); c.textAlign = 'left'; c.fillText('GRUPOS DE PESTAÑAS', px(16), py(y0 + 84));
+        fila(y0 + 112, 'Ambilor.Lab', 1, true); fila(y0 + 148, 'Contabilidad', 1, false); fila(y0 + 184, 'Clientes', 1, false);
+        c.fillStyle = '#8e8e93'; c.font = fuenteSF(P(12), 600); c.fillText('BIBLIOTECA', px(16), py(y0 + 232));
+        fila(y0 + 260, 'Favoritos', 3, false); fila(y0 + 296, 'Lista de lectura', 2, false); fila(y0 + 332, 'Historial', 2, false);
+      }
       var gl = c.createLinearGradient(sx, sy, sx + SW, sy + SH); gl.addColorStop(0, 'rgba(255,255,255,.05)'); gl.addColorStop(0.42, 'rgba(255,255,255,0)'); gl.addColorStop(0.5, 'rgba(255,255,255,.04)'); gl.addColorStop(0.58, 'rgba(255,255,255,0)');
       c.fillStyle = gl; c.fillRect(sx, sy, SW, SH);
       c.restore();
@@ -212,7 +243,7 @@ window.alFoto = (function(){
     var pantalla = new T.Group(); g.add(pantalla);
     if (equipo() !== 'pc') {
       var mc = marco(T, g, pantalla, o), d = mc.d;
-      g.userData = { plano: true, pleno: true, pantalla: pantalla, SW: d.SW, SH: d.SH, ventanaY: d.appY, marco: mc, ext: mc.ext,
+      g.userData = { plano: true, pleno: true, pantalla: pantalla, SW: d.SW, SH: d.SH, ventanaY: d.appY, ventanaX: d.appX, marco: mc, ext: mc.ext,
         sombraVentana: { material: {} }, caja: { x: 0, y: 0, w: mc.ext.w, h: mc.ext.h } };
       g.visible = false; return g;
     }
