@@ -148,4 +148,18 @@ def aplicar(s):
         "    const TELEFONO = !!(window.alFoto && alFoto.tactil());   // propuesta: en celular y tablet, a pantalla completa\n"
         "    const cel = (g, top = 18) => { g.clearRect(0, 0, CW, CH); if (TELEFONO) { g.fillStyle = '#ffffff'; g.fillRect(0, 0, CW, CH); return { x: 48, y: 82, w: CW - 96, h: CH - 110 }; } g.fillStyle = '#f4f7fb'; rr(g, 0, 0, CW, CH, 34); g.fill(); return celular(g, 150 + (top - 18)*0.25, top, 500 - (top - 18)*0.5, 982 - top); };\n"
         "    const flota = (g, x, y, s, ink, size, h, align) => { if (TELEFONO) return;")
+    # 11 · celular vertical: la app se dibuja más alta, con la altura de la pantalla del teléfono (alFoto.estirar).
+    #      El lienzo se estira solo en alto; el texto y los círculos se dibujan compensados, así conservan su forma.
+    rep("    const CW = vert ? 800 : 1200, CH = vert ? 1000 : 950, PW = vert ? 3.84 : 4.8, PH = PW * CH / CW;",
+        "    const CW = vert ? 800 : 1200, CH = vert ? 1000 : 950, PW = vert ? 3.84 : 4.8, K = alFoto.estirar(vert, !!MENU), PH = PW * CH / CW * K;")
+    rep("      return { m, sh, g:null, tx:null, cv:null, CW, CH };", "      return { m, sh, g:null, tx:null, cv:null, CW, CH, K };")
+    rep("    c.cv = document.createElement('canvas'); c.cv.width = c.CW * TEX_S; c.cv.height = c.CH * TEX_S;\n    c.g = c.cv.getContext('2d'); c.g.scale(TEX_S, TEX_S);",
+        "    c.cv = document.createElement('canvas'); c.cv.width = c.CW * TEX_S; c.cv.height = Math.round(c.CH * TEX_S * (c.K || 1));\n"
+        "    c.g = c.cv.getContext('2d'); c.g.scale(TEX_S, TEX_S * (c.K || 1));\n"
+        "    if (c.K > 1) {   // propuesta: lienzo estirado en alto; el texto y los círculos, compensados\n"
+        "      const g = c.g, k = c.K, ft = g.fillText.bind(g), st = g.strokeText.bind(g);\n"
+        "      g.fillText = (s, x, y, w) => { g.save(); g.translate(x, y); g.scale(1, 1 / k); w == null ? ft(s, 0, 0) : ft(s, 0, 0, w); g.restore(); };\n"
+        "      g.strokeText = (s, x, y, w) => { g.save(); g.translate(x, y); g.scale(1, 1 / k); w == null ? st(s, 0, 0) : st(s, 0, 0, w); g.restore(); };\n"
+        "      g.arc = (x, y, r, a0, a1, ccw) => g.ellipse(x, y, r, r / k, 0, a0, a1, !!ccw);\n"
+        "    }")
     return s
