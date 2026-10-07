@@ -60,7 +60,8 @@ def aplicar(s):
       tomarLienzo(c);
       J.DRAW[i](c.g, Math.max(0, t - s.a)); c.tx.needsUpdate = true;
       const e = ease(ein), sx = dist === 0 ? (1 - e) * 0.35 : -ease(sale) * 0.35;
-      c.m.position.set(sx * (J.disp.userData.pleno ? 0.25 : 1), J.disp.userData.ventanaY || 0, dist === 0 ? 0.004 : 0.002);
+      c.m.position.set(sx * (J.disp.userData.marco ? 0 : J.disp.userData.pleno ? 0.25 : 1), J.disp.userData.ventanaY || 0, dist === 0 ? 0.004 : 0.002);
+      if (dist === 0 && J.disp.userData.marco) J.disp.userData.marco.tono(c.g);   // barra de estado: blanca u oscura según la app
       c.m.rotation.set(0, 0, 0);
       c.m.material.opacity = dist === 0 ? e : 1 - ease(sale);
       if (dist === 0) J.disp.userData.sombraVentana.material.opacity = 0.9 * e;
