@@ -257,4 +257,13 @@
 #product .al-demo__stage{overflow:visible!important;margin-top:30px!important}
 .p-paso{top:-30px!important;left:50%!important;transform:translateX(-50%)}
 .p-paso.cambia{transform:translate(-50%,-4px)}
+
+/* ════ PROPUESTA M: deslizar en táctil ════════════════════════════════════════════════ */
+.p-pista{position:absolute;left:50%;bottom:calc(var(--al-barra) + 14px);transform:translateX(-50%);z-index:7;pointer-events:none;white-space:nowrap;
+  padding:7px 14px;border-radius:999px;background:rgba(10,18,30,.72);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#fff;font:600 12.5px/1 var(--sans,Inter,sans-serif);
+  animation:p-pista 1.6s ease-in-out infinite;transition:opacity .5s ease}
+.p-pista span{display:inline-block;opacity:.7;margin:0 .25em}
+.p-pista.fuera{opacity:0}
+@keyframes p-pista{0%,100%{transform:translateX(-50%)}50%{transform:translateX(calc(-50% - 10px))}}
+@media (prefers-reduced-motion:reduce){ .p-pista{animation:none} }
 </style>

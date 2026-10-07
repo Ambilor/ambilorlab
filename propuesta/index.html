@@ -2723,6 +2723,15 @@ window.AL_NOTAS = {
 #product .al-demo__stage{overflow:visible!important;margin-top:30px!important}
 .p-paso{top:-30px!important;left:50%!important;transform:translateX(-50%)}
 .p-paso.cambia{transform:translate(-50%,-4px)}
+
+/* ════ PROPUESTA M: deslizar en táctil ════════════════════════════════════════════════ */
+.p-pista{position:absolute;left:50%;bottom:calc(var(--al-barra) + 14px);transform:translateX(-50%);z-index:7;pointer-events:none;white-space:nowrap;
+  padding:7px 14px;border-radius:999px;background:rgba(10,18,30,.72);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#fff;font:600 12.5px/1 var(--sans,Inter,sans-serif);
+  animation:p-pista 1.6s ease-in-out infinite;transition:opacity .5s ease}
+.p-pista span{display:inline-block;opacity:.7;margin:0 .25em}
+.p-pista.fuera{opacity:0}
+@keyframes p-pista{0%,100%{transform:translateX(-50%)}50%{transform:translateX(calc(-50% - 10px))}}
+@media (prefers-reduced-motion:reduce){ .p-pista{animation:none} }
 </style>
 </head>
 
@@ -6740,7 +6749,24 @@ window.alDemoTarjetas = function(root, cfg){
   }
   function overlay(g, a){ g.save(); rr(g, 0, 0, CW, CH, 34); g.clip(); g.fillStyle = 'rgba(18,48,77,' + (0.32*a) + ')'; g.fillRect(0, 0, CW, CH); g.restore(); }
   function dialog(g, x, y, w, h){ g.save(); g.shadowColor = 'rgba(18,48,77,.25)'; g.shadowBlur = 40; g.shadowOffsetY = 12; g.fillStyle = '#fff'; rr(g, x, y, w, h, 24); g.fill(); g.restore(); }
-  function banner(g, x, y, w, h, label, color = C.ok){ g.fillStyle = color; rr(g, x, y, w, h, h/2); g.fill(); txt(g, label, x + w/2, y + h/2 + 1, 35, 800, '#fff', 'center', w - h*0.7); }
+  function banner(g, x, y, w, h, label, color = C.ok){
+    const a = g.globalAlpha, p = Math.min(1, a), cx = x + w/2, cy = y + h/2, pop = p < 1 ? 1 + Math.sin(p * Math.PI) * 0.07 : 1;
+    g.save(); g.translate(cx, cy); g.scale(pop, pop); g.translate(-cx, -cy);
+    if (p < 1) { const e = p * 28; g.globalAlpha = a * (1 - p) * 0.55; g.strokeStyle = color; g.lineWidth = 6; rr(g, x - e, y - e, w + 2*e, h + 2*e, h/2 + e); g.stroke(); g.globalAlpha = a; }
+    g.fillStyle = color; rr(g, x, y, w, h, h/2); g.fill();
+    if (label.indexOf('✓ ') === 0) {
+      const s = label.slice(2), maxW = w - h*0.7 - 44; let size = 35; g.font = '800 ' + size + 'px ' + FONT;
+      while (size > 14 && g.measureText(s).width > maxW) { size -= 1; g.font = '800 ' + size + 'px ' + FONT; }
+      const tw = g.measureText(s).width, kx = cx - tw/2 - 14, k = size / 35, q = p < 1 ? p : 1;
+      const P = [[kx - 13*k, cy + 1*k], [kx - 4*k, cy + 10*k], [kx + 13*k, cy - 9*k]], l1 = Math.hypot(9, 9), l2 = Math.hypot(17, 19), t = q * (l1 + l2);
+      g.strokeStyle = '#fff'; g.lineWidth = 6*k; g.lineCap = 'round'; g.lineJoin = 'round'; g.beginPath(); g.moveTo(P[0][0], P[0][1]);
+      if (t <= l1) g.lineTo(P[0][0] + (P[1][0] - P[0][0]) * t / l1, P[0][1] + (P[1][1] - P[0][1]) * t / l1);
+      else { g.lineTo(P[1][0], P[1][1]); const u = (t - l1) / l2; g.lineTo(P[1][0] + (P[2][0] - P[1][0]) * u, P[1][1] + (P[2][1] - P[1][1]) * u); }
+      g.stroke();
+      txt(g, s, cx + 18, cy + 1, size, 800, '#fff', 'center', maxW);
+    } else txt(g, label, cx, cy + 1, 35, 800, '#fff', 'center', w - h*0.7);
+    g.restore();
+  }
   function checkDot(g, x, y, on, pop = 1){
     g.beginPath(); g.arc(x, y, 18 * (on ? pop : 1), 0, Math.PI*2);
     if (on) { g.fillStyle = C.ok; g.fill(); txt(g, '✓', x, y + 1, 32, 800, '#fff', 'center'); }
@@ -9428,7 +9454,30 @@ window.addEventListener('load', function(){ var h = new URLSearchParams(location
       poner(); new MutationObserver(poner).observe(d, { subtree: true, attributes: true, attributeFilter: ['aria-current'] });
     });
   }
-  function etiquetasYResumen(){ etiquetas(); resumenes(); subtitulos(); }
+  // en celular y tablet: deslizar el demo hacia el lado pasa de paso, como en el teléfono (el demo sigue al
+  // dedo y vuelve con un resorte); la primera vez, una pista breve
+  var tactil = window.alFoto && alFoto.tactil(), pistaVista = false;
+  function deslizar(){
+    if (!tactil) return;
+    document.querySelectorAll('#product .al-demo').forEach(function(d){
+      var cv = d.querySelector('.al-demo__stage canvas'); if (!cv || cv._desliza) return; cv._desliza = true;
+      cv.style.touchAction = 'pan-y';
+      var x0 = 0, y0 = 0, dx = 0, activo = false, horizontal = null;
+      cv.addEventListener('touchstart', function(e){ var t = e.touches[0]; x0 = t.clientX; y0 = t.clientY; dx = 0; activo = true; horizontal = null; }, { passive: true });
+      cv.addEventListener('touchmove', function(e){ if (!activo) return; var t = e.touches[0]; dx = t.clientX - x0; var dy = t.clientY - y0;
+        if (horizontal === null && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) horizontal = Math.abs(dx) > Math.abs(dy) * 1.3;
+        if (horizontal) cv.style.transform = 'translateX(' + (dx * 0.35) + 'px)'; }, { passive: true });
+      cv.addEventListener('touchend', function(){ if (!activo) return; activo = false;
+        if (horizontal && Math.abs(dx) > 50) { var b = d.querySelector('[data-act="' + (dx < 0 ? 'next' : 'prev') + '"]'); if (b) b.click(); }
+        var de = cv.style.transform || 'translateX(0px)'; cv.style.transform = '';
+        if (horizontal && cv.animate) cv.animate([{ transform: de }, { transform: 'translateX(' + (dx < 0 ? 4 : -4) + 'px)', offset: .6 }, { transform: 'translateX(0)' }], { duration: 420, easing: 'cubic-bezier(.2,.8,.2,1)' });
+      }, { passive: true });
+      if (!pistaVista && d.offsetParent) { pistaVista = true;
+        var h = document.createElement('div'); h.className = 'p-pista'; h.setAttribute('aria-hidden', 'true'); h.innerHTML = '<span>‹</span> Desliza para cambiar de paso <span>›</span>';
+        d.querySelector('.al-demo__stage').appendChild(h); setTimeout(function(){ h.classList.add('fuera'); setTimeout(function(){ h.remove(); }, 600); }, 4200); }
+    });
+  }
+  function etiquetasYResumen(){ etiquetas(); resumenes(); subtitulos(); deslizar(); }
   etiquetasYResumen(); window.addEventListener('load', etiquetasYResumen); setInterval(etiquetasYResumen, 2000);
 
   /* engancha el cambio de pestaña sin tocar show() */

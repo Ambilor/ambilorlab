@@ -51,6 +51,28 @@ def aplicar(s):
     rep("    g.strokeStyle = C.line; g.lineWidth = 4; rr(g, 2, 2, CW - 4, CH - 4, 32); g.stroke();",
         "    if (!PLENO) { g.strokeStyle = C.line; g.lineWidth = 4; rr(g, 2, 2, CW - 4, CH - 4, 32); g.stroke(); }")
 
+    # 0b · momentos de logro: la insignia de éxito («✓ …») entra con un rebote, una onda que sale de ella y el
+    #      check que se dibuja trazo a trazo (el avance lo da la opacidad con que la pinta cada paso)
+    rep("  function banner(g, x, y, w, h, label, color = C.ok){ g.fillStyle = color; rr(g, x, y, w, h, h/2); g.fill(); txt(g, label, x + w/2, y + h/2 + 1, 35, 800, '#fff', 'center', w - h*0.7); }",
+        """  function banner(g, x, y, w, h, label, color = C.ok){
+    const a = g.globalAlpha, p = Math.min(1, a), cx = x + w/2, cy = y + h/2, pop = p < 1 ? 1 + Math.sin(p * Math.PI) * 0.07 : 1;
+    g.save(); g.translate(cx, cy); g.scale(pop, pop); g.translate(-cx, -cy);
+    if (p < 1) { const e = p * 28; g.globalAlpha = a * (1 - p) * 0.55; g.strokeStyle = color; g.lineWidth = 6; rr(g, x - e, y - e, w + 2*e, h + 2*e, h/2 + e); g.stroke(); g.globalAlpha = a; }
+    g.fillStyle = color; rr(g, x, y, w, h, h/2); g.fill();
+    if (label.indexOf('✓ ') === 0) {
+      const s = label.slice(2), maxW = w - h*0.7 - 44; let size = 35; g.font = '800 ' + size + 'px ' + FONT;
+      while (size > 14 && g.measureText(s).width > maxW) { size -= 1; g.font = '800 ' + size + 'px ' + FONT; }
+      const tw = g.measureText(s).width, kx = cx - tw/2 - 14, k = size / 35, q = p < 1 ? p : 1;
+      const P = [[kx - 13*k, cy + 1*k], [kx - 4*k, cy + 10*k], [kx + 13*k, cy - 9*k]], l1 = Math.hypot(9, 9), l2 = Math.hypot(17, 19), t = q * (l1 + l2);
+      g.strokeStyle = '#fff'; g.lineWidth = 6*k; g.lineCap = 'round'; g.lineJoin = 'round'; g.beginPath(); g.moveTo(P[0][0], P[0][1]);
+      if (t <= l1) g.lineTo(P[0][0] + (P[1][0] - P[0][0]) * t / l1, P[0][1] + (P[1][1] - P[0][1]) * t / l1);
+      else { g.lineTo(P[1][0], P[1][1]); const u = (t - l1) / l2; g.lineTo(P[1][0] + (P[2][0] - P[1][0]) * u, P[1][1] + (P[2][1] - P[1][1]) * u); }
+      g.stroke();
+      txt(g, s, cx + 18, cy + 1, size, 800, '#fff', 'center', maxW);
+    } else txt(g, label, cx, cy + 1, 35, 800, '#fff', 'center', w - h*0.7);
+    g.restore();
+  }""")
+
     # ── motor de tarjetas ──────────────────────────────────────────────────────
     # 1 · sin sala blanca ni niebla: el fondo lo pone la página (degradado)
     rep("  AL3D.ambiente(scene, { z:-4.5 });\n  AL3D.piso(scene, { y:-2.35 });",
