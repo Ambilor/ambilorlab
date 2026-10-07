@@ -266,4 +266,15 @@
 .p-pista.fuera{opacity:0}
 @keyframes p-pista{0%,100%{transform:translateX(-50%)}50%{transform:translateX(calc(-50% - 10px))}}
 @media (prefers-reduced-motion:reduce){ .p-pista{animation:none} }
+
+/* ════ PROPUESTA N: en celular y tablet, más liviano ═══════════════════════════════════ */
+@media (pointer:coarse){
+  .prop-aurora,.prop-cinta div{animation:none!important}
+  .prop-luz{display:none!important}
+  .p-paso,.p-pista{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;background:rgba(10,18,30,.82)!important}
+}
+
+/* sin desenfoque en ningún equipo: ni al deslizar, ni al cambiar de pestaña o de demo */
+.p-vel,.p-corte{display:none!important}
+.demo-par .entrando :is(.al-demo__stage>canvas,.al-sim,.al-demo__copy),.demo-par .saliendo :is(.al-demo__stage>canvas,.al-sim,.al-demo__copy){filter:none!important}
 </style>

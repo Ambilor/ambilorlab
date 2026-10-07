@@ -1,5 +1,16 @@
 <a class="prop-aviso" href="../" title="Abrir la versión publicada"><b>Propuesta</b> · ver la actual ↗</a>
 <script id="propuesta-mov-js">
+/* propuesta · ninguna animación usa desenfoque (molesta a la vista al deslizar): se quita el filtro de los
+   cuadros clave y queda el movimiento con su opacidad */
+(function(){
+  if (!Element.prototype.animate) return;
+  var anim = Element.prototype.animate;
+  Element.prototype.animate = function(k, o){
+    if (Array.isArray(k)) k = k.map(function(f){ if (f && f.filter && /blur/.test(f.filter)) { var g = {}; for (var x in f) if (x !== 'filter') g[x] = f[x]; return g; } return f; });
+    return anim.call(this, k, o);
+  };
+})();
+
 (function(){
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var EXPO = 'cubic-bezier(.19,1,.22,1)', ENTER = 'cubic-bezier(.22,1,.36,1)';
@@ -301,7 +312,7 @@
       if (p.prev) { v.set((cam.position.x - p.prev.x) * .12, (cam.position.y - p.prev.y) * .12 - velScroll * .004); } else v.set(0, 0);
       v.multiplyScalar(1); if (v.length() > .02) v.setLength(.02);
       p.prev = cam.position.clone();
-      p.mat.uniforms.uFoco.value = p.foco;
+      v.set(0, 0); p.mat.uniforms.uFoco.value = 0;   // sin desenfoque de movimiento ni de foco
       this.getDrawingBufferSize(tam);
       if (p.rt.width !== tam.x || p.rt.height !== tam.y) p.rt.setSize(tam.x, tam.y);
       this.setRenderTarget(p.rt); this.clear(); render0.call(this, scene, cam);
