@@ -70,12 +70,16 @@ window.alFoto = (function(){
     var r = { m: m, e: e, u: u, top: e.top * u, bot: e.bot * u, side: e.side * u, radio: e.r * u, bisel: (e.bisel + e.canto) * u, canto: e.canto * u };
     r.SW = e.W * u; r.SH = e.H * u; r.OW = r.SW + 2 * r.bisel; r.OH = r.SH + 2 * r.bisel;
     r.appY = r.SH / 2 - r.top - PH / 2;   // la app, arriba de la página (bajo las barras)
+    // celular vertical: como en las fotos de producto, el teléfono a todo el ancho y cortado bajo la app
+    // (lo de abajo es página en blanco); se ve desde el borde superior hasta un poco bajo el fin de la app
+    if (vert && (m.tipo === 'iphone' || m.tipo === 'android')) r.corte = r.appY - PH / 2 - 0.05 * PW;
     return r;
   }
   // proporción del cuadro en táctil (la usa el CSS de la propuesta): la del equipo completo
   if (equipo() !== 'pc') {
     var _v = medidas(true, 3.84, 4.8), _h = medidas(false, 4.8, 3.8);
-    document.documentElement.style.setProperty('--p-ar-v', (_v.OW / _v.OH).toFixed(4));
+    document.documentElement.style.setProperty('--p-ar-v', (_v.corte != null ? _v.OW / (_v.OH / 2 - _v.corte) : _v.OW / _v.OH).toFixed(4));
+    if (_v.corte != null) document.documentElement.classList.add('p-corte-cel');
     document.documentElement.style.setProperty('--p-ar-h', (_h.OW / _h.OH).toFixed(4));
   }
   // íconos de la barra de estado, dibujados en pt (como los de iOS): x, y = esquina izquierda, centro vertical
@@ -197,8 +201,9 @@ window.alFoto = (function(){
     plano(mat(cuerpo), 0.05, 40);
     var claro = plano(mat(capa('#ffffff')), 0.06, 41), oscuro = plano(mat(capa('#000000')), 0.06, 41); oscuro.visible = false;
     var solo = !(m.tipo === 'iphone' && vert); if (solo) { oscuro.visible = true; claro.visible = false; }   // la barra de estado va sobre el navegador
-    document.documentElement.style.setProperty(vert ? '--p-ar-v' : '--p-ar-h', (FW / FH).toFixed(4));
-    return { d: d, ext: { w: FW, h: FH }, zoom: m.tipo === 'iphone' || m.tipo === 'android' ? (vert ? 0.66 : 0.82) : 0.8,
+    var vis = d.corte != null ? { w: FW, h: FH / 2 - d.corte, cy: (FH / 2 + d.corte) / 2 } : { w: FW, h: FH, cy: 0 };
+    document.documentElement.style.setProperty(vert ? '--p-ar-v' : '--p-ar-h', (vis.w / vis.h).toFixed(4));
+    return { d: d, ext: vis, zoom: m.tipo === 'iphone' || m.tipo === 'android' ? (vert ? 1 : 0.82) : 0.8,
       // en el iPhone la barra de estado va sobre la página: blanca sobre fondo oscuro, negra sobre claro
       tono: function(cx){ if (solo) return; try { var p = cx.getImageData(Math.round(cx.canvas.width / 2), 3, 1, 1).data, lum = (0.3 * p[0] + 0.59 * p[1] + 0.11 * p[2]) / 255; var os = p[3] > 10 && lum > 0.6; claro.visible = !os; oscuro.visible = os; } catch (er) {} } };
   }
@@ -281,7 +286,7 @@ window.alFoto = (function(){
       st.z += (o.quiere - st.z) * (1 - Math.exp(-dt * 3.2));
       if (o.foco) { var kq = 1 - Math.exp(-dt * 4.5); st.x += (cl(o.foco.x, -u.SW * 0.3, u.SW * 0.3) - st.x) * kq; st.y += (cl(o.foco.y, -u.SH * 0.3, u.SH * 0.3) - st.y) * kq; }
       var z0 = ease(st.z);
-      cam.position.set(lerp(0, st.x, z0), lerp(0, st.y, z0), lerp(lejos0, cerca0, z0));
+      var cy0 = e0.cy || 0; cam.position.set(lerp(0, st.x, z0), lerp(cy0, st.y, z0), lerp(lejos0, cerca0, z0));
       cam.lookAt(cam.position.x, cam.position.y, 0); return;
     }
     st.z += (o.quiere - st.z) * (1 - Math.exp(-dt * 3.2));

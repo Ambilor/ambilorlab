@@ -5,6 +5,30 @@
 # El "Ver en acción" del V1 pasa al mismo motor (fuente/v1.js).
 APARATO = r"""
   // aparato fotográfico compartido (fuente/foto.js): notebook en horizontal; en vertical, la ventana sola
+  // nota dentro de la app (fuente/notas.js): burbuja junto al primer toque del paso, o arriba si no hay toque
+  function notaPaso(g, i, lt){
+    const N = window.AL_NOTAS && AL_NOTAS[root.id]; if (!N || !N[i]) return;
+    const CW = J.CW, CH = J.CH, cf = J.CURSOR[i], dur = STEPS[i].b - STEPS[i].a;
+    let ax = CW / 2, ay = 96, t0 = 0.3, abajo = true;
+    if (cf && cf.clicks && cf.clicks.length) {
+      const ck = cf.clicks[0]; let mejor = cf.keys[0];
+      cf.keys.forEach(k => { if (Math.abs(k[0] - ck) < Math.abs(mejor[0] - ck)) mejor = k; });
+      ax = mejor[1]; ay = mejor[2]; t0 = Math.max(0.2, ck - 0.8); abajo = ay < 300;
+    }
+    const a = clamp((lt - t0) / 0.3) * (1 - clamp((lt - (dur - 0.5)) / 0.3)); if (a <= 0) return;
+    let f = J.vert ? 30 : 27; const fam = '600 ' + f + 'px Inter, -apple-system, sans-serif';
+    g.save(); g.font = fam; let w = g.measureText(N[i]).width + 48;
+    while (w > CW - 48 && f > 18) { f -= 1; g.font = '600 ' + f + 'px Inter, -apple-system, sans-serif'; w = g.measureText(N[i]).width + 48; }
+    const h = f * 2.1, bx = Math.max(24, Math.min(CW - 24 - w, ax - w / 2)), by = abajo ? ay + 44 : ay - 44 - h, px = Math.max(bx + 26, Math.min(bx + w - 26, ax));
+    const e = 0.9 + 0.1 * ease(clamp((lt - t0) / 0.35));
+    g.globalAlpha = a; g.translate(px, abajo ? by : by + h); g.scale(e, e); g.translate(-px, -(abajo ? by : by + h));
+    g.shadowColor = 'rgba(0,0,0,.28)'; g.shadowBlur = 24; g.shadowOffsetY = 8;
+    const r = 16; g.beginPath(); g.moveTo(bx + r, by); g.arcTo(bx + w, by, bx + w, by + h, r); g.arcTo(bx + w, by + h, bx, by + h, r); g.arcTo(bx, by + h, bx, by, r); g.arcTo(bx, by, bx + w, by, r); g.closePath();
+    g.fillStyle = 'rgba(28,28,30,.93)'; g.fill(); g.shadowColor = 'transparent';
+    g.beginPath(); if (abajo) { g.moveTo(px - 12, by); g.lineTo(px, by - 12); g.lineTo(px + 12, by); } else { g.moveTo(px - 12, by + h); g.lineTo(px, by + h + 12); g.lineTo(px + 12, by + h); } g.fill();
+    g.fillStyle = '#fff'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(N[i], bx + w / 2, by + h / 2 + 1);
+    g.restore();
+  }
   function aparato(vert, PW, PH){ return alFoto.crear(THREE, scene, { vert, ventana: { w: PW, h: PH }, anis: ANISO, listo: () => { needsRender = true; } }); }
   // pantalla completa: la tarjeta cubre toda la pantalla del aparato; fuera de su dibujo la textura repite el
   // borde (ClampToEdge), así la barra superior y el fondo de la app llegan de lado a lado sin deformar la letra
@@ -16,10 +40,11 @@ APARATO = r"""
   }"""
 import os
 V1_JS = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'v1.js'), encoding='utf-8').read()
+NOTAS_JS = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'notas.js'), encoding='utf-8').read()
 FOTO_JS = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'foto.js'), encoding='utf-8').read()
 
 def aplicar(s):
-    s = s.replace('</head>', '<script>\n' + FOTO_JS + '</script>\n</head>', 1)
+    s = s.replace('</head>', '<script>\n' + FOTO_JS + NOTAS_JS + '</script>\n</head>', 1)
     def rep(a, b, n=1):
         nonlocal s
         c = s.count(a); assert c == n, (c, a[:90]); s = s.replace(a, b)
@@ -28,6 +53,9 @@ def aplicar(s):
     rep("  function rr(g,x,y,w,h,r){ g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }\n  function txt(",
         "  const PLENO = !!(window.alFoto && (alFoto.elegir(CH > CW) || alFoto.tactil()));   // propuesta: app a pantalla completa (en el notebook, o en celular y tablet)\n"
         "  function rr(g,x,y,w,h,r){ if (PLENO && !x && !y && w === CW && h === CH) r = 0; g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }\n  function txt(")
+    # en celular y tablet el formato lo decide la orientación del equipo (no la medida del cuadro)
+    rep("    usar(w / h < 1.2);   // el diseño sigue la forma del recuadro: así la tarjeta siempre llena su marco",
+        "    usar(alFoto.tactil() ? matchMedia('(orientation: portrait)').matches : w / h < 1.2);   // propuesta: en táctil, la orientación del equipo")
     rep("  const cursorGeo = new THREE.PlaneGeometry(0.24, 0.31); cursorGeo.translate(0.12, -0.155, 0);",
         "  const DEDO = alFoto.tactil();   // propuesta: en celular y tablet se toca con el dedo, no hay flecha\n"
         "  const cursorGeo = DEDO ? new THREE.PlaneGeometry(0.36, 0.36) : new THREE.PlaneGeometry(0.24, 0.31); if (!DEDO) cursorGeo.translate(0.12, -0.155, 0);")
@@ -58,7 +86,7 @@ def aplicar(s):
       c.m.visible = vis; c.sh.visible = false;
       if (!vis) { soltarLienzo(c); return; }
       tomarLienzo(c);
-      J.DRAW[i](c.g, Math.max(0, t - s.a)); c.tx.needsUpdate = true;
+      J.DRAW[i](c.g, Math.max(0, t - s.a)); if (dist === 0) notaPaso(c.g, i, Math.max(0, t - s.a)); c.tx.needsUpdate = true;
       const e = ease(ein), sx = dist === 0 ? (1 - e) * 0.35 : -ease(sale) * 0.35;
       c.m.position.set(sx * (J.disp.userData.marco ? 0 : J.disp.userData.pleno ? 0.25 : 1), J.disp.userData.ventanaY || 0, dist === 0 ? 0.004 : 0.002);
       if (dist === 0 && J.disp.userData.marco) J.disp.userData.marco.tono(c.g);   // barra de estado: blanca u oscura según la app
@@ -91,4 +119,10 @@ def aplicar(s):
     rep("  const r1 = document.getElementById('como-se-instala');\n  if (r1 && v1i && window.alDemoTarjetas) alDemoTarjetas(r1, v1i);",
         V1_JS + "\n  const r0 = document.getElementById('ver-en-accion');\n  if (r0 && window.alDemoTarjetas) alDemoTarjetas(r0, AL_DEMOS['ver-en-accion']);\n"
         "  const r1 = document.getElementById('como-se-instala');\n  if (r1 && v1i && window.alDemoTarjetas) alDemoTarjetas(r1, v1i);")
+    # 8 · al terminar, el demo se detiene en el último cuadro y muestra el resumen de los pasos (capa.js);
+    #     el texto completo queda para el final (y para el modo manual)
+    rep("    if (L.playing && visible) { L.T += dt; if (L.T >= DUR) L.T = 0; L.sucio = true; }",
+        "    if (L.playing && visible) { L.T += dt; if (L.T >= DUR) { L.T = DUR - 0.001; L.setPlaying(false); root.classList.add('al-demo--fin'); } L.sucio = true; }")
+    rep("    if (p && L.T >= DUR - 0.02) L.T = 0;\n", "    if (p && L.T >= DUR - 0.02) L.T = 0;\n    if (p) root.classList.remove('al-demo--fin');\n")
+    rep("    L.T = L.playing ? STEPS[i].a + 0.001 : STEPS[i].b - HOLD;\n", "    L.T = L.playing ? STEPS[i].a + 0.001 : STEPS[i].b - HOLD; root.classList.remove('al-demo--fin');\n")
     return s
