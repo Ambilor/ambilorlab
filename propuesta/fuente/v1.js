@@ -20,7 +20,7 @@ AL_DEMOS['ver-en-accion'] = (function(){
   function L(CW, CH){
     const V = CH > CW, W = CW - 2*M;
     return { V, W, CW, CH,
-      hojaY: V ? 212 : 196, fila: V ? 58 : 50,                                  // hoja: primera fila y alto de fila
+      hojaY: V ? 212 : 196, fila: V ? 55 : 50,                                  // hoja: primera fila y alto de fila
       col: V ? { n: M + 22, f: M + 64, d: M + 168, dW: 300, m: CW - M - 18, e: 0 }
              : { n: M + 22, f: M + 70, d: M + 200, dW: 360, m: M + 740, e: M + 790 },
       imp: V ? { x: M, y: 262, w: W } : { x: M, y: 262, w: 380 },             // Conecta: botón Importar
@@ -76,7 +76,7 @@ AL_DEMOS['ver-en-accion'] = (function(){
         g.fillStyle = '#e3e9f0'; g.fillRect(M, y + l.fila/2 - 1, W, 1);
       });
     }
-    const estado = (g, y, label, fill, ink) => { if (V) pill(g, M + 44, y - 18, label, fill, ink, 18, 30, 'left'); else pill(g, l.col.e, y - 20, label, fill, ink, 21, 38); };
+    const estado = (g, y, label, fill, ink) => { if (V) { g.fillStyle = ink; g.beginPath(); g.arc(M + 6, y, 9, 0, 7); g.fill(); txt(g, '✓', M + 6, y + 1, 13, 800, '#fff', 'center'); } else pill(g, l.col.e, y - 20, label, fill, ink, 21, 38); };
     return [
       // 0 · El problema: la hoja, revisada a mano fila por fila
       (g, lt) => {
@@ -87,7 +87,7 @@ AL_DEMOS['ver-en-accion'] = (function(){
           tinte(g, y, 'rgba(245,200,76,.45)', marca(i));
         });
         const q = easeOut((lt - 2.2) / 0.3);
-        if (q > 0) { g.globalAlpha = q; const y = l.hojaY + 52 + 6*l.fila; pill(g, V ? CW - M - 8 : l.col.e, y - 22, '¿calza con F-103?', '#fdf1e2', C.warn, V ? 20 : 22, V ? 36 : 42, V ? 'right' : 'left'); g.globalAlpha = 1; }
+        if (q > 0 && !V) { g.globalAlpha = q; const y = l.hojaY + 52 + 6*l.fila; pill(g, l.col.e, y - 22, '¿calza con F-103?', '#fdf1e2', C.warn, 22, 42); g.globalAlpha = 1; }
         const r = easeOut((lt - 2.6) / 0.35);
         if (r > 0) { g.globalAlpha = r; pill(g, CW/2, CH - (V ? 80 : 70), '⏱ 2 h 40 min revisando… y quedan 188 filas', C.bad, '#fff', V ? 24 : 28, V ? 50 : 56, 'center'); g.globalAlpha = 1; }
       },
@@ -145,7 +145,7 @@ AL_DEMOS['ver-en-accion'] = (function(){
         const n = Math.round(3000 * run).toLocaleString('es-CL');
         pill(g, CW/2, CH - (V ? 76 : 66), (run >= 1 ? '✓ ' : '') + n + ' movimientos · ' + (3.0 * run).toFixed(1).replace('.', ',') + ' s', run >= 1 ? C.ok : C.brand, '#fff', V ? 24 : 28, V ? 50 : 56, 'center');
         const k = Math.min(3, Math.floor((lt - 0.5) / 0.55));
-        if (k >= 0 && lt < 3.4) { const p = PAIRS[k]; g.globalAlpha = 0.95; pill(g, CW/2, V ? 140 : 136, DATA[p[0]][1] + ' ↔ ' + DATA[p[1]][1] + ' · mismo monto', C.ok, '#fff', V ? 20 : 23, V ? 40 : 44, 'center'); g.globalAlpha = 1; }
+        if (k >= 0 && lt < 3.4 && !V) { const p = PAIRS[k]; g.globalAlpha = 0.95; pill(g, CW/2, CH - 128, DATA[p[0]][1] + ' ↔ ' + DATA[p[1]][1] + ' · mismo monto', C.ok, '#fff', 23, 44, 'center'); g.globalAlpha = 1; }
       },
       // 4 · Revisa: lo que no calzó; empareja a mano y el ajuste queda guardado
       (g, lt) => {
@@ -190,17 +190,15 @@ AL_DEMOS['ver-en-accion'] = (function(){
         if (q > 0.9) { let lx = M; partes.forEach(([n, c, s]) => { g.fillStyle = c; rr(g, lx, by + 88, 18, 18, 4); g.fill(); txt(g, s + ' ' + n, lx + 28, by + 98, 22, 700, C.muted); lx += V ? 220 : 260; }); }
         // filas del detalle
         const dy = by + 150;
-        [[0, 'Par 1'], [9, 'Par manual'], [3, 'Pendiente']].forEach(([i, s], k) => {
+        [[0, 'Par 1'], [9, 'Par manual'], [3, 'Pendiente']].slice(0, V ? 2 : 3).forEach(([i, s], k) => {
           const a = easeOut((lt - 1.6 - k*0.2) / 0.35); if (a <= 0) return; const y = dy + k*56, r = DATA[i];
           g.globalAlpha = a; txt(g, r[1], M, y, 26, 600, C.ink, 'left', V ? 340 : 420); txt(g, r[2], V ? M + 520 : M + 640, y, 26, 800, C.ink, 'right');
           pill(g, CW - M, y - 18, s, s === 'Pendiente' ? '#fdf1e2' : '#e6f2eb', s === 'Pendiente' ? C.warn : C.ok, 20, 36, 'right');
           g.fillStyle = '#e3e9f0'; g.fillRect(M, y + 26, W, 1); g.globalAlpha = 1;
         });
-        if (dy + 3*56 < l.expo.y - 10 || !V) btn(g, l.expo.x, l.expo.y, l.expo.w, 64, 'Exportar resultados', 'primary', press(lt, 3.45), 32);
+        if (!V || lt < 3.7) btn(g, l.expo.x, l.expo.y, l.expo.w, 64, 'Exportar resultados', 'primary', press(lt, 3.45), 32);
         const b = easeOut((lt - 3.7) / 0.35);
-        if (b > 0) { g.globalAlpha = b; const bx = V ? M : M, bw = V ? W : W - 450; banner(g, bx, V ? l.expo.y - 80 : l.expo.y, bw, 64, '✓ resultados_septiembre.xlsx', SHEET); g.globalAlpha = 1; }
-        const c = easeOut((lt - 4.6) / 0.4);
-        if (c > 0 && !V) { g.globalAlpha = c; pill(g, M, l.expo.y - 70, '3 s en vez de 3 horas', '#eef2f7', C.brand, 24, 46); g.globalAlpha = 1; }
+        if (b > 0) { g.globalAlpha = b; banner(g, M, l.expo.y, V ? W : W - 450, 64, '✓ resultados_septiembre.xlsx', SHEET); g.globalAlpha = 1; }
       }
     ];
   }

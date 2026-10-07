@@ -2710,8 +2710,19 @@ window.AL_NOTAS = {
 #product .demo-label{display:flex!important;justify-content:center;margin:0 auto .4rem!important;width:max-content;max-width:100%}
 #product .prod-cel{display:block!important;margin:1.4rem auto 2rem!important;max-width:680px}
 #product .prod-cel .prod-tagline{display:none!important}
-@media (pointer:fine){ #product .al-demo__stage{height:max(300px, min(56cqw, calc(100svh - 390px)))!important} }
+@media (pointer:fine){ #product .al-demo__stage{height:max(300px, min(56cqw, calc(100svh - 420px)))!important} }
 @media (pointer:coarse){ #product .al-demo{padding:10px 12px!important} }
+
+/* ════ PROPUESTA L: nada encima de la pantalla del demo ═══════════════════════════════ */
+/* la frase del paso va bajo el demo como subtítulo (.p-nota, la pone capa.js); mientras corre, el título del
+   paso se guarda para el modo manual; la etiqueta de la etapa va encima del demo, fuera de la pantalla */
+#product .al-demo__grid .p-nota{order:0;margin:2px auto 0;max-width:640px;text-align:center;font:500 clamp(14px,1.3vw,16px)/1.45 var(--sans,Inter,sans-serif);color:inherit;opacity:.92;min-height:1.45em;transition:opacity .25s ease}
+#product .al-demo__grid .p-nota::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:#3d7fd6;margin-right:.55em;vertical-align:.12em;box-shadow:0 0 0 4px rgba(61,127,214,.18)}
+#product .al-demo__grid .p-nota.cambia{opacity:0}
+#product .al-demo:not(.al-demo--manual) .al-demo__title{display:none!important}
+#product .al-demo__stage{overflow:visible!important;margin-top:30px!important}
+.p-paso{top:-30px!important;left:50%!important;transform:translateX(-50%)}
+.p-paso.cambia{transform:translate(-50%,-4px)}
 </style>
 </head>
 
@@ -6666,29 +6677,16 @@ window.alDemoTarjetas = function(root, cfg){
   const SS = { z: 0, x: 0, y: 0, a: 1 };   // zoom automático (como Screen Studio): z = acercamiento al cursor, a = vista del aparato completo
 
   // aparato fotográfico compartido (fuente/foto.js): notebook en horizontal; en vertical, la ventana sola
-  // nota dentro de la app (fuente/notas.js): burbuja junto al primer toque del paso, o arriba si no hay toque
+  // señal dentro de la app: un anillo suave que late donde se va a tocar (la frase del paso va bajo el demo,
+  // así no tapa nada de la pantalla)
   function notaPaso(g, i, lt){
-    const N = window.AL_NOTAS && AL_NOTAS[root.id]; if (!N || !N[i]) return;
-    const CW = J.CW, CH = J.CH, cf = J.CURSOR[i], dur = STEPS[i].b - STEPS[i].a;
-    let ax = CW / 2, ay = 96, t0 = 0.3, abajo = true;
-    if (cf && cf.clicks && cf.clicks.length) {
-      const ck = cf.clicks[0]; let mejor = cf.keys[0];
-      cf.keys.forEach(k => { if (Math.abs(k[0] - ck) < Math.abs(mejor[0] - ck)) mejor = k; });
-      ax = mejor[1]; ay = mejor[2]; t0 = Math.max(0.2, ck - 0.8); abajo = ay < 300;
-    }
-    const a = clamp((lt - t0) / 0.3) * (1 - clamp((lt - (dur - 0.5)) / 0.3)); if (a <= 0) return;
-    let f = J.vert ? 30 : 27; const fam = '600 ' + f + 'px Inter, -apple-system, sans-serif';
-    g.save(); g.font = fam; let w = g.measureText(N[i]).width + 48;
-    while (w > CW - 48 && f > 18) { f -= 1; g.font = '600 ' + f + 'px Inter, -apple-system, sans-serif'; w = g.measureText(N[i]).width + 48; }
-    const h = f * 2.1, bx = Math.max(24, Math.min(CW - 24 - w, ax - w / 2)), by = abajo ? ay + 44 : ay - 44 - h, px = Math.max(bx + 26, Math.min(bx + w - 26, ax));
-    const e = 0.9 + 0.1 * ease(clamp((lt - t0) / 0.35));
-    g.globalAlpha = a; g.translate(px, abajo ? by : by + h); g.scale(e, e); g.translate(-px, -(abajo ? by : by + h));
-    g.shadowColor = 'rgba(0,0,0,.28)'; g.shadowBlur = 24; g.shadowOffsetY = 8;
-    const r = 16; g.beginPath(); g.moveTo(bx + r, by); g.arcTo(bx + w, by, bx + w, by + h, r); g.arcTo(bx + w, by + h, bx, by + h, r); g.arcTo(bx, by + h, bx, by, r); g.arcTo(bx, by, bx + w, by, r); g.closePath();
-    g.fillStyle = 'rgba(28,28,30,.93)'; g.fill(); g.shadowColor = 'transparent';
-    g.beginPath(); if (abajo) { g.moveTo(px - 12, by); g.lineTo(px, by - 12); g.lineTo(px + 12, by); } else { g.moveTo(px - 12, by + h); g.lineTo(px, by + h + 12); g.lineTo(px + 12, by + h); } g.fill();
-    g.fillStyle = '#fff'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(N[i], bx + w / 2, by + h / 2 + 1);
-    g.restore();
+    const cf = J.CURSOR[i]; if (!cf || !cf.clicks || !cf.clicks.length) return;
+    const ck = cf.clicks[0]; let k0 = cf.keys[0];
+    cf.keys.forEach(k => { if (Math.abs(k[0] - ck) < Math.abs(k0[0] - ck)) k0 = k; });
+    const a = clamp((lt - (ck - 1.1)) / 0.3) * (1 - clamp((lt - ck) / 0.25)); if (a <= 0) return;
+    const p = (lt * 1.6) % 1, r = (J.vert ? 34 : 30) * (1 + p * 0.8);
+    g.save(); g.globalAlpha = a * (1 - p) * 0.9; g.strokeStyle = '#3d7fd6'; g.lineWidth = 5;
+    g.beginPath(); g.arc(k0[1], k0[2], r, 0, Math.PI * 2); g.stroke(); g.restore();
   }
   function aparato(vert, PW, PH){ return alFoto.crear(THREE, scene, { vert, ventana: { w: PW, h: PH }, anis: ANISO, listo: () => { needsRender = true; } }); }
   // pantalla completa: la tarjeta cubre toda la pantalla del aparato; fuera de su dibujo la textura repite el
@@ -8733,7 +8731,7 @@ AL_DEMOS['ver-en-accion'] = (function(){
   function L(CW, CH){
     const V = CH > CW, W = CW - 2*M;
     return { V, W, CW, CH,
-      hojaY: V ? 212 : 196, fila: V ? 58 : 50,                                  // hoja: primera fila y alto de fila
+      hojaY: V ? 212 : 196, fila: V ? 55 : 50,                                  // hoja: primera fila y alto de fila
       col: V ? { n: M + 22, f: M + 64, d: M + 168, dW: 300, m: CW - M - 18, e: 0 }
              : { n: M + 22, f: M + 70, d: M + 200, dW: 360, m: M + 740, e: M + 790 },
       imp: V ? { x: M, y: 262, w: W } : { x: M, y: 262, w: 380 },             // Conecta: botón Importar
@@ -8789,7 +8787,7 @@ AL_DEMOS['ver-en-accion'] = (function(){
         g.fillStyle = '#e3e9f0'; g.fillRect(M, y + l.fila/2 - 1, W, 1);
       });
     }
-    const estado = (g, y, label, fill, ink) => { if (V) pill(g, M + 44, y - 18, label, fill, ink, 18, 30, 'left'); else pill(g, l.col.e, y - 20, label, fill, ink, 21, 38); };
+    const estado = (g, y, label, fill, ink) => { if (V) { g.fillStyle = ink; g.beginPath(); g.arc(M + 6, y, 9, 0, 7); g.fill(); txt(g, '✓', M + 6, y + 1, 13, 800, '#fff', 'center'); } else pill(g, l.col.e, y - 20, label, fill, ink, 21, 38); };
     return [
       // 0 · El problema: la hoja, revisada a mano fila por fila
       (g, lt) => {
@@ -8800,7 +8798,7 @@ AL_DEMOS['ver-en-accion'] = (function(){
           tinte(g, y, 'rgba(245,200,76,.45)', marca(i));
         });
         const q = easeOut((lt - 2.2) / 0.3);
-        if (q > 0) { g.globalAlpha = q; const y = l.hojaY + 52 + 6*l.fila; pill(g, V ? CW - M - 8 : l.col.e, y - 22, '¿calza con F-103?', '#fdf1e2', C.warn, V ? 20 : 22, V ? 36 : 42, V ? 'right' : 'left'); g.globalAlpha = 1; }
+        if (q > 0 && !V) { g.globalAlpha = q; const y = l.hojaY + 52 + 6*l.fila; pill(g, l.col.e, y - 22, '¿calza con F-103?', '#fdf1e2', C.warn, 22, 42); g.globalAlpha = 1; }
         const r = easeOut((lt - 2.6) / 0.35);
         if (r > 0) { g.globalAlpha = r; pill(g, CW/2, CH - (V ? 80 : 70), '⏱ 2 h 40 min revisando… y quedan 188 filas', C.bad, '#fff', V ? 24 : 28, V ? 50 : 56, 'center'); g.globalAlpha = 1; }
       },
@@ -8858,7 +8856,7 @@ AL_DEMOS['ver-en-accion'] = (function(){
         const n = Math.round(3000 * run).toLocaleString('es-CL');
         pill(g, CW/2, CH - (V ? 76 : 66), (run >= 1 ? '✓ ' : '') + n + ' movimientos · ' + (3.0 * run).toFixed(1).replace('.', ',') + ' s', run >= 1 ? C.ok : C.brand, '#fff', V ? 24 : 28, V ? 50 : 56, 'center');
         const k = Math.min(3, Math.floor((lt - 0.5) / 0.55));
-        if (k >= 0 && lt < 3.4) { const p = PAIRS[k]; g.globalAlpha = 0.95; pill(g, CW/2, V ? 140 : 136, DATA[p[0]][1] + ' ↔ ' + DATA[p[1]][1] + ' · mismo monto', C.ok, '#fff', V ? 20 : 23, V ? 40 : 44, 'center'); g.globalAlpha = 1; }
+        if (k >= 0 && lt < 3.4 && !V) { const p = PAIRS[k]; g.globalAlpha = 0.95; pill(g, CW/2, CH - 128, DATA[p[0]][1] + ' ↔ ' + DATA[p[1]][1] + ' · mismo monto', C.ok, '#fff', 23, 44, 'center'); g.globalAlpha = 1; }
       },
       // 4 · Revisa: lo que no calzó; empareja a mano y el ajuste queda guardado
       (g, lt) => {
@@ -8903,17 +8901,15 @@ AL_DEMOS['ver-en-accion'] = (function(){
         if (q > 0.9) { let lx = M; partes.forEach(([n, c, s]) => { g.fillStyle = c; rr(g, lx, by + 88, 18, 18, 4); g.fill(); txt(g, s + ' ' + n, lx + 28, by + 98, 22, 700, C.muted); lx += V ? 220 : 260; }); }
         // filas del detalle
         const dy = by + 150;
-        [[0, 'Par 1'], [9, 'Par manual'], [3, 'Pendiente']].forEach(([i, s], k) => {
+        [[0, 'Par 1'], [9, 'Par manual'], [3, 'Pendiente']].slice(0, V ? 2 : 3).forEach(([i, s], k) => {
           const a = easeOut((lt - 1.6 - k*0.2) / 0.35); if (a <= 0) return; const y = dy + k*56, r = DATA[i];
           g.globalAlpha = a; txt(g, r[1], M, y, 26, 600, C.ink, 'left', V ? 340 : 420); txt(g, r[2], V ? M + 520 : M + 640, y, 26, 800, C.ink, 'right');
           pill(g, CW - M, y - 18, s, s === 'Pendiente' ? '#fdf1e2' : '#e6f2eb', s === 'Pendiente' ? C.warn : C.ok, 20, 36, 'right');
           g.fillStyle = '#e3e9f0'; g.fillRect(M, y + 26, W, 1); g.globalAlpha = 1;
         });
-        if (dy + 3*56 < l.expo.y - 10 || !V) btn(g, l.expo.x, l.expo.y, l.expo.w, 64, 'Exportar resultados', 'primary', press(lt, 3.45), 32);
+        if (!V || lt < 3.7) btn(g, l.expo.x, l.expo.y, l.expo.w, 64, 'Exportar resultados', 'primary', press(lt, 3.45), 32);
         const b = easeOut((lt - 3.7) / 0.35);
-        if (b > 0) { g.globalAlpha = b; const bx = V ? M : M, bw = V ? W : W - 450; banner(g, bx, V ? l.expo.y - 80 : l.expo.y, bw, 64, '✓ resultados_septiembre.xlsx', SHEET); g.globalAlpha = 1; }
-        const c = easeOut((lt - 4.6) / 0.4);
-        if (c > 0 && !V) { g.globalAlpha = c; pill(g, M, l.expo.y - 70, '3 s en vez de 3 horas', '#eef2f7', C.brand, 24, 46); g.globalAlpha = 1; }
+        if (b > 0) { g.globalAlpha = b; banner(g, M, l.expo.y, V ? W : W - 450, 64, '✓ resultados_septiembre.xlsx', SHEET); g.globalAlpha = 1; }
       }
     ];
   }
@@ -9422,7 +9418,17 @@ window.addEventListener('load', function(){ var h = new URLSearchParams(location
       r.querySelectorAll('ol button').forEach(function(b){ b.addEventListener('click', function(){ var s = d.querySelectorAll('.al-demo__step')[+b.getAttribute('data-i')]; if (s) s.click(); var p = d.querySelector('[data-act="play"]'); if (p && d.classList.contains('al-demo--manual')) p.click(); }); });
     });
   }
-  function etiquetasYResumen(){ etiquetas(); resumenes(); }
+  // subtítulo del demo: la frase del paso (fuente/notas.js) bajo el demo, sin tapar la pantalla
+  function subtitulos(){
+    document.querySelectorAll('#product .al-demo').forEach(function(d){
+      var N = window.AL_NOTAS && AL_NOTAS[d.id], st = d.querySelector('.al-demo__stage'); if (!N || !st || d.querySelector('.p-nota')) return;
+      var e = document.createElement('p'); e.className = 'p-nota'; e.setAttribute('aria-live', 'polite'); st.insertAdjacentElement('afterend', e);
+      var poner = function(){ var b = d.querySelectorAll('.al-demo__step'), i = 0; b.forEach(function(x, j){ if (x.getAttribute('aria-current') === 'step') i = j; });
+        var t = N[i] || ''; if (t === e.textContent) return; e.classList.add('cambia'); setTimeout(function(){ e.textContent = t; e.classList.remove('cambia'); }, 160); };
+      poner(); new MutationObserver(poner).observe(d, { subtree: true, attributes: true, attributeFilter: ['aria-current'] });
+    });
+  }
+  function etiquetasYResumen(){ etiquetas(); resumenes(); subtitulos(); }
   etiquetasYResumen(); window.addEventListener('load', etiquetasYResumen); setInterval(etiquetasYResumen, 2000);
 
   /* engancha el cambio de pestaña sin tocar show() */
