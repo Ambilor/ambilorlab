@@ -173,13 +173,13 @@
   mask-composite:intersect}
 
 /* ════ PROPUESTA H: en celular y tablet, la app como en el propio equipo ═══════════ */
-/* el cuadro toma la forma de la app (vertical al sostenerlo así, horizontal al girarlo) y la llena de borde
-   a borde, sin bordes desvanecidos; la barra de controles va debajo */
+/* el cuadro toma la forma del equipo del visitante con la app (vertical al sostenerlo así, horizontal al
+   girarlo; la proporción la pone fuente/foto.js), sin bordes desvanecidos; la barra de controles va debajo */
 @media (pointer:coarse){
   .al-demo--player .al-demo__stage{height:auto!important;padding-bottom:var(--al-barra)}
-  .al-demo--player .al-demo__stage canvas{height:auto!important;aspect-ratio:800/1000;max-height:calc(100svh - 150px);-webkit-mask-image:none;mask-image:none}
+  .al-demo--player .al-demo__stage canvas{height:auto!important;aspect-ratio:var(--p-ar-v,.8);max-height:calc(100svh - 150px);-webkit-mask-image:none;mask-image:none}
 }
 @media (pointer:coarse) and (orientation:landscape){
-  .al-demo--player .al-demo__stage canvas{aspect-ratio:1200/950;max-height:calc(100svh - var(--al-barra) - 16px)}
+  .al-demo--player .al-demo__stage canvas{aspect-ratio:var(--p-ar-h,1.26);max-height:calc(100svh - var(--al-barra) - 72px)}
 }
 </style>
