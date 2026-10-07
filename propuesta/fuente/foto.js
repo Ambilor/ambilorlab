@@ -13,9 +13,11 @@ window.alFoto = (function(){
     notebook: { src: 'img/notebook.webp', w: 1800, h: 1111, prop: 1.6, radio: 0.008,
       q: [[61.4, 73.6], [1207.0, 119.5], [1261.3, 816.7], [82.9, 842.5]], caja: [27.6, 27.6, 1772.4, 1083.9] } };
   // ¿qué aparato tiene el visitante? (iPadOS se presenta como Mac: se distingue por la pantalla táctil)
+  var _eq = null;
   function equipo(){
+    if (_eq) return _eq;
     var tactil = navigator.maxTouchPoints > 0 && window.matchMedia && matchMedia('(pointer: coarse)').matches;
-    return !tactil ? 'pc' : (Math.min(screen.width, screen.height) >= 600 ? 'tablet' : 'cel');
+    return (_eq = !tactil ? 'pc' : (Math.min(screen.width, screen.height) >= 600 ? 'tablet' : 'cel'));
   }
   function homografia(de, a){   // 4 pares de puntos → matriz 3×3 (h22 = 1)
     var A = [], B = [], i, c, r, k;
@@ -44,7 +46,7 @@ window.alFoto = (function(){
     x.filter = 'blur(14px)'; x.fillStyle = 'rgba(0,8,20,.75)'; x.fillRect(36, 40, 184, 184);
     var t = new T.CanvasTexture(c); t.encoding = T.sRGBEncoding;
     var vs = new T.Mesh(new T.PlaneGeometry(o.ventana.w + 0.7, o.ventana.h + 0.7), new T.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false, toneMapped: false }));
-    vs.position.set(0, -0.1, -0.005); vs.renderOrder = 2; pantalla.add(vs);
+    vs.position.set(0, -0.1, -0.005); vs.renderOrder = 2; vs.visible = equipo() === 'pc'; pantalla.add(vs);
     // "aparato completo" = la ventana con algo de aire: el alejamiento entre pasos es leve
     g.userData = { plano: true, pantalla: pantalla, SW: o.ventana.w, SH: o.ventana.h, sombraVentana: vs, caja: { x: 0, y: -o.ventana.h * 0.05, w: o.ventana.w * 1.3, h: o.ventana.h * 1.3 } };
     g.visible = false; return g;
@@ -101,7 +103,12 @@ window.alFoto = (function(){
   function camara(cam, u, st, o){
     var cl = function(v, a, b){ return Math.max(a, Math.min(b, v)); }, lerp = function(a, b, t){ return a + (b - a) * t; };
     var ease = function(x){ x = cl(x, 0, 1); return x < 0.5 ? 4*x*x*x : 1 - Math.pow(-2*x + 2, 3) / 2; };
-    var dt = o.dt;
+    var dt = o.dt, tactil = equipo() !== 'pc';
+    if (tactil && u.plano) {   // en celular y tablet la app se usa quieta: sin zoom, sin alejarse, de borde a borde
+      var tg0 = Math.tan(cam.fov * Math.PI / 360);
+      cam.position.set(0, 0, Math.max(o.vent.h / 2 / tg0, o.vent.w / 2 / (tg0 * cam.aspect)));
+      cam.lookAt(0, 0, 0); return;
+    }
     st.z += (o.quiere - st.z) * (1 - Math.exp(-dt * 3.2));
     if (o.foco) { var kp = 1 - Math.exp(-dt * 4.5), lx = u.SW * 0.2, ly = u.SH * 0.2;
       st.x += (cl(o.foco.x, -lx, lx) - st.x) * kp; st.y += (cl(o.foco.y, -ly, ly) - st.y) * kp; }
@@ -116,5 +123,10 @@ window.alFoto = (function(){
     cam.position.set(mx, my, lerp(lerp(ventanaD, cerca, z), aparatoD, a) * (1 - Math.sin(o.T * 0.3) * 0.008));
     cam.lookAt(mx, my, 0);
   }
-  return { crear: crear, camara: camara, elegir: elegir };
+  // indicador de toque (en táctil, en vez de la flecha del mouse)
+  function dedo(T){
+    var t = lienzo(T, 128, 128, function(c, w){ c.beginPath(); c.arc(w/2, w/2, 46, 0, 7); c.fillStyle = 'rgba(18,48,77,.30)'; c.fill(); c.lineWidth = 6; c.strokeStyle = 'rgba(255,255,255,.95)'; c.stroke(); });
+    return t;
+  }
+  return { crear: crear, camara: camara, elegir: elegir, tactil: function(){ return equipo() !== 'pc'; }, dedo: dedo };
 })();

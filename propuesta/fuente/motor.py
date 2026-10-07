@@ -26,8 +26,13 @@ def aplicar(s):
 
     # 0 · con aparato fotográfico la ventana va a pantalla completa: su fondo sin esquinas redondeadas ni borde
     rep("  function rr(g,x,y,w,h,r){ g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }\n  function txt(",
-        "  const PLENO = !!(window.alFoto && alFoto.elegir(CH > CW));   // propuesta: app a pantalla completa\n"
+        "  const PLENO = !!(window.alFoto && (alFoto.elegir(CH > CW) || alFoto.tactil()));   // propuesta: app a pantalla completa (en el notebook, o en celular y tablet)\n"
         "  function rr(g,x,y,w,h,r){ if (PLENO && !x && !y && w === CW && h === CH) r = 0; g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }\n  function txt(")
+    rep("  const cursorGeo = new THREE.PlaneGeometry(0.24, 0.31); cursorGeo.translate(0.12, -0.155, 0);",
+        "  const DEDO = alFoto.tactil();   // propuesta: en celular y tablet se toca con el dedo, no hay flecha\n"
+        "  const cursorGeo = DEDO ? new THREE.PlaneGeometry(0.36, 0.36) : new THREE.PlaneGeometry(0.24, 0.31); if (!DEDO) cursorGeo.translate(0.12, -0.155, 0);")
+    rep("  const cursor = new THREE.Mesh(cursorGeo, basic({ map:ctex })); cursor.renderOrder = 20; scene.add(cursor);",
+        "  const cursor = new THREE.Mesh(cursorGeo, basic({ map: DEDO ? alFoto.dedo(THREE) : ctex })); cursor.renderOrder = 20; scene.add(cursor);")
     rep("    g.strokeStyle = C.line; g.lineWidth = 4; rr(g, 2, 2, CW - 4, CH - 4, 32); g.stroke();",
         "    if (!PLENO) { g.strokeStyle = C.line; g.lineWidth = 4; rr(g, 2, 2, CW - 4, CH - 4, 32); g.stroke(); }")
 
