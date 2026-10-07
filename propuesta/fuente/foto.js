@@ -251,8 +251,8 @@ window.alFoto = (function(){
     return { d: d, ext: vis, zoom: 1,   // sin acercamiento al tocar: el demo quieto se entiende mejor
       // en el iPhone la barra de estado va sobre la página: blanca sobre fondo oscuro, negra sobre claro
       // y la barra de pestañas va solo en las pantallas del panel (cabecera de color), no en las del cliente
-      tono: function(cx){ if (solo && !tabs) return; try { var p = cx.getImageData(Math.round(cx.canvas.width / 2), 3, 1, 1).data, lum = (0.3 * p[0] + 0.59 * p[1] + 0.11 * p[2]) / 255; var os = p[3] > 10 && lum > 0.6;
-        if (!solo) { claro.visible = !os; oscuro.visible = os; } if (tabs) tabs.visible = !os; } catch (er) {} } };
+      tono: function(cx, sinTab){ if (solo && !tabs) return; try { var p = cx.getImageData(Math.round(cx.canvas.width / 2), 3, 1, 1).data, lum = (0.3 * p[0] + 0.59 * p[1] + 0.11 * p[2]) / 255; var os = p[3] > 10 && lum > 0.6;
+        if (!solo) { claro.visible = !os; oscuro.visible = os; } if (tabs) tabs.visible = !os && !sinTab; } catch (er) {} } };
   }
   // Ventana de frente, sin aparato: en computador (ventana angosta) con su sombra; en celular y tablet,
   // dentro del marco del equipo del visitante, a pantalla completa.
