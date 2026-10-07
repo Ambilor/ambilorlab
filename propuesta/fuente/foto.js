@@ -1,22 +1,17 @@
 /* Propuesta · aparato fotográfico compartido por los demos (motor de tarjetas y "Ver en acción" del V1).
-   El aparato es el del visitante: notebook en computador, tablet en iPad/tablet (horizontal o vertical, según
-   cómo la tenga). Fotos de estudio generadas con IA (Higgsfield · Z Image), en propuesta/img/, con la
+   En computador, la app se ve en la pantalla de un notebook. Fotos de estudio generadas con IA (Higgsfield · Z Image), en propuesta/img/, con la
    pantalla en negro, sin reflejos verdes y recortadas sin fondo (Higgsfield · remove_background), para que el
    aparato se apoye directo en la página (fuente/preparar.py y quad.py).
    La pantalla de la foto está en perspectiva: una homografía lleva el plano de la pantalla (x, y en unidades
    del demo) a sus cuatro esquinas en la foto, y así lo que se dibuja en ella queda pegado al vidrio.
-   En celular (y en una ventana angosta de computador) no hay aparato: la ventana va de frente y llena el
-   cuadro, que en pantalla chica es lo que se tiene que leer. */
+   En celular y tablet (y en una ventana angosta de computador) no hay aparato: la pantalla del visitante ya
+   lo es, así que la app va de frente, de borde a borde del cuadro, en el formato de cómo lo sostiene. */
 window.alFoto = (function(){
   // q: esquinas de la pantalla (sup-izq, sup-der, inf-der, inf-izq, px de la foto) · caja: el aparato completo, para encuadrar
   // prop: ancho/alto de la pantalla real · radio: esquinas redondeadas de la pantalla (fracción del ancho)
   var FOTOS = {
     notebook: { src: 'img/notebook.webp', w: 1800, h: 1111, prop: 1.6, radio: 0.008,
-      q: [[61.4, 73.6], [1207.0, 119.5], [1261.3, 816.7], [82.9, 842.5]], caja: [27.6, 27.6, 1772.4, 1083.9] },
-    tablet: { src: 'img/tablet.webp', w: 1800, h: 1578, prop: 1.43, radio: 0.025,
-      q: [[86.5, 149.7], [1658.4, 110.8], [1656.3, 1473.9], [88.5, 1320.5]], caja: [31.9, 31.9, 1768.1, 1545.9] },
-    tabletV: { src: 'img/tablet_v.webp', w: 1578, h: 1800, prop: 0.7, radio: 0.035,   // la misma foto, girada
-      q: [[257.5, 88.5], [1428.3, 86.5], [1467.2, 1658.4], [104.1, 1656.3]], caja: [32.1, 31.9, 1546.1, 1768.1] } };
+      q: [[61.4, 73.6], [1207.0, 119.5], [1261.3, 816.7], [82.9, 842.5]], caja: [27.6, 27.6, 1772.4, 1083.9] } };
   // ¿qué aparato tiene el visitante? (iPadOS se presenta como Mac: se distingue por la pantalla táctil)
   function equipo(){
     var tactil = navigator.maxTouchPoints > 0 && window.matchMedia && matchMedia('(pointer: coarse)').matches;
@@ -51,11 +46,12 @@ window.alFoto = (function(){
     var vs = new T.Mesh(new T.PlaneGeometry(o.ventana.w + 0.7, o.ventana.h + 0.7), new T.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false, toneMapped: false }));
     vs.position.set(0, -0.1, -0.005); vs.renderOrder = 2; pantalla.add(vs);
     // "aparato completo" = la ventana con algo de aire: el alejamiento entre pasos es leve
-    g.userData = { pantalla: pantalla, SW: o.ventana.w, SH: o.ventana.h, sombraVentana: vs, caja: { x: 0, y: -o.ventana.h * 0.05, w: o.ventana.w * 1.3, h: o.ventana.h * 1.3 } };
+    g.userData = { plano: true, pantalla: pantalla, SW: o.ventana.w, SH: o.ventana.h, sombraVentana: vs, caja: { x: 0, y: -o.ventana.h * 0.05, w: o.ventana.w * 1.3, h: o.ventana.h * 1.3 } };
     g.visible = false; return g;
   }
   // ¿Con qué foto? null = sin aparato (ventana sola, de frente)
-  function elegir(vert){ var e = equipo(); return e === 'tablet' ? (vert ? FOTOS.tabletV : FOTOS.tablet) : (e === 'pc' && !vert ? FOTOS.notebook : null); }
+  // en celular y tablet la pantalla del visitante ya es el aparato: la app va sola, de borde a borde del cuadro
+  function elegir(vert){ return equipo() === 'pc' && !vert ? FOTOS.notebook : null; }
   // Arma el aparato dentro de la escena (ver elegir()).
   // o: { vert, ventana: {w, h} (ventana centrada sobre un escritorio) o alto: alto de la pantalla, anis, listo }
   function crear(T, escena, o){
@@ -113,9 +109,10 @@ window.alFoto = (function(){
     st.a += (ver - st.a) * (1 - Math.exp(-dt * (ver > st.a ? 5 : 2.4)));
     var cj = u.caja, tg = Math.tan(cam.fov * Math.PI / 360), as = cam.aspect, v = o.vert;
     var aparatoD = Math.max(cj.h * (v ? 1.2 : 1.38) / 2 / tg, cj.w * (v ? 1.06 : 1.22) / 2 / (tg * as));
-    var ventanaD = Math.max(o.vent.h * (v ? 1.1 : 1.24) / 2 / tg, o.vent.w * (v ? 1.06 : 1.1) / 2 / (tg * as)), cerca = ventanaD * 0.68;
+    var fh = u.plano ? 1.04 : (v ? 1.1 : 1.24), fw = u.plano ? 1.03 : (v ? 1.06 : 1.1);   // sin aparato: la app de borde a borde
+    var ventanaD = Math.max(o.vent.h * fh / 2 / tg, o.vent.w * fw / 2 / (tg * as)), cerca = ventanaD * 0.68;
     var z = ease(st.z), a = ease(st.a), px = o.px || { x: 0, y: 0 };
-    var mx = lerp(lerp(0, st.x, z), cj.x, a) + px.x * 0.12, my = lerp(lerp(-o.vent.h * (v ? 0 : 0.06), st.y, z), cj.y - cj.h * 0.07, a) + px.y * 0.08;
+    var mx = lerp(lerp(0, st.x, z), cj.x, a) + px.x * 0.12, my = lerp(lerp(-o.vent.h * (v || u.plano ? 0 : 0.06), st.y, z), cj.y - cj.h * 0.07, a) + px.y * 0.08;
     cam.position.set(mx, my, lerp(lerp(ventanaD, cerca, z), aparatoD, a) * (1 - Math.sin(o.T * 0.3) * 0.008));
     cam.lookAt(mx, my, 0);
   }
