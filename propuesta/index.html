@@ -2206,12 +2206,16 @@ window.alFoto = (function(){
     var r = { m: m, e: e, u: u, top: e.top * u, bot: e.bot * u, side: e.side * u, radio: e.r * u, bisel: (e.bisel + e.canto) * u, canto: e.canto * u };
     r.SW = e.W * u; r.SH = e.H * u; r.OW = r.SW + 2 * r.bisel; r.OH = r.SH + 2 * r.bisel;
     r.appY = r.SH / 2 - r.top - PH / 2;   // la app, arriba de la página (bajo las barras)
+    // celular vertical: como en las fotos de producto, el teléfono a todo el ancho y cortado bajo la app
+    // (lo de abajo es página en blanco); se ve desde el borde superior hasta un poco bajo el fin de la app
+    if (vert && (m.tipo === 'iphone' || m.tipo === 'android')) r.corte = r.appY - PH / 2 - 0.05 * PW;
     return r;
   }
   // proporción del cuadro en táctil (la usa el CSS de la propuesta): la del equipo completo
   if (equipo() !== 'pc') {
     var _v = medidas(true, 3.84, 4.8), _h = medidas(false, 4.8, 3.8);
-    document.documentElement.style.setProperty('--p-ar-v', (_v.OW / _v.OH).toFixed(4));
+    document.documentElement.style.setProperty('--p-ar-v', (_v.corte != null ? _v.OW / (_v.OH / 2 - _v.corte) : _v.OW / _v.OH).toFixed(4));
+    if (_v.corte != null) document.documentElement.classList.add('p-corte-cel');
     document.documentElement.style.setProperty('--p-ar-h', (_h.OW / _h.OH).toFixed(4));
   }
   // íconos de la barra de estado, dibujados en pt (como los de iOS): x, y = esquina izquierda, centro vertical
@@ -2333,8 +2337,9 @@ window.alFoto = (function(){
     plano(mat(cuerpo), 0.05, 40);
     var claro = plano(mat(capa('#ffffff')), 0.06, 41), oscuro = plano(mat(capa('#000000')), 0.06, 41); oscuro.visible = false;
     var solo = !(m.tipo === 'iphone' && vert); if (solo) { oscuro.visible = true; claro.visible = false; }   // la barra de estado va sobre el navegador
-    document.documentElement.style.setProperty(vert ? '--p-ar-v' : '--p-ar-h', (FW / FH).toFixed(4));
-    return { d: d, ext: { w: FW, h: FH }, zoom: m.tipo === 'iphone' || m.tipo === 'android' ? (vert ? 0.66 : 0.82) : 0.8,
+    var vis = d.corte != null ? { w: FW, h: FH / 2 - d.corte, cy: (FH / 2 + d.corte) / 2 } : { w: FW, h: FH, cy: 0 };
+    document.documentElement.style.setProperty(vert ? '--p-ar-v' : '--p-ar-h', (vis.w / vis.h).toFixed(4));
+    return { d: d, ext: vis, zoom: m.tipo === 'iphone' || m.tipo === 'android' ? (vert ? 1 : 0.82) : 0.8,
       // en el iPhone la barra de estado va sobre la página: blanca sobre fondo oscuro, negra sobre claro
       tono: function(cx){ if (solo) return; try { var p = cx.getImageData(Math.round(cx.canvas.width / 2), 3, 1, 1).data, lum = (0.3 * p[0] + 0.59 * p[1] + 0.11 * p[2]) / 255; var os = p[3] > 10 && lum > 0.6; claro.visible = !os; oscuro.visible = os; } catch (er) {} } };
   }
@@ -2417,7 +2422,7 @@ window.alFoto = (function(){
       st.z += (o.quiere - st.z) * (1 - Math.exp(-dt * 3.2));
       if (o.foco) { var kq = 1 - Math.exp(-dt * 4.5); st.x += (cl(o.foco.x, -u.SW * 0.3, u.SW * 0.3) - st.x) * kq; st.y += (cl(o.foco.y, -u.SH * 0.3, u.SH * 0.3) - st.y) * kq; }
       var z0 = ease(st.z);
-      cam.position.set(lerp(0, st.x, z0), lerp(0, st.y, z0), lerp(lejos0, cerca0, z0));
+      var cy0 = e0.cy || 0; cam.position.set(lerp(0, st.x, z0), lerp(cy0, st.y, z0), lerp(lejos0, cerca0, z0));
       cam.lookAt(cam.position.x, cam.position.y, 0); return;
     }
     st.z += (o.quiere - st.z) * (1 - Math.exp(-dt * 3.2));
@@ -2441,6 +2446,22 @@ window.alFoto = (function(){
   }
   return { crear: crear, camara: camara, elegir: elegir, tactil: function(){ return equipo() !== 'pc'; }, dedo: dedo };
 })();
+/* Propuesta · notas dentro de la app: una frase corta por paso, en una burbuja junto a lo que se toca
+   (o arriba, si el paso no tiene toque). Las dibuja el motor de tarjetas sobre la pantalla del demo. */
+window.AL_NOTAS = {
+  'ver-en-accion': ['Así se cuadra hoy: fila por fila, a mano', 'Importa la cartola tal como la entrega tu banco', 'Un clic: valida los datos y concilia',
+                    'Cada movimiento busca su contraparte solo', 'Lo que no calzó, lo emparejas tú', 'El resultado, listo para archivar'],
+  'como-se-instala': ['Haz una copia en tu Drive', 'Abre «Configurar herramienta» en el menú', 'Autoriza el acceso una sola vez',
+                      'Publica tu panel con «Implementar»', 'Ábrelo y empieza a conciliar', 'Listo: ya quedó instalado'],
+  'v2-accion': ['Un abono paga dos facturas: ¿cuáles?', 'Pega el enlace de cada Google Sheet', 'El grupo 1:2 se arma solo',
+                'Una regla y las comisiones quedan explicadas', 'Envía la vista a quien la necesita', 'Indicadores que llevan al detalle'],
+  'v2-instala': ['Haz una copia en tu Drive', 'Abre «Configurar herramienta» en el menú', 'Autoriza los permisos una sola vez',
+                 'Publica tu panel con «Implementar»', 'Ábrelo y conecta tus fuentes', 'Listo: tu panel quedó instalado'],
+  'ped-accion': ['Pedidos repartidos entre chats y notas', 'Tu catálogo en un enlace para compartir', 'Tu cliente elige y envía en un minuto',
+                 'El pedido aparece al instante en tu panel', 'Confirmas y avisas por WhatsApp', 'Ventas y lo más pedido, a la vista'],
+  'ped-instala': ['Haz una copia en tu Drive', 'Publica tu app con «Implementar»', 'Autoriza el acceso una sola vez',
+                  'Entra a tu panel con tu clave', 'Tu negocio y tu catálogo', 'Comparte tu formulario con tus clientes']
+};
 </script>
 <meta name="robots" content="noindex, nofollow">
 <!-- ═══ PROPUESTA DE MOVIMIENTO (2026-10-07) ═══════════════════════════════════
@@ -2624,6 +2645,11 @@ window.alFoto = (function(){
   .al-demo--player .al-demo__stage{height:auto!important;padding-bottom:var(--al-barra)}
   .al-demo--player .al-demo__stage canvas{height:auto!important;aspect-ratio:var(--p-ar-v,.8);max-height:calc(100svh - 150px);-webkit-mask-image:none;mask-image:none}
 }
+/* celular vertical: el teléfono a todo el ancho del cuadro, cortado bajo la app y desvanecido abajo */
+@media (pointer:coarse) and (orientation:portrait){
+  .p-corte-cel #product .al-demo__stage{margin-left:-10px!important;margin-right:-10px!important;width:calc(100% + 20px)!important;max-width:none!important}
+  .p-corte-cel .al-demo--player .al-demo__stage canvas{max-height:none;-webkit-mask-image:linear-gradient(#000 86%,transparent);mask-image:linear-gradient(#000 86%,transparent)}
+}
 @media (pointer:coarse) and (orientation:landscape){
   .al-demo--player .al-demo__stage canvas{aspect-ratio:var(--p-ar-h,1.26);max-height:calc(100svh - var(--al-barra) - 72px)}
 }
@@ -2651,6 +2677,26 @@ window.alFoto = (function(){
   .p-paso{top:-30px;left:50%;transform:translateX(-50%)}
   .p-paso.cambia{transform:translate(-50%,-4px)}
 }
+
+/* ════ PROPUESTA J: el texto acompaña, no compite ════════════════════════════════════ */
+/* mientras corre solo queda el título del paso (la nota dentro de la app explica el resto); la bajada se
+   ve en modo manual; al terminar, el resumen de los pasos sobre el demo (.p-resumen, la arma capa.js) */
+#product .al-demo:not(.al-demo--manual) .al-demo__body,#product .al-demo:not(.al-demo--manual) .al-demo__extra{display:none!important}
+.p-resumen{position:absolute;left:0;right:0;top:0;bottom:var(--al-barra);z-index:6;display:flex;flex-direction:column;justify-content:center;align-items:center;
+  padding:18px;text-align:left;background:rgba(7,13,22,.74);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);
+  opacity:0;visibility:hidden;transition:opacity .45s ease,visibility .45s}
+.al-demo--fin .p-resumen{opacity:1;visibility:visible}
+.p-resumen__k{margin:0 0 .6rem;font:600 11px/1 var(--mono,monospace);letter-spacing:.12em;text-transform:uppercase;color:#8fc1ff}
+.p-resumen ol{margin:0;padding:0;list-style:none;counter-reset:p;display:grid;gap:4px;width:min(100%,460px)}
+.p-resumen li{counter-increment:p}
+.p-resumen ol button{display:flex;gap:.7rem;align-items:center;width:100%;min-height:36px;padding:6px 10px;border:0;border-radius:10px;background:rgba(255,255,255,.06);color:#e9eef5;font:500 13.5px/1.3 var(--sans,Inter,sans-serif);text-align:left;cursor:pointer}
+.p-resumen ol button::before{content:counter(p);flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:#35B37E;color:#fff;font:700 11px/1 var(--mono,monospace)}
+.p-resumen ol button:hover{background:rgba(255,255,255,.12)}
+.p-resumen__acc{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:14px}
+.p-resumen__otra,.p-resumen__cta{min-height:44px;padding:0 18px;border-radius:999px;display:inline-flex;align-items:center;font:600 13px/1 var(--sans,Inter,sans-serif);text-decoration:none;cursor:pointer}
+.p-resumen__otra{border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff}
+.p-resumen__cta{background:#3d7fd6;color:#fff;border:0}
+@media (max-width:420px){ .p-resumen ol button{min-height:32px;font-size:12.5px} .p-resumen{padding:12px} }
 </style>
 </head>
 
@@ -5758,7 +5804,7 @@ window.alDemoLinea = function(root, STEPS, o){
   L.go = i => {
     i = (i + STEPS.length) % STEPS.length;
     // en automático parte al inicio de la etapa; en manual muestra la etapa completa
-    L.T = L.playing ? STEPS[i].a + 0.001 : STEPS[i].b - HOLD;
+    L.T = L.playing ? STEPS[i].a + 0.001 : STEPS[i].b - HOLD; root.classList.remove('al-demo--fin');
     L.setStep(i); L.sucio = true;
   };
   L.setPlaying = p => {
@@ -5767,6 +5813,7 @@ window.alDemoLinea = function(root, STEPS, o){
     root.classList.toggle('al-demo--manual', !p);
     // al volver a automático sigue desde donde quedó (si terminó, vuelve a empezar)
     if (p && L.T >= DUR - 0.02) L.T = 0;
+    if (p) root.classList.remove('al-demo--fin');
     L.sucio = true;
   };
   L.restart = () => {
@@ -5775,7 +5822,7 @@ window.alDemoLinea = function(root, STEPS, o){
     if (rst && !reduce) { rst.classList.remove('gira'); void rst.offsetWidth; rst.classList.add('gira'); }
   };
   L.tick = (dt, visible) => {
-    if (L.playing && visible) { L.T += dt; if (L.T >= DUR) L.T = 0; L.sucio = true; }
+    if (L.playing && visible) { L.T += dt; if (L.T >= DUR) { L.T = DUR - 0.001; L.setPlaying(false); root.classList.add('al-demo--fin'); } L.sucio = true; }
     if (!L.sucio) return false;
     L.sucio = false;
     L.setStep(stepOf(L.T));
@@ -6604,6 +6651,30 @@ window.alDemoTarjetas = function(root, cfg){
   const SS = { z: 0, x: 0, y: 0, a: 1 };   // zoom automático (como Screen Studio): z = acercamiento al cursor, a = vista del aparato completo
 
   // aparato fotográfico compartido (fuente/foto.js): notebook en horizontal; en vertical, la ventana sola
+  // nota dentro de la app (fuente/notas.js): burbuja junto al primer toque del paso, o arriba si no hay toque
+  function notaPaso(g, i, lt){
+    const N = window.AL_NOTAS && AL_NOTAS[root.id]; if (!N || !N[i]) return;
+    const CW = J.CW, CH = J.CH, cf = J.CURSOR[i], dur = STEPS[i].b - STEPS[i].a;
+    let ax = CW / 2, ay = 96, t0 = 0.3, abajo = true;
+    if (cf && cf.clicks && cf.clicks.length) {
+      const ck = cf.clicks[0]; let mejor = cf.keys[0];
+      cf.keys.forEach(k => { if (Math.abs(k[0] - ck) < Math.abs(mejor[0] - ck)) mejor = k; });
+      ax = mejor[1]; ay = mejor[2]; t0 = Math.max(0.2, ck - 0.8); abajo = ay < 300;
+    }
+    const a = clamp((lt - t0) / 0.3) * (1 - clamp((lt - (dur - 0.5)) / 0.3)); if (a <= 0) return;
+    let f = J.vert ? 30 : 27; const fam = '600 ' + f + 'px Inter, -apple-system, sans-serif';
+    g.save(); g.font = fam; let w = g.measureText(N[i]).width + 48;
+    while (w > CW - 48 && f > 18) { f -= 1; g.font = '600 ' + f + 'px Inter, -apple-system, sans-serif'; w = g.measureText(N[i]).width + 48; }
+    const h = f * 2.1, bx = Math.max(24, Math.min(CW - 24 - w, ax - w / 2)), by = abajo ? ay + 44 : ay - 44 - h, px = Math.max(bx + 26, Math.min(bx + w - 26, ax));
+    const e = 0.9 + 0.1 * ease(clamp((lt - t0) / 0.35));
+    g.globalAlpha = a; g.translate(px, abajo ? by : by + h); g.scale(e, e); g.translate(-px, -(abajo ? by : by + h));
+    g.shadowColor = 'rgba(0,0,0,.28)'; g.shadowBlur = 24; g.shadowOffsetY = 8;
+    const r = 16; g.beginPath(); g.moveTo(bx + r, by); g.arcTo(bx + w, by, bx + w, by + h, r); g.arcTo(bx + w, by + h, bx, by + h, r); g.arcTo(bx, by + h, bx, by, r); g.arcTo(bx, by, bx + w, by, r); g.closePath();
+    g.fillStyle = 'rgba(28,28,30,.93)'; g.fill(); g.shadowColor = 'transparent';
+    g.beginPath(); if (abajo) { g.moveTo(px - 12, by); g.lineTo(px, by - 12); g.lineTo(px + 12, by); } else { g.moveTo(px - 12, by + h); g.lineTo(px, by + h + 12); g.lineTo(px + 12, by + h); } g.fill();
+    g.fillStyle = '#fff'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(N[i], bx + w / 2, by + h / 2 + 1);
+    g.restore();
+  }
   function aparato(vert, PW, PH){ return alFoto.crear(THREE, scene, { vert, ventana: { w: PW, h: PH }, anis: ANISO, listo: () => { needsRender = true; } }); }
   // pantalla completa: la tarjeta cubre toda la pantalla del aparato; fuera de su dibujo la textura repite el
   // borde (ClampToEdge), así la barra superior y el fondo de la app llegan de lado a lado sin deformar la letra
@@ -6780,7 +6851,7 @@ window.alDemoTarjetas = function(root, cfg){
       c.m.visible = vis; c.sh.visible = false;
       if (!vis) { soltarLienzo(c); return; }
       tomarLienzo(c);
-      J.DRAW[i](c.g, Math.max(0, t - s.a)); c.tx.needsUpdate = true;
+      J.DRAW[i](c.g, Math.max(0, t - s.a)); if (dist === 0) notaPaso(c.g, i, Math.max(0, t - s.a)); c.tx.needsUpdate = true;
       const e = ease(ein), sx = dist === 0 ? (1 - e) * 0.35 : -ease(sale) * 0.35;
       c.m.position.set(sx * (J.disp.userData.marco ? 0 : J.disp.userData.pleno ? 0.25 : 1), J.disp.userData.ventanaY || 0, dist === 0 ? 0.004 : 0.002);
       if (dist === 0 && J.disp.userData.marco) J.disp.userData.marco.tono(c.g);   // barra de estado: blanca u oscura según la app
@@ -6822,7 +6893,7 @@ window.alDemoTarjetas = function(root, cfg){
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(w, h, false);
     camera.aspect = w / h; camera.updateProjectionMatrix();
-    usar(w / h < 1.2);   // el diseño sigue la forma del recuadro: así la tarjeta siempre llena su marco
+    usar(alFoto.tactil() ? matchMedia('(orientation: portrait)').matches : w / h < 1.2);   // propuesta: en táctil, la orientación del equipo
     const tg = Math.tan(camera.fov * Math.PI / 360);
     zV = Math.max(4.8 * 0.6 / tg, 3.84 * 0.62 / (tg * camera.aspect));
     needsRender = true;
@@ -9320,7 +9391,24 @@ window.addEventListener('load', function(){ var h = new URLSearchParams(location
       poner(); new MutationObserver(poner).observe(k, { childList: true, characterData: true, subtree: true });
     });
   }
-  etiquetas(); window.addEventListener('load', etiquetas); setInterval(etiquetas, 2000);
+  // 4 · resumen al final: los pasos del demo y qué hacer después (el texto completo queda para el final)
+  function resumenes(){
+    document.querySelectorAll('#product .al-demo').forEach(function(d){
+      var st = d.querySelector('.al-demo__stage'), fb = d.querySelectorAll('.al-demo__fblist > li');
+      if (!st || !fb.length || st.querySelector('.p-resumen')) return;
+      var r = document.createElement('div'); r.className = 'p-resumen';
+      var h = '<p class="p-resumen__k">Así funciona</p><ol>';
+      fb.forEach(function(li, i){ var t = li.querySelector('.al-demo__fbt'); h += '<li><button type="button" data-i="' + i + '">' + (t ? t.textContent : '') + '</button></li>'; });
+      h += '</ol><div class="p-resumen__acc"><button type="button" class="p-resumen__otra">↻ Ver de nuevo</button></div>';
+      r.innerHTML = h; st.appendChild(r);
+      var cta = d.querySelector('.al-demo__fallback .al-demo__cta') || d.querySelector('.al-demo__cta');
+      if (cta) { var a = cta.cloneNode(true); a.className = 'p-resumen__cta'; r.querySelector('.p-resumen__acc').appendChild(a); }
+      r.querySelector('.p-resumen__otra').addEventListener('click', function(){ var b = d.querySelector('[data-act="restart"]'); if (b) b.click(); });
+      r.querySelectorAll('ol button').forEach(function(b){ b.addEventListener('click', function(){ var s = d.querySelectorAll('.al-demo__step')[+b.getAttribute('data-i')]; if (s) s.click(); var p = d.querySelector('[data-act="play"]'); if (p && d.classList.contains('al-demo--manual')) p.click(); }); });
+    });
+  }
+  function etiquetasYResumen(){ etiquetas(); resumenes(); }
+  etiquetasYResumen(); window.addEventListener('load', etiquetasYResumen); setInterval(etiquetasYResumen, 2000);
 
   /* engancha el cambio de pestaña sin tocar show() */
   var showOrig = window.show;

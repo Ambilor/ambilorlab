@@ -179,6 +179,11 @@
   .al-demo--player .al-demo__stage{height:auto!important;padding-bottom:var(--al-barra)}
   .al-demo--player .al-demo__stage canvas{height:auto!important;aspect-ratio:var(--p-ar-v,.8);max-height:calc(100svh - 150px);-webkit-mask-image:none;mask-image:none}
 }
+/* celular vertical: el teléfono a todo el ancho del cuadro, cortado bajo la app y desvanecido abajo */
+@media (pointer:coarse) and (orientation:portrait){
+  .p-corte-cel #product .al-demo__stage{margin-left:-10px!important;margin-right:-10px!important;width:calc(100% + 20px)!important;max-width:none!important}
+  .p-corte-cel .al-demo--player .al-demo__stage canvas{max-height:none;-webkit-mask-image:linear-gradient(#000 86%,transparent);mask-image:linear-gradient(#000 86%,transparent)}
+}
 @media (pointer:coarse) and (orientation:landscape){
   .al-demo--player .al-demo__stage canvas{aspect-ratio:var(--p-ar-h,1.26);max-height:calc(100svh - var(--al-barra) - 72px)}
 }
@@ -206,4 +211,24 @@
   .p-paso{top:-30px;left:50%;transform:translateX(-50%)}
   .p-paso.cambia{transform:translate(-50%,-4px)}
 }
+
+/* ════ PROPUESTA J: el texto acompaña, no compite ════════════════════════════════════ */
+/* mientras corre solo queda el título del paso (la nota dentro de la app explica el resto); la bajada se
+   ve en modo manual; al terminar, el resumen de los pasos sobre el demo (.p-resumen, la arma capa.js) */
+#product .al-demo:not(.al-demo--manual) .al-demo__body,#product .al-demo:not(.al-demo--manual) .al-demo__extra{display:none!important}
+.p-resumen{position:absolute;left:0;right:0;top:0;bottom:var(--al-barra);z-index:6;display:flex;flex-direction:column;justify-content:center;align-items:center;
+  padding:18px;text-align:left;background:rgba(7,13,22,.74);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);
+  opacity:0;visibility:hidden;transition:opacity .45s ease,visibility .45s}
+.al-demo--fin .p-resumen{opacity:1;visibility:visible}
+.p-resumen__k{margin:0 0 .6rem;font:600 11px/1 var(--mono,monospace);letter-spacing:.12em;text-transform:uppercase;color:#8fc1ff}
+.p-resumen ol{margin:0;padding:0;list-style:none;counter-reset:p;display:grid;gap:4px;width:min(100%,460px)}
+.p-resumen li{counter-increment:p}
+.p-resumen ol button{display:flex;gap:.7rem;align-items:center;width:100%;min-height:36px;padding:6px 10px;border:0;border-radius:10px;background:rgba(255,255,255,.06);color:#e9eef5;font:500 13.5px/1.3 var(--sans,Inter,sans-serif);text-align:left;cursor:pointer}
+.p-resumen ol button::before{content:counter(p);flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:#35B37E;color:#fff;font:700 11px/1 var(--mono,monospace)}
+.p-resumen ol button:hover{background:rgba(255,255,255,.12)}
+.p-resumen__acc{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:14px}
+.p-resumen__otra,.p-resumen__cta{min-height:44px;padding:0 18px;border-radius:999px;display:inline-flex;align-items:center;font:600 13px/1 var(--sans,Inter,sans-serif);text-decoration:none;cursor:pointer}
+.p-resumen__otra{border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff}
+.p-resumen__cta{background:#3d7fd6;color:#fff;border:0}
+@media (max-width:420px){ .p-resumen ol button{min-height:32px;font-size:12.5px} .p-resumen{padding:12px} }
 </style>
