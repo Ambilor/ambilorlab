@@ -159,4 +159,16 @@
 /* ════ PROPUESTA F: grabación de pantalla pro ═════════════════════════════════════ */
 /* fondo de estudio: degradado de la marca detrás del laptop / teléfono */
 .al-demo__stage{background-color:#0B1F35!important;background-image:radial-gradient(70% 60% at 28% 18%,rgba(76,141,219,.55),transparent 62%),radial-gradient(60% 55% at 86% 92%,rgba(7,140,126,.42),transparent 62%),linear-gradient(140deg,#0B1F35 0%,#133F6C 55%,#0C2B38 100%)!important}
+
+/* ════ PROPUESTA G: sin marco ════════════════════════════════════════════════════ */
+/* el aparato (o la ventana, en celular) se apoya directo en la página: sin fondo, borde, brillo ni lente;
+   los bordes del lienzo se desvanecen para que el acercamiento no deje un corte recto */
+.al-demo__stage{background:none!important;box-shadow:none!important;border-radius:0!important}
+.al-demo__stage::after,.p-lente,.p-barrido{display:none!important}
+.al-demo__stage.p-fin{animation:none}
+.al-demo__stage canvas{
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent),linear-gradient(180deg,transparent,#000 5%,#000 95%,transparent);
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent),linear-gradient(180deg,transparent,#000 5%,#000 95%,transparent);
+  mask-composite:intersect}
 </style>
