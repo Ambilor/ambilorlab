@@ -5,29 +5,16 @@
 # El "Ver en acción" del V1 pasa al mismo motor (fuente/v1.js).
 APARATO = r"""
   // aparato fotográfico compartido (fuente/foto.js): notebook en horizontal; en vertical, la ventana sola
-  // nota dentro de la app (fuente/notas.js): burbuja junto al primer toque del paso, o arriba si no hay toque
+  // señal dentro de la app: un anillo suave que late donde se va a tocar (la frase del paso va bajo el demo,
+  // así no tapa nada de la pantalla)
   function notaPaso(g, i, lt){
-    const N = window.AL_NOTAS && AL_NOTAS[root.id]; if (!N || !N[i]) return;
-    const CW = J.CW, CH = J.CH, cf = J.CURSOR[i], dur = STEPS[i].b - STEPS[i].a;
-    let ax = CW / 2, ay = 96, t0 = 0.3, abajo = true;
-    if (cf && cf.clicks && cf.clicks.length) {
-      const ck = cf.clicks[0]; let mejor = cf.keys[0];
-      cf.keys.forEach(k => { if (Math.abs(k[0] - ck) < Math.abs(mejor[0] - ck)) mejor = k; });
-      ax = mejor[1]; ay = mejor[2]; t0 = Math.max(0.2, ck - 0.8); abajo = ay < 300;
-    }
-    const a = clamp((lt - t0) / 0.3) * (1 - clamp((lt - (dur - 0.5)) / 0.3)); if (a <= 0) return;
-    let f = J.vert ? 30 : 27; const fam = '600 ' + f + 'px Inter, -apple-system, sans-serif';
-    g.save(); g.font = fam; let w = g.measureText(N[i]).width + 48;
-    while (w > CW - 48 && f > 18) { f -= 1; g.font = '600 ' + f + 'px Inter, -apple-system, sans-serif'; w = g.measureText(N[i]).width + 48; }
-    const h = f * 2.1, bx = Math.max(24, Math.min(CW - 24 - w, ax - w / 2)), by = abajo ? ay + 44 : ay - 44 - h, px = Math.max(bx + 26, Math.min(bx + w - 26, ax));
-    const e = 0.9 + 0.1 * ease(clamp((lt - t0) / 0.35));
-    g.globalAlpha = a; g.translate(px, abajo ? by : by + h); g.scale(e, e); g.translate(-px, -(abajo ? by : by + h));
-    g.shadowColor = 'rgba(0,0,0,.28)'; g.shadowBlur = 24; g.shadowOffsetY = 8;
-    const r = 16; g.beginPath(); g.moveTo(bx + r, by); g.arcTo(bx + w, by, bx + w, by + h, r); g.arcTo(bx + w, by + h, bx, by + h, r); g.arcTo(bx, by + h, bx, by, r); g.arcTo(bx, by, bx + w, by, r); g.closePath();
-    g.fillStyle = 'rgba(28,28,30,.93)'; g.fill(); g.shadowColor = 'transparent';
-    g.beginPath(); if (abajo) { g.moveTo(px - 12, by); g.lineTo(px, by - 12); g.lineTo(px + 12, by); } else { g.moveTo(px - 12, by + h); g.lineTo(px, by + h + 12); g.lineTo(px + 12, by + h); } g.fill();
-    g.fillStyle = '#fff'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(N[i], bx + w / 2, by + h / 2 + 1);
-    g.restore();
+    const cf = J.CURSOR[i]; if (!cf || !cf.clicks || !cf.clicks.length) return;
+    const ck = cf.clicks[0]; let k0 = cf.keys[0];
+    cf.keys.forEach(k => { if (Math.abs(k[0] - ck) < Math.abs(k0[0] - ck)) k0 = k; });
+    const a = clamp((lt - (ck - 1.1)) / 0.3) * (1 - clamp((lt - ck) / 0.25)); if (a <= 0) return;
+    const p = (lt * 1.6) % 1, r = (J.vert ? 34 : 30) * (1 + p * 0.8);
+    g.save(); g.globalAlpha = a * (1 - p) * 0.9; g.strokeStyle = '#3d7fd6'; g.lineWidth = 5;
+    g.beginPath(); g.arc(k0[1], k0[2], r, 0, Math.PI * 2); g.stroke(); g.restore();
   }
   function aparato(vert, PW, PH){ return alFoto.crear(THREE, scene, { vert, ventana: { w: PW, h: PH }, anis: ANISO, listo: () => { needsRender = true; } }); }
   // pantalla completa: la tarjeta cubre toda la pantalla del aparato; fuera de su dibujo la textura repite el

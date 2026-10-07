@@ -336,7 +336,17 @@
       r.querySelectorAll('ol button').forEach(function(b){ b.addEventListener('click', function(){ var s = d.querySelectorAll('.al-demo__step')[+b.getAttribute('data-i')]; if (s) s.click(); var p = d.querySelector('[data-act="play"]'); if (p && d.classList.contains('al-demo--manual')) p.click(); }); });
     });
   }
-  function etiquetasYResumen(){ etiquetas(); resumenes(); }
+  // subtítulo del demo: la frase del paso (fuente/notas.js) bajo el demo, sin tapar la pantalla
+  function subtitulos(){
+    document.querySelectorAll('#product .al-demo').forEach(function(d){
+      var N = window.AL_NOTAS && AL_NOTAS[d.id], st = d.querySelector('.al-demo__stage'); if (!N || !st || d.querySelector('.p-nota')) return;
+      var e = document.createElement('p'); e.className = 'p-nota'; e.setAttribute('aria-live', 'polite'); st.insertAdjacentElement('afterend', e);
+      var poner = function(){ var b = d.querySelectorAll('.al-demo__step'), i = 0; b.forEach(function(x, j){ if (x.getAttribute('aria-current') === 'step') i = j; });
+        var t = N[i] || ''; if (t === e.textContent) return; e.classList.add('cambia'); setTimeout(function(){ e.textContent = t; e.classList.remove('cambia'); }, 160); };
+      poner(); new MutationObserver(poner).observe(d, { subtree: true, attributes: true, attributeFilter: ['aria-current'] });
+    });
+  }
+  function etiquetasYResumen(){ etiquetas(); resumenes(); subtitulos(); }
   etiquetasYResumen(); window.addEventListener('load', etiquetasYResumen); setInterval(etiquetasYResumen, 2000);
 
   /* engancha el cambio de pestaña sin tocar show() */

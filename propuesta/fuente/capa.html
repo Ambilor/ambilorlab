@@ -244,6 +244,17 @@
 #product .demo-label{display:flex!important;justify-content:center;margin:0 auto .4rem!important;width:max-content;max-width:100%}
 #product .prod-cel{display:block!important;margin:1.4rem auto 2rem!important;max-width:680px}
 #product .prod-cel .prod-tagline{display:none!important}
-@media (pointer:fine){ #product .al-demo__stage{height:max(300px, min(56cqw, calc(100svh - 390px)))!important} }
+@media (pointer:fine){ #product .al-demo__stage{height:max(300px, min(56cqw, calc(100svh - 420px)))!important} }
 @media (pointer:coarse){ #product .al-demo{padding:10px 12px!important} }
+
+/* ════ PROPUESTA L: nada encima de la pantalla del demo ═══════════════════════════════ */
+/* la frase del paso va bajo el demo como subtítulo (.p-nota, la pone capa.js); mientras corre, el título del
+   paso se guarda para el modo manual; la etiqueta de la etapa va encima del demo, fuera de la pantalla */
+#product .al-demo__grid .p-nota{order:0;margin:2px auto 0;max-width:640px;text-align:center;font:500 clamp(14px,1.3vw,16px)/1.45 var(--sans,Inter,sans-serif);color:inherit;opacity:.92;min-height:1.45em;transition:opacity .25s ease}
+#product .al-demo__grid .p-nota::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:#3d7fd6;margin-right:.55em;vertical-align:.12em;box-shadow:0 0 0 4px rgba(61,127,214,.18)}
+#product .al-demo__grid .p-nota.cambia{opacity:0}
+#product .al-demo:not(.al-demo--manual) .al-demo__title{display:none!important}
+#product .al-demo__stage{overflow:visible!important;margin-top:30px!important}
+.p-paso{top:-30px!important;left:50%!important;transform:translateX(-50%)}
+.p-paso.cambia{transform:translate(-50%,-4px)}
 </style>
