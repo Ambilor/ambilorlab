@@ -6249,98 +6249,72 @@ window.alDemoTarjetas = function(root, cfg){
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
   scene.fog = null;   // propuesta: sin sala; el fondo degradado lo pone la página
-  scene.add(new THREE.HemisphereLight(0xdfe8f5, 0x0d1520, 0.15));
-  { const sol = new THREE.DirectionalLight(0xffffff, 0.8); sol.position.set(-4, 7, 5); scene.add(sol); }
   const SS = { z: 0, x: 0, y: 0, t0: 0 };   // estado del zoom automático (como Screen Studio)
 
-  // ── aparato 3D (propuesta): laptop de aluminio con reflejos de estudio, o teléfono en el formato vertical ──
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  // Estudio fotográfico para los reflejos: RoomEnvironment de three.js (MIT, © three.js authors;
-  // viene de model-viewer de Google). Es la iluminación de los visores de productos.
-  scene.environment = (() => {
-    const env = new THREE.Scene(), geo = new THREE.BoxGeometry(); geo.deleteAttribute('uv');
-    const sala = new THREE.MeshStandardMaterial({ side: THREE.BackSide }), caja = new THREE.MeshStandardMaterial();
-    const luzP = new THREE.PointLight(0xffffff, 5.0, 28, 2); luzP.position.set(0.418, 16.199, 0.3); env.add(luzP);
-    const m = (mat, p, r, e) => { const o = new THREE.Mesh(geo, mat); o.position.set(p[0], p[1], p[2]); if (r) o.rotation.set(0, r, 0); o.scale.set(e[0], e[1], e[2]); env.add(o); };
-    m(sala, [-0.757, 13.219, 0.717], 0, [31.713, 28.305, 28.591]);
-    m(caja, [-10.906, 2.009, 1.846], -0.195, [2.328, 7.905, 4.651]); m(caja, [-5.607, -0.754, -0.758], 0.994, [1.970, 1.534, 3.955]);
-    m(caja, [6.167, 0.857, 7.803], 0.561, [3.927, 6.285, 3.687]);   m(caja, [-2.017, 0.018, 6.124], 0.333, [2.002, 4.566, 2.064]);
-    m(caja, [2.291, -0.756, -2.621], -0.286, [1.546, 1.552, 1.496]); m(caja, [-2.193, -0.369, -5.547], 0.516, [3.875, 3.487, 2.986]);
-    const area = k => { const mm = new THREE.MeshBasicMaterial(); mm.color.setScalar(k); return mm; };
-    m(area(50), [-16.116, 14.37, 8.208], 0, [0.1, 2.428, 2.739]); m(area(50), [-16.109, 18.021, -8.207], 0, [0.1, 2.425, 2.751]);
-    m(area(17), [14.904, 12.198, -1.832], 0, [0.15, 4.265, 6.331]); m(area(43), [-0.462, 8.89, 14.52], 0, [4.38, 5.441, 0.088]);
-    m(area(20), [3.235, 11.486, -12.541], 0, [2.5, 2.0, 0.1]);     m(area(100), [0, 20, 0], 0, [1.0, 0.1, 1.0]);
-    const t = pmrem.fromScene(env, 0.04).texture; pmrem.dispose(); return t;
-  })();
-  // mapeo de tonos de cine para el aparato (la interfaz no lo usa: sus materiales van sin tone mapping)
-  renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
-  // aluminio cepillado: rugosidad con vetas horizontales finas, para que el metal no se vea de cartón
-  const veta = (() => { const c = document.createElement('canvas'); c.width = 512; c.height = 512; const g = c.getContext('2d');
-    g.fillStyle = 'rgb(120,120,120)'; g.fillRect(0, 0, 512, 512);
-    for (let i = 0; i < 2600; i++) { const y = Math.random() * 512, v = 95 + Math.random() * 60 | 0; g.fillStyle = 'rgba(' + v + ',' + v + ',' + v + ',.55)'; g.fillRect(0, y, 512, 0.6 + Math.random()); }
-    const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(2, 2); return t; })();
-  function aparato(vert, PW, PH){
-    const g = new THREE.Group(); scene.add(g);
-    const alu = new THREE.MeshPhysicalMaterial({ color: 0x9aa3b0, metalness: 1.0, roughness: 0.42, roughnessMap: veta, clearcoat: 0.25, clearcoatRoughness: 0.35, envMapIntensity: 1.0 });
-    const aluOsc = new THREE.MeshPhysicalMaterial({ color: 0x4a5260, metalness: 1.0, roughness: 0.45, roughnessMap: veta, envMapIntensity: 0.9 });
-    const vidrioNegro = new THREE.MeshPhysicalMaterial({ color: 0x030405, metalness: 0.0, roughness: 0.05, clearcoat: 1.0, clearcoatRoughness: 0.03, reflectivity: 0.6, envMapIntensity: 1.2 });
-    const tecla = new THREE.MeshStandardMaterial({ color: 0x0a0c10, metalness: 0.0, roughness: 0.75, envMapIntensity: 0.03 });
-    const pozo = new THREE.MeshStandardMaterial({ color: 0x1a1f27, metalness: 0.6, roughness: 0.6, envMapIntensity: 0.35 });
-    const rr = (w, h, r) => { const x = -w/2, y = -h/2, sh = new THREE.Shape(); sh.moveTo(x + r, y); sh.lineTo(x + w - r, y); sh.quadraticCurveTo(x + w, y, x + w, y + r); sh.lineTo(x + w, y + h - r); sh.quadraticCurveTo(x + w, y + h, x + w - r, y + h); sh.lineTo(x + r, y + h); sh.quadraticCurveTo(x, y + h, x, y + h - r); sh.lineTo(x, y + r); sh.quadraticCurveTo(x, y, x + r, y); return sh; };
-    const losa = (w, h, r, d, mat, bisel) => new THREE.Mesh(new THREE.ExtrudeGeometry(rr(w, h, r), { depth: d, bevelEnabled: true, bevelThickness: bisel || 0.02, bevelSize: bisel || 0.02, bevelSegments: 4, curveSegments: 14 }), mat);
-    const pantalla = new THREE.Group();   // marco de la pantalla: aquí viven las ventanas de cada paso
-    if (vert) {   // teléfono
-      const cuerpo = losa(PW + 0.36, PH + 0.46, 0.46, 0.16, alu, 0.05); cuerpo.position.z = -0.21; g.add(cuerpo);
-      const frente = losa(PW + 0.22, PH + 0.32, 0.36, 0.01, vidrioNegro, 0.01); frente.position.z = -0.03; g.add(frente);
-      const isla = losa(0.9, 0.2, 0.1, 0.01, vidrioNegro, 0.005); isla.position.set(0, PH/2 - 0.04, 0.012); g.add(isla);
-      [[-1, 0.9], [-1, 0.45], [1, 0.7]].forEach(([lado, y]) => { const b = losa(0.06, 0.34, 0.03, 0.04, aluOsc, 0.01); b.position.set(lado * (PW/2 + 0.2), y, -0.15); g.add(b); });
-      g.add(pantalla); g.userData.base = -(PH + 0.46) / 2;
-    } else {      // laptop: tapa inclinada hacia atrás sobre una bisagra, base con teclado y trackpad
-      const MENTON = 0.2, INC = 0.13, BX = PW + 1.0, BZ = 3.2;
-      const bisagraY = -PH/2 - MENTON;
-      const tapa = new THREE.Group(); tapa.position.set(0, bisagraY, 0); tapa.rotation.x = -INC; g.add(tapa);
-      const tapaAlu = losa(PW + 0.34, PH + MENTON + 0.2, 0.18, 0.035, alu, 0.02); tapaAlu.position.set(0, (PH + MENTON + 0.2)/2 - 0.03, -0.12); tapa.add(tapaAlu);
-      const marco = losa(PW + 0.26, PH + MENTON + 0.12, 0.14, 0.008, vidrioNegro, 0.006); marco.position.set(0, (PH + MENTON + 0.12)/2, -0.028); tapa.add(marco);
-      const cam = new THREE.Mesh(new THREE.CircleGeometry(0.022, 20), new THREE.MeshStandardMaterial({ color: 0x1b2430, metalness: 0.3, roughness: 0.15 })); cam.position.set(0, PH + MENTON + 0.035, -0.012); tapa.add(cam);
-      pantalla.position.set(0, MENTON + PH/2, 0); tapa.add(pantalla);
-      const bis = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, PW * 0.78, 24), aluOsc); bis.rotation.z = Math.PI/2; bis.position.set(0, bisagraY - 0.02, -0.06); g.add(bis);
-      const base = losa(BX, BZ, 0.22, 0.07, alu, 0.03); base.rotation.x = -Math.PI/2; base.position.set(0, bisagraY - 0.14, 0.02 + BZ/2 - 0.12); g.add(base);
-      const topY = bisagraY - 0.14 + 0.07 + 0.03;   // cara superior de la base
-      const hueco = new THREE.Mesh(new THREE.PlaneGeometry(BX - 0.7, 1.42), pozo); hueco.rotation.x = -Math.PI/2; hueco.position.set(0, topY + 0.001, 0.92); g.add(hueco);
-      // teclado: 5 filas de teclas y la barra espaciadora (una sola malla instanciada)
-      const filas = [14, 14, 13, 12, 1], paso = (BX - 0.9) / 14, tg = new THREE.BoxGeometry(paso * 0.82, 0.03, 0.22);
-      const total = filas.reduce((a, n) => a + n, 0) + 6, inst = new THREE.InstancedMesh(tg, tecla, total), dm = new THREE.Object3D(); let k = 0;
-      filas.forEach((n, f) => {
-        for (let i = 0; i < n; i++) {
-          const ancho = f === 4 ? 6 : 1, x0 = -(n - 1) * paso / 2 - (f === 4 ? 0 : 0);
-          dm.position.set(x0 + i * paso, topY + 0.016, 0.38 + f * 0.27); dm.scale.set(ancho, 1, 1); dm.updateMatrix(); inst.setMatrixAt(k++, dm.matrix);
-        }
-      });
-      [-1, 1].forEach(l => { for (let i = 0; i < 3; i++) { dm.position.set(l * (2.2 + i) * paso, topY + 0.016, 0.38 + 4 * 0.27); dm.scale.set(1, 1, 1); dm.updateMatrix(); inst.setMatrixAt(k++, dm.matrix); } });
-      inst.count = k; g.add(inst);
-      // sombra suave de la pantalla sobre el teclado y oclusión entre teclas (degradado oscuro junto a la bisagra)
-      const sc = document.createElement('canvas'); sc.width = 4; sc.height = 128; const sg = sc.getContext('2d'), sgr = sg.createLinearGradient(0, 0, 0, 128);
-      sgr.addColorStop(0, 'rgba(0,0,0,.55)'); sgr.addColorStop(0.5, 'rgba(0,0,0,.18)'); sgr.addColorStop(1, 'rgba(0,0,0,0)'); sg.fillStyle = sgr; sg.fillRect(0, 0, 4, 128);
-      const somb = new THREE.Mesh(new THREE.PlaneGeometry(BX - 0.1, 1.2), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(sc), transparent: true, depthWrite: false, toneMapped: false }));
-      somb.rotation.x = -Math.PI/2; somb.position.set(0, topY + 0.035, 0.62); somb.renderOrder = 3; g.add(somb);
-      const pad = losa(1.7, 1.05, 0.08, 0.004, new THREE.MeshStandardMaterial({ color: 0x9aa6b8, metalness: 0.7, roughness: 0.22 }), 0.004); pad.rotation.x = -Math.PI/2; pad.position.set(0, topY - 0.002, 2.45); g.add(pad);
-      // rejillas de parlantes a los lados del teclado
-      const rc = document.createElement('canvas'); rc.width = 64; rc.height = 256; const rg = rc.getContext('2d'); rg.fillStyle = '#1a1f27';
-      for (let y = 4; y < 256; y += 8) for (let x = 4; x < 64; x += 8) { rg.beginPath(); rg.arc(x, y, 1.6, 0, 7); rg.fill(); }
-      const rej = new THREE.MeshStandardMaterial({ map: new THREE.CanvasTexture(rc), transparent: true, metalness: 0.5, roughness: 0.5 });
-      [-1, 1].forEach(l => { const r = new THREE.Mesh(new THREE.PlaneGeometry(0.22, 1.25), rej); r.rotation.x = -Math.PI/2; r.position.set(l * (BX/2 - 0.22), topY + 0.002, 0.92); g.add(r); });
-      const ranura = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.03, 0.06), aluOsc); ranura.position.set(0, topY - 0.06, 0.02 + BZ - 0.12); g.add(ranura);
-      g.userData.base = bisagraY - 0.15;
+  // ── aparato fotográfico (propuesta): fotos de estudio generadas con IA (Higgsfield · Z Image) ──
+  // propuesta/img/notebook.webp y tablet.webp: pantalla en negro, reflejos verdes quitados y bordes difuminados
+  // (fuente/preparar.py y quad.py). La pantalla de la foto está en perspectiva: una homografía lleva el
+  // plano de la pantalla (x, y en unidades del demo) a sus cuatro esquinas en la foto, y así las
+  // ventanas, el cursor y los clics quedan pegados al vidrio.
+  // q: esquinas de la pantalla (sup-izq, sup-der, inf-der, inf-izq, px de la foto) · caja: el aparato completo, para encuadrar
+  // prop: ancho/alto de la pantalla real · radio: esquinas redondeadas de la pantalla (fracción del ancho)
+  const FOTOS = {
+    notebook: { src: 'img/notebook.webp', w: 2048, h: 1536, prop: 1.6, radio: 0.008,
+      q: [[441.5, 394.1], [1438.0, 433.9], [1485.4, 1040.3], [460.0, 1063.1]], caja: [410, 346, 1933, 1280] },
+    tablet: { src: 'img/tablet.webp', w: 1536, h: 2048, prop: 0.72, radio: 0.035,
+      q: [[239.9, 373.2], [1001.4, 419.7], [1289.8, 1619.2], [476.6, 1679.2]], caja: [174, 312, 1336, 1761] } };
+  function homografia(de, a){   // 4 pares de puntos → matriz 3×3 (h22 = 1)
+    const A = [], B = [];
+    for (let i = 0; i < 4; i++) { const [x, y] = de[i], [u, v] = a[i];
+      A.push([x, y, 1, 0, 0, 0, -u*x, -u*y]); B.push(u); A.push([0, 0, 0, x, y, 1, -v*x, -v*y]); B.push(v); }
+    for (let c = 0; c < 8; c++) {   // Gauss con pivoteo
+      let p = c; for (let r = c + 1; r < 8; r++) if (Math.abs(A[r][c]) > Math.abs(A[p][c])) p = r;
+      [A[c], A[p]] = [A[p], A[c]]; [B[c], B[p]] = [B[p], B[c]];
+      for (let r = 0; r < 8; r++) if (r !== c) { const f = A[r][c] / A[c][c]; for (let k = c; k < 8; k++) A[r][k] -= f * A[c][k]; B[r] -= f * B[c]; }
     }
-    // reflejo de vidrio: franja diagonal tenue sobre la pantalla
-    const rc2 = document.createElement('canvas'); rc2.width = 256; rc2.height = 256; const rg2 = rc2.getContext('2d');
-    const gr = rg2.createLinearGradient(0, 0, 256, 256); gr.addColorStop(0, 'rgba(255,255,255,.06)'); gr.addColorStop(0.4, 'rgba(255,255,255,0)'); gr.addColorStop(0.5, 'rgba(255,255,255,.13)'); gr.addColorStop(0.6, 'rgba(255,255,255,0)'); gr.addColorStop(1, 'rgba(255,255,255,.03)');
-    rg2.fillStyle = gr; rg2.fillRect(0, 0, 256, 256);
-    const brillo = new THREE.Mesh(new THREE.PlaneGeometry(PW, PH), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(rc2), transparent: true, depthWrite: false }));
-    brillo.position.z = 0.03; brillo.renderOrder = 15; pantalla.add(brillo);
-    g.userData.pantalla = pantalla;
+    return B.map((v, i) => v / A[i][i]).concat(1);
+  }
+  const rr = (c, x, y, w, h, r) => { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); };
+  const lienzo = (w, h, f) => { const c = document.createElement('canvas'); c.width = w; c.height = h; f(c.getContext('2d'), w, h); const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; return t; };
+  // horizontal: notebook; vertical: tablet. La ventana del paso va centrada en la pantalla.
+  function aparato(vert, PW, PH){
+    const FOTO = vert ? FOTOS.tablet : FOTOS.notebook;
+    const g = new THREE.Group(); scene.add(g);
+    const SH = vert ? PW * 1.06 / FOTO.prop : PH * 1.06, SW = SH * FOTO.prop;
+    const q = FOTO.q, cx = (q[0][0] + q[1][0] + q[2][0] + q[3][0]) / 4, cy = (q[0][1] + q[1][1] + q[2][1] + q[3][1]) / 4;
+    const k = SH / (((q[3][1] - q[0][1]) + (q[2][1] - q[1][1])) / 2);   // unidades por píxel de la foto
+    const W = (x, y) => [(x - cx) * k, -(y - cy) * k];
+    // la foto
+    const tex = new THREE.TextureLoader().load(FOTO.src, () => { needsRender = true; });
+    tex.encoding = THREE.sRGBEncoding; tex.anisotropy = ANISO;
+    const foto = new THREE.Mesh(new THREE.PlaneGeometry(FOTO.w * k, FOTO.h * k), new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, toneMapped: false }));
+    foto.position.set((FOTO.w / 2 - cx) * k, -(FOTO.h / 2 - cy) * k, -0.02); foto.renderOrder = -1; g.add(foto);
+    // la pantalla: grupo con matriz proyectiva (homografía) en vez de posición/rotación
+    const H = homografia([[-SW/2, SH/2], [SW/2, SH/2], [SW/2, -SH/2], [-SW/2, -SH/2]], q.map(p => W(p[0], p[1])));
+    const pantalla = new THREE.Group(); pantalla.matrixAutoUpdate = false;
+    pantalla.matrix.set(H[0], H[1], 0, H[2],  H[3], H[4], 0, H[5],  0, 0, 1, 0,  H[6], H[7], 0, H[8]);
+    g.add(pantalla);
+    // escritorio: degradado de marca con un halo, como fondo de pantalla
+    const fondo = new THREE.Mesh(new THREE.PlaneGeometry(SW, SH), new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, transparent: true, toneMapped: false, depthWrite: false, map: lienzo(vert ? 320 : 512, vert ? 444 : 320, (c, w, h) => {
+      const l = c.createLinearGradient(0, 0, w, h); l.addColorStop(0, '#0d2742'); l.addColorStop(0.55, '#16477a'); l.addColorStop(1, '#0b3340'); c.fillStyle = l; c.fillRect(0, 0, w, h);
+      const r = c.createRadialGradient(w * 0.3, h * 0.25, 0, w * 0.3, h * 0.25, w * 0.6); r.addColorStop(0, 'rgba(110,170,240,.45)'); r.addColorStop(1, 'rgba(110,170,240,0)'); c.fillStyle = r; c.fillRect(0, 0, w, h);
+      const r2 = c.createRadialGradient(w * 0.85, h * 0.9, 0, w * 0.85, h * 0.9, w * 0.5); r2.addColorStop(0, 'rgba(20,170,150,.35)'); r2.addColorStop(1, 'rgba(20,170,150,0)'); c.fillStyle = r2; c.fillRect(0, 0, w, h);
+      c.globalCompositeOperation = 'destination-in'; c.fillStyle = '#000'; rr(c, 0, 0, w, h, FOTO.radio * w); c.fill();   // esquinas de la pantalla
+    }) }));
+    fondo.position.z = -0.01; fondo.renderOrder = 1; fondo.frustumCulled = false; pantalla.add(fondo);
+    // sombra suave de la ventana sobre el escritorio
+    const vs = new THREE.Mesh(new THREE.PlaneGeometry(PW + 0.7, PH + 0.7), new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, transparent: true, depthWrite: false, toneMapped: false, map: lienzo(256, 256, (c, w, h) => {
+      c.filter = 'blur(14px)'; c.fillStyle = 'rgba(0,8,20,.75)'; c.fillRect(36, 40, w - 72, h - 72); }) }));
+    vs.position.set(0, -0.08, -0.005); vs.renderOrder = 2; vs.frustumCulled = false; pantalla.add(vs);
+    // brillo del vidrio: franja diagonal muy tenue sobre toda la pantalla
+    const brillo = new THREE.Mesh(new THREE.PlaneGeometry(SW, SH), new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, transparent: true, depthWrite: false, toneMapped: false, map: lienzo(256, 256, (c, w, h) => {
+      const l = c.createLinearGradient(0, 0, w, h); l.addColorStop(0, 'rgba(255,255,255,.07)'); l.addColorStop(0.38, 'rgba(255,255,255,0)'); l.addColorStop(0.5, 'rgba(255,255,255,.06)'); l.addColorStop(0.62, 'rgba(255,255,255,0)'); c.fillStyle = l; c.fillRect(0, 0, w, h); }) }));
+    brillo.position.z = 0.06; brillo.renderOrder = 30; brillo.frustumCulled = false; pantalla.add(brillo);
+    const [x0, y0] = W(FOTO.caja[0], FOTO.caja[1]), [x1, y1] = W(FOTO.caja[2], FOTO.caja[3]);
+    Object.assign(g.userData, { pantalla, sombraVentana: vs, caja: { x: (x0 + x1) / 2, y: (y0 + y1) / 2, w: x1 - x0, h: y0 - y1 }, SW, SH });
     g.visible = false; return g;
   }
+
   const PX = AL3D.parallax(stage, reduce);
   const ANISO = renderer.capabilities.getMaxAnisotropy();
   const basic = (opts) => new THREE.MeshBasicMaterial(Object.assign({ transparent:true, side:THREE.DoubleSide, depthWrite:false, toneMapped:false }, opts));
@@ -6453,9 +6427,9 @@ window.alDemoTarjetas = function(root, cfg){
       return { m, sh, g:null, tx:null, cv:null, CW, CH };
     });
     AL3D.grosor(cards.map(c => c.m), 0.09, { radio:0.136 });
-    const sombraCard = AL3D.sombra(scene, PW*1.4, 2.6); sombraCard.visible = false;
+    const sombraCard = AL3D.sombra(scene, PW*1.1, 1.6); sombraCard.visible = false;
     const disp = aparato(vert, PW, PH);
-    cards.forEach(c => { disp.userData.pantalla.add(c.m); disp.userData.pantalla.add(c.sh); });
+    cards.forEach(c => { disp.userData.pantalla.add(c.m); disp.userData.pantalla.add(c.sh); c.m.frustumCulled = false; c.m.children.forEach(h => { h.visible = false; }); });   // ventanas planas, sin canto
     return { vert, CW, CH, PW, PH, DRAW, CURSOR, cards, sombraCard, disp };
   }
   function tomarLienzo(c){
@@ -6510,11 +6484,7 @@ window.alDemoTarjetas = function(root, cfg){
       c.m.position.set(sx, 0, dist === 0 ? 0.004 : 0.002);
       c.m.rotation.set(0, 0, 0);
       c.m.material.opacity = dist === 0 ? e : 1 - ease(sale);
-      if (dist === 0) {
-        sombraCard.visible = true;
-        sombraCard.position.set(0, J.disp.userData.base - 0.02, J.vert ? 0 : 1.5);
-        sombraCard.material.opacity = 0.85;
-      }
+      if (dist === 0) J.disp.userData.sombraVentana.material.opacity = 0.9 * e;
       c.m.updateMatrixWorld();
     });
   }
@@ -6531,14 +6501,14 @@ window.alDemoTarjetas = function(root, cfg){
     }
     const card = J.cards[i].m;
     card.localToWorld(pxToLocal(px, py));
-    cursor.position.copy(tmp); card.getWorldQuaternion(cursor.quaternion);
+    cursor.position.copy(tmp); cursor.rotation.set(0, 0, 0);
     const click = Math.max(0, ...cf.clicks.map(c => clamp(1 - Math.abs(lt - c) / 0.1)));
     cursor.scale.setScalar(1 - click*0.18);
     cursor.material.opacity = op * card.material.opacity;
     cursor.visible = true;
     const rp = Math.max(...cf.clicks.map(c => (lt >= c && lt < c + 0.45) ? (lt - c) / 0.45 : -1));
     if (rp >= 0) {
-      ring.visible = true; ring.position.copy(tmp); ring.position.z -= 0.01; card.getWorldQuaternion(ring.quaternion);
+      ring.visible = true; ring.position.copy(tmp); ring.position.z -= 0.01; ring.rotation.set(0, 0, 0);
       ring.scale.setScalar(0.6 + rp*1.6); ring.material.opacity = (1 - rp) * 0.8 * op;
     }
   }
@@ -6573,14 +6543,15 @@ window.alDemoTarjetas = function(root, cfg){
       if (cf && cursor.visible) { const k = cf.keys; quiere = clamp((lt - k[0][0] + 0.15) / 0.35) * (1 - clamp((lt - k[k.length - 1][0] - 0.9) / 0.4)); }
       const kz = 1 - Math.exp(-dt * 3.2), kp = 1 - Math.exp(-dt * 4.5);
       SS.z += (quiere - SS.z) * kz;
-      if (cursor.visible) {   // el encuadre sigue al cursor sin salirse de la pantalla del aparato
-        const lx = J.PW / 2 - (J.vert ? 0.9 : 1.25), ly = J.PH / 2 - (J.vert ? 1.1 : 0.95);
+      const u = J.disp.userData, cj = u.caja, tg = Math.tan(camera.fov * Math.PI / 360);
+      if (cursor.visible) {   // el encuadre sigue al cursor sin salirse de la pantalla
+        const lx = u.SW * 0.2, ly = u.SH * 0.2;
         SS.x += (clamp(cursor.position.x, -lx, lx) - SS.x) * kp; SS.y += (clamp(cursor.position.y, -ly, ly) - SS.y) * kp;
       }
-      const z = ease(SS.z), Zb = (J.vert ? zV * 1.12 : 9.55 * 1.06), dist = lerp(Zb, Zb * 0.52, z);
-      const ang = lerp(0.2, 0.05, z) * (J.vert ? 0.6 : 1), alt = lerp(J.vert ? 0.1 : 0.42, 0.04, z);
-      const mx = lerp(0, SS.x, z), my = lerp(J.vert ? 0 : -0.25, SS.y, z);
-      camera.position.set(mx + Math.sin(ang) * dist + PX.x * 0.8, my + alt * dist * 0.18 + PX.y * 0.5 + Math.sin(T * 0.4) * 0.03, Math.cos(ang) * dist);
+      const z = ease(SS.z);
+      const lejos = Math.max(cj.h * (J.vert ? 1.2 : 1.38) / 2 / tg, cj.w * (J.vert ? 1.06 : 1.22) / 2 / (tg * camera.aspect)), cerca = lejos * 0.56;
+      const mx = lerp(cj.x, SS.x, z) + PX.x * 0.12, my = lerp(cj.y - cj.h * 0.07, SS.y, z) + PX.y * 0.08;   // abajo queda la barra de controles
+      camera.position.set(mx, my, lerp(lejos, cerca, z) * (1 - Math.sin(T * 0.3) * 0.008));
       camera.lookAt(mx, my, 0);
       renderer.render(scene, camera);
       needsRender = false;
