@@ -346,7 +346,30 @@
       poner(); new MutationObserver(poner).observe(d, { subtree: true, attributes: true, attributeFilter: ['aria-current'] });
     });
   }
-  function etiquetasYResumen(){ etiquetas(); resumenes(); subtitulos(); }
+  // en celular y tablet: deslizar el demo hacia el lado pasa de paso, como en el teléfono (el demo sigue al
+  // dedo y vuelve con un resorte); la primera vez, una pista breve
+  var tactil = window.alFoto && alFoto.tactil(), pistaVista = false;
+  function deslizar(){
+    if (!tactil) return;
+    document.querySelectorAll('#product .al-demo').forEach(function(d){
+      var cv = d.querySelector('.al-demo__stage canvas'); if (!cv || cv._desliza) return; cv._desliza = true;
+      cv.style.touchAction = 'pan-y';
+      var x0 = 0, y0 = 0, dx = 0, activo = false, horizontal = null;
+      cv.addEventListener('touchstart', function(e){ var t = e.touches[0]; x0 = t.clientX; y0 = t.clientY; dx = 0; activo = true; horizontal = null; }, { passive: true });
+      cv.addEventListener('touchmove', function(e){ if (!activo) return; var t = e.touches[0]; dx = t.clientX - x0; var dy = t.clientY - y0;
+        if (horizontal === null && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) horizontal = Math.abs(dx) > Math.abs(dy) * 1.3;
+        if (horizontal) cv.style.transform = 'translateX(' + (dx * 0.35) + 'px)'; }, { passive: true });
+      cv.addEventListener('touchend', function(){ if (!activo) return; activo = false;
+        if (horizontal && Math.abs(dx) > 50) { var b = d.querySelector('[data-act="' + (dx < 0 ? 'next' : 'prev') + '"]'); if (b) b.click(); }
+        var de = cv.style.transform || 'translateX(0px)'; cv.style.transform = '';
+        if (horizontal && cv.animate) cv.animate([{ transform: de }, { transform: 'translateX(' + (dx < 0 ? 4 : -4) + 'px)', offset: .6 }, { transform: 'translateX(0)' }], { duration: 420, easing: 'cubic-bezier(.2,.8,.2,1)' });
+      }, { passive: true });
+      if (!pistaVista && d.offsetParent) { pistaVista = true;
+        var h = document.createElement('div'); h.className = 'p-pista'; h.setAttribute('aria-hidden', 'true'); h.innerHTML = '<span>‹</span> Desliza para cambiar de paso <span>›</span>';
+        d.querySelector('.al-demo__stage').appendChild(h); setTimeout(function(){ h.classList.add('fuera'); setTimeout(function(){ h.remove(); }, 600); }, 4200); }
+    });
+  }
+  function etiquetasYResumen(){ etiquetas(); resumenes(); subtitulos(); deslizar(); }
   etiquetasYResumen(); window.addEventListener('load', etiquetasYResumen); setInterval(etiquetasYResumen, 2000);
 
   /* engancha el cambio de pestaña sin tocar show() */
