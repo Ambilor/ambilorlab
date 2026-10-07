@@ -1,64 +1,97 @@
-# Recorridos de cámara (propuesta E): cambios al motor de los demos, solo en la copia.
+# Cambios al motor de los demos, solo para la copia propuesta/.
+# F · estilo "grabación de pantalla pro": las ventanas de cada paso se ven dentro de un
+#     laptop 3D (teléfono en el formato vertical) sobre un fondo degradado de marca; la
+#     cámara hace zoom automático hacia el cursor mientras interactúa y se aleja entre pasos.
+# Además: tomas de cine en "Ver en acción" del V1 (curvas y viajes en arco), sobre el mismo fondo.
 def aplicar(s):
     def rep(a, b, n=1):
         nonlocal s
         c = s.count(a); assert c == n, (c, a[:90]); s = s.replace(a, b)
-    # 1 · la línea de tiempo queda accesible para el recorrido guiado por desplazamiento
-    rep("  const L = { T: 0, playing: !reduce, current: -1, sucio: true };",
-        "  const L = { T: 0, playing: !reduce, current: -1, sucio: true }; root._L = L; L.DUR = DUR; L.STEPS = STEPS;")
-    # 2 · motor de tarjetas: pared y piso viajan con la cámara
+
+    # ── motor de tarjetas ──────────────────────────────────────────────────────
+    # 1 · sin sala blanca ni niebla: el fondo lo pone la página (degradado); luces para el aparato
     rep("  AL3D.ambiente(scene, { z:-4.5 });\n  AL3D.piso(scene, { y:-2.35 });",
-        "  const PARED = AL3D.ambiente(scene, { z:-4.5 });\n  const PISO = AL3D.piso(scene, { y:-2.35 });\n"
-        "  // Recorrido: cada paso tiene su lugar en un pasillo que se adentra en la escena (zigzag a izquierda y derecha)\n"
-        "  const RUTA = i => ({ x: i === 0 ? 0 : (i % 2 ? 1.7 : -1.7), y: 0, z: -i * 5.4, ry: i === 0 ? 0 : (i % 2 ? -0.2 : 0.2) });")
+        "  scene.fog = null;   // propuesta: sin sala; el fondo degradado lo pone la página\n"
+        "  scene.add(new THREE.HemisphereLight(0xdfe8f5, 0x0d1520, 0.55));\n"
+        "  { const sol = new THREE.DirectionalLight(0xffffff, 0.65); sol.position.set(-3, 5, 6); scene.add(sol); }\n"
+        "  const SS = { z: 0, x: 0, y: 0, t0: 0 };   // estado del zoom automático (como Screen Studio)\n"
+        "  function aparato(vert, PW, PH){\n"
+        "    const g = new THREE.Group(); scene.add(g);\n"
+        "    const metal = new THREE.MeshStandardMaterial({ color: 0x1c2431, metalness: 0.6, roughness: 0.38 }), cubierta = new THREE.MeshStandardMaterial({ color: 0x161d28, metalness: 0.5, roughness: 0.45 });\n"
+        "    const negro = new THREE.MeshBasicMaterial({ color: 0x07090d });\n"
+        "    const rr = (w, h, r) => { const x = -w/2, y = -h/2, sh = new THREE.Shape(); sh.moveTo(x + r, y); sh.lineTo(x + w - r, y); sh.quadraticCurveTo(x + w, y, x + w, y + r); sh.lineTo(x + w, y + h - r); sh.quadraticCurveTo(x + w, y + h, x + w - r, y + h); sh.lineTo(x + r, y + h); sh.quadraticCurveTo(x, y + h, x, y + h - r); sh.lineTo(x, y + r); sh.quadraticCurveTo(x, y, x + r, y); return sh; };\n"
+        "    const caja = (w, h, r, d, mat) => { const geo = new THREE.ExtrudeGeometry(rr(w, h, r), { depth: d, bevelEnabled: true, bevelThickness: 0.02, bevelSize: 0.02, bevelSegments: 3, curveSegments: 10 }); return new THREE.Mesh(geo, mat); };\n"
+        "    if (vert) {   // teléfono\n"
+        "      const cuerpo = caja(PW + 0.34, PH + 0.42, 0.42, 0.16, metal); cuerpo.position.z = -0.2; g.add(cuerpo);\n"
+        "      const vidrio = caja(PW + 0.2, PH + 0.28, 0.34, 0.01, negro); vidrio.position.z = -0.035; g.add(vidrio);\n"
+        "      const isla = caja(0.9, 0.18, 0.09, 0.01, negro); isla.position.set(0, PH/2 - 0.02, 0.012); g.add(isla);\n"
+        "      g.userData.base = -(PH + 0.42) / 2;\n"
+        "    } else {      // laptop\n"
+        "      const tapa = caja(PW + 0.36, PH + 0.44, 0.16, 0.08, metal); tapa.position.set(0, 0.03, -0.14); g.add(tapa);\n"
+        "      const marco = caja(PW + 0.24, PH + 0.32, 0.12, 0.01, negro); marco.position.set(0, 0.03, -0.035); g.add(marco);\n"
+        "      const cam = new THREE.Mesh(new THREE.CircleGeometry(0.025, 16), new THREE.MeshBasicMaterial({ color: 0x1d2633 })); cam.position.set(0, PH/2 + 0.11, -0.02); g.add(cam);\n"
+        "      const base = new THREE.Mesh(new THREE.BoxGeometry(PW + 1.0, 0.1, 3.1), cubierta); base.position.set(0, -PH/2 - 0.21, 1.42); g.add(base);\n"
+        "      const teclas = new THREE.Mesh(new THREE.PlaneGeometry(PW + 0.2, 1.3), new THREE.MeshStandardMaterial({ color: 0x141a24, roughness: 0.6 })); teclas.rotation.x = -Math.PI/2; teclas.position.set(0, -PH/2 - 0.155, 0.95); g.add(teclas);\n"
+        "      const pad = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 0.9), new THREE.MeshStandardMaterial({ color: 0x2c3646, metalness: 0.4, roughness: 0.25 })); pad.rotation.x = -Math.PI/2; pad.position.set(0, -PH/2 - 0.155, 2.25); g.add(pad);\n"
+        "      g.userData.base = -PH/2 - 0.26;\n"
+        "    }\n"
+        "    // reflejo de vidrio: una franja diagonal muy tenue sobre la pantalla\n"
+        "    const rc = document.createElement('canvas'); rc.width = 256; rc.height = 256; const rg = rc.getContext('2d');\n"
+        "    const gr = rg.createLinearGradient(0, 0, 256, 256); gr.addColorStop(0, 'rgba(255,255,255,0)'); gr.addColorStop(0.42, 'rgba(255,255,255,0)'); gr.addColorStop(0.5, 'rgba(255,255,255,.16)'); gr.addColorStop(0.58, 'rgba(255,255,255,0)'); gr.addColorStop(1, 'rgba(255,255,255,.05)');\n"
+        "    rg.fillStyle = gr; rg.fillRect(0, 0, 256, 256);\n"
+        "    const brillo = new THREE.Mesh(new THREE.PlaneGeometry(PW, PH), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(rc), transparent: true, depthWrite: false }));\n"
+        "    brillo.position.z = 0.03; brillo.renderOrder = 15; g.add(brillo);\n"
+        "    g.visible = false; return g;\n"
+        "  }")
+    # 2 · cada formato (horizontal / vertical) arma su aparato y lo muestra al usarse
+    rep("    const sombraCard = AL3D.sombra(scene, PW*1.1, 1.6); sombraCard.visible = false;\n    return { vert, CW, CH, PW, PH, DRAW, CURSOR, cards, sombraCard };",
+        "    const sombraCard = AL3D.sombra(scene, PW*1.4, 2.6); sombraCard.visible = false;\n    const disp = aparato(vert, PW, PH);\n    return { vert, CW, CH, PW, PH, DRAW, CURSOR, cards, sombraCard, disp };")
+    rep("    if (J) { J.cards.forEach(c => { c.m.visible = c.sh.visible = false; soltarLienzo(c); }); J.sombraCard.visible = false; }\n    J = vert ? (JV || (JV = juego(true))) : (JH || (JH = juego(false)));",
+        "    if (J) { J.cards.forEach(c => { c.m.visible = c.sh.visible = false; soltarLienzo(c); }); J.sombraCard.visible = false; J.disp.visible = false; }\n    J = vert ? (JV || (JV = juego(true))) : (JH || (JH = juego(false)));\n    J.disp.visible = true;")
+    # 3 · las ventanas viven en la pantalla: la del paso entra con un fundido corto, la anterior sale hacia la izquierda
     a = s.index("      const ein = i === 0 ? clamp((t + 0.3) / 0.9) : clamp((t - (s.a - 0.35)) / 0.9);")
     b = s.index("      c.m.updateMatrixWorld();", a)
-    s = s[:a] + """      const ein = i === 0 ? clamp((t + 0.3) / 0.9) : clamp((t - (s.a - 0.35)) / 0.9);
-      const e = AL3D.rebote(ein);
-      const cur = stepOf(t), dist = i - cur;
-      const vis = Math.abs(dist) <= 1;   // el paso actual y sus vecinos: el anterior queda atrás, el siguiente espera adelante
-      c.m.visible = c.sh.visible = vis;
+    s = s[:a] + """      const cur = stepOf(t), dist = i - cur;
+      const ein = i === 0 ? 1 : clamp((t - s.a + 0.05) / 0.38);                       // entra
+      const sale = dist === -1 ? clamp((t - STEPS[cur].a + 0.05) / 0.38) : 0;        // la anterior se va
+      const vis = dist === 0 || (dist === -1 && sale < 1);
+      c.m.visible = vis; c.sh.visible = false;
       if (!vis) { soltarLienzo(c); return; }
       tomarLienzo(c);
       J.DRAW[i](c.g, Math.max(0, t - s.a)); c.tx.needsUpdate = true;
-      const cf = J.CURSOR[i], lt = t - s.a;
-      let hundir = 0;
-      if (cf) cf.clicks.forEach(ck => { const d = lt - ck; if (d >= 0 && d < 0.8) hundir = Math.max(hundir, Math.exp(-7*d) * Math.cos(9*d)); });
-      const P = RUTA(i), lado = i % 2 ? 1 : -1;
-      c.m.position.set(P.x + (1 - e) * lado * 0.9, P.y - (1 - e) * 0.5, P.z - 0.16*hundir);
-      c.m.rotation.set(-0.04 + (1 - e) * 0.12, P.ry + (1 - e) * 0.45 * lado + Math.sin(t*0.5)*0.03*e, 0);
-      // el anterior se desvanece mientras la cámara pasa a su lado; el siguiente espera tenue al fondo
-      c.m.material.opacity = dist === 0 ? Math.max(0.3, clamp(ein*1.6)) : (dist < 0 ? 0.5 * clamp(1 - (t - STEPS[cur].a + 0.35) / 1.0) : 0.28 + 0.4*clamp(ein*1.6));
+      const e = ease(ein), sx = dist === 0 ? (1 - e) * 0.35 : -ease(sale) * 0.35;
+      c.m.position.set(sx, 0, dist === 0 ? 0.004 : 0.002);
+      c.m.rotation.set(0, 0, 0);
+      c.m.material.opacity = dist === 0 ? e : 1 - ease(sale);
       if (dist === 0) {
         sombraCard.visible = true;
-        sombraCard.position.set(c.m.position.x, -2.33, c.m.position.z + 0.2);
-        sombraCard.material.opacity = 0.8 * c.m.material.opacity;
+        sombraCard.position.set(0, J.disp.userData.base - 0.02, J.vert ? 0 : 1.2);
+        sombraCard.material.opacity = 0.85;
       }
-      c.sh.position.set(c.m.position.x + 0.06, c.m.position.y - 0.08, c.m.position.z - 0.05);
-      c.sh.rotation.copy(c.m.rotation);
-      c.sh.material.opacity = 0.13 * c.m.material.opacity;
 """ + s[b:]
-    # 3 · motor de tarjetas: la cámara vuela de un paso al siguiente (arco: sube y se aleja a mitad de camino), gira despacio mientras explica y se acerca a cada clic
+    # 4 · cámara estilo Screen Studio: vista general del aparato en tres cuartos; mientras el cursor
+    #     trabaja, zoom suave (≈1,9x) que lo sigue; entre pasos se aleja
     a = s.index("      const ip = stepOf(T), sp = STEPS[ip], lt = T - sp.a, lado = ip % 2 ? -1 : 1;")
     b = s.index("      camera.lookAt(bx*0.3 + fx, by*0.4 + fy, 0);", a) + len("      camera.lookAt(bx*0.3 + fx, by*0.4 + fy, 0);")
     s = s[:a] + """      const ip = stepOf(T), sp = STEPS[ip], lt = T - sp.a;
-      const A = RUTA(Math.max(0, ip - 1)), B = RUTA(ip);
-      const fl = ip === 0 ? 1 : ease(clamp((lt + 0.35) / 1.3));
-      const arco = Math.sin(fl * Math.PI);
-      const tx = lerp(A.x, B.x, fl), tz = lerp(A.z, B.z, fl);
-      const giro = ((ease(clamp(lt / (sp.b - sp.a))) - 0.5) * 0.24 * (ip % 2 ? -1 : 1) - B.ry * 0.6 * fl) * (J.vert ? 0.5 : 1);
-      let fx = 0, fy = 0, f = 0;
       const cf = J.CURSOR[ip];
-      if (cf && cursor.visible) {
-        cf.clicks.forEach(ck => { f = Math.max(f, clamp(1 - Math.abs(lt - ck) / 0.9)); });
-        f = ease(f); fx = (cursor.position.x - tx)*0.55*f; fy = (cursor.position.y - 0.1)*0.55*f;
+      let quiere = 0;
+      if (cf && cursor.visible) { const k = cf.keys; quiere = clamp((lt - k[0][0] + 0.15) / 0.35) * (1 - clamp((lt - k[k.length - 1][0] - 0.9) / 0.4)); }
+      const kz = 1 - Math.exp(-dt * 3.2), kp = 1 - Math.exp(-dt * 4.5);
+      SS.z += (quiere - SS.z) * kz;
+      if (cursor.visible) {   // el encuadre sigue al cursor sin salirse de la pantalla del aparato
+        const lx = J.PW / 2 - (J.vert ? 0.9 : 1.25), ly = J.PH / 2 - (J.vert ? 1.1 : 0.95);
+        SS.x += (clamp(cursor.position.x, -lx, lx) - SS.x) * kp; SS.y += (clamp(cursor.position.y, -ly, ly) - SS.y) * kp;
       }
-      const Z = (J.vert ? zV * 1.07 : 9.55) - 0.75*f + arco*2.2;
-      camera.position.set(tx + Math.sin(giro)*Z + PX.x*1.05 + fx*0.6, 0.24 + arco*1.1 + Math.sin(T*0.4)*0.06 + PX.y*0.65 + fy*0.6, tz + Math.cos(giro)*Z);
-      camera.lookAt(tx + fx, 0.05 + fy - arco*0.25, tz);
-      PARED.position.set(Math.round(tx / 3) * 3, PARED.position.y, camera.position.z - 14.05);
-      PISO.position.set(Math.round(tx / 3) * 3, PISO.position.y, Math.round((camera.position.z - 12.55) / 3) * 3);""" + s[b:]
-    # 4 · demo "Ver en acción" del V1: tomas de cine (curvas, grúas y órbitas) y viajes en arco entre pasos
+      const z = ease(SS.z), Zb = (J.vert ? zV * 1.12 : 9.55 * 1.06), dist = lerp(Zb, Zb * 0.52, z);
+      const ang = lerp(0.2, 0.05, z) * (J.vert ? 0.6 : 1), alt = lerp(J.vert ? 0.1 : 0.42, 0.04, z);
+      const mx = lerp(0, SS.x, z), my = lerp(J.vert ? 0 : -0.25, SS.y, z);
+      camera.position.set(mx + Math.sin(ang) * dist + PX.x * 0.8, my + alt * dist * 0.18 + PX.y * 0.5 + Math.sin(T * 0.4) * 0.03, Math.cos(ang) * dist);
+      camera.lookAt(mx, my, 0);""" + s[b:]
+
+    # ── "Ver en acción" del V1 ─────────────────────────────────────────────────
+    rep("AL3D.ambiente(scene, { z:-4.5, y:-0.85 });\nAL3D.piso(scene, { y:-3.95 });",
+        "scene.fog = null;   // propuesta: sin sala blanca; fondo degradado de la página")
     a = s.index("const TOMAS = [\n  { p0:V3(-2.8, 0.9, 9.6)")
     b = s.index("function camara(t){", a)
     c = s.index("\n}\n", b) + 3
