@@ -2137,7 +2137,8 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
 /* Propuesta · aparato fotográfico compartido por los demos (motor de tarjetas y "Ver en acción" del V1).
    El aparato es el del visitante: notebook en computador, tablet en iPad/tablet (horizontal o vertical, según
    cómo la tenga). Fotos de estudio generadas con IA (Higgsfield · Z Image), en propuesta/img/, con la
-   pantalla en negro, sin reflejos verdes, fondo de marca y bordes difuminados (fuente/preparar.py y quad.py).
+   pantalla en negro, sin reflejos verdes y recortadas sin fondo (Higgsfield · remove_background), para que el
+   aparato se apoye directo en la página (fuente/preparar.py y quad.py).
    La pantalla de la foto está en perspectiva: una homografía lleva el plano de la pantalla (x, y en unidades
    del demo) a sus cuatro esquinas en la foto, y así lo que se dibuja en ella queda pegado al vidrio.
    En celular (y en una ventana angosta de computador) no hay aparato: la ventana va de frente y llena el
@@ -2146,12 +2147,12 @@ window.alFoto = (function(){
   // q: esquinas de la pantalla (sup-izq, sup-der, inf-der, inf-izq, px de la foto) · caja: el aparato completo, para encuadrar
   // prop: ancho/alto de la pantalla real · radio: esquinas redondeadas de la pantalla (fracción del ancho)
   var FOTOS = {
-    notebook: { src: 'img/notebook.webp', w: 2048, h: 1536, prop: 1.6, radio: 0.008,
-      q: [[441.5, 394.1], [1438.0, 433.9], [1485.4, 1040.3], [460.0, 1063.1]], caja: [410, 346, 1933, 1280] },
-    tablet: { src: 'img/tablet.webp', w: 2048, h: 1536, prop: 1.43, radio: 0.025,
-      q: [[273.0, 271.5], [1454.6, 242.3], [1453.0, 1266.9], [274.5, 1151.6]], caja: [236, 184, 1536, 1318] },
-    tabletV: { src: 'img/tablet_v.webp', w: 1536, h: 2048, prop: 0.7, radio: 0.035,   // la misma foto, girada
-      q: [[384.4, 274.5], [1264.5, 273.0], [1293.7, 1454.6], [269.1, 1453.0]], caja: [218, 236, 1352, 1536] } };
+    notebook: { src: 'img/notebook.webp', w: 1800, h: 1111, prop: 1.6, radio: 0.008,
+      q: [[61.4, 73.6], [1207.0, 119.5], [1261.3, 816.7], [82.9, 842.5]], caja: [27.6, 27.6, 1772.4, 1083.9] },
+    tablet: { src: 'img/tablet.webp', w: 1800, h: 1578, prop: 1.43, radio: 0.025,
+      q: [[86.5, 149.7], [1658.4, 110.8], [1656.3, 1473.9], [88.5, 1320.5]], caja: [31.9, 31.9, 1768.1, 1545.9] },
+    tabletV: { src: 'img/tablet_v.webp', w: 1578, h: 1800, prop: 0.7, radio: 0.035,   // la misma foto, girada
+      q: [[257.5, 88.5], [1428.3, 86.5], [1467.2, 1658.4], [104.1, 1656.3]], caja: [32.1, 31.9, 1546.1, 1768.1] } };
   // ¿qué aparato tiene el visitante? (iPadOS se presenta como Mac: se distingue por la pantalla táctil)
   function equipo(){
     var tactil = navigator.maxTouchPoints > 0 && window.matchMedia && matchMedia('(pointer: coarse)').matches;
@@ -2227,6 +2228,11 @@ window.alFoto = (function(){
       var l = c.createLinearGradient(0, 0, w, h); l.addColorStop(0, 'rgba(255,255,255,.07)'); l.addColorStop(0.38, 'rgba(255,255,255,0)'); l.addColorStop(0.5, 'rgba(255,255,255,.06)'); l.addColorStop(0.62, 'rgba(255,255,255,0)'); c.fillStyle = l; c.fillRect(0, 0, w, h); })), 0.06, 30);
     var a = W(FOTO.caja[0], FOTO.caja[1]), b = W(FOTO.caja[2], FOTO.caja[3]);
     u.caja = { x: (a[0] + b[0]) / 2, y: (a[1] + b[1]) / 2, w: b[0] - a[0], h: a[1] - b[1] };
+    // sombra de apoyo: el aparato descansa sobre la página
+    var piso = new T.Mesh(new T.PlaneGeometry(u.caja.w * 1.05, u.caja.h * 0.16), new MB({ transparent: true, depthWrite: false, toneMapped: false, map: lienzo(T, 256, 64, function(c, w, h){
+      var r = c.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 2); r.addColorStop(0, 'rgba(0,6,16,.55)'); r.addColorStop(0.6, 'rgba(0,6,16,.18)'); r.addColorStop(1, 'rgba(0,6,16,0)');
+      c.setTransform(1, 0, 0, h / w, 0, 0); c.fillStyle = r; c.fillRect(0, 0, w, w); }) }));
+    piso.position.set(u.caja.x, b[1] + u.caja.h * 0.01, -0.03); piso.renderOrder = -2; g.add(piso);
     g.userData = u; g.visible = false; return g;
   }
   // Cámara estilo grabación de pantalla (Screen Studio), de frente a la foto. Tres encuadres, con resortes suaves:
@@ -2415,6 +2421,18 @@ window.alFoto = (function(){
 /* ════ PROPUESTA F: grabación de pantalla pro ═════════════════════════════════════ */
 /* fondo de estudio: degradado de la marca detrás del laptop / teléfono */
 .al-demo__stage{background-color:#0B1F35!important;background-image:radial-gradient(70% 60% at 28% 18%,rgba(76,141,219,.55),transparent 62%),radial-gradient(60% 55% at 86% 92%,rgba(7,140,126,.42),transparent 62%),linear-gradient(140deg,#0B1F35 0%,#133F6C 55%,#0C2B38 100%)!important}
+
+/* ════ PROPUESTA G: sin marco ════════════════════════════════════════════════════ */
+/* el aparato (o la ventana, en celular) se apoya directo en la página: sin fondo, borde, brillo ni lente;
+   los bordes del lienzo se desvanecen para que el acercamiento no deje un corte recto */
+.al-demo__stage{background:none!important;box-shadow:none!important;border-radius:0!important}
+.al-demo__stage::after,.p-lente,.p-barrido{display:none!important}
+.al-demo__stage.p-fin{animation:none}
+.al-demo__stage canvas{
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent),linear-gradient(180deg,transparent,#000 5%,#000 95%,transparent);
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent),linear-gradient(180deg,transparent,#000 5%,#000 95%,transparent);
+  mask-composite:intersect}
 </style>
 </head>
 
