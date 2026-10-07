@@ -78,7 +78,7 @@ def aplicar(s):
     # 1 · sin sala blanca ni niebla: el fondo lo pone la página (degradado)
     rep("  AL3D.ambiente(scene, { z:-4.5 });\n  AL3D.piso(scene, { y:-2.35 });",
         "  scene.fog = null;   // propuesta: sin sala; el fondo degradado lo pone la página\n"
-        "  const SS = { z: 0, x: 0, y: 0, t0: 0 };   // estado del zoom automático (como Screen Studio)\n"
+        "  const SS = { z: 0, x: 0, y: 0, a: 1 };   // zoom automático (como Screen Studio): z = acercamiento al cursor, a = vista del aparato completo\n"
         + APARATO)
     # 2 · cada formato (horizontal / vertical) arma su aparato y lo muestra al usarse
     rep("    const sombraCard = AL3D.sombra(scene, PW*1.1, 1.6); sombraCard.visible = false;\n    return { vert, CW, CH, PW, PH, DRAW, CURSOR, cards, sombraCard };",
@@ -103,7 +103,8 @@ def aplicar(s):
       if (dist === 0) J.disp.userData.sombraVentana.material.opacity = 0.9 * e;
 """ + s[b:]
     # 4 · cámara estilo Screen Studio: de frente a la foto (zoom y paneo, como en una edición de video);
-    #     mientras el cursor trabaja, zoom suave (≈1,8x) que lo sigue; entre pasos se aleja
+    #     la ventana llena el cuadro; mientras el cursor trabaja, acercamiento suave que lo sigue;
+    #     el aparato completo se ve al empezar y en un alejamiento breve entre pasos
     a = s.index("      const ip = stepOf(T), sp = STEPS[ip], lt = T - sp.a, lado = ip % 2 ? -1 : 1;")
     b = s.index("      camera.lookAt(bx*0.3 + fx, by*0.4 + fy, 0);", a) + len("      camera.lookAt(bx*0.3 + fx, by*0.4 + fy, 0);")
     s = s[:a] + """      const ip = stepOf(T), sp = STEPS[ip], lt = T - sp.a;
@@ -112,15 +113,22 @@ def aplicar(s):
       if (cf && cursor.visible) { const k = cf.keys; quiere = clamp((lt - k[0][0] + 0.15) / 0.35) * (1 - clamp((lt - k[k.length - 1][0] - 0.9) / 0.4)); }
       const kz = 1 - Math.exp(-dt * 3.2), kp = 1 - Math.exp(-dt * 4.5);
       SS.z += (quiere - SS.z) * kz;
+      // el aparato completo se ve al empezar y en un alejamiento breve al cambiar de paso; el resto del
+      // tiempo la ventana llena el cuadro para que se lea
+      const verAparato = T < 1.4 ? 1 : (ip > 0 && lt < 0.55 ? 0.4 : 0);
+      SS.a += (verAparato - SS.a) * (1 - Math.exp(-dt * (verAparato > SS.a ? 5 : 2.4)));
       const u = J.disp.userData, cj = u.caja, tg = Math.tan(camera.fov * Math.PI / 360);
       if (cursor.visible) {   // el encuadre sigue al cursor sin salirse de la pantalla
         const lx = u.SW * 0.2, ly = u.SH * 0.2;
         SS.x += (clamp(cursor.position.x, -lx, lx) - SS.x) * kp; SS.y += (clamp(cursor.position.y, -ly, ly) - SS.y) * kp;
       }
       const z = ease(SS.z);
-      const lejos = Math.max(cj.h * (J.vert ? 1.2 : 1.38) / 2 / tg, cj.w * (J.vert ? 1.06 : 1.22) / 2 / (tg * camera.aspect)), cerca = lejos * 0.56;
-      const mx = lerp(cj.x, SS.x, z) + PX.x * 0.12, my = lerp(cj.y - cj.h * 0.07, SS.y, z) + PX.y * 0.08;   // abajo queda la barra de controles
-      camera.position.set(mx, my, lerp(lejos, cerca, z) * (1 - Math.sin(T * 0.3) * 0.008));
+      // tres encuadres (abajo queda la barra de controles): aparato completo · ventana · acercamiento al cursor
+      const aparatoD = Math.max(cj.h * (J.vert ? 1.2 : 1.38) / 2 / tg, cj.w * (J.vert ? 1.06 : 1.22) / 2 / (tg * camera.aspect));
+      const ventanaD = Math.max(J.PH * (J.vert ? 1.36 : 1.24) / 2 / tg, J.PW * (J.vert ? 1.02 : 1.1) / 2 / (tg * camera.aspect)), cerca = ventanaD * 0.68;
+      const a = ease(SS.a);
+      const mx = lerp(lerp(0, SS.x, z), cj.x, a) + PX.x * 0.12, my = lerp(lerp(-J.PH * (J.vert ? 0.125 : 0.06), SS.y, z), cj.y - cj.h * 0.07, a) + PX.y * 0.08;
+      camera.position.set(mx, my, lerp(lerp(ventanaD, cerca, z), aparatoD, a) * (1 - Math.sin(T * 0.3) * 0.008));
       camera.lookAt(mx, my, 0);""" + s[b:]
 
     # ── "Ver en acción" del V1 ─────────────────────────────────────────────────
