@@ -155,9 +155,8 @@
 .p-vel.on{opacity:1}
 @media (prefers-reduced-motion:reduce){ .p-lente::before{animation:none} .p-vel,.p-corte{display:none} }
 
-/* ════ PROPUESTA E: recorridos guiados por el desplazamiento ════════════════════ */
-.p-pin{position:relative}
-.p-pin.on>.al-demo{position:sticky;top:var(--p-top,64px)}
-.p-guia{position:absolute;left:50%;bottom:calc(var(--al-barra,48px) + 10px);translate:-50% 0;z-index:5;pointer-events:none;padding:5px 12px;border-radius:999px;background:rgba(10,18,30,.78);color:#E8EDF5;font:500 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;opacity:0;transition:opacity .4s ease;white-space:nowrap}
-.p-pin.on .p-guia.on{opacity:1}
+
+/* ════ PROPUESTA F: grabación de pantalla pro ═════════════════════════════════════ */
+/* fondo de estudio: degradado de la marca detrás del laptop / teléfono */
+.al-demo__stage{background-color:#0B1F35!important;background-image:radial-gradient(70% 60% at 28% 18%,rgba(76,141,219,.55),transparent 62%),radial-gradient(60% 55% at 86% 92%,rgba(7,140,126,.42),transparent 62%),linear-gradient(140deg,#0B1F35 0%,#133F6C 55%,#0C2B38 100%)!important}
 </style>
