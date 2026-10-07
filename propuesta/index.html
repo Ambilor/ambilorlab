@@ -2271,6 +2271,25 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
   .al-demo__stage::after,.al-sim__bar i::after,.al-demo--manual .al-demo__btn--play{animation:none!important}
   .al-sim__evt{transition:none!important}
 }
+
+/* ════ PROPUESTA D: sensación de cine ═══════════════════════════════════════════ */
+/* D0 · marco del demo: menos redondeado y anillo de luz más fino */
+.al-demo__stage{border-radius:6px!important}
+.al-demo__stage::after{padding:1.5px}
+/* D1 · capas de lente sobre la escena: viñeta, grano vivo y destello de luz */
+.p-lente{position:absolute;inset:0;z-index:3;pointer-events:none;border-radius:inherit;
+  background:radial-gradient(120% 95% at 50% 45%,transparent 55%,rgba(6,12,22,.38) 100%)}
+.p-lente::before{content:'';position:absolute;inset:-50%;opacity:.10;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:p-grano .5s steps(4) infinite}
+@keyframes p-grano{0%{transform:translate(0,0)}25%{transform:translate(-6%,4%)}50%{transform:translate(5%,-3%)}75%{transform:translate(-3%,-6%)}100%{transform:translate(0,0)}}
+.p-lente::after{content:'';position:absolute;inset:0;mix-blend-mode:screen;opacity:.55;
+  background:radial-gradient(40% 30% at var(--p-lx,18%) var(--p-ly,12%),rgba(255,214,150,.35),transparent 70%),radial-gradient(30% 22% at calc(100% - var(--p-lx,18%)) 88%,rgba(120,180,255,.25),transparent 70%);transition:opacity .6s ease}
+.al-demo__stage canvas{filter:saturate(1.08) contrast(1.04)}
+/* D2 · corte de edición al cambiar de pestaña: destello y entrada con desenfoque de movimiento */
+.p-corte{position:fixed;inset:0;z-index:9997;pointer-events:none;background:radial-gradient(80% 60% at 50% 50%,rgba(191,224,255,.18),rgba(6,10,18,.0) 70%);opacity:0}
+/* D3 · al desplazarse rápido la página se desenfoca en la dirección del movimiento */
+.p-vel{position:fixed;inset:0;z-index:9996;pointer-events:none;-webkit-backdrop-filter:blur(var(--p-blur,0px));backdrop-filter:blur(var(--p-blur,0px));opacity:0;transition:opacity .25s ease}
+.p-vel.on{opacity:1}
+@media (prefers-reduced-motion:reduce){ .p-lente::before{animation:none} .p-vel,.p-corte{display:none} }
 </style>
 </head>
 
@@ -8584,11 +8603,115 @@ window.addEventListener('load', function(){ var h = new URLSearchParams(location
     }
   }
 
+
+  /* ════ PROPUESTA D: sensación de cine ════ */
+  // D1 · capas de lente en cada escena de demo; la luz sigue al mouse
+  [].forEach.call(document.querySelectorAll('.al-demo__stage'), function(st){
+    var l = document.createElement('div'); l.className = 'p-lente'; st.appendChild(l);
+    if (fino && !reduce) st.addEventListener('pointermove', function(e){ var r = st.getBoundingClientRect(); l.style.setProperty('--p-lx', ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%'); l.style.setProperty('--p-ly', ((e.clientY - r.top) / r.height * 100).toFixed(1) + '%'); }, { passive: true });
+  });
+
+  // velocidad de desplazamiento de la página (la usan la cámara y el desenfoque)
+  var velScroll = 0;
+  (function(){
+    var yAnt = scrollY, tAnt = performance.now(), capa = null;
+    if (!reduce) { capa = document.createElement('div'); capa.className = 'p-vel'; document.body.appendChild(capa); }
+    (function paso(now){
+      var dy = scrollY - yAnt, dt = Math.max(8, now - tAnt); yAnt = scrollY; tAnt = now;
+      var v = dy / dt;                         // px por ms
+      velScroll += (v - velScroll) * .25;
+      if (capa) { var b = Math.min(2.4, Math.abs(velScroll) * 1.1); capa.style.setProperty('--p-blur', b.toFixed(2) + 'px'); capa.classList.toggle('on', b > .35); }
+      requestAnimationFrame(paso);
+    })(tAnt);
+  })();
+
+  // D2 · corte de edición: la pestaña nueva entra con empuje y desenfoque, en la dirección del menú
+  var ORDEN = ['home', 'about', 'product', 'guias', 'contact'], tabAnt = (document.querySelector('section.visible') || {}).id;
+  function corte(id){
+    if (reduce || !id || id === tabAnt) { tabAnt = id; return; }
+    var dir = ORDEN.indexOf(id) >= ORDEN.indexOf(tabAnt) ? 1 : -1; tabAnt = id;
+    var sec = document.getElementById(id); if (!sec || !sec.animate) return;
+    var hijos = [].filter.call(sec.children, function(c){ return c.offsetParent && !/fixed/.test(getComputedStyle(c).position); });
+    hijos.forEach(function(c){
+      c.animate([{ transform: 'translateX(' + (dir * 70) + 'px) scale(1.035)', filter: 'blur(14px)', opacity: .15 }, { transform: 'translateX(' + (dir * -6) + 'px) scale(.998)', filter: 'blur(1px)', opacity: 1, offset: .6 }, { transform: 'none', filter: 'blur(0)', opacity: 1 }],
+        { duration: 520, easing: 'cubic-bezier(.16,1,.3,1)' });
+    });
+    var f = document.createElement('div'); f.className = 'p-corte'; document.body.appendChild(f);
+    f.animate([{ opacity: 0 }, { opacity: 1, offset: .15 }, { opacity: 0 }], { duration: 420, easing: 'ease-out' }).onfinish = function(){ f.remove(); };
+  }
+
+  // D4 · cámara de cine y pasada de imagen para las escenas 3D de los demos
+  if (!reduce && typeof window.alConTHREE === 'function') window.alConTHREE(function(){
+    var T = window.THREE; if (!T || !T.WebGLRenderer || T.WebGLRenderer.prototype.__pCine) return;
+    var proto = T.WebGLRenderer.prototype, render0 = proto.render; proto.__pCine = true;
+    var VS = 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }';
+    var FS = [
+      'uniform sampler2D tDiff; uniform vec2 uVel; uniform float uFoco; uniform float uAb; uniform vec2 uRes; varying vec2 vUv;',
+      'vec4 tapa(vec2 p){ return texture2D(tDiff, clamp(p, vec2(.001), vec2(.999))); }',
+      'void main(){',
+      '  vec2 c = vUv - .5; float r = length(c);',
+      // desenfoque de movimiento a lo largo de la velocidad de la cámara + foco que se ajusta al cambiar de paso
+      '  vec4 acc = vec4(0.); float w = 0.;',
+      '  for (int i = -4; i <= 4; i++) { float t = float(i) / 4.; vec2 off = uVel * t + c * uFoco * t * .06; float k = 1. - abs(t) * .5; acc += tapa(vUv + off) * k; w += k; }',
+      '  vec4 col = acc / w;',
+      // aberración cromática: más fuerte en los bordes y cuando la cámara se mueve
+      '  float ab = (uAb + length(uVel) * 2.5) * r * r * 2.2;',
+      '  vec2 d = normalize(c + 1e-5) * ab;',
+      '  float rC = tapa(vUv + d).r, bC = tapa(vUv - d).b;',
+      '  col.r = mix(col.r, rC, .85); col.b = mix(col.b, bC, .85);',
+      '  gl_FragColor = col;',
+      '}'].join('\n');
+    var quadCam = new T.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    var tam = new T.Vector2();
+    function cine(rd){
+      if (rd.__p) return rd.__p;
+      var cv = rd.domElement; if (!cv || !cv.closest || !cv.closest('.al-demo__stage')) return (rd.__p = false);
+      var gl2 = rd.capabilities && rd.capabilities.isWebGL2;
+      var RT = gl2 && T.WebGLMultisampleRenderTarget ? T.WebGLMultisampleRenderTarget : T.WebGLRenderTarget;
+      var rt = new RT(2, 2, { format: T.RGBAFormat }); if (gl2 && rt.samples !== undefined) rt.samples = 4;
+      rt.texture.encoding = rd.outputEncoding;
+      var mat = new T.ShaderMaterial({ vertexShader: VS, fragmentShader: FS, transparent: true, depthTest: false, depthWrite: false,
+        uniforms: { tDiff: { value: rt.texture }, uVel: { value: new T.Vector2() }, uFoco: { value: 0 }, uAb: { value: .0035 }, uRes: { value: new T.Vector2() } } });
+      var esc = new T.Scene(); esc.add(new T.Mesh(new T.PlaneGeometry(2, 2), mat));
+      var st = cv.closest('.al-demo__stage'), demo = st.closest('.al-demo');
+      var p = rd.__p = { rt: rt, mat: mat, esc: esc, prev: null, t0: performance.now(), punch: 0, foco: 0, paso: null, demo: demo };
+      // al cambiar de paso: empuje de cámara y foco que se ajusta (como un corte con zoom)
+      if (demo && window.MutationObserver) new MutationObserver(function(ms){ ms.forEach(function(m){ if (m.target.getAttribute('aria-current') === 'step' && m.target !== p.paso) { p.paso = m.target; p.punch = 1; p.foco = 1; } }); })
+        .observe(demo, { subtree: true, attributes: true, attributeFilter: ['aria-current'] });
+      return p;
+    }
+    proto.render = function(scene, cam){
+      var p = this.getRenderTarget() ? false : cine(this);
+      if (!p || !cam || !cam.isPerspectiveCamera) return render0.call(this, scene, cam);
+      var now = performance.now(), t = (now - p.t0) / 1000;
+      // cámara en mano: respira y se mece apenas; el empuje decae; la página en movimiento la inclina
+      p.punch *= .93; p.foco *= .9;
+      var pos0 = cam.position.clone(), q0 = cam.quaternion.clone(), fov0 = cam.fov;
+      var ox = Math.sin(t * .9) * .018 + Math.sin(t * 2.3) * .006, oy = Math.sin(t * 1.3 + 1) * .014 + Math.sin(t * 3.1) * .004;
+      cam.position.x += ox; cam.position.y += oy;
+      cam.rotateZ(Math.sin(t * .7) * .0035 + velScroll * .004);
+      cam.rotateX(-velScroll * .006);
+      cam.fov = fov0 * (1 - .07 * p.punch * p.punch); cam.updateProjectionMatrix();
+      // velocidad en pantalla para el desenfoque de movimiento
+      var v = p.mat.uniforms.uVel.value;
+      if (p.prev) { v.set((cam.position.x - p.prev.x) * .12, (cam.position.y - p.prev.y) * .12 - velScroll * .004); } else v.set(0, 0);
+      v.multiplyScalar(1); if (v.length() > .02) v.setLength(.02);
+      p.prev = cam.position.clone();
+      p.mat.uniforms.uFoco.value = p.foco;
+      this.getDrawingBufferSize(tam);
+      if (p.rt.width !== tam.x || p.rt.height !== tam.y) p.rt.setSize(tam.x, tam.y);
+      this.setRenderTarget(p.rt); this.clear(); render0.call(this, scene, cam);
+      this.setRenderTarget(null); this.clear(); render0.call(this, p.esc, quadCam);
+      cam.position.copy(pos0); cam.quaternion.copy(q0); cam.fov = fov0; cam.updateProjectionMatrix();
+    };
+  });
+
   /* engancha el cambio de pestaña sin tocar show() */
   var showOrig = window.show;
   if (typeof showOrig === 'function') {
     window.show = function(id){
       var r = showOrig.apply(this, arguments);
+      corte(id);
       if (id === 'about') sobreMi();
       if (id === 'product') { setTimeout(trazos, 50); demos(); }
       if (id === 'guias') setTimeout(recursos, 30);
