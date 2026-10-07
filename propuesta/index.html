@@ -2491,7 +2491,15 @@ window.alFoto = (function(){
     var t = lienzo(T, 128, 128, function(c, w){ c.beginPath(); c.arc(w/2, w/2, 46, 0, 7); c.fillStyle = 'rgba(18,48,77,.30)'; c.fill(); c.lineWidth = 6; c.strokeStyle = 'rgba(255,255,255,.95)'; c.stroke(); });
     return t;
   }
-  return { crear: crear, camara: camara, elegir: elegir, tactil: function(){ return equipo() !== 'pc'; }, dedo: dedo };
+  // Celular vertical: cuánto más alta se dibuja la app (diseñada en 800 × 1000) para llenar la pantalla del
+  // teléfono hasta la barra de abajo. Se reparte en alto (filas, campos, botones y espacios) y la letra y los
+  // círculos conservan su forma (ver el motor).
+  function estirar(vert, pestanas){
+    var m = modelo(); if (!vert || equipo() === 'pc' || !(m.tipo === 'iphone' || m.tipo === 'android')) return 1;
+    var e = especie(m, true), chh = e.H - e.top - e.bot - (pestanas ? 56 : 0), cw = e.W * 1.09;
+    return Math.max(1, (800 / 1000) * chh / cw);
+  }
+  return { crear: crear, camara: camara, elegir: elegir, estirar: estirar, tactil: function(){ return equipo() !== 'pc'; }, dedo: dedo };
 })();
 /* Propuesta · notas dentro de la app: una frase corta por paso, en una burbuja junto a lo que se toca
    (o arriba, si el paso no tiene toque). Las dibuja el motor de tarjetas sobre la pantalla del demo. */
@@ -6885,7 +6893,7 @@ window.alDemoTarjetas = function(root, cfg){
 
   // Un juego de tarjetas por diseño; el vertical se arma recién cuando se usa
   function juego(vert){
-    const CW = vert ? 800 : 1200, CH = vert ? 1000 : 950, PW = vert ? 3.84 : 4.8, PH = PW * CH / CW;
+    const CW = vert ? 800 : 1200, CH = vert ? 1000 : 950, PW = vert ? 3.84 : 4.8, K = alFoto.estirar(vert, !!MENU), PH = PW * CH / CW * K;
     const DRAW = (vert ? cfg.drawV : cfg.draw)(mkH(CW, CH)), CURSOR = (vert ? cfg.cursorV : cfg.cursor) || [];
     // 2026-09-30: cada tarjeta dibuja su lienzo solo mientras está en pantalla
     // (a lo más 2 a la vez) y lo libera al salir. Antes las 6 de cada demo
@@ -6895,7 +6903,7 @@ window.alDemoTarjetas = function(root, cfg){
       const m = new THREE.Mesh(new THREE.PlaneGeometry(PW, PH), basic({ map:null })); m.renderOrder = 5; scene.add(m);
       const sh = new THREE.Mesh(new THREE.PlaneGeometry(PW + 0.08, PH + 0.08), basic({ color:col(C.ink) })); sh.renderOrder = 4; scene.add(sh);
       m.visible = sh.visible = false;
-      return { m, sh, g:null, tx:null, cv:null, CW, CH };
+      return { m, sh, g:null, tx:null, cv:null, CW, CH, K };
     });
     AL3D.grosor(cards.map(c => c.m), 0.09, { radio:0.136 });
     const sombraCard = AL3D.sombra(scene, PW*1.1, 1.6); sombraCard.visible = false;
@@ -6906,8 +6914,14 @@ window.alDemoTarjetas = function(root, cfg){
   }
   function tomarLienzo(c){
     if (c.cv) return;
-    c.cv = document.createElement('canvas'); c.cv.width = c.CW * TEX_S; c.cv.height = c.CH * TEX_S;
-    c.g = c.cv.getContext('2d'); c.g.scale(TEX_S, TEX_S);
+    c.cv = document.createElement('canvas'); c.cv.width = c.CW * TEX_S; c.cv.height = Math.round(c.CH * TEX_S * (c.K || 1));
+    c.g = c.cv.getContext('2d'); c.g.scale(TEX_S, TEX_S * (c.K || 1));
+    if (c.K > 1) {   // propuesta: lienzo estirado en alto; el texto y los círculos, compensados
+      const g = c.g, k = c.K, ft = g.fillText.bind(g), st = g.strokeText.bind(g);
+      g.fillText = (s, x, y, w) => { g.save(); g.translate(x, y); g.scale(1, 1 / k); w == null ? ft(s, 0, 0) : ft(s, 0, 0, w); g.restore(); };
+      g.strokeText = (s, x, y, w) => { g.save(); g.translate(x, y); g.scale(1, 1 / k); w == null ? st(s, 0, 0) : st(s, 0, 0, w); g.restore(); };
+      g.arc = (x, y, r, a0, a1, ccw) => g.ellipse(x, y, r, r / k, 0, a0, a1, !!ccw);
+    }
     c.tx = new THREE.CanvasTexture(c.cv); c.tx.encoding = THREE.sRGBEncoding; c.tx.anisotropy = ANISO;
     c.m.material.map = c.tx; c.m.material.needsUpdate = true;
   }

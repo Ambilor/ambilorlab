@@ -355,5 +355,13 @@ window.alFoto = (function(){
     var t = lienzo(T, 128, 128, function(c, w){ c.beginPath(); c.arc(w/2, w/2, 46, 0, 7); c.fillStyle = 'rgba(18,48,77,.30)'; c.fill(); c.lineWidth = 6; c.strokeStyle = 'rgba(255,255,255,.95)'; c.stroke(); });
     return t;
   }
-  return { crear: crear, camara: camara, elegir: elegir, tactil: function(){ return equipo() !== 'pc'; }, dedo: dedo };
+  // Celular vertical: cuánto más alta se dibuja la app (diseñada en 800 × 1000) para llenar la pantalla del
+  // teléfono hasta la barra de abajo. Se reparte en alto (filas, campos, botones y espacios) y la letra y los
+  // círculos conservan su forma (ver el motor).
+  function estirar(vert, pestanas){
+    var m = modelo(); if (!vert || equipo() === 'pc' || !(m.tipo === 'iphone' || m.tipo === 'android')) return 1;
+    var e = especie(m, true), chh = e.H - e.top - e.bot - (pestanas ? 56 : 0), cw = e.W * 1.09;
+    return Math.max(1, (800 / 1000) * chh / cw);
+  }
+  return { crear: crear, camara: camara, elegir: elegir, estirar: estirar, tactil: function(){ return equipo() !== 'pc'; }, dedo: dedo };
 })();
