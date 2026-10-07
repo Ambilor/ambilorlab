@@ -2387,8 +2387,8 @@ window.alFoto = (function(){
     return { d: d, ext: vis, zoom: 1,   // sin acercamiento al tocar: el demo quieto se entiende mejor
       // en el iPhone la barra de estado va sobre la página: blanca sobre fondo oscuro, negra sobre claro
       // y la barra de pestañas va solo en las pantallas del panel (cabecera de color), no en las del cliente
-      tono: function(cx){ if (solo && !tabs) return; try { var p = cx.getImageData(Math.round(cx.canvas.width / 2), 3, 1, 1).data, lum = (0.3 * p[0] + 0.59 * p[1] + 0.11 * p[2]) / 255; var os = p[3] > 10 && lum > 0.6;
-        if (!solo) { claro.visible = !os; oscuro.visible = os; } if (tabs) tabs.visible = !os; } catch (er) {} } };
+      tono: function(cx, sinTab){ if (solo && !tabs) return; try { var p = cx.getImageData(Math.round(cx.canvas.width / 2), 3, 1, 1).data, lum = (0.3 * p[0] + 0.59 * p[1] + 0.11 * p[2]) / 255; var os = p[3] > 10 && lum > 0.6;
+        if (!solo) { claro.visible = !os; oscuro.visible = os; } if (tabs) tabs.visible = !os && !sinTab; } catch (er) {} } };
   }
   // Ventana de frente, sin aparato: en computador (ventana angosta) con su sombra; en celular y tablet,
   // dentro del marco del equipo del visitante, a pantalla completa.
@@ -6969,7 +6969,7 @@ window.alDemoTarjetas = function(root, cfg){
       J.DRAW[i](c.g, Math.max(0, t - s.a)); if (dist === 0) notaPaso(c.g, i, Math.max(0, t - s.a)); c.tx.needsUpdate = true;
       const e = ease(ein), sx = dist === 0 ? (1 - e) * 0.35 : -ease(sale) * 0.35;
       c.m.position.set(sx * (J.disp.userData.marco ? 0 : J.disp.userData.pleno ? 0.25 : 1) + (J.disp.userData.ventanaX || 0), J.disp.userData.ventanaY || 0, dist === 0 ? 0.004 : 0.002);
-      if (dist === 0 && J.disp.userData.marco && J.tonoPaso !== i && t - s.a > 0.2) { J.tonoPaso = i; J.disp.userData.marco.tono(c.g); }   // barra de estado según la app (una vez por paso: leer píxeles es caro en Safari)
+      if (dist === 0 && J.disp.userData.marco && J.tonoPaso !== i && t - s.a > 0.2) { J.tonoPaso = i; J.disp.userData.marco.tono(c.g, root.id === 'ped-accion' && i === 0); }   // barra de estado según la app (una vez por paso: leer píxeles es caro en Safari)
       c.m.rotation.set(0, 0, 0);
       c.m.material.opacity = dist === 0 ? e : 1 - ease(sale);
       if (dist === 0) J.disp.userData.sombraVentana.material.opacity = 0.9 * e;
@@ -7525,8 +7525,9 @@ AL_DEMOS['ped-accion'] = {
         if (p > 0) { g.globalAlpha = p; pill(g, 600, 790, '¿Quién pidió qué? ¿Quién ya pagó?', C.bad, '#fff', 32, 64, 'center'); g.globalAlpha = 1; }
       },
       (g, lt) => {
-        g.clearRect(0, 0, CW, CH); g.fillStyle = '#f4f7fb'; rr(g, 0, 0, CW, CH, 34); g.fill();
-        const a = celular(g, 380, 30, 440, 890);
+        g.clearRect(0, 0, CW, CH);
+        const a = (window.alFoto && alFoto.tactil()) ? (g.fillStyle = '#ffffff', g.fillRect(0, 0, CW, CH), { x: 330, y: 94, w: 540, h: 830 })   // propuesta: página centrada en la tablet
+          : (g.fillStyle = '#f4f7fb', rr(g, 0, 0, CW, CH, 34), g.fill(), celular(g, 380, 30, 440, 890));
         tienda(g, a);
         let x = a.x;
         ['Destacados', 'Panadería', 'Lácteos'].forEach((c, k) => { x += pill(g, x, a.y + 112, c, k ? '#eef2f7' : C.brand, k ? C.muted : '#fff', 20, 38) + 8; });
@@ -7545,8 +7546,9 @@ AL_DEMOS['ped-accion'] = {
         if (l > 0) { g.globalAlpha = l; pill(g, 90, 200, '🔗 Un enlace', '#fff', C.brand, 28, 56); pill(g, 90, 280, 'Sin instalar nada', '#fff', C.ink, 26, 52); pill(g, 1110, 520, 'Precios por cantidad', '#fff', C.ok, 26, 52, 'right'); g.globalAlpha = 1; }
       },
       (g, lt) => {
-        g.clearRect(0, 0, CW, CH); g.fillStyle = '#f4f7fb'; rr(g, 0, 0, CW, CH, 34); g.fill();
-        const a = celular(g, 380, 30, 440, 890);
+        g.clearRect(0, 0, CW, CH);
+        const a = (window.alFoto && alFoto.tactil()) ? (g.fillStyle = '#ffffff', g.fillRect(0, 0, CW, CH), { x: 330, y: 94, w: 540, h: 830 })   // propuesta: página centrada en la tablet
+          : (g.fillStyle = '#f4f7fb', rr(g, 0, 0, CW, CH, 34), g.fill(), celular(g, 380, 30, 440, 890));
         const env = lt > 2.9;
         if (!env) {
           txt(g, 'Tu pedido', a.x, a.y + 30, 32, 800, C.ink);
@@ -9526,8 +9528,15 @@ window.addEventListener('load', function(){ var h = new URLSearchParams(location
       fb.forEach(function(li, i){ var t = li.querySelector('.al-demo__fbt'); h += '<li><button type="button" data-i="' + i + '">' + (t ? t.textContent : '') + '</button></li>'; });
       h += '</ol><div class="p-resumen__acc"><button type="button" class="p-resumen__otra">↻ Ver de nuevo</button></div>';
       r.innerHTML = h; st.appendChild(r);
-      var cta = d.querySelector('.al-demo__fallback .al-demo__cta') || d.querySelector('.al-demo__cta');
-      if (cta) { var a = cta.cloneNode(true); a.className = 'p-resumen__cta'; r.querySelector('.p-resumen__acc').appendChild(a); }
+      // «Ver qué incluye»: el del último paso (lo pone el demo al llegar a él); se agrega al terminar
+      var acc = r.querySelector('.p-resumen__acc');
+      var ponerCta = function(){
+        if (acc.querySelector('.p-resumen__cta') || !d.classList.contains('al-demo--fin')) return;
+        var cta = d.querySelector('.al-demo__copy .al-demo__cta') || d.querySelector('.al-demo__fallback .al-demo__cta'); if (!cta) return;
+        var a = document.createElement('a'); a.className = 'p-resumen__cta'; a.href = cta.getAttribute('href') || '#'; a.textContent = cta.textContent;
+        a.addEventListener('click', function(ev){ ev.preventDefault(); cta.click(); }); acc.appendChild(a);
+      };
+      new MutationObserver(ponerCta).observe(d, { attributes: true, attributeFilter: ['class'] });
       r.querySelector('.p-resumen__otra').addEventListener('click', function(){ var b = d.querySelector('[data-act="restart"]'); if (b) b.click(); });
       r.querySelectorAll('ol button').forEach(function(b){ b.addEventListener('click', function(){ var s = d.querySelectorAll('.al-demo__step')[+b.getAttribute('data-i')]; if (s) s.click(); var p = d.querySelector('[data-act="play"]'); if (p && d.classList.contains('al-demo--manual')) p.click(); }); });
     });

@@ -102,7 +102,7 @@ def aplicar(s):
       J.DRAW[i](c.g, Math.max(0, t - s.a)); if (dist === 0) notaPaso(c.g, i, Math.max(0, t - s.a)); c.tx.needsUpdate = true;
       const e = ease(ein), sx = dist === 0 ? (1 - e) * 0.35 : -ease(sale) * 0.35;
       c.m.position.set(sx * (J.disp.userData.marco ? 0 : J.disp.userData.pleno ? 0.25 : 1) + (J.disp.userData.ventanaX || 0), J.disp.userData.ventanaY || 0, dist === 0 ? 0.004 : 0.002);
-      if (dist === 0 && J.disp.userData.marco && J.tonoPaso !== i && t - s.a > 0.2) { J.tonoPaso = i; J.disp.userData.marco.tono(c.g); }   // barra de estado según la app (una vez por paso: leer píxeles es caro en Safari)
+      if (dist === 0 && J.disp.userData.marco && J.tonoPaso !== i && t - s.a > 0.2) { J.tonoPaso = i; J.disp.userData.marco.tono(c.g, root.id === 'ped-accion' && i === 0); }   // barra de estado según la app (una vez por paso: leer píxeles es caro en Safari)
       c.m.rotation.set(0, 0, 0);
       c.m.material.opacity = dist === 0 ? e : 1 - ease(sale);
       if (dist === 0) J.disp.userData.sombraVentana.material.opacity = 0.9 * e;
@@ -162,4 +162,10 @@ def aplicar(s):
         "      g.strokeText = (s, x, y, w) => { g.save(); g.translate(x, y); g.scale(1, 1 / k); w == null ? st(s, 0, 0) : st(s, 0, 0, w); g.restore(); };\n"
         "      g.arc = (x, y, r, a0, a1, ccw) => g.ellipse(x, y, r, r / k, 0, a0, a1, !!ccw);\n"
         "    }")
+    # 12 · App de Pedidos, diseño horizontal en tablet: el catálogo y el pedido del cliente como página web
+    #      centrada (sin un teléfono dibujado dentro del iPad)
+    rep("        g.clearRect(0, 0, CW, CH); g.fillStyle = '#f4f7fb'; rr(g, 0, 0, CW, CH, 34); g.fill();\n        const a = celular(g, 380, 30, 440, 890);",
+        "        g.clearRect(0, 0, CW, CH);\n"
+        "        const a = (window.alFoto && alFoto.tactil()) ? (g.fillStyle = '#ffffff', g.fillRect(0, 0, CW, CH), { x: 330, y: 94, w: 540, h: 830 })   // propuesta: página centrada en la tablet\n"
+        "          : (g.fillStyle = '#f4f7fb', rr(g, 0, 0, CW, CH, 34), g.fill(), celular(g, 380, 30, 440, 890));", 2)
     return s

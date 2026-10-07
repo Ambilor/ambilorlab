@@ -341,8 +341,15 @@
       fb.forEach(function(li, i){ var t = li.querySelector('.al-demo__fbt'); h += '<li><button type="button" data-i="' + i + '">' + (t ? t.textContent : '') + '</button></li>'; });
       h += '</ol><div class="p-resumen__acc"><button type="button" class="p-resumen__otra">↻ Ver de nuevo</button></div>';
       r.innerHTML = h; st.appendChild(r);
-      var cta = d.querySelector('.al-demo__fallback .al-demo__cta') || d.querySelector('.al-demo__cta');
-      if (cta) { var a = cta.cloneNode(true); a.className = 'p-resumen__cta'; r.querySelector('.p-resumen__acc').appendChild(a); }
+      // «Ver qué incluye»: el del último paso (lo pone el demo al llegar a él); se agrega al terminar
+      var acc = r.querySelector('.p-resumen__acc');
+      var ponerCta = function(){
+        if (acc.querySelector('.p-resumen__cta') || !d.classList.contains('al-demo--fin')) return;
+        var cta = d.querySelector('.al-demo__copy .al-demo__cta') || d.querySelector('.al-demo__fallback .al-demo__cta'); if (!cta) return;
+        var a = document.createElement('a'); a.className = 'p-resumen__cta'; a.href = cta.getAttribute('href') || '#'; a.textContent = cta.textContent;
+        a.addEventListener('click', function(ev){ ev.preventDefault(); cta.click(); }); acc.appendChild(a);
+      };
+      new MutationObserver(ponerCta).observe(d, { attributes: true, attributeFilter: ['class'] });
       r.querySelector('.p-resumen__otra').addEventListener('click', function(){ var b = d.querySelector('[data-act="restart"]'); if (b) b.click(); });
       r.querySelectorAll('ol button').forEach(function(b){ b.addEventListener('click', function(){ var s = d.querySelectorAll('.al-demo__step')[+b.getAttribute('data-i')]; if (s) s.click(); var p = d.querySelector('[data-act="play"]'); if (p && d.classList.contains('al-demo--manual')) p.click(); }); });
     });
