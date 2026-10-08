@@ -2017,6 +2017,7 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
 .al-paso{position:absolute;left:50%;top:-30px;transform:translateX(-50%);z-index:5;pointer-events:none;padding:5px 11px;border-radius:999px;white-space:nowrap;max-width:calc(100% - 24px);overflow:hidden;text-overflow:ellipsis;
   background:rgba(10,18,30,.82);color:rgba(255,255,255,.94);font:600 10.5px/1.2 var(--mono);letter-spacing:.08em;text-transform:uppercase;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);transition:opacity .35s ease,transform .35s ease}
 .al-paso.cambia{opacity:0;transform:translate(-50%,-4px)}
+.al-guia{display:none}
 .al-demo__grid .al-frase{order:0;margin:2px auto 0;max-width:640px;height:2.9em;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;text-align:center;font:500 clamp(14px,1.3vw,16px)/1.45 var(--sans);color:#dfe7f1;transition:opacity .25s ease}   /* alto fijo de 2 líneas: nada se mueve al cambiar de paso */
 [data-theme="light"] .al-demo__grid .al-frase{color:#12304d}
 .al-demo__grid .al-frase::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:#3d7fd6;margin-right:.55em;vertical-align:.12em;box-shadow:0 0 0 4px rgba(61,127,214,.18)}
@@ -2082,20 +2083,35 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
    (iPhone vertical), en el mismo recuadro que el notebook: al cambiar no se mueve nada de la página. En celular y tablet no
    aparece (ya se ve en el equipo del visitante) ni en ventanas de formato A o B, donde no cabe. */
 .al-equipo{display:none}
-/* D en computador ancho (2026-10-08): el demo a la derecha con el alto de la pantalla y, a su izquierda, la frase,
-   el título y la explicación del paso (antes quedaban bajo el demo, fuera de la primera pantalla). El nombre de la
-   app ya está en la pestaña de arriba: aquí no se repite como título (el panel se nombra por su pestaña) y lo que hace
-   va en una línea. Al cambiar de equipo o de demo el recuadro no cambia: nada de la página se mueve. */
+/* D en computador ancho (2026-10-08): a la izquierda, la guía con los pasos numerados (el actual resaltado con su
+   frase; tocar uno lleva a él) y, a la derecha, el demo con el alto de la pantalla. Así se entiende de un vistazo qué
+   hace la herramienta y en qué paso vas, sin texto que quede bajo el demo. El nombre de la app ya está en la pestaña de
+   arriba: aquí no se repite como título (el panel se nombra por su pestaña) y lo que hace va en una línea. Al cambiar
+   de equipo o de demo el recuadro no cambia: nada de la página se mueve. */
 @media (pointer:fine) and (min-width:1100px) and (min-height:561px) and (orientation:landscape){
   #product .hp-panel.on>.prod-cab{max-width:none;margin:0 auto .5rem}
   #product .hp-panel.on>.prod-cab .prod-cab-txt{display:flex;align-items:center;justify-content:center;gap:12px}
   #product .hp-panel.on>.prod-cab .prod-eyebrow{margin:0}
   #product .hp-panel.on>.prod-cab .prod-h1{display:none}   /* el panel ya se nombra por su pestaña (aria-labelledby) */
   #product .hp-panel.on>.prod-cab .prod-tagline{margin:0;max-width:none}
-  .al-demo__grid{display:grid;grid-template-columns:minmax(220px,.55fr) minmax(0,1.7fr);grid-template-rows:auto 1fr;column-gap:clamp(24px,3vw,44px);align-items:start}
-  .al-demo__stage{grid-column:2;grid-row:1 / span 2;height:max(300px, min(62cqw, calc(100svh - 316px)))}
-  .al-demo__grid .al-frase{grid-column:1;grid-row:1;margin:72px 0 0;max-width:none;height:auto;-webkit-line-clamp:3;text-align:left;font-size:clamp(16px,1.4vw,19px);font-weight:600}
-  .al-demo__copy{grid-column:1;grid-row:2;max-width:none;margin:14px 0 0;text-align:left;align-items:flex-start}
+  .al-demo__grid{display:grid;grid-template-columns:minmax(230px,.5fr) minmax(0,1.7fr);column-gap:clamp(24px,3vw,44px);align-items:center}
+  .al-demo__stage{grid-column:2;grid-row:1;height:max(300px, min(62cqw, calc(100svh - 316px)))}
+  .al-demo__grid .al-frase,.al-demo__copy{display:none}
+  .al-guia{display:flex;flex-direction:column;gap:4px;grid-column:1;grid-row:1;margin:30px 0 0;padding:0;list-style:none;counter-reset:none}
+  .al-guia button{display:grid;grid-template-columns:28px 1fr;column-gap:12px;align-items:center;width:100%;padding:9px 12px;border:0;border-radius:12px;background:none;text-align:left;cursor:pointer;color:#9fb0c6;font:500 14px/1.35 var(--sans);transition:background-color .2s,color .2s}
+  .al-guia button:hover{background:rgba(255,255,255,.05);color:#e9eef5}
+  .al-guia button:focus-visible{outline:2px solid #9cc4f2;outline-offset:2px}
+  .al-guia__n{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:600 12px/1 var(--mono);background:rgba(255,255,255,.07);color:#c7d3e3}
+  .al-guia__f{display:none;grid-column:2;margin-top:4px;font-size:13px;line-height:1.45;color:#c7d3e3}
+  .al-guia li.hecho .al-guia__n{background:#2f8a5b;color:#fff}
+  .al-guia li.on button{background:rgba(61,127,214,.16);color:#fff;font-weight:600}
+  .al-guia li.on .al-guia__n{background:#3d7fd6;color:#fff}
+  .al-guia li.on .al-guia__f{display:block;font-weight:400}
+  [data-theme="light"] .al-guia button{color:#4b5d73}
+  [data-theme="light"] .al-guia button:hover{background:rgba(18,48,77,.05);color:#12304d}
+  [data-theme="light"] .al-guia__n{background:rgba(18,48,77,.08);color:#12304d}
+  [data-theme="light"] .al-guia li.on button{background:rgba(31,92,153,.1);color:#12304d}
+  [data-theme="light"] .al-guia__f{color:#33475c}
 }
 @media (min-width:640px) and (min-height:561px){
   .al-equipo{display:inline-flex;flex:none;gap:2px;padding:2px;margin-left:4px;border-radius:999px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
@@ -2544,7 +2560,7 @@ window.alFoto = (function(){
     var aparatoD = Math.max(cj.h * (v ? 1.2 : 1.38) / 2 / tg, cj.w * (v ? 1.06 : 1.22) / 2 / (tg * as));
     var fh = u.plano ? 1.04 : (v ? 1.1 : 1.24), fw = u.plano ? 1.03 : (v ? 1.06 : 1.1);   // sin aparato: la app de borde a borde
     var ventanaD = Math.max(o.vent.h * fh / 2 / tg, o.vent.w * fw / 2 / (tg * as)), cerca = ventanaD * 0.84;   // acercamiento suave: el foco acompaña sin hacer perder el hilo
-    var z = u.plano ? 0 : ease(st.z), a = ease(st.a), px = o.px || { x: 0, y: 0 };   // sin aparato: la app quieta y completa (ni se acerca ni sigue al cursor)
+    var z = 0, a = ease(st.a), px = o.px || { x: 0, y: 0 };   // 2026-10-08: quieta en computador (acercarse y seguir al cursor cortaba la app y el notebook); el puntero y el círculo ya muestran dónde mirar
     var mx = lerp(lerp(0, st.x, z), cj.x, a) + px.x * 0.12, my = lerp(lerp(-o.vent.h * (v || u.plano ? 0 : 0.06), st.y, z), cj.y - cj.h * 0.07, a) + px.y * 0.08;
     cam.position.set(mx, my, lerp(lerp(ventanaD, cerca, z), aparatoD, a) * (1 - Math.sin(o.T * 0.3) * 0.008));
     cam.lookAt(mx, my, 0);
@@ -6271,7 +6287,21 @@ window.alDemoTarjetas = function(root, cfg){
     var et = document.createElement('div'); et.className = 'al-paso'; et.setAttribute('aria-hidden', 'true'); st.appendChild(et);
     var N = window.AL_NOTAS && AL_NOTAS[d.id], fr = null;
     if (N) { fr = document.createElement('p'); fr.className = 'al-frase'; fr.setAttribute('aria-live', 'polite'); st.insertAdjacentElement('afterend', fr); }
-    var poner = function(){ if (k) suave(et, k.textContent.trim()); if (fr) suave(fr, N[pasoActual(d)] || ''); };
+    // guía de pasos (computador ancho, ver el bloque D): los pasos numerados junto al demo, el actual resaltado
+    // con su frase; tocar uno lleva a ese paso. En los demás formatos no se muestra (CSS).
+    var gu = document.createElement('ol'); gu.className = 'al-guia';
+    d.querySelectorAll('.al-demo__step').forEach(function(b, j){
+      var li = document.createElement('li'), bt = document.createElement('button'), lb = b.querySelector('.al-demo__label');
+      bt.type = 'button'; bt.innerHTML = '<span class="al-guia__n"></span><span class="al-guia__t"></span><span class="al-guia__f"></span>';
+      bt.querySelector('.al-guia__n').textContent = j + 1; bt.querySelector('.al-guia__t').textContent = lb ? lb.textContent : '';
+      if (N) bt.querySelector('.al-guia__f').textContent = N[j] || '';
+      bt.addEventListener('click', function(){ b.click(); });
+      li.appendChild(bt); gu.appendChild(li);
+    });
+    var grid = d.querySelector('.al-demo__grid'); if (grid) grid.insertBefore(gu, grid.firstChild);
+    // marca con clases (no con aria-current: ese atributo lo vigila el observador de abajo y se volvería a llamar sin fin)
+    var guiaEn = -1, marcarGuia = function(){ var i = pasoActual(d); if (i === guiaEn) return; guiaEn = i; gu.querySelectorAll('li').forEach(function(li, j){ li.classList.toggle('on', j === i); li.classList.toggle('hecho', j < i); }); };
+    var poner = function(){ if (k) suave(et, k.textContent.trim()); if (fr) suave(fr, N[pasoActual(d)] || ''); marcarGuia(); };
     // la etiqueta sigue al texto del paso (que el demo cambia después de marcar el paso)
     poner(); new MutationObserver(poner).observe(d, { subtree: true, attributes: true, attributeFilter: ['aria-current'] });
     if (k) new MutationObserver(poner).observe(k, { childList: true, characterData: true, subtree: true });

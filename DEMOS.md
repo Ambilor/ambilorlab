@@ -24,7 +24,7 @@ La escena 3D de "Ver en acción" del **Conciliador V1** es la referencia más co
   - **A · celular vertical:** la escena va arriba, cuadrada y con la tarjeta vertical; el texto va debajo.
   - **B · celular horizontal:** la escena va a la izquierda con todo el alto; el texto, a la derecha. En el celular girado la app va sola (sin el marco del teléfono, como en el iPhone SE) y la barra de controles pasa a la columna derecha, bajo la frase: así la app usa casi todo el alto y se lee.
   - **C · tablet vertical:** el texto va a la izquierda y la escena a la derecha, más alta que ancha.
-  - **D · tablet horizontal y computador:** el texto va a la izquierda y la escena a la derecha, con el alto que queda. En computador ancho (desde 1100 px), el nombre de la app no se repite como título (ya está en la pestaña de arriba): bajo las pestañas va en una línea lo que hace, y la frase, el título y la explicación del paso van a la izquierda del demo, todo en la primera pantalla.
+  - **D · tablet horizontal y computador:** el texto va a la izquierda y la escena a la derecha, con el alto que queda. En computador ancho (desde 1100 px), el nombre de la app no se repite como título (ya está en la pestaña de arriba): bajo las pestañas va en una línea lo que hace, y a la izquierda del demo va la guía de pasos (`.al-guia`: los pasos numerados, los hechos en verde y el actual resaltado con su frase de `AL_NOTAS`; tocar uno lleva a ese paso), todo en la primera pantalla. En computador la cámara queda quieta (no se acerca ni sigue al cursor).
 
   Una demo nueva los hereda sin escribir CSS. Un ajuste de disposición se hace **dentro** del formato que corresponde, nunca con una regla suelta en otra parte.
 
