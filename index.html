@@ -6,7 +6,7 @@
 <script>/* 2026-10-08: navegadores antiguos (p. ej. Safari 6 en iOS 6) no entienden el JavaScript del sitio y
    solo mostraban los nombres de las pestañas: si no reconoce let, funciones flecha ni class, va a la
    versión básica (basico.html). Escrito en JavaScript antiguo a propósito. */
-(function(){var ok=true;try{ok=!!new Function("let a=()=>1;class B{};return a()===1")();}catch(e){ok=false;}if(!ok){location.replace("basico.html?v=4");}})();</script>
+(function(){var ok=true;try{ok=!!new Function("let a=()=>1;class B{};return a()===1")();}catch(e){ok=false;}if(!ok){location.replace("basico.html?v=5");}})();</script>
 <script>try{var t=localStorage.getItem("al-theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}
 /* 2026-09-27: el sitio siempre abre arriba, en Inicio. Safari (iPad/iPhone)
    restauraba el scroll de la visita anterior o saltaba a un #ancla guardado
@@ -513,7 +513,7 @@ nav.scrolled .nav-links a{font-size:12px}
 #instalacion{margin-top:2.5rem}
 
 /* ================================================================
-   DEMO 3D "VER EN ACCION" (three.js) - Conciliador Semiautomático V1
+   DEMO 3D "VER EN ACCION" (three.js) - Conciliador Automático V1
    Adaptado desde ver-en-accion-conciliador.html al ancho real del
    sitio (--max:900px) y al dark mode.
    NOTA de diseno: el canvas 3D se mantiene en tema claro a
@@ -2067,7 +2067,7 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
 }
 /* C · TABLET VERTICAL y D · TABLET HORIZONTAL Y COMPUTADOR: lo común basta, más el selector de equipo */
 /* 2026-10-08: en computador, la barra del demo ofrece ver la app como en tablet (iPad horizontal) o celular
-   (iPhone vertical); con uno de ellos el recuadro gana alto para que el equipo se lea. En celular y tablet no
+   (iPhone vertical), en el mismo recuadro que el notebook: al cambiar no se mueve nada de la página. En celular y tablet no
    aparece (ya se ve en el equipo del visitante) ni en ventanas de formato A o B, donde no cabe. */
 .al-equipo{display:none}
 @media (min-width:640px) and (min-height:561px){
@@ -2076,7 +2076,6 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
   .al-equipo button:hover{color:#fff;background:rgba(255,255,255,.1)}
   .al-equipo button[aria-pressed="true"]{background:#3d7fd6;color:#fff}
   .al-equipo button:focus-visible{outline:2px solid #9cc4f2;outline-offset:1px}
-  .al-sim-tablet .al-demo__stage,.al-sim-cel .al-demo__stage{height:max(360px, min(72cqw, calc(100svh - 230px)))}
 }
 /* 2026-09-30: pantallas táctiles. Los controles de las demos quedaban bajo el
    mínimo de 44 px para tocar con el dedo (26-28 px en la barra, 24 px el
@@ -2214,11 +2213,11 @@ window.alFoto = (function(){
     return e;
   }
   // medidas en unidades del demo: la app llena el ancho útil (o el alto, si así cabe mejor)
-  function medidas(vert, PW, PH, pestanas){
+  function medidas(vert, PW, PH, pestanas, exacto){
     var m = modelo(), e = especie(m, vert), tel = m.tipo === 'iphone' || m.tipo === 'android', tab = vert && tel && pestanas ? 56 : 0;
     var cw = e.W - 2 * e.side, chh = e.H - e.top - e.bot - tab;
     // celular vertical: la app usa todo el ancho de la pantalla (su margen interno de los lados queda fuera)
-    var ancho = vert && (m.tipo === 'iphone' || m.tipo === 'android') ? 1.09 : 1;
+    var ancho = vert && !exacto && (m.tipo === 'iphone' || m.tipo === 'android') ? 1.09 : 1;   // con pantallas reales (exacto), la captura completa
     var u = Math.max(PW / (cw * ancho), PH / chh);   // unidades por pt
     // tablet horizontal: la pantalla es más ancha que la app; como en Safari de iPad, la barra lateral llena el resto
     var lado = !vert && !tel ? Math.max(0, cw - PW / u) : 0;
@@ -2251,7 +2250,7 @@ window.alFoto = (function(){
   }
   function fuenteSF(px, peso){ return (peso || 600) + ' ' + Math.round(px) + 'px -apple-system, "SF Pro Text", "Helvetica Neue", Inter, sans-serif'; }
   function marco(T, g, pantalla, o){
-    var vert = o.vert, PW = o.ventana.w, PH = o.ventana.h, d = medidas(vert, PW, PH, o.menu), m = d.m, e = d.e;
+    var vert = o.vert, PW = o.ventana.w, PH = o.ventana.h, d = medidas(vert, PW, PH, o.menu, o.exacto), m = d.m, e = d.e;
     var pad = 0.012 * Math.max(d.OW, d.OH), FW = d.OW + 2 * pad, FH = d.OH + 2 * pad;
     var k = (equipo() === 'cel' ? 1536 : 2048) / Math.max(FW, FH), cw = Math.round(FW * k), ch = Math.round(FH * k);
     var X = function(v){ return v * k; }, P = function(pt){ return pt * d.u * k; };   // unidades → px · pt → px
@@ -2490,7 +2489,7 @@ window.alFoto = (function(){
       if (o.foco) { var kq = 1 - Math.exp(-dt * 4.5); st.x += (cl(o.foco.x, -u.SW * 0.3, u.SW * 0.3) - st.x) * kq; st.y += (cl(o.foco.y, -u.SH * 0.3, u.SH * 0.3) - st.y) * kq; }
       var z0 = (u.marco && u.marco.zoom < 1) ? ease(st.z) : 0;
       var cy0 = e0.cy || 0;
-      if (_sim) { lejos0 *= 1.14; cerca0 *= 1.14; cy0 -= lejos0 * tg0 * 0.09; }   // equipo elegido en computador: con aire y sobre la barra (que va encima del lienzo)
+      if (_sim) { lejos0 *= 1.1; cerca0 *= 1.1; }   // equipo elegido en computador: con aire (los bordes del lienzo se desvanecen)
       cam.position.set(lerp(0, st.x, z0), lerp(cy0, st.y, z0), lerp(lejos0, cerca0, z0));
       cam.lookAt(cam.position.x, cam.position.y, 0); return;
     }
@@ -2521,32 +2520,37 @@ window.alFoto = (function(){
     var e = especie(m, true), chh = e.H - e.top - e.bot - (pestanas ? 56 : 0), cw = e.W * 1.09;
     return Math.max(1, (800 / 1000) * chh / cw);
   }
+  // pantallas reales de las apps (img/demos): qué juego de capturas calza con la pantalla de este equipo
+  function conjunto(vert){
+    var q = equipo();
+    if (q === 'pc') return vert ? 'cel-v' : 'web';
+    if (q === 'tablet') return vert ? 'tab-v' : 'tab-h';
+    return modelo().tipo === 'chico' ? 'se' : (vert ? 'cel-v' : 'cel-h');
+  }
   // simular: solo en computador; 'tablet' (iPad horizontal), 'cel' (iPhone vertical) o null (el notebook).
   // Avisa a las demos con el evento «al-equipo» para que rearmen su aparato.
   function simular(t){
     if (real() !== 'pc') return;
     t = t === 'tablet' || t === 'cel' ? t : null; if (t === _sim) return;
     _sim = t;
-    document.documentElement.classList.toggle('al-sim-tablet', t === 'tablet');
-    document.documentElement.classList.toggle('al-sim-cel', t === 'cel');
     document.dispatchEvent(new Event('al-equipo'));
   }
   return { crear: crear, camara: camara, elegir: elegir, estirar: estirar, tactil: function(){ return equipo() !== 'pc'; }, dedo: dedo,
-    real: real, simular: simular, redondo: redondo, simulado: function(){ return _sim; }, vertSim: function(){ return _sim === 'cel'; } };
+    real: real, simular: simular, redondo: redondo, conjunto: conjunto, simulado: function(){ return _sim; }, vertSim: function(){ return _sim === 'cel'; } };
 })();
 /* Demos: notas de cada paso (2026-10-07): una frase corta por paso, en una burbuja junto a lo que se toca
    (o arriba, si el paso no tiene toque). Las dibuja el motor de tarjetas sobre la pantalla del demo. */
 window.AL_NOTAS = {
-  'ver-en-accion': ['Así se cuadra hoy: fila por fila, a mano', 'Importa la cartola tal como la entrega tu banco', 'Un clic: valida los datos y concilia',
-                    'Cada movimiento busca su contraparte solo', 'Lo que no calzó, lo emparejas tú', 'El resultado, listo para archivar'],
+  'ver-en-accion': ['Así se cuadra hoy: fila por fila, a mano', 'Pega el enlace de tu cartola en Google Sheets', 'Un clic: valida los datos y concilia',
+                    'Cada movimiento con su contraparte y su motivo', 'Lo que no calzó, lo emparejas tú', 'El reporte, listo para imprimir o guardar en PDF'],
   'como-se-instala': ['Haz una copia en tu Drive', 'Abre «Configurar herramienta» en el menú', 'Autoriza el acceso una sola vez',
                       'Publica tu panel con «Implementar»', 'Ábrelo y empieza a conciliar', 'Listo: ya quedó instalado'],
-  'v2-accion': ['Un abono paga dos facturas: ¿cuáles?', 'Pega el enlace de cada Google Sheet', 'El grupo 1:2 se arma solo',
-                'Una regla y las comisiones quedan explicadas', 'Envía la vista a quien la necesita', 'Indicadores que llevan al detalle'],
+  'v2-accion': ['Un abono paga dos facturas: ¿cuáles?', 'Pega el enlace de cada Google Sheet', 'Una factura y sus dos abonos, en un grupo',
+                'Una regla y la comisión queda explicada', 'Envía la vista a quien la necesita', 'Indicadores y sugerencias para lo dudoso'],
   'v2-instala': ['Haz una copia en tu Drive', 'Abre «Configurar herramienta» en el menú', 'Autoriza los permisos una sola vez',
                  'Publica tu panel con «Implementar»', 'Ábrelo y conecta tus fuentes', 'Listo: tu panel quedó instalado'],
   'ped-accion': ['Pedidos repartidos entre chats y notas', 'Tu catálogo en un enlace para compartir', 'Tu cliente elige y envía en un minuto',
-                 'El pedido aparece al instante en tu panel', 'Confirmas y avisas por WhatsApp', 'Ventas y lo más pedido, a la vista'],
+                 'El pedido aparece al instante en tu panel', 'Confirmas y avisas por WhatsApp', 'Tus ventas y el resumen de hoy, a la vista'],
   'ped-instala': ['Haz una copia en tu Drive', 'Publica tu app con «Implementar»', 'Autoriza el acceso una sola vez',
                   'Entra a tu panel con tu clave', 'Tu negocio y tu catálogo', 'Comparte tu formulario con tus clientes']
 };
@@ -2828,7 +2832,7 @@ window.AL_NOTAS = {
     <div class="prod-cab">
       <div class="prod-cab-txt">
         <div class="prod-eyebrow"><span class="prox-badge">Próximamente</span></div>
-        <h2 class="prod-h1">Conciliador Semiautomático V1</h2>
+        <h2 class="prod-h1">Conciliador Automático V1</h2>
         <p class="prod-tagline">Tu conciliación mensual, hecha en segundos dentro de tu propio Google Sheets.</p>
       </div>
       <div class="alert-box"><b>¿Qué es conciliar?</b> Confirmar que cada movimiento de tu cartola o libro mayor tenga su contraparte: la factura con su pago, el cargo con su abono.</div>
@@ -2837,7 +2841,7 @@ window.AL_NOTAS = {
     <div class="demo-par">
     <div class="demo-section on" data-d="accion" role="tabpanel">
       <div class="demo-label demo-cambio" role="tablist" aria-label="Demostraciones"><i aria-hidden="true"></i><button type="button" class="on" role="tab" aria-selected="true" data-d="accion">Ver en acción</button><button type="button" role="tab" aria-selected="false" data-d="instala">Cómo se instala</button></div>
-      <div class="al-demo" id="ver-en-accion" aria-label="Conciliador Semiautomático V1 en acción">
+      <div class="al-demo" id="ver-en-accion" aria-label="Conciliador Automático V1 en acción">
         <div class="al-demo__grid">
           <div class="al-demo__copy">
             <p class="al-demo__kicker">El problema que resuelve</p>
@@ -2900,7 +2904,7 @@ window.AL_NOTAS = {
     </div>
     <div class="demo-section" data-d="instala" role="tabpanel" hidden id="instalacion">
       <div class="demo-label demo-cambio" role="tablist" aria-label="Demostraciones"><i aria-hidden="true"></i><button type="button" role="tab" aria-selected="false" data-d="accion">Ver en acción</button><button type="button" class="on" role="tab" aria-selected="true" data-d="instala">Cómo se instala</button></div>
-      <div class="al-demo" id="como-se-instala" aria-label="Cómo se instala el Conciliador Semiautomático V1">
+      <div class="al-demo" id="como-se-instala" aria-label="Cómo se instala el Conciliador Automático V1">
         <div class="al-demo__grid">
           <div class="al-demo__copy" aria-live="polite">
             <p class="al-demo__kicker">Paso 1: haz tu copia</p>
@@ -2990,8 +2994,8 @@ window.AL_NOTAS = {
     <div class="pi-bloque">
       <div class="pi-eyebrow">Lo que necesitas saber</div>
       <div class="pi-nums">
-        <div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></span><b>3<small>s</small></b><span>por cada 3.000 movimientos</span></div>
-        <div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><b>5.000<small></small></b><span>movimientos por ejecución</span></div>
+        <div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></span><b>1<small>clic</small></b><span>para conciliar desde el panel</span></div>
+        <div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><b>3.000<small></small></b><span>movimientos por ejecución</span></div>
         <div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><b>~5<small>min</small></b><span>de instalación, sin programar</span></div>
         <div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></span><b>1<small></small></b><span>cuenta de Google y nada más</span></div>
       </div>
@@ -3013,7 +3017,7 @@ window.AL_NOTAS = {
         <details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><span class="pi-q">¿Mis datos quedan en algún servidor?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>No. Todo corre dentro de tu propia cuenta de Google: tus datos no salen de tu Drive.</p></details>
         <details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10l9-6 9 6M5 10v8M9 10v8M15 10v8M19 10v8M3 21h18"/></svg></span><span class="pi-q">¿Sirve con cualquier banco o planilla?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Sí. Sirve con la cartola de cualquier banco, tu libro mayor o lo que exporta tu ERP, incluso si separa Cargo y Abono.</p></details>
         <details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21V8l6-4v17M9 21h12V11l-6-3"/><path d="M12 13h1M12 16h1M16 13h1M16 16h1"/></svg></span><span class="pi-q">¿Puedo usarlo en más de una empresa?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Sí: con perfiles guardas la configuración de cada empresa o periodo. La licencia cubre una persona u organización; si administras varias, escríbeme.</p></details>
-        <details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><span class="pi-q">¿Y si tengo más de 5.000 registros?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Se recomienda menos de 5.000 por ejecución (Google limita cada ejecución a 6 minutos): procésalos por mes. 3.000 registros tardan unos 3 segundos.</p></details>
+        <details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><span class="pi-q">¿Y si tengo más de 3.000 registros?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>El rango declarado es de hasta 3.000 movimientos por ejecución (Google limita cada ejecución a 6 minutos): si tienes más, procésalos por mes.</p></details>
         <details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6v18h12V7z"/><path d="M14 3v4h4M9 13l6 4M15 13l-6 4"/></svg></span><span class="pi-q">¿Funciona en Excel?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Usa Google Sheets. Sube tu .xlsx a Drive, ábrelo como Google Sheet y úsalo como fuente.</p></details>
       </div>
     </div>
@@ -4465,7 +4469,7 @@ window.addEventListener('scroll',function(){
   });
 })();
 
-// 2026-09-28: las cifras de Herramientas (3 s, 5.000, ~5 min) cuentan desde 0
+// 2026-09-28: las cifras de Herramientas (3.000, ~5 min) cuentan desde 0
 // la primera vez que aparecen en pantalla. Sin esto con movimiento reducido.
 (function(){
   if(!('IntersectionObserver' in window)) return;
@@ -5188,7 +5192,7 @@ window.AL3D = (function(){
     });
   }
   // cifras flotantes (reporteria)
-  var CIFRAS = [['3 s','por cada 3.000'],['5.000','movimientos'],['98 %','conciliado'],['~5 min','instalación'],['0','errores de copia']];
+  var CIFRAS = [['3.000','por ejecución'],['1 clic','para conciliar'],['82 %','conciliado'],['~5 min','instalación'],['0','errores de copia']];
   function textoCifra(c){
     return lienzo(200, 90, function(g, w, h){
       g.font = '600 38px "JetBrains Mono", ui-monospace, monospace'; g.fillStyle = '#E8EDF5'; g.textBaseline = 'alphabetic';
@@ -5300,7 +5304,7 @@ window.AL3D = (function(){
     poner(gr, plano(hoja([1, 2, 0, 3, 1, 2]), 2.4, 1.7), -lx - 0.3, 0.9, z0 - 5.5);
     poner(gr, plano(hoja([2, 0, 3, 1, 0, 2]), 2.4, 1.7), lx + 0.4, -0.7, z0 - 8);
     [['=CONCILIAR(A2:A500)', 'una fórmula, un clic', '#4C8DDB'], ['✓ 498 pares', 'emparejados solos', '#34C27A'], ['⚠ 2 pendientes', 'para revisar', '#F0A63A'],
-     ['3 s', 'por cada 3.000 movimientos', '#8FC1FF'], ['Google Sheets', 'tu propia planilla', '#34C27A']].forEach(function(f, i){
+     ['3.000', 'movimientos por ejecución', '#8FC1FF'], ['Google Sheets', 'tu propia planilla', '#34C27A']].forEach(function(f, i){
       var s = i % 2 ? -1 : 1; poner(gr, plano(fichaTex(f[0], f[1], f[2]), 2.4, 0.51), s * (lx + 0.2 + (i % 2) * 0.4), -1.7 + i * 0.85, z0 - 4 - i * 1.3);
     });
   })();
@@ -5890,9 +5894,9 @@ window.alDemoTarjetas = function(root, cfg){
   }
   // pestañas de la app (barra inferior en el celular), solo en los demos del panel; en los de instalación se
   // ven Drive y Apps Script, que no las tienen
-  const MENU = /instala/.test(root.id) ? null : /^ped/.test(root.id) ? ['Pedidos','Catálogo','Reportes','Clientes','Ajustes']
+  const MENU = cfg.capturas || /instala/.test(root.id) ? null : /^ped/.test(root.id) ? ['Pedidos','Catálogo','Reportes','Clientes','Ajustes']
     : /^v2/.test(root.id) ? ['Resumen','Resultados','Sugerencias','Historial','Ajustes'] : ['Resumen','Resultados','Ajustes','Historial','Config.'];
-  function aparato(vert, PW, PH){ return alFoto.crear(THREE, scene, { vert, ventana: { w: PW, h: PH }, menu: MENU, anis: ANISO, listo: () => { needsRender = true; } }); }
+  function aparato(vert, PW, PH){ return alFoto.crear(THREE, scene, { vert, ventana: { w: PW, h: PH }, menu: MENU, exacto: !!cfg.capturas, anis: ANISO, listo: () => { needsRender = true; } }); }
   // pantalla completa: la tarjeta cubre toda la pantalla del aparato; fuera de su dibujo la textura repite el
   // borde (ClampToEdge), así la barra superior y el fondo de la app llegan de lado a lado sin deformar la letra
   function pantallaCompleta(m, u, PW, PH){
@@ -6013,13 +6017,17 @@ window.alDemoTarjetas = function(root, cfg){
     g.fillStyle = '#12304d'; rr(g, x + w/2 - 60, y + 24, 120, 22, 11); g.fill();
     return { x: x + 30, y: y + 64, w: w - 60, h: h - 92 };
   }
-  return { C, CW, CH, FONT, clamp, ease, easeOut, lerp, rr, txt, wrap, press, btn, base, overlay, dialog, banner, checkDot, sheetIcon, pill, campo, panelBar, celular, vertical: CH > CW };
+  return { C, CW, CH, FONT, clamp, ease, easeOut, lerp, rr, txt, wrap, press, btn, base, overlay, dialog, banner, checkDot, sheetIcon, pill, campo, panelBar, celular, vertical: CH > CW,
+    mk: mkH, redibujar: () => { needsRender = true; } };
   }
 
   // Un juego de tarjetas por diseño; el vertical se arma recién cuando se usa
   function juego(vert){
-    const CW = vert ? 800 : 1200, CH = vert ? 1000 : 950, PW = vert ? 3.84 : 4.8, K = alFoto.estirar(vert, !!MENU), PH = PW * CH / CW * K;
-    const DRAW = (vert ? cfg.drawV : cfg.draw)(mkH(CW, CH)), CURSOR = (vert ? cfg.cursorV : cfg.cursor) || [];
+    // con pantallas reales (cfg.capturas), la tarjeta tiene el tamaño de la pantalla de la app en este equipo
+    const CAP = cfg.capturas ? cfg.capturas.de(alFoto.conjunto(vert)) : null;
+    const CW = CAP ? CAP.w : vert ? 800 : 1200, CH = CAP ? CAP.h : vert ? 1000 : 950, PW = (CAP ? CW >= CH : !vert) ? 4.8 : 3.84;
+    const K = CAP ? 1 : alFoto.estirar(vert, !!MENU), PH = PW * CH / CW * K;
+    const DRAW = CAP ? CAP.draw(mkH(CW, CH)) : (vert ? cfg.drawV : cfg.draw)(mkH(CW, CH)), CURSOR = (CAP ? CAP.cursor : vert ? cfg.cursorV : cfg.cursor) || [];
     // 2026-09-30: cada tarjeta dibuja su lienzo solo mientras está en pantalla
     // (a lo más 2 a la vez) y lo libera al salir. Antes las 6 de cada demo
     // vivían siempre (~70 MB por demo), también las de demos ocultas; en iPhone
@@ -6263,6 +6271,90 @@ window.alDemoTarjetas = function(root, cfg){
   }
   window.alDemoTarjetas = function(root, cfg){ var r = orig.apply(this, arguments); if (root && root._alDemo) extras(root); return r; };
 })();
+</script>
+<script src="img/demos/capturas.js"></script>
+<script>
+/* Demos con pantallas reales (2026-10-08). «Ver en acción» muestra la app de verdad: cada paso es una
+   serie de capturas de la app real con datos de ejemplo (img/demos/capturar.js las saca con los
+   simuladores de cada repo, en la pantalla de cada equipo) y aquí se animan encima el puntero o el dedo,
+   los toques, el paso de una pantalla a otra y los resaltados. El paso del problema (que no es la app)
+   sigue dibujado, escalado a la pantalla. alCapturas(app, cfg) suma cfg.capturas y recalcula los tiempos
+   de los pasos; el motor arma la tarjeta del tamaño de la pantalla del equipo (alFoto.conjunto). */
+window.alCapturas = function(app, cfg){
+  var M = window.AL_CAPTURAS && AL_CAPTURAS[app]; if (!M || !cfg) return;
+  var ref = M['cel-v'] || M[Object.keys(M)[0]];
+  if (!ref || ref.pasos.length !== cfg.steps.length) return;   // sin capturas al día: queda el demo dibujado
+  var FUNDE = 0.18, VIAJE = 0.6, TOQUE = 0.45;
+  var cl = function(x){ return Math.max(0, Math.min(1, x)); };
+  // cada cuadro se lee (lee) y, si toca algo, el puntero llega, toca y entra el cuadro siguiente
+  function tiempos(cs){ var t = 0; return cs.map(function(c){ var a = t, lee = c.lee || 1; t += lee + (c.toca ? TOQUE : 0); return { a: a, lee: lee, fin: t }; }); }
+  var t = 0;
+  cfg.steps.forEach(function(st, p){
+    var cs = ref.pasos[p], d = cs ? tiempos(cs).pop().fin + 0.4 : st.b - st.a;
+    st.a = +t.toFixed(2); t += d; st.b = +t.toFixed(2);
+  });
+  function elegir(set){
+    if (M[set]) return set;
+    var q = { 'web': 1.6, 'tab-h': 1.61, 'tab-v': 0.76, 'cel-v': 0.56, 'cel-h': 2.2, 'se': 0.68 }[set] || 1, mejor = null;
+    Object.keys(M).forEach(function(k){ var r = M[k].w / M[k].h; if (!mejor || Math.abs(Math.log(r / q)) < Math.abs(Math.log(M[mejor].w / M[mejor].h / q))) mejor = k; });
+    return mejor;
+  }
+  cfg.capturas = { de: function(pedido){
+    var set = elegir(pedido), S = M[set], W = S.w, Hh = S.h;
+    var vert = Hh > W && !!cfg.drawV, dw = vert ? 800 : 1200, dh = vert ? 1000 : 950;
+    var esc = W / dw; if (dh * esc > Hh) esc = Hh / dh; var ox = (W - dw * esc) / 2;
+    var cur = (vert ? cfg.cursorV : cfg.cursor) || [];
+    var cursor = S.pasos.map(function(cs, p){
+      if (!cs) { var o = cur[p]; return o ? { keys: o.keys.map(function(k){ return [k[0], ox + k[1] * esc, k[2] * esc]; }), clicks: o.clicks } : null; }
+      var T = tiempos(cs), keys = [], clicks = [], x = W * 0.72, y = Hh * 0.82;
+      cs.forEach(function(c, i){
+        if (!c.toca) return;
+        var tx = c.toca[0] + c.toca[2] / 2, ty = c.toca[1] + c.toca[3] / 2, t0 = T[i].a + T[i].lee;
+        if (!keys.length) keys.push([Math.max(0.1, t0 - VIAJE - 0.5), x, y]);
+        keys.push([Math.max(keys[keys.length - 1][0] + 0.05, t0 - VIAJE), x, y], [t0, tx, ty], [t0 + TOQUE - 0.05, tx, ty]);
+        clicks.push(t0 + 0.2); x = tx; y = ty;
+      });
+      return keys.length ? { keys: keys, clicks: clicks } : null;
+    });
+    return { w: W, h: Hh, cursor: cursor, draw: function(H){
+      var imgs = {}, dib = null;
+      function img(p, f){
+        var k = p + '-' + f, im = imgs[k];
+        if (!im) { im = new Image(); im.decoding = 'async'; im.onload = H.redibujar; im.src = 'img/demos/' + app + '/' + set + '/' + S.pasos[p][f].src; imgs[k] = im; }
+        return im.complete && im.naturalWidth ? im : null;
+      }
+      // en memoria solo el paso que se ve y sus vecinos (Safari en iPhone limita la memoria)
+      function precargar(p){
+        Object.keys(imgs).forEach(function(k){ var q = +k.split('-')[0]; if (q < p - 1 || q > p + 1) { imgs[k].onload = null; imgs[k].src = ''; delete imgs[k]; } });
+        [p, p + 1].forEach(function(q){ if (S.pasos[q]) S.pasos[q].forEach(function(c, f){ img(q, f); }); });
+      }
+      return S.pasos.map(function(cs, p){
+        if (!cs) return function(g, lt){   // el problema: el dibujo de siempre, escalado a la pantalla
+          if (!dib) dib = (vert ? cfg.drawV : cfg.draw)(H.mk(dw, dh));
+          precargar(p);
+          g.fillStyle = '#eef2f7'; g.fillRect(0, 0, W, Hh);
+          g.save(); g.translate(ox, 0); g.scale(esc, esc); dib[p](g, lt); g.restore();
+        };
+        var T = tiempos(cs);
+        return function(g, lt){
+          precargar(p);
+          var i = 0; while (i + 1 < cs.length && lt >= T[i + 1].a) i++;
+          var e = cl((lt - T[i].a) / FUNDE), a = i ? img(p, i - 1) : null, b = img(p, i);
+          g.fillStyle = '#ffffff'; g.fillRect(0, 0, W, Hh);
+          if (a && e < 1) g.drawImage(a, 0, 0, W, Hh);
+          if (b) { g.globalAlpha = i ? e : 1; g.drawImage(b, 0, 0, W, Hh); g.globalAlpha = 1; }
+          (cs[i].marca || []).forEach(function(m){   // resaltado: un borde que late alrededor de lo importante
+            var v = cl((lt - T[i].a - 0.35) / 0.3); if (v <= 0) return;
+            var x0 = Math.max(m[0], 6), y0 = Math.max(m[1], 6), x1 = Math.min(m[0] + m[2], W - 6), y1 = Math.min(m[1] + m[3], Hh - 6);   // solo la parte que se ve
+            if (x1 - x0 < 20 || y1 - y0 < 16) return; m = [x0, y0, x1 - x0, y1 - y0];
+            g.save(); g.globalAlpha = v * (0.75 + 0.25 * Math.sin(lt * 4)); g.strokeStyle = '#3d7fd6'; g.lineWidth = 3;
+            g.shadowColor = 'rgba(61,127,214,.55)'; g.shadowBlur = 14; H.rr(g, m[0] - 4, m[1] - 4, m[2] + 8, m[3] + 8, 10); g.stroke(); g.restore();
+          });
+        };
+      });
+    } };
+  } };
+};
 </script>
 <script>
 /* Demos del Conciliador Semiautomático V2 (2026-09-30). Pantallas dibujadas a
@@ -8246,22 +8338,22 @@ AL_DEMOS['ver-en-accion'] = (function(){
         body:'Cada factura debe coincidir con su pago, fila por fila, en planillas de cientos de filas. Hacerlo a mano toma horas, y un solo número mal copiado puede generar un problema después.',
         stats:[['200','movimientos típicos'],['3 h','tiempo manual']] },
       { a:3.6, b:8.0, short:'Conecta', kicker:'Paso 1: conecta tu fuente',
-        title:'Tu banco o ERP exporta a Google Sheets',
-        body:'Importa tu .xlsx o conecta un sheet externo. El sistema detecta los encabezados, te propone qué columna es cada dato (también Cargo y Abono por separado) y te confirma que son las correctas.' },
+        title:'Tu cartola, desde Google Sheets',
+        body:'Pegas el enlace del Google Sheet con tus movimientos (la cartola o lo que exporta tu banco o ERP; un .xlsx se sube a Drive y se abre como Google Sheet). El sistema lee los encabezados, te propone qué columna es cada dato (también Cargo y Abono por separado) y tú las confirmas.' },
       { a:8.0, b:10.9, short:'Ejecuta', kicker:'Paso 2: ejecuta desde el panel',
         title:'Abre el panel de control web y ejecuta con un clic',
         body:'Resultados, gráfico y números clave en una sola vista. El sistema valida los datos antes de procesar.' },
       { a:10.9, b:15.3, short:'Matching', kicker:'Algoritmo de matching',
         title:'Cruza cada movimiento contra todos los demás',
-        body:'El sistema recorre todos los registros y empareja automáticamente cada movimiento con su contraparte, explicando el motivo de cada resultado.',
-        stats:[['~3.000','movimientos'],['~3 s','de proceso']] },
+        body:'El sistema compara cada movimiento con los demás y lo empareja con su contraparte de monto opuesto (1 a 1), con el motivo de cada resultado: diferencia de monto, días de distancia y parecido del concepto.',
+        stats:[['3.000','movimientos por ejecución'],['1:1','cada par con su motivo']] },
       { a:15.3, b:21.0, short:'Revisa', kicker:'Paso 3: revisa y corrige',
         title:'Lo que no calzó, lo resuelves tú',
         body:'Cada pendiente queda a la vista. Si sabes que una transferencia sin referencia corresponde a una factura, la emparejas a mano o deshaces un pareo, y el ajuste queda guardado entre ejecuciones.' },
       { a:21.0, b:28.8, short:'Resultado', kicker:'Resultado final',
         title:'Así queda tu conciliación',
-        body:'Cada movimiento con su estado, su contraparte y el detalle del match. Filtra los pendientes y exporta los resultados con un clic, listos para compartir o archivar.',
-        stats:[['3 s','vs 3 horas manual'],['5 min','instalación']],
+        body:'Cada movimiento con su estado, su contraparte y el detalle del match. Filtras los pendientes, descargas un CSV o imprimes el reporte (o lo guardas en PDF), listo para compartir o archivar.',
+        stats:[['1 clic','para conciliar'],['5 min','instalación']],
         cta:['Ver qué incluye', 'incluye'] }
     ],
     cursor: recorrido(L(1200, 950)), cursorV: recorrido(L(800, 1000)),
@@ -8269,6 +8361,8 @@ AL_DEMOS['ver-en-accion'] = (function(){
   };
 })();
 
+  // pantallas reales de la app (img/demos), si están: V1, V2 y PedidoApp
+  if (window.alCapturas) { alCapturas('v1', AL_DEMOS['ver-en-accion']); alCapturas('v2', AL_DEMOS['v2-accion']); alCapturas('ped', AL_DEMOS['ped-accion']); }
   const r0 = document.getElementById('ver-en-accion');
   if (r0 && window.alDemoTarjetas) alDemoTarjetas(r0, AL_DEMOS['ver-en-accion']);
   const r1 = document.getElementById('como-se-instala');
