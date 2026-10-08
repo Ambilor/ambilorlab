@@ -372,6 +372,11 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
    espera del doble toque en el celular. */
 :is(.cta-home,.buy-btn,.i3-btn,.al-demo__btn,.gp-tab,.btn-top,.rc-copiar,.nav-dark-btn){touch-action:manipulation}
 :is(.cta-home,.buy-btn,.i3-btn,.al-demo__btn,.gp-tab,.btn-top,.rc-copiar,.nav-dark-btn):active{scale:.97;transition-duration:0s}
+/* 2026-10-08 (criterio shadcn/ui y TailGrids): los demás botones de la página con la misma respuesta al tocar
+   y el mismo anillo de foco con teclado */
+:is(.demo-cambio button,.al-equipo button,.al-resumen ol button,.al-resumen__otra,.al-resumen__cta,.rc-f,.rc-boton,.rc-ver,.rc-volver,.gp-ctrl button){touch-action:manipulation}
+:is(.demo-cambio button,.al-equipo button,.al-resumen ol button,.al-resumen__otra,.al-resumen__cta,.rc-f,.rc-boton,.rc-ver,.rc-volver,.gp-ctrl button):active{scale:.97}
+:is(.cta-home,.buy-btn,.i3-btn,.gp-tab,.btn-top,.rc-copiar,.nav-dark-btn,.al-equipo button,.al-resumen ol button,.al-resumen__otra,.al-resumen__cta,.rc-f,.rc-boton,.rc-ver,.rc-volver,.gp-ctrl button):focus-visible{outline:2px solid var(--azul);outline-offset:2px}
 @keyframes shimmer-btn{from{transform:translateX(-150%) skewX(-22deg)}to{transform:translateX(450%) skewX(-22deg)}}
 .gvw-tc{transition:transform .2s,filter .2s}
 .gvw-tc:hover{transform:translateY(-4px)!important;filter:brightness(1.04)}
@@ -2070,6 +2075,18 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
    (iPhone vertical), en el mismo recuadro que el notebook: al cambiar no se mueve nada de la página. En celular y tablet no
    aparece (ya se ve en el equipo del visitante) ni en ventanas de formato A o B, donde no cabe. */
 .al-equipo{display:none}
+/* D en computador ancho (2026-10-08): el nombre y lo que hace a la izquierda y el demo a la derecha, con el alto
+   de la pantalla. Así el celular y la tablet del selector de equipo se ven grandes, el notebook no pierde nada y,
+   al cambiar de equipo o de demo, el recuadro no cambia: nada de la página se mueve. */
+@media (pointer:fine) and (min-width:1100px) and (min-height:561px) and (orientation:landscape){
+  #product .hp-panel.on{display:grid;grid-template-columns:minmax(240px,.62fr) minmax(0,1.7fr);column-gap:clamp(24px,3vw,48px);align-items:start}
+  #product .hp-panel.on>*{grid-column:1/-1}
+  #product .hp-panel.on>.prod-cab{grid-column:1;grid-row:1;align-self:center;text-align:left;margin:0;max-width:none}
+  #product .hp-panel.on>.prod-cab .prod-eyebrow{justify-content:flex-start}
+  #product .hp-panel.on>.prod-cab .prod-tagline{margin:0}
+  #product .hp-panel.on>.demo-par{grid-column:2;grid-row:1;min-width:0}
+  .al-demo__stage{height:max(360px, min(68cqw, calc(100svh - 304px)))}
+}
 @media (min-width:640px) and (min-height:561px){
   .al-equipo{display:inline-flex;flex:none;gap:2px;padding:2px;margin-left:4px;border-radius:999px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
   .al-equipo button{border:0;background:none;cursor:pointer;padding:4px 10px;border-radius:999px;font:500 10.5px/1.2 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:rgba(232,237,245,.72);transition:background-color .15s,color .15s}
@@ -2120,7 +2137,7 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
 }
 @media (pointer:coarse) and (orientation:portrait) and (max-width:600px){   /* celular: el teléfono completo, lo más grande que cabe */
   #product .al-demo{padding-left:6px;padding-right:6px}
-  .al-demo--player .al-demo__stage canvas{max-height:calc(100svh - 240px)}   /* equipo, barra y frase sobre la barra flotante de Safari (iOS 26, ~85 px) */
+  .al-demo--player .al-demo__stage canvas{max-height:calc(100svh - 244px)}   /* equipo, barra y frase sobre la barra flotante de Safari (iOS 26, ~85 px) */
   .al-chico #product .al-demo{padding-left:4px;padding-right:4px}   /* iPhone SE: la app sola, a todo el ancho */
   .al-chico .al-demo--player .al-demo__stage canvas{max-height:calc(100svh - 160px)}
 }
@@ -2213,11 +2230,11 @@ window.alFoto = (function(){
     return e;
   }
   // medidas en unidades del demo: la app llena el ancho útil (o el alto, si así cabe mejor)
-  function medidas(vert, PW, PH, pestanas, exacto){
+  function medidas(vert, PW, PH, pestanas){
     var m = modelo(), e = especie(m, vert), tel = m.tipo === 'iphone' || m.tipo === 'android', tab = vert && tel && pestanas ? 56 : 0;
     var cw = e.W - 2 * e.side, chh = e.H - e.top - e.bot - tab;
-    // celular vertical: la app usa todo el ancho de la pantalla (su margen interno de los lados queda fuera)
-    var ancho = vert && !exacto && (m.tipo === 'iphone' || m.tipo === 'android') ? 1.09 : 1;   // con pantallas reales (exacto), la captura completa
+    // la app completa de borde a borde, con su propio margen a los lados (antes se recortaba y el texto tocaba el borde)
+    var ancho = 1;
     var u = Math.max(PW / (cw * ancho), PH / chh);   // unidades por pt
     // tablet horizontal: la pantalla es más ancha que la app; como en Safari de iPad, la barra lateral llena el resto
     var lado = !vert && !tel ? Math.max(0, cw - PW / u) : 0;
@@ -2250,7 +2267,7 @@ window.alFoto = (function(){
   }
   function fuenteSF(px, peso){ return (peso || 600) + ' ' + Math.round(px) + 'px -apple-system, "SF Pro Text", "Helvetica Neue", Inter, sans-serif'; }
   function marco(T, g, pantalla, o){
-    var vert = o.vert, PW = o.ventana.w, PH = o.ventana.h, d = medidas(vert, PW, PH, o.menu, o.exacto), m = d.m, e = d.e;
+    var vert = o.vert, PW = o.ventana.w, PH = o.ventana.h, d = medidas(vert, PW, PH, o.menu), m = d.m, e = d.e;
     var pad = 0.012 * Math.max(d.OW, d.OH), FW = d.OW + 2 * pad, FH = d.OH + 2 * pad;
     var k = (equipo() === 'cel' ? 1536 : 2048) / Math.max(FW, FH), cw = Math.round(FW * k), ch = Math.round(FH * k);
     var X = function(v){ return v * k; }, P = function(pt){ return pt * d.u * k; };   // unidades → px · pt → px
@@ -2489,7 +2506,7 @@ window.alFoto = (function(){
       if (o.foco) { var kq = 1 - Math.exp(-dt * 4.5); st.x += (cl(o.foco.x, -u.SW * 0.3, u.SW * 0.3) - st.x) * kq; st.y += (cl(o.foco.y, -u.SH * 0.3, u.SH * 0.3) - st.y) * kq; }
       var z0 = (u.marco && u.marco.zoom < 1) ? ease(st.z) : 0;
       var cy0 = e0.cy || 0;
-      if (_sim) { lejos0 *= 1.1; cerca0 *= 1.1; }   // equipo elegido en computador: con aire (los bordes del lienzo se desvanecen)
+      if (_sim) { lejos0 *= 1.03; cerca0 *= 1.03; }   // equipo elegido en computador: llena el alto del recuadro, como el notebook (apenas aire para el borde que se desvanece)
       cam.position.set(lerp(0, st.x, z0), lerp(cy0, st.y, z0), lerp(lejos0, cerca0, z0));
       cam.lookAt(cam.position.x, cam.position.y, 0); return;
     }
@@ -2517,15 +2534,9 @@ window.alFoto = (function(){
   // círculos conservan su forma (ver el motor).
   function estirar(vert, pestanas){
     var m = modelo(); if (!vert || equipo() === 'pc' || !(m.tipo === 'iphone' || m.tipo === 'android')) return 1;
-    var e = especie(m, true), chh = e.H - e.top - e.bot - (pestanas ? 56 : 0), cw = e.W * 1.09;
-    return Math.max(1, (800 / 1000) * chh / cw);
-  }
-  // pantallas reales de las apps (img/demos): qué juego de capturas calza con la pantalla de este equipo
-  function conjunto(vert){
-    var q = equipo();
-    if (q === 'pc') return vert ? 'cel-v' : 'web';
-    if (q === 'tablet') return vert ? 'tab-v' : 'tab-h';
-    return modelo().tipo === 'chico' ? 'se' : (vert ? 'cel-v' : 'cel-h');
+    var e = especie(m, true), chh = e.H - e.top - e.bot - (pestanas ? 56 : 0), cw = e.W;
+    // solo una parte del alto que sobra: las filas quedan compactas, como en la app; abajo sigue la página de la app
+    return Math.max(1, 1 + ((800 / 1000) * chh / cw - 1) * 0.3);
   }
   // simular: solo en computador; 'tablet' (iPad horizontal), 'cel' (iPhone vertical) o null (el notebook).
   // Avisa a las demos con el evento «al-equipo» para que rearmen su aparato.
@@ -2536,7 +2547,7 @@ window.alFoto = (function(){
     document.dispatchEvent(new Event('al-equipo'));
   }
   return { crear: crear, camara: camara, elegir: elegir, estirar: estirar, tactil: function(){ return equipo() !== 'pc'; }, dedo: dedo,
-    real: real, simular: simular, redondo: redondo, conjunto: conjunto, simulado: function(){ return _sim; }, vertSim: function(){ return _sim === 'cel'; } };
+    real: real, simular: simular, redondo: redondo, simulado: function(){ return _sim; }, vertSim: function(){ return _sim === 'cel'; } };
 })();
 /* Demos: notas de cada paso (2026-10-07): una frase corta por paso, en una burbuja junto a lo que se toca
    (o arriba, si el paso no tiene toque). Las dibuja el motor de tarjetas sobre la pantalla del demo. */
@@ -2545,12 +2556,12 @@ window.AL_NOTAS = {
                     'Cada movimiento con su contraparte y su motivo', 'Lo que no calzó, lo emparejas tú', 'El reporte, listo para imprimir o guardar en PDF'],
   'como-se-instala': ['Haz una copia en tu Drive', 'Abre «Configurar herramienta» en el menú', 'Autoriza el acceso una sola vez',
                       'Publica tu panel con «Implementar»', 'Ábrelo y empieza a conciliar', 'Listo: ya quedó instalado'],
-  'v2-accion': ['Un abono paga dos facturas: ¿cuáles?', 'Pega el enlace de cada Google Sheet', 'Una factura y sus dos abonos, en un grupo',
-                'Una regla y la comisión queda explicada', 'Envía la vista a quien la necesita', 'Indicadores y sugerencias para lo dudoso'],
+  'v2-accion': ['Un abono paga dos facturas: ¿cuáles?', 'Pega el enlace de cada Google Sheet', 'El grupo 1:2 se arma solo',
+                'Una regla y las comisiones quedan explicadas', 'Envía la vista a quien la necesita', 'Indicadores que llevan al detalle'],
   'v2-instala': ['Haz una copia en tu Drive', 'Abre «Configurar herramienta» en el menú', 'Autoriza los permisos una sola vez',
                  'Publica tu panel con «Implementar»', 'Ábrelo y conecta tus fuentes', 'Listo: tu panel quedó instalado'],
   'ped-accion': ['Pedidos repartidos entre chats y notas', 'Tu catálogo en un enlace para compartir', 'Tu cliente elige y envía en un minuto',
-                 'El pedido aparece al instante en tu panel', 'Confirmas y avisas por WhatsApp', 'Tus ventas y el resumen de hoy, a la vista'],
+                 'El pedido aparece al instante en tu panel', 'Confirmas y avisas por WhatsApp', 'Ventas y lo más pedido, a la vista'],
   'ped-instala': ['Haz una copia en tu Drive', 'Publica tu app con «Implementar»', 'Autoriza el acceso una sola vez',
                   'Entra a tu panel con tu clave', 'Tu negocio y tu catálogo', 'Comparte tu formulario con tus clientes']
 };
@@ -5892,11 +5903,10 @@ window.alDemoTarjetas = function(root, cfg){
     g.save(); g.globalAlpha = a * (1 - p) * 0.9; g.strokeStyle = '#3d7fd6'; g.lineWidth = 5;
     g.beginPath(); g.arc(k0[1], k0[2], r, 0, Math.PI * 2); g.stroke(); g.restore();
   }
-  // pestañas de la app (barra inferior en el celular), solo en los demos del panel; en los de instalación se
-  // ven Drive y Apps Script, que no las tienen
-  const MENU = cfg.capturas || /instala/.test(root.id) ? null : /^ped/.test(root.id) ? ['Pedidos','Catálogo','Reportes','Clientes','Ajustes']
-    : /^v2/.test(root.id) ? ['Resumen','Resultados','Sugerencias','Historial','Ajustes'] : ['Resumen','Resultados','Ajustes','Historial','Config.'];
-  function aparato(vert, PW, PH){ return alFoto.crear(THREE, scene, { vert, ventana: { w: PW, h: PH }, menu: MENU, exacto: !!cfg.capturas, anis: ANISO, listo: () => { needsRender = true; } }); }
+  // barra de pestañas abajo en el celular: solo la tiene el panel real de PedidoApp (en ese orden); el V1 y el V2
+  // llevan sus pestañas arriba, y en los de instalación se ven Drive y Apps Script
+  const MENU = /^ped-accion/.test(root.id) ? ['Pedidos','Catálogo','Clientes','Reportes','Ajustes'] : null;
+  function aparato(vert, PW, PH){ return alFoto.crear(THREE, scene, { vert, ventana: { w: PW, h: PH }, menu: MENU, anis: ANISO, listo: () => { needsRender = true; } }); }
   // pantalla completa: la tarjeta cubre toda la pantalla del aparato; fuera de su dibujo la textura repite el
   // borde (ClampToEdge), así la barra superior y el fondo de la app llegan de lado a lado sin deformar la letra
   function pantallaCompleta(m, u, PW, PH){
@@ -6017,17 +6027,13 @@ window.alDemoTarjetas = function(root, cfg){
     g.fillStyle = '#12304d'; rr(g, x + w/2 - 60, y + 24, 120, 22, 11); g.fill();
     return { x: x + 30, y: y + 64, w: w - 60, h: h - 92 };
   }
-  return { C, CW, CH, FONT, clamp, ease, easeOut, lerp, rr, txt, wrap, press, btn, base, overlay, dialog, banner, checkDot, sheetIcon, pill, campo, panelBar, celular, vertical: CH > CW,
-    mk: mkH, redibujar: () => { needsRender = true; } };
+  return { C, CW, CH, FONT, clamp, ease, easeOut, lerp, rr, txt, wrap, press, btn, base, overlay, dialog, banner, checkDot, sheetIcon, pill, campo, panelBar, celular, vertical: CH > CW };
   }
 
   // Un juego de tarjetas por diseño; el vertical se arma recién cuando se usa
   function juego(vert){
-    // con pantallas reales (cfg.capturas), la tarjeta tiene el tamaño de la pantalla de la app en este equipo
-    const CAP = cfg.capturas ? cfg.capturas.de(alFoto.conjunto(vert)) : null;
-    const CW = CAP ? CAP.w : vert ? 800 : 1200, CH = CAP ? CAP.h : vert ? 1000 : 950, PW = (CAP ? CW >= CH : !vert) ? 4.8 : 3.84;
-    const K = CAP ? 1 : alFoto.estirar(vert, !!MENU), PH = PW * CH / CW * K;
-    const DRAW = CAP ? CAP.draw(mkH(CW, CH)) : (vert ? cfg.drawV : cfg.draw)(mkH(CW, CH)), CURSOR = (CAP ? CAP.cursor : vert ? cfg.cursorV : cfg.cursor) || [];
+    const CW = vert ? 800 : 1200, CH = vert ? 1000 : 950, PW = vert ? 3.84 : 4.8, K = alFoto.estirar(vert, !!MENU), PH = PW * CH / CW * K;
+    const DRAW = (vert ? cfg.drawV : cfg.draw)(mkH(CW, CH)), CURSOR = (vert ? cfg.cursorV : cfg.cursor) || [];
     // 2026-09-30: cada tarjeta dibuja su lienzo solo mientras está en pantalla
     // (a lo más 2 a la vez) y lo libera al salir. Antes las 6 de cada demo
     // vivían siempre (~70 MB por demo), también las de demos ocultas; en iPhone
@@ -6271,90 +6277,6 @@ window.alDemoTarjetas = function(root, cfg){
   }
   window.alDemoTarjetas = function(root, cfg){ var r = orig.apply(this, arguments); if (root && root._alDemo) extras(root); return r; };
 })();
-</script>
-<script src="img/demos/capturas.js"></script>
-<script>
-/* Demos con pantallas reales (2026-10-08). «Ver en acción» muestra la app de verdad: cada paso es una
-   serie de capturas de la app real con datos de ejemplo (img/demos/capturar.js las saca con los
-   simuladores de cada repo, en la pantalla de cada equipo) y aquí se animan encima el puntero o el dedo,
-   los toques, el paso de una pantalla a otra y los resaltados. El paso del problema (que no es la app)
-   sigue dibujado, escalado a la pantalla. alCapturas(app, cfg) suma cfg.capturas y recalcula los tiempos
-   de los pasos; el motor arma la tarjeta del tamaño de la pantalla del equipo (alFoto.conjunto). */
-window.alCapturas = function(app, cfg){
-  var M = window.AL_CAPTURAS && AL_CAPTURAS[app]; if (!M || !cfg) return;
-  var ref = M['cel-v'] || M[Object.keys(M)[0]];
-  if (!ref || ref.pasos.length !== cfg.steps.length) return;   // sin capturas al día: queda el demo dibujado
-  var FUNDE = 0.18, VIAJE = 0.6, TOQUE = 0.45;
-  var cl = function(x){ return Math.max(0, Math.min(1, x)); };
-  // cada cuadro se lee (lee) y, si toca algo, el puntero llega, toca y entra el cuadro siguiente
-  function tiempos(cs){ var t = 0; return cs.map(function(c){ var a = t, lee = c.lee || 1; t += lee + (c.toca ? TOQUE : 0); return { a: a, lee: lee, fin: t }; }); }
-  var t = 0;
-  cfg.steps.forEach(function(st, p){
-    var cs = ref.pasos[p], d = cs ? tiempos(cs).pop().fin + 0.4 : st.b - st.a;
-    st.a = +t.toFixed(2); t += d; st.b = +t.toFixed(2);
-  });
-  function elegir(set){
-    if (M[set]) return set;
-    var q = { 'web': 1.6, 'tab-h': 1.61, 'tab-v': 0.76, 'cel-v': 0.56, 'cel-h': 2.2, 'se': 0.68 }[set] || 1, mejor = null;
-    Object.keys(M).forEach(function(k){ var r = M[k].w / M[k].h; if (!mejor || Math.abs(Math.log(r / q)) < Math.abs(Math.log(M[mejor].w / M[mejor].h / q))) mejor = k; });
-    return mejor;
-  }
-  cfg.capturas = { de: function(pedido){
-    var set = elegir(pedido), S = M[set], W = S.w, Hh = S.h;
-    var vert = Hh > W && !!cfg.drawV, dw = vert ? 800 : 1200, dh = vert ? 1000 : 950;
-    var esc = W / dw; if (dh * esc > Hh) esc = Hh / dh; var ox = (W - dw * esc) / 2;
-    var cur = (vert ? cfg.cursorV : cfg.cursor) || [];
-    var cursor = S.pasos.map(function(cs, p){
-      if (!cs) { var o = cur[p]; return o ? { keys: o.keys.map(function(k){ return [k[0], ox + k[1] * esc, k[2] * esc]; }), clicks: o.clicks } : null; }
-      var T = tiempos(cs), keys = [], clicks = [], x = W * 0.72, y = Hh * 0.82;
-      cs.forEach(function(c, i){
-        if (!c.toca) return;
-        var tx = c.toca[0] + c.toca[2] / 2, ty = c.toca[1] + c.toca[3] / 2, t0 = T[i].a + T[i].lee;
-        if (!keys.length) keys.push([Math.max(0.1, t0 - VIAJE - 0.5), x, y]);
-        keys.push([Math.max(keys[keys.length - 1][0] + 0.05, t0 - VIAJE), x, y], [t0, tx, ty], [t0 + TOQUE - 0.05, tx, ty]);
-        clicks.push(t0 + 0.2); x = tx; y = ty;
-      });
-      return keys.length ? { keys: keys, clicks: clicks } : null;
-    });
-    return { w: W, h: Hh, cursor: cursor, draw: function(H){
-      var imgs = {}, dib = null;
-      function img(p, f){
-        var k = p + '-' + f, im = imgs[k];
-        if (!im) { im = new Image(); im.decoding = 'async'; im.onload = H.redibujar; im.src = 'img/demos/' + app + '/' + set + '/' + S.pasos[p][f].src; imgs[k] = im; }
-        return im.complete && im.naturalWidth ? im : null;
-      }
-      // en memoria solo el paso que se ve y sus vecinos (Safari en iPhone limita la memoria)
-      function precargar(p){
-        Object.keys(imgs).forEach(function(k){ var q = +k.split('-')[0]; if (q < p - 1 || q > p + 1) { imgs[k].onload = null; imgs[k].src = ''; delete imgs[k]; } });
-        [p, p + 1].forEach(function(q){ if (S.pasos[q]) S.pasos[q].forEach(function(c, f){ img(q, f); }); });
-      }
-      return S.pasos.map(function(cs, p){
-        if (!cs) return function(g, lt){   // el problema: el dibujo de siempre, escalado a la pantalla
-          if (!dib) dib = (vert ? cfg.drawV : cfg.draw)(H.mk(dw, dh));
-          precargar(p);
-          g.fillStyle = '#eef2f7'; g.fillRect(0, 0, W, Hh);
-          g.save(); g.translate(ox, 0); g.scale(esc, esc); dib[p](g, lt); g.restore();
-        };
-        var T = tiempos(cs);
-        return function(g, lt){
-          precargar(p);
-          var i = 0; while (i + 1 < cs.length && lt >= T[i + 1].a) i++;
-          var e = cl((lt - T[i].a) / FUNDE), a = i ? img(p, i - 1) : null, b = img(p, i);
-          g.fillStyle = '#ffffff'; g.fillRect(0, 0, W, Hh);
-          if (a && e < 1) g.drawImage(a, 0, 0, W, Hh);
-          if (b) { g.globalAlpha = i ? e : 1; g.drawImage(b, 0, 0, W, Hh); g.globalAlpha = 1; }
-          (cs[i].marca || []).forEach(function(m){   // resaltado: un borde que late alrededor de lo importante
-            var v = cl((lt - T[i].a - 0.35) / 0.3); if (v <= 0) return;
-            var x0 = Math.max(m[0], 6), y0 = Math.max(m[1], 6), x1 = Math.min(m[0] + m[2], W - 6), y1 = Math.min(m[1] + m[3], Hh - 6);   // solo la parte que se ve
-            if (x1 - x0 < 20 || y1 - y0 < 16) return; m = [x0, y0, x1 - x0, y1 - y0];
-            g.save(); g.globalAlpha = v * (0.75 + 0.25 * Math.sin(lt * 4)); g.strokeStyle = '#3d7fd6'; g.lineWidth = 3;
-            g.shadowColor = 'rgba(61,127,214,.55)'; g.shadowBlur = 14; H.rr(g, m[0] - 4, m[1] - 4, m[2] + 8, m[3] + 8, 10); g.stroke(); g.restore();
-          });
-        };
-      });
-    } };
-  } };
-};
 </script>
 <script>
 /* Demos del Conciliador Semiautomático V2 (2026-09-30). Pantallas dibujadas a
@@ -6815,7 +6737,7 @@ AL_DEMOS['ped-accion'] = {
     { keys:[[0.3,1000,900],[2.4,1050,246],[2.65,1050,246],[3.3,900,900]], clicks:[2.55] }
   ],
   draw: H => { const { C, CW, CH, clamp, ease, easeOut, lerp, rr, txt, wrap, press, btn, base, overlay, dialog, banner, pill, panelBar, celular } = H;
-    const TABS = ['Pedidos','Catálogo','Reportes','Ajustes'];
+    const TABS = ['Pedidos','Catálogo','Clientes','Reportes','Ajustes'];   // las pestañas del panel real
     const PROD = [['Pan amasado (kg)','$2.490'],['Queso mantecoso','$6.990'],['Café molido 500 g','$5.490'],['Huevos x 30','$7.290']];
     function tienda(g, a, x, y, w, h){
       g.fillStyle = C.brand; rr(g, a.x, a.y, a.w, 96, 18); g.fill();
@@ -6937,7 +6859,7 @@ AL_DEMOS['ped-accion'] = {
       },
       (g, lt) => {
         base(g, 'Panel de pedidos');
-        panelBar(g, 'Almacén Don Pepe', TABS, 2);
+        panelBar(g, 'Almacén Don Pepe', TABS, 3);
         btn(g, 780, 220, 200, 52, 'CSV', 'ghost', 0, 24);
         btn(g, 990, 220, 170, 52, 'Hoy', 'ghost', press(lt, 2.55), 24);
         const tw = (1120 - 2*20) / 3;
@@ -6990,7 +6912,7 @@ AL_DEMOS['ped-instala'] = {
     { keys:[[0.3,1000,900],[1.0,1000,246],[1.2,1000,246],[2.6,800,770],[2.85,800,770],[3.5,1000,900]], clicks:[1.1,2.75] }
   ],
   draw: H => { const { C, CW, CH, FONT, clamp, ease, easeOut, rr, txt, wrap, press, btn, base, overlay, dialog, banner, checkDot, sheetIcon, pill, campo, panelBar } = H;
-    const TABS = ['Pedidos','Catálogo','Reportes','Ajustes'];
+    const TABS = ['Pedidos','Catálogo','Clientes','Reportes','Ajustes'];   // las pestañas del panel real
     return [
       (g, lt) => {
         base(g, 'Google Drive');
@@ -7132,7 +7054,7 @@ AL_DEMOS['ped-instala'] = {
       },
       (g, lt) => {
         base(g, 'Panel de pedidos');
-        panelBar(g, 'Almacén Don Pepe', TABS, 3);
+        panelBar(g, 'Almacén Don Pepe', TABS, 4);
         txt(g, 'Negocio', 40, 262, 34, 800, C.ink);
         const nombre = 'Almacén Don Pepe', n = Math.floor(clamp((lt - 0.3) / 0.8) * nombre.length);
         campo(g, 40, 320, 540, 60, 'Nombre del negocio', nombre.slice(0, n), lt < 1.2);
@@ -7719,7 +7641,7 @@ AL_DEMOS['como-se-instala'] = {
   // ── PedidoApp · Cómo se instala ──
   const pi = AL_DEMOS['ped-instala'];
   pi.drawV = H => { const { C, CW, CH, clamp, ease, easeOut, rr, txt, wrap, press, btn, base, overlay, dialog, banner, sheetIcon, pill, campo, panelBar } = H;
-    const TABS = ['Pedidos','Catálogo','Reportes','Ajustes'];
+    const TABS = ['Pedidos','Catálogo','Clientes','Reportes','Ajustes'];   // las pestañas del panel real
     return [
       I.copia(H, 'PedidoApp', ['Lista de precios', 'Proveedores', 'Clientes', 'Inventario']),
       I.publicar(H, 'PedidoApp.gs', true),
@@ -7763,7 +7685,7 @@ AL_DEMOS['como-se-instala'] = {
       },
       (g, lt) => {
         base(g, 'Panel de pedidos');
-        panelBar(g, 'Almacén Don Pepe', TABS, 3);
+        panelBar(g, 'Almacén Don Pepe', TABS, 4);
         txt(g, 'Negocio', 40, 262, 34, 800, C.ink);
         const nombre = 'Almacén Don Pepe', n = Math.floor(clamp((lt - 0.3) / 0.8) * nombre.length);
         campo(g, 40, 330, 720, 66, 'Nombre del negocio', nombre.slice(0, n), lt < 1.2);
@@ -7976,7 +7898,7 @@ AL_DEMOS['como-se-instala'] = {
   // ── PedidoApp · Ver en acción ──
   const pa = AL_DEMOS['ped-accion'];
   pa.drawV = H => { const { C, CW, CH, FONT, clamp, ease, easeOut, rr, txt, wrap, press, btn, base, overlay, dialog, banner, pill, panelBar, celular } = H;
-    const TABS = ['Pedidos','Catálogo','Reportes','Ajustes'];
+    const TABS = ['Pedidos','Catálogo','Clientes','Reportes','Ajustes'];   // las pestañas del panel real
     const PROD = [['Pan amasado (kg)','$2.490'],['Queso mantecoso','$6.990'],['Café molido 500 g','$5.490'],['Huevos x 30','$7.290']];
     // el formulario del cliente ocupa la tarjeta completa: un celular de frente
     const TELEFONO = !!(window.alFoto && alFoto.tactil());   // en celular y tablet, a pantalla completa
@@ -8092,7 +8014,7 @@ AL_DEMOS['como-se-instala'] = {
       },
       (g, lt) => {
         base(g, 'Panel de pedidos');
-        panelBar(g, 'Almacén Don Pepe', TABS, 2);
+        panelBar(g, 'Almacén Don Pepe', TABS, 3);
         btn(g, 40, 232, 170, 54, 'CSV', 'ghost', 0, 24);
         btn(g, 226, 232, 170, 54, 'Hoy', 'ghost', press(lt, 2.55), 24);
         g.fillStyle = '#f6f8fb'; rr(g, 40, 304, 720, 104, 16); g.fill();
@@ -8143,7 +8065,7 @@ AL_DEMOS['ver-en-accion'] = (function(){
   ];
   const PAIRS = [[0,1],[4,8],[5,6],[7,10]], MANUAL = [9, 11], PEND = [2, 3, 9, 11];
   const PAR = {}; PAIRS.forEach((p, k) => { PAR[p[0]] = PAR[p[1]] = k; });
-  const TABS = ['Resumen','Resultados','Ajustes','Configuración','Historial'];
+  const TABS = ['Resumen','Resultados','Historial','Configuración'];   // las pestañas del panel real del V1
   const M = 40;
   // medidas de cada formato (las comparten el dibujo y el recorrido del cursor)
   function L(CW, CH){
@@ -8152,8 +8074,8 @@ AL_DEMOS['ver-en-accion'] = (function(){
       hojaY: V ? 212 : 196, fila: V ? 55 : 50,                                  // hoja: primera fila y alto de fila
       col: V ? { n: M + 22, f: M + 64, d: M + 168, dW: 300, m: CW - M - 18, e: 0 }
              : { n: M + 22, f: M + 70, d: M + 200, dW: 360, m: M + 740, e: M + 790 },
-      imp: V ? { x: M, y: 262, w: W } : { x: M, y: 262, w: 380 },             // Conecta: botón Importar
-      ext: V ? { x: M, y: 342, w: W } : { x: M + 400, y: 262, w: 440 },
+      imp: V ? { x: M, y: 342, w: W } : { x: M + W - 300, y: 262, w: 300 },   // Conecta: botón Guardar fuente
+      ext: V ? { x: M, y: 262, w: W } : { x: M, y: 262, w: W - 320 },          // y el enlace del Google Sheet
       arch: V ? 438 : 362, mapY: V ? 540 : 460, mapH: V ? 86 : 74,
       conf: V ? { x: M, y: 832, w: W } : { x: M, y: 742, w: 460 },
       bannerConf: V ? { x: M, y: 914, w: W } : { x: M + 490, y: 742, w: W - 490 },
@@ -8220,13 +8142,14 @@ AL_DEMOS['ver-en-accion'] = (function(){
         const r = easeOut((lt - 2.6) / 0.35);
         if (r > 0) { g.globalAlpha = r; pill(g, CW/2, CH - (V ? 80 : 70), '2 h 40 min revisando… y quedan 188 filas', C.bad, '#fff', V ? 24 : 28, V ? 50 : 56, 'center'); g.globalAlpha = 1; }
       },
-      // 1 · Conecta: importa el .xlsx, detecta las columnas y las confirma
+      // 1 · Conecta: pega el enlace del Google Sheet, detecta las columnas y las confirma (como Configuración → Fuente de datos)
       (g, lt) => {
         base(g, 'Conciliador V1'); panelBar(g, 'Conciliador V1', TABS, 3);
-        btn(g, l.imp.x, l.imp.y, l.imp.w, 64, 'Importar .xlsx', 'primary', press(lt, 0.88), 32);
-        btn(g, l.ext.x, l.ext.y, l.ext.w, 64, 'Conectar sheet externo', 'secondary', 0, 32);
+        const url = 'docs.google.com/spreadsheets/d/1Cartola…', n = Math.round(clamp(lt / 0.7) * url.length);
+        campo(g, l.ext.x, l.ext.y, l.ext.w, 64, '', url.slice(0, n) || 'Enlace o ID del Sheet', lt < 0.8);
+        btn(g, l.imp.x, l.imp.y, l.imp.w, 64, 'Guardar fuente', 'primary', press(lt, 0.88), 32);
         const f = easeOut((lt - 1.1) / 0.35);
-        if (f > 0) { g.globalAlpha = f; pill(g, M, l.arch, 'cartola_septiembre.xlsx · 12 filas', '#e6f2eb', SHEET, V ? 24 : 26, 50); g.globalAlpha = 1; }
+        if (f > 0) { g.globalAlpha = f; pill(g, M, l.arch, 'Cartola banco › Movimientos septiembre', '#e6f2eb', SHEET, V ? 24 : 26, 50); g.globalAlpha = 1; }
         const t = easeOut((lt - 1.5) / 0.3);
         if (t > 0) { g.globalAlpha = t; txt(g, 'Encabezados detectados', M, l.mapY - 30, 30, 800, C.ink); g.globalAlpha = 1; }
         [['Fecha','FECHA'],['Concepto','DESCRIPCION'],['Monto','IMPORTE']].forEach((m, k) => {
@@ -8325,9 +8248,9 @@ AL_DEMOS['ver-en-accion'] = (function(){
           pill(g, CW - M, y - 18, s, s === 'Pendiente' ? '#fdf1e2' : '#e6f2eb', s === 'Pendiente' ? C.warn : C.ok, 20, 36, 'right');
           g.fillStyle = '#e3e9f0'; g.fillRect(M, y + 26, W, 1); g.globalAlpha = 1;
         });
-        if (!V || lt < 3.7) btn(g, l.expo.x, l.expo.y, l.expo.w, 64, 'Exportar resultados', 'primary', press(lt, 3.45), 32);
+        if (!V || lt < 3.7) btn(g, l.expo.x, l.expo.y, l.expo.w, 64, 'Reporte', 'primary', press(lt, 3.45), 32);
         const b = easeOut((lt - 3.7) / 0.35);
-        if (b > 0) { g.globalAlpha = b; banner(g, M, l.expo.y, V ? W : W - 450, 64, '✓ resultados_septiembre.xlsx', SHEET); g.globalAlpha = 1; }
+        if (b > 0) { g.globalAlpha = b; banner(g, M, l.expo.y, V ? W : W - 450, 64, '✓ Reporte listo: imprimir o guardar en PDF', SHEET); g.globalAlpha = 1; }
       }
     ];
   }
@@ -8361,8 +8284,6 @@ AL_DEMOS['ver-en-accion'] = (function(){
   };
 })();
 
-  // pantallas reales de la app (img/demos), si están: V1, V2 y PedidoApp
-  if (window.alCapturas) { alCapturas('v1', AL_DEMOS['ver-en-accion']); alCapturas('v2', AL_DEMOS['v2-accion']); alCapturas('ped', AL_DEMOS['ped-accion']); }
   const r0 = document.getElementById('ver-en-accion');
   if (r0 && window.alDemoTarjetas) alDemoTarjetas(r0, AL_DEMOS['ver-en-accion']);
   const r1 = document.getElementById('como-se-instala');
