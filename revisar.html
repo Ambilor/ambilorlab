@@ -194,7 +194,9 @@ async function revisarAlto(v, H){
   // (en horizontal bajo, como el iPhone girado, la demo cabe sola pero no junto al titulo: se revisa solo la demo)
   // 2026-09-30: solo en horizontal. En vertical la escena de la demo tiene prioridad (diseño
   // vertical a buen tamaño) y se revisa que la demo completa quepa (regla de arriba).
-  if (actual === 'product' && W >= 900 && W > H && H > 560) { win.scrollTo(0, 0); cabe('Encabezado + demo "Ver en acción"', doc.getElementById('ver-en-accion').getBoundingClientRect().bottom + win.scrollY); }
+  // 2026-10-07: la demo es el equipo completo (protagonista, debajo del nombre). En horizontal, la primera
+  // pantalla muestra el nombre de la app y el equipo entero con su barra; la frase y la nota pueden quedar abajo.
+  if (actual === 'product' && W >= 900 && W > H && H > 560) { win.scrollTo(0, 0); cabe('Encabezado + equipo de "Ver en acción"', doc.querySelector('#ver-en-accion .al-demo__stage').getBoundingClientRect().bottom + win.scrollY); }
   if (actual === 'guias') { const g = doc.querySelector('.gp-panel.on'); if (g && g.querySelector('.gp-prog')) cabe('Paso de la guía', g.querySelector('.gp-ctrl').getBoundingClientRect().bottom - g.querySelector('.gp-prog').getBoundingClientRect().top); }
   // Guías paso a paso (se abren desde Recursos): desde el comienzo de la página hasta los botones del paso, en la primera pantalla
   if (actual === 'guias' && H >= 500) {
