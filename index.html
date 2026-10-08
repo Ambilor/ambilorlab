@@ -2065,7 +2065,19 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
   .al-demo__tip{margin-top:.45rem;padding:.4rem .7rem;font-size:12px;line-height:1.4}
   .al-demo__checks{margin-top:.45rem;gap:.2rem;font-size:12px}
 }
-/* C · TABLET VERTICAL y D · TABLET HORIZONTAL Y COMPUTADOR: lo común basta */
+/* C · TABLET VERTICAL y D · TABLET HORIZONTAL Y COMPUTADOR: lo común basta, más el selector de equipo */
+/* 2026-10-08: en computador, la barra del demo ofrece ver la app como en tablet (iPad horizontal) o celular
+   (iPhone vertical); con uno de ellos el recuadro gana alto para que el equipo se lea. En celular y tablet no
+   aparece (ya se ve en el equipo del visitante) ni en ventanas de formato A o B, donde no cabe. */
+.al-equipo{display:none}
+@media (min-width:640px) and (min-height:561px){
+  .al-equipo{display:inline-flex;flex:none;gap:2px;padding:2px;margin-left:4px;border-radius:999px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+  .al-equipo button{border:0;background:none;cursor:pointer;padding:4px 10px;border-radius:999px;font:500 10.5px/1.2 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:rgba(232,237,245,.72);transition:background-color .15s,color .15s}
+  .al-equipo button:hover{color:#fff;background:rgba(255,255,255,.1)}
+  .al-equipo button[aria-pressed="true"]{background:#3d7fd6;color:#fff}
+  .al-equipo button:focus-visible{outline:2px solid #9cc4f2;outline-offset:1px}
+  .al-sim-tablet .al-demo__stage,.al-sim-cel .al-demo__stage{height:max(360px, min(72cqw, calc(100svh - 230px)))}
+}
 /* 2026-09-30: pantallas táctiles. Los controles de las demos quedaban bajo el
    mínimo de 44 px para tocar con el dedo (26-28 px en la barra, 24 px el
    selector de demo). En táctil: botones de 44 px, segmentos de pasos con 44 px
@@ -2134,8 +2146,13 @@ window.alFoto = (function(){
     notebook: { src: 'img/notebook.webp', w: 1800, h: 1111, prop: 1.6, radio: 0.008,
       q: [[61.4, 73.6], [1207.0, 119.5], [1261.3, 816.7], [82.9, 842.5]], caja: [27.6, 27.6, 1772.4, 1083.9] } };
   // ¿qué aparato tiene el visitante? (iPadOS se presenta como Mac: se distingue por la pantalla táctil)
-  var _eq = null;
+  // en computador se puede ver la app como en otro equipo (selector de cada demo): _sim = 'tablet' o 'cel'
+  var _eq = null, _sim = null;
   function equipo(){
+    if (_sim) return _sim;
+    return real();
+  }
+  function real(){
     if (_eq) return _eq;
     var tactil = navigator.maxTouchPoints > 0 && window.matchMedia && matchMedia('(pointer: coarse)').matches;
     return (_eq = !tactil ? 'pc' : (Math.min(screen.width, screen.height) >= 600 ? 'tablet' : 'cel'));
@@ -2168,6 +2185,8 @@ window.alFoto = (function(){
   //   iPad Pro 11: 834 × 1194, esquinas de 18, bisel de unos 28; barra de estado de 24 y Safari arriba (50).
   //   Android: 412 × 915, esquinas de 40, cámara perforada; barra de estado de 32 y Chrome arriba (56).
   function modelo(){
+    if (_sim === 'cel') return { tipo: 'iphone', w: 402, h: 874, r: 55 };
+    if (_sim === 'tablet') return { tipo: 'ipad', w: 834, h: 1194, r: 18 };
     var ua = navigator.userAgent, w = Math.min(screen.width, screen.height), h = Math.max(screen.width, screen.height);
     // pantallas chicas (iPhone SE, Android compactos): el teléfono del visitante ya es el marco; la app va sola,
     // a todo el ancho, para que se vea grande sin desbordar
@@ -2175,6 +2194,13 @@ window.alFoto = (function(){
     if (/iPhone/.test(ua)) return w <= 390 && h <= 844 ? { tipo: 'iphone', muesca: true, w: 390, h: 844, r: 47 } : { tipo: 'iphone', w: 402, h: 874, r: 55 };
     if (/iPad/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) return { tipo: 'ipad', w: 834, h: 1194, r: 18 };
     return equipo() === 'tablet' ? { tipo: 'tableta', w: 800, h: 1280, r: 20 } : { tipo: 'android', w: 412, h: 915, r: 40 };
+  }
+  // plano con las esquinas redondeadas de la pantalla (lo que va en ella no asoma fuera de la curva del equipo)
+  function redondo(T, w, h, r){
+    var s = new T.Shape(), x = -w / 2, y = -h / 2; r = Math.min(r, w / 2, h / 2);
+    s.moveTo(x + r, y); s.lineTo(x + w - r, y); s.quadraticCurveTo(x + w, y, x + w, y + r); s.lineTo(x + w, y + h - r); s.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    s.lineTo(x + r, y + h); s.quadraticCurveTo(x, y + h, x, y + h - r); s.lineTo(x, y + r); s.quadraticCurveTo(x, y, x + r, y);
+    return new T.ShapeGeometry(s, 10);
   }
   // geometría en pt del equipo según la orientación: pantalla, franjas de sistema y bisel
   function especie(m, vert){
@@ -2366,7 +2392,7 @@ window.alFoto = (function(){
     }); };
     var MB = T.MeshBasicMaterial, mat = function(map){ return new MB({ map: map, transparent: true, depthWrite: false, toneMapped: false }); };
     var plano = function(mt, z, orden){ var me = new T.Mesh(new T.PlaneGeometry(FW, FH), mt); me.position.z = z; me.renderOrder = orden; me.frustumCulled = false; g.add(me); return me; };
-    var fondo = new T.Mesh(new T.PlaneGeometry(d.SW, d.SH), new MB({ color: 0xffffff, toneMapped: false })); fondo.position.z = -0.02; fondo.renderOrder = 0; pantalla.add(fondo);
+    var fondo = new T.Mesh(redondo(T, d.SW, d.SH, d.radio), new MB({ color: 0xffffff, toneMapped: false })); fondo.position.z = -0.02; fondo.renderOrder = 0; pantalla.add(fondo);
     plano(mat(cuerpo), 0.05, 40);
     var claro = plano(mat(capa('#ffffff')), 0.06, 41), oscuro = plano(mat(capa('#000000')), 0.06, 41); oscuro.visible = false;
     var solo = !(m.tipo === 'iphone' && vert); if (solo) { oscuro.visible = true; claro.visible = false; }   // la barra de estado va sobre el navegador
@@ -2463,7 +2489,9 @@ window.alFoto = (function(){
       st.z += (o.quiere - st.z) * (1 - Math.exp(-dt * 3.2));
       if (o.foco) { var kq = 1 - Math.exp(-dt * 4.5); st.x += (cl(o.foco.x, -u.SW * 0.3, u.SW * 0.3) - st.x) * kq; st.y += (cl(o.foco.y, -u.SH * 0.3, u.SH * 0.3) - st.y) * kq; }
       var z0 = (u.marco && u.marco.zoom < 1) ? ease(st.z) : 0;
-      var cy0 = e0.cy || 0; cam.position.set(lerp(0, st.x, z0), lerp(cy0, st.y, z0), lerp(lejos0, cerca0, z0));
+      var cy0 = e0.cy || 0;
+      if (_sim) { lejos0 *= 1.14; cerca0 *= 1.14; cy0 -= lejos0 * tg0 * 0.09; }   // equipo elegido en computador: con aire y sobre la barra (que va encima del lienzo)
+      cam.position.set(lerp(0, st.x, z0), lerp(cy0, st.y, z0), lerp(lejos0, cerca0, z0));
       cam.lookAt(cam.position.x, cam.position.y, 0); return;
     }
     st.z += (o.quiere - st.z) * (1 - Math.exp(-dt * 3.2));
@@ -2493,7 +2521,18 @@ window.alFoto = (function(){
     var e = especie(m, true), chh = e.H - e.top - e.bot - (pestanas ? 56 : 0), cw = e.W * 1.09;
     return Math.max(1, (800 / 1000) * chh / cw);
   }
-  return { crear: crear, camara: camara, elegir: elegir, estirar: estirar, tactil: function(){ return equipo() !== 'pc'; }, dedo: dedo };
+  // simular: solo en computador; 'tablet' (iPad horizontal), 'cel' (iPhone vertical) o null (el notebook).
+  // Avisa a las demos con el evento «al-equipo» para que rearmen su aparato.
+  function simular(t){
+    if (real() !== 'pc') return;
+    t = t === 'tablet' || t === 'cel' ? t : null; if (t === _sim) return;
+    _sim = t;
+    document.documentElement.classList.toggle('al-sim-tablet', t === 'tablet');
+    document.documentElement.classList.toggle('al-sim-cel', t === 'cel');
+    document.dispatchEvent(new Event('al-equipo'));
+  }
+  return { crear: crear, camara: camara, elegir: elegir, estirar: estirar, tactil: function(){ return equipo() !== 'pc'; }, dedo: dedo,
+    real: real, simular: simular, redondo: redondo, simulado: function(){ return _sim; }, vertSim: function(){ return _sim === 'cel'; } };
 })();
 /* Demos: notas de cada paso (2026-10-07): una frase corta por paso, en una burbuja junto a lo que se toca
    (o arriba, si el paso no tiene toque). Las dibuja el motor de tarjetas sobre la pantalla del demo. */
@@ -5857,7 +5896,7 @@ window.alDemoTarjetas = function(root, cfg){
   // pantalla completa: la tarjeta cubre toda la pantalla del aparato; fuera de su dibujo la textura repite el
   // borde (ClampToEdge), así la barra superior y el fondo de la app llegan de lado a lado sin deformar la letra
   function pantallaCompleta(m, u, PW, PH){
-    const geo = new THREE.PlaneGeometry(u.SW, u.SH); geo.translate(-(u.ventanaX || 0), -u.ventanaY, 0);
+    const geo = u.marco ? alFoto.redondo(THREE, u.SW, u.SH, u.marco.d.radio) : new THREE.PlaneGeometry(u.SW, u.SH); geo.translate(-(u.ventanaX || 0), -u.ventanaY, 0);
     const p = geo.attributes.position, uv = geo.attributes.uv;
     for (let i = 0; i < p.count; i++) uv.setXY(i, p.getX(i) / PW + 0.5, p.getY(i) / PH + 0.5);
     m.geometry.dispose(); m.geometry = geo;
@@ -5996,7 +6035,16 @@ window.alDemoTarjetas = function(root, cfg){
     const disp = aparato(vert, PW, PH);
     cards.forEach(c => { disp.userData.pantalla.add(c.m); disp.userData.pantalla.add(c.sh); c.m.frustumCulled = false; c.m.children.forEach(h => { h.visible = false; }); });   // ventanas planas, sin canto
     if (disp.userData.pleno) cards.forEach(c => pantallaCompleta(c.m, disp.userData, PW, PH));
-    return { vert, CW, CH, PW, PH, DRAW, CURSOR, cards, sombraCard, disp };
+    return { vert, CW, CH, PW, PH, DRAW, CURSOR, cards, sombraCard, disp, sim: alFoto.simulado() };
+  }
+  // al cambiar de equipo (selector en computador) los aparatos ya armados se desarman y se sueltan
+  function tirar(j){
+    if (!j) return;
+    j.cards.forEach(soltarLienzo);
+    [j.disp, j.sombraCard].forEach(o => {
+      if (o.parent) o.parent.remove(o);
+      o.traverse(n => { if (n.geometry) n.geometry.dispose(); [].concat(n.material || []).forEach(m => { if (m.map) m.map.dispose(); m.dispose(); }); });
+    });
   }
   function tomarLienzo(c){
     if (c.cv) return;
@@ -6022,19 +6070,25 @@ window.alDemoTarjetas = function(root, cfg){
   let JH = null, JV = null, J = null;
   function usar(vert){
     if (vert && !cfg.drawV) vert = false;
+    if (J && J.sim !== alFoto.simulado()) { tirar(JH); tirar(JV); JH = JV = J = null; ponerCursor(); SS.z = 0; SS.x = SS.y = 0; SS.a = 1; }
     if (J && J.vert === vert) return;
     if (J) { J.cards.forEach(c => { c.m.visible = c.sh.visible = false; soltarLienzo(c); }); J.sombraCard.visible = false; J.disp.visible = false; }
     J = vert ? (JV || (JV = juego(true))) : (JH || (JH = juego(false)));
     J.disp.visible = true;
     needsRender = true;
   }
-  const DEDO = alFoto.tactil();   // en celular y tablet se toca con el dedo, no hay flecha
-  const cursorGeo = DEDO ? new THREE.PlaneGeometry(0.36, 0.36) : new THREE.PlaneGeometry(0.24, 0.31); if (!DEDO) cursorGeo.translate(0.12, -0.155, 0);
+  let DEDO = alFoto.tactil(), dedoTex = null;   // en celular y tablet se toca con el dedo, no hay flecha
+  const geoCursor = () => { const q = DEDO ? new THREE.PlaneGeometry(0.36, 0.36) : new THREE.PlaneGeometry(0.24, 0.31); if (!DEDO) q.translate(0.12, -0.155, 0); return q; };
   const ctex = (() => { const c = document.createElement('canvas'); c.width = 104 * TEX_S; c.height = 136 * TEX_S; const g = c.getContext('2d'); g.scale(TEX_S, TEX_S);
     g.beginPath(); g.moveTo(8, 6); g.lineTo(8, 110); g.lineTo(34, 86); g.lineTo(52, 128); g.lineTo(70, 120); g.lineTo(52, 80); g.lineTo(88, 80); g.closePath();
     g.fillStyle = C.ink; g.fill(); g.strokeStyle = '#fff'; g.lineWidth = 7; g.lineJoin = 'round'; g.stroke();
     const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; return t; })();
-  const cursor = new THREE.Mesh(cursorGeo, basic({ map: DEDO ? alFoto.dedo(THREE) : ctex })); cursor.renderOrder = 20; scene.add(cursor);
+  const mapaCursor = () => DEDO ? (dedoTex || (dedoTex = alFoto.dedo(THREE))) : ctex;
+  const cursor = new THREE.Mesh(geoCursor(), basic({ map: mapaCursor() })); cursor.renderOrder = 20; scene.add(cursor);
+  function ponerCursor(){
+    if (DEDO === alFoto.tactil()) return;
+    DEDO = alFoto.tactil(); cursor.geometry.dispose(); cursor.geometry = geoCursor(); cursor.material.map = mapaCursor(); cursor.material.needsUpdate = true;
+  }
   const ring = new THREE.Mesh(new THREE.RingGeometry(0.06, 0.085, 40), basic({ color:col(C.brand) })); ring.renderOrder = 19; scene.add(ring);
   const tmp = new THREE.Vector3(), esc = new THREE.Vector3();
   const pxToLocal = (x, y) => tmp.set((x / J.CW - 0.5) * J.PW, (0.5 - y / J.CH) * J.PH, 0.04);
@@ -6103,12 +6157,13 @@ window.alDemoTarjetas = function(root, cfg){
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(w, h, false);
     camera.aspect = w / h; camera.updateProjectionMatrix();
-    usar(alFoto.tactil() ? matchMedia('(orientation: portrait)').matches : w / h < 1.2);   // en táctil, la orientación del equipo
+    usar(alFoto.simulado() ? alFoto.vertSim() : alFoto.tactil() ? matchMedia('(orientation: portrait)').matches : w / h < 1.2);   // en táctil, la orientación del equipo; si se eligió otro equipo, la suya
     const tg = Math.tan(camera.fov * Math.PI / 360);
     zV = Math.max(4.8 * 0.6 / tg, 3.84 * 0.62 / (tg * camera.aspect));
     needsRender = true;
   }
   new ResizeObserver(resize).observe(stage); resize();
+  document.addEventListener('al-equipo', () => { if (stage.offsetParent) resize(); });   // las ocultas se rearman al mostrarse (ResizeObserver)
   // fuera de pantalla (u oculta) la demo no dibuja y suelta sus lienzos; al volver se redibuja
   if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible = es[es.length - 1].isIntersecting; if (visible) needsRender = true; else soltarTodo(); }, { threshold:0.05 }).observe(stage);
 
@@ -6176,6 +6231,18 @@ window.alDemoTarjetas = function(root, cfg){
         var a = document.createElement('a'); a.className = 'al-resumen__cta'; a.href = cta.getAttribute('href') || '#'; a.textContent = cta.textContent;
         a.addEventListener('click', function(ev){ ev.preventDefault(); cta.click(); }); acc.appendChild(a);
       }).observe(d, { attributes: true, attributeFilter: ['class'] });
+    }
+    // en computador: ver la app como en otro equipo (vale para todas las demos)
+    var bar = d.querySelector('.al-player') || d.querySelector('.al-demo__controls');
+    if (window.alFoto && alFoto.real && alFoto.real() === 'pc' && bar) {
+      var eq = document.createElement('div'); eq.className = 'al-equipo'; eq.setAttribute('role', 'group'); eq.setAttribute('aria-label', 'Ver la app en');
+      [['', 'Computador'], ['tablet', 'Tablet'], ['cel', 'Celular']].forEach(function(o){
+        var b = document.createElement('button'); b.type = 'button'; b.setAttribute('data-eq', o[0]); b.textContent = o[1]; eq.appendChild(b);
+        b.addEventListener('click', function(){ alFoto.simular(o[0] || null); });
+      });
+      var marcar = function(){ var v = alFoto.simulado() || ''; eq.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-eq') === v ? 'true' : 'false'); }); };
+      marcar(); document.addEventListener('al-equipo', marcar);
+      bar.appendChild(eq);
     }
     // deslizar en táctil
     var cv = st.querySelector('canvas'); if (!tactil || !cv) return;
