@@ -2070,6 +2070,18 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
    (iPhone vertical), en el mismo recuadro que el notebook: al cambiar no se mueve nada de la página. En celular y tablet no
    aparece (ya se ve en el equipo del visitante) ni en ventanas de formato A o B, donde no cabe. */
 .al-equipo{display:none}
+/* D en computador ancho (2026-10-08): el nombre y lo que hace a la izquierda y el demo a la derecha, con el alto
+   de la pantalla. Así el celular y la tablet del selector de equipo se ven grandes, el notebook no pierde nada y,
+   al cambiar de equipo o de demo, el recuadro no cambia: nada de la página se mueve. */
+@media (pointer:fine) and (min-width:1100px) and (min-height:561px) and (orientation:landscape){
+  #product .hp-panel.on{display:grid;grid-template-columns:minmax(240px,.62fr) minmax(0,1.7fr);column-gap:clamp(24px,3vw,48px);align-items:start}
+  #product .hp-panel.on>*{grid-column:1/-1}
+  #product .hp-panel.on>.prod-cab{grid-column:1;grid-row:1;align-self:center;text-align:left;margin:0;max-width:none}
+  #product .hp-panel.on>.prod-cab .prod-eyebrow{justify-content:flex-start}
+  #product .hp-panel.on>.prod-cab .prod-tagline{margin:0}
+  #product .hp-panel.on>.demo-par{grid-column:2;grid-row:1;min-width:0}
+  .al-demo__stage{height:max(360px, min(68cqw, calc(100svh - 304px)))}
+}
 @media (min-width:640px) and (min-height:561px){
   .al-equipo{display:inline-flex;flex:none;gap:2px;padding:2px;margin-left:4px;border-radius:999px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
   .al-equipo button{border:0;background:none;cursor:pointer;padding:4px 10px;border-radius:999px;font:500 10.5px/1.2 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:rgba(232,237,245,.72);transition:background-color .15s,color .15s}
