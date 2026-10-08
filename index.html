@@ -2067,7 +2067,7 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
 }
 /* C · TABLET VERTICAL y D · TABLET HORIZONTAL Y COMPUTADOR: lo común basta, más el selector de equipo */
 /* 2026-10-08: en computador, la barra del demo ofrece ver la app como en tablet (iPad horizontal) o celular
-   (iPhone vertical); con uno de ellos el recuadro gana alto para que el equipo se lea. En celular y tablet no
+   (iPhone vertical), en el mismo recuadro que el notebook: al cambiar no se mueve nada de la página. En celular y tablet no
    aparece (ya se ve en el equipo del visitante) ni en ventanas de formato A o B, donde no cabe. */
 .al-equipo{display:none}
 @media (min-width:640px) and (min-height:561px){
@@ -2076,7 +2076,6 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
   .al-equipo button:hover{color:#fff;background:rgba(255,255,255,.1)}
   .al-equipo button[aria-pressed="true"]{background:#3d7fd6;color:#fff}
   .al-equipo button:focus-visible{outline:2px solid #9cc4f2;outline-offset:1px}
-  .al-sim-tablet .al-demo__stage,.al-sim-cel .al-demo__stage{height:max(360px, min(72cqw, calc(100svh - 230px)))}
 }
 /* 2026-09-30: pantallas táctiles. Los controles de las demos quedaban bajo el
    mínimo de 44 px para tocar con el dedo (26-28 px en la barra, 24 px el
@@ -2490,7 +2489,7 @@ window.alFoto = (function(){
       if (o.foco) { var kq = 1 - Math.exp(-dt * 4.5); st.x += (cl(o.foco.x, -u.SW * 0.3, u.SW * 0.3) - st.x) * kq; st.y += (cl(o.foco.y, -u.SH * 0.3, u.SH * 0.3) - st.y) * kq; }
       var z0 = (u.marco && u.marco.zoom < 1) ? ease(st.z) : 0;
       var cy0 = e0.cy || 0;
-      if (_sim) { lejos0 *= 1.14; cerca0 *= 1.14; cy0 -= lejos0 * tg0 * 0.09; }   // equipo elegido en computador: con aire y sobre la barra (que va encima del lienzo)
+      if (_sim) { lejos0 *= 1.1; cerca0 *= 1.1; }   // equipo elegido en computador: con aire (los bordes del lienzo se desvanecen)
       cam.position.set(lerp(0, st.x, z0), lerp(cy0, st.y, z0), lerp(lejos0, cerca0, z0));
       cam.lookAt(cam.position.x, cam.position.y, 0); return;
     }
@@ -2527,8 +2526,6 @@ window.alFoto = (function(){
     if (real() !== 'pc') return;
     t = t === 'tablet' || t === 'cel' ? t : null; if (t === _sim) return;
     _sim = t;
-    document.documentElement.classList.toggle('al-sim-tablet', t === 'tablet');
-    document.documentElement.classList.toggle('al-sim-cel', t === 'cel');
     document.dispatchEvent(new Event('al-equipo'));
   }
   return { crear: crear, camara: camara, elegir: elegir, estirar: estirar, tactil: function(){ return equipo() !== 'pc'; }, dedo: dedo,
