@@ -139,7 +139,7 @@ async function revisarAlto(v, H){
     sec.querySelectorAll('*').forEach(e => {
       const r = e.getBoundingClientRect(); if (!r.width || !r.height) return;
       const cs = win.getComputedStyle(e); if (cs.visibility === 'hidden' || cs.position === 'fixed' || cs.display === 'none') return;
-      if ((r.right > W + 1 || r.left < -1) && e.tagName !== 'CANVAS' && !e.closest('.hx-canvas')) fuera.add(e.className && typeof e.className === 'string' ? e.className.split(' ')[0] : e.tagName);
+      if ((r.right > W + 1 || r.left < -1) && e.tagName !== 'CANVAS' && !e.closest('.hx-canvas') && !e.closest('.mv-cinta'))   /* la cinta de palabras de la portada corre más ancha que la pantalla a propósito, recortada por su máscara */ fuera.add(e.className && typeof e.className === 'string' ? e.className.split(' ')[0] : e.tagName);
       if (!e.children.length && e.textContent.trim() && (cs.overflow === 'hidden' || cs.overflowX === 'hidden' || cs.textOverflow === 'ellipsis')) { const rg = doc.createRange(); rg.selectNodeContents(e); const tw = rg.getBoundingClientRect().width; if (tw > e.clientWidth + 2) cortados.add(e.textContent.trim().slice(0, 28)); }
     });
     if (fuera.size) av.push('Se sale de la pantalla: ' + [...fuera].slice(0, 3).join(', '));
