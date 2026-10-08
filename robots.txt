@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /propuesta/
  
 Sitemap: https://ambilor.github.io/ambilorlab/sitemap.xml

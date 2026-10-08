@@ -576,12 +576,9 @@ nav.scrolled .nav-links a{font-size:12px}
 .al-demo__cta:focus-visible{outline:2px solid var(--azul); outline-offset:2px}
 .al-demo__stage{
   order:-1; position:relative; width:100%; max-width:340px; margin:0 auto; aspect-ratio:1/1;
-  border-radius:14px; overflow:hidden;
-  background-color:var(--al-paper);
-  /* 2026-09-27: la cuadrícula plana se reemplazó por una pared 3D (AL3D) que
-     se mueve con el parallax; aquí queda solo una viñeta suave de profundidad */
-  background-image:radial-gradient(ellipse 75% 70% at 50% 42%,#ffffff 0%,var(--al-paper) 62%,#d9e2ec 100%);
-  box-shadow:inset 0 0 0 1px var(--al-line), inset 0 -40px 60px -30px rgba(18,48,77,.12);
+  /* 2026-10-07: sin marco. El aparato (notebook o el equipo del visitante) se apoya directo en la página:
+     sin fondo, borde ni recorte; la etiqueta del paso asoma por encima del recuadro */
+  overflow:visible;
 }
 .al-demo__stage canvas{display:block; width:100%; height:100%}
 .al-demo__controls{display:flex; align-items:center; gap:8px; margin-top:1.2rem}
@@ -1935,9 +1932,9 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
 /* 2026-09-30: el marco queda quieto (recuadro, escena y barra); solo el
    contenido de adentro (la animación, su panel y el texto) hace el fundido.
    Antes se desplazaba el recuadro completo y en celular se leía como un salto. */
-.demo-par :is(.al-demo__stage>canvas,.al-sim,.al-demo__copy){transition:opacity .45s var(--ease),filter .45s var(--ease)}
-.demo-par .entrando :is(.al-demo__stage>canvas,.al-sim,.al-demo__copy){opacity:0;filter:blur(4px)}
-.demo-par .saliendo :is(.al-demo__stage>canvas,.al-sim,.al-demo__copy){opacity:0;filter:blur(4px);transition-duration:.22s}
+.demo-par :is(.al-demo__stage>canvas,.al-sim,.al-demo__copy){transition:opacity .45s var(--ease)}
+.demo-par .entrando :is(.al-demo__stage>canvas,.al-sim,.al-demo__copy){opacity:0}
+.demo-par .saliendo :is(.al-demo__stage>canvas,.al-sim,.al-demo__copy){opacity:0;transition-duration:.22s}
 .demo-cambio{position:relative;display:inline-flex;padding:2px;border:1px solid var(--borde);border-radius:999px;background:var(--gris-4);letter-spacing:0;text-transform:none}
 #product .demo-cambio{margin-bottom:.4rem}
 .demo-cambio button{position:relative;z-index:1;border:0;background:none;cursor:pointer;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:4px 13px;min-height:24px;border-radius:999px;color:var(--gris-1);transition:color .35s var(--ease);white-space:nowrap}
@@ -1953,7 +1950,7 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
 [data-theme="dark"] .demo-cambio i{background:var(--glow,#4C8DDB);box-shadow:0 0 22px -4px var(--glow,#4C8DDB)}
 @media (prefers-reduced-motion: reduce){ .demo-par :is(.al-demo__stage>canvas,.al-sim,.al-demo__copy),.demo-cambio i{transition:none} }
 /* ════════════════════════════════════════════════════════════════════
-   HERRAMIENTAS: CUATRO FORMATOS (2026-09-30)
+   HERRAMIENTAS: CUATRO FORMATOS (2026-09-30; demos como grabación de la app, 2026-10-07)
    Toda la disposición de las demos y del encabezado de cada herramienta vive
    aquí, en cuatro formatos que no se pisan (cada tamaño cae en uno solo):
      A  celular vertical ......... vertical y angosto (< 640 px); también las
@@ -1963,43 +1960,82 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
      D  tablet / computador ...... desde 640 px, horizontal o casi cuadrado,
                                    con más de 560 px de alto
    Arriba, lo común; en cada formato, solo lo que cambia. El tacto (botones de
-   44 px) va aparte, más abajo, y se suma a cualquiera de los cuatro.
+   44 px, la forma del equipo del visitante) va aparte, más abajo, y se suma a
+   cualquiera de los cuatro.
+   Desde 2026-10-07 el orden es el mismo en los cuatro: el nombre de la app y una
+   línea de qué hace, centrados; el selector de demo; el demo (protagonista, a todo
+   el ancho, con la etiqueta de la etapa encima y la frase del paso debajo); el
+   título y la bajada del paso solo en modo manual; «¿Qué es…?» después del demo.
+   En celular el equipo se ve completo: la primera pantalla muestra el nombre, qué
+   hace y el comienzo del demo (ver ESTANDAR_Diseno_Adaptable.md).
    Reglas: la escena tiene proporción fija y nunca se estira para llenar; el
    texto reserva su alto (nada se mueve al avanzar ni al cambiar de demo).
    ════════════════════════════════════════════════════════════════════ */
-.prod-cel{display:none}
-.al-demo__grid{grid-template-columns:1fr}
-.al-demo__copy{max-width:none;margin:0;justify-content:flex-start}
-.al-demo__stage{order:-1;justify-self:stretch;width:100%;max-width:none;margin:0;aspect-ratio:auto;height:420px}
-/* A · CELULAR VERTICAL: escena arriba (cuadrada, con su tarjeta vertical) y
-   el texto de la etapa debajo; la bajada y "¿Qué es…?" pasan bajo la demo. */
+#product .hp-tabs{margin-bottom:12px}
+#product .hp-panel .prod-cab{display:block;text-align:center;margin:0 auto .7rem;max-width:680px}
+#product .prod-cab .prod-eyebrow{display:flex;justify-content:center;margin-bottom:.35rem}
+#product .prod-h1{font-size:clamp(20px,2.6vw,30px);line-height:1.18;margin:0 0 .35rem;letter-spacing:-.01em}
+#product .prod-cab .prod-tagline{font-size:clamp(13px,1.3vw,15px);line-height:1.45;margin:0 auto;max-width:580px;opacity:.82}
+#product .prod-cab .alert-box{display:none}
+.prod-cel{display:block;margin:1.4rem auto 2rem;max-width:680px}
+.prod-cel .prod-tagline{display:none}
+#product .demo-label{display:flex;justify-content:center;margin:0 auto .4rem;width:max-content;max-width:100%}
+.al-demo__grid{display:flex;flex-direction:column;gap:12px}
+.al-demo__stage{order:-1;align-self:center;width:100%;max-width:1000px;margin:30px auto 0;aspect-ratio:auto;height:max(260px, min(56cqw, calc(100svh - 480px)))}   /* el nombre y el equipo entran en la primera pantalla */
+.al-demo__copy{order:1;max-width:680px;margin:0 auto;min-height:0;padding:0;text-align:center;justify-content:flex-start}
+.al-demo__kicker,.al-demo__stats,.al-demo__map{display:none}
+.al-demo__title{font-size:clamp(15px,1.5vw,18px);line-height:1.35;margin:0 0 .25rem;opacity:.92}
+.al-demo__body{font-size:clamp(12.5px,1.1vw,14px);line-height:1.5;opacity:.68;margin:0 auto}
+.al-demo__extra{display:flex;justify-content:center;padding-top:0}
+.al-demo__note{text-align:center;opacity:.55;margin-top:.6rem}
+/* mientras corre, la frase del paso acompaña al demo; el título y la bajada quedan para el modo manual */
+.al-demo:not(.al-demo--manual) :is(.al-demo__title,.al-demo__body,.al-demo__extra){display:none}
+/* con mouse: el notebook se acerca al cursor; los bordes del lienzo se desvanecen para que no quede un corte recto */
+@media (pointer:fine){
+  .al-demo__stage canvas{
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent),linear-gradient(180deg,transparent,#000 5%,#000 95%,transparent);
+    -webkit-mask-composite:source-in;
+    mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent),linear-gradient(180deg,transparent,#000 5%,#000 95%,transparent);
+    mask-composite:intersect}
+}
+/* componentes de la demo (los arma el script «Demos: etiqueta, frase, resumen y deslizar») */
+.al-paso{position:absolute;left:50%;top:-30px;transform:translateX(-50%);z-index:5;pointer-events:none;padding:5px 11px;border-radius:999px;white-space:nowrap;max-width:calc(100% - 24px);overflow:hidden;text-overflow:ellipsis;
+  background:rgba(10,18,30,.82);color:rgba(255,255,255,.94);font:600 10.5px/1.2 var(--mono);letter-spacing:.08em;text-transform:uppercase;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);transition:opacity .35s ease,transform .35s ease}
+.al-paso.cambia{opacity:0;transform:translate(-50%,-4px)}
+.al-demo__grid .al-frase{order:0;margin:2px auto 0;max-width:640px;height:2.9em;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;text-align:center;font:500 clamp(14px,1.3vw,16px)/1.45 var(--sans);color:#dfe7f1;transition:opacity .25s ease}   /* alto fijo de 2 líneas: nada se mueve al cambiar de paso */
+[data-theme="light"] .al-demo__grid .al-frase{color:#12304d}
+.al-demo__grid .al-frase::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:#3d7fd6;margin-right:.55em;vertical-align:.12em;box-shadow:0 0 0 4px rgba(61,127,214,.18)}
+.al-demo__grid .al-frase.cambia{opacity:0}
+.al-resumen{position:absolute;left:0;right:0;top:0;bottom:var(--al-barra);z-index:6;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:18px;text-align:left;
+  background:rgba(7,13,22,.86);opacity:0;visibility:hidden;transition:opacity .45s ease,visibility .45s}
+.al-demo--fin .al-resumen{opacity:1;visibility:visible}
+.al-resumen__k{margin:0 0 .6rem;font:600 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:#8fc1ff}
+.al-resumen ol{margin:0;padding:0;list-style:none;counter-reset:p;display:grid;gap:4px;width:min(100%,460px)}
+.al-resumen li{counter-increment:p}
+.al-resumen ol button{display:flex;gap:.7rem;align-items:center;width:100%;min-height:36px;padding:6px 10px;border:0;border-radius:10px;background:rgba(255,255,255,.06);color:#e9eef5;font:500 13.5px/1.3 var(--sans);text-align:left;cursor:pointer}
+.al-resumen ol button::before{content:counter(p);flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:#35B37E;color:#fff;font:700 11px/1 var(--mono)}
+.al-resumen ol button:hover{background:rgba(255,255,255,.12)}
+.al-resumen__acc{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:14px}
+.al-resumen__otra,.al-resumen__cta{min-height:44px;padding:0 18px;border-radius:999px;display:inline-flex;align-items:center;font:600 13px/1 var(--sans);text-decoration:none;cursor:pointer}
+.al-resumen__otra{border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff}
+.al-resumen__cta{background:#3d7fd6;color:#fff;border:0}
+.al-pista{position:absolute;left:50%;bottom:calc(var(--al-barra) + 14px);transform:translateX(-50%);z-index:7;pointer-events:none;white-space:nowrap;padding:7px 14px;border-radius:999px;
+  background:rgba(10,18,30,.82);color:#fff;font:600 12.5px/1 var(--sans);animation:al-pista 1.6s ease-in-out infinite;transition:opacity .5s ease}
+.al-pista span{display:inline-block;opacity:.7;margin:0 .25em}
+.al-pista.fuera{opacity:0}
+@keyframes al-pista{0%,100%{transform:translateX(-50%)}50%{transform:translateX(calc(-50% - 10px))}}
+@media (prefers-reduced-motion: reduce){ .al-pista{animation:none} }
+/* A · CELULAR VERTICAL: el demo arriba con su frase; la bajada y «¿Qué es…?» pasan bajo la demo. */
 @media (orientation:portrait) and (max-width:639px), (max-width:639px) and (min-height:561px){
-  #product .hp-tabs{margin-bottom:8px}
-  #product .hp-panel .prod-cab{margin-bottom:10px}
-  #product .prod-h1{font-size:19.5px;line-height:1.28;margin-bottom:0}
-  .prod-cab .prod-tagline,.prod-cab .alert-box{display:none}
-  .prod-cel{display:block;margin:-.6rem 0 2.5rem}
-  .prod-cel .prod-tagline{margin-bottom:1rem}
-  .prod-cel .alert-box{margin-bottom:0}
-  #product .demo-label{margin-bottom:.35rem}
   .al-demo{padding:12px 16px;border-radius:16px}
-  .al-demo__grid{gap:10px}
-  /* 2026-10-01: la escena mide el 90 % de su ancho más la barra, con tope para que el título de la etapa y sus primeras
-     líneas queden en la primera pantalla. En Safari de iOS 26 la barra de
-     direcciones flota SOBRE el final de la página (~85 px): con la escena
-     cuadrada el texto quedaba debajo de ella. */
-  .al-demo__stage{height:max(260px, min(calc(90cqw + var(--al-barra)), calc(100svh - 330px)))}
-  .al-demo__copy{min-height:158px}   /* el paso más largo de las 6 demos (medido) */
-  .al-demo__kicker{display:none}     /* la etapa ya la dicen el título y la barra */
-  .al-demo__title{font-size:16px;line-height:1.3;margin-bottom:.3rem}
-  .al-demo__body{font-size:13px;line-height:1.45}
-  .al-demo__stats,.al-demo__map,.al-demo__note,.al-demo__contact{display:none}   /* Contacto sigue a un toque en el menú */
+  .al-demo__note,.al-demo__contact{display:none}   /* la nota cambia de alto entre demos; Contacto sigue a un toque en el menú */
   .al-demo__cta{margin-top:.55rem;padding:7px 16px;font-size:12.5px}
   .al-demo__tip{margin-top:.45rem;padding:.4rem .7rem;font-size:12px;line-height:1.4}
   .al-demo__checks{margin-top:.45rem;gap:.2rem;font-size:12px}
   .al-demo__checks li{line-height:1.38}
+  .al-resumen ol button{min-height:32px;font-size:12.5px}
+  .al-resumen{padding:12px}
 }
-@media (orientation:portrait) and (max-width:379px){ .al-demo__copy{min-height:172px} }
 /* menos de 300 px (celular con el zoom de Safari al 150 %): los nombres de las
    herramientas en dos líneas, el selector a todo el ancho y los botones de la
    barra de 40 px para que quepan en su fila */
@@ -2013,92 +2049,19 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
   .al-player{gap:4px;padding:6px}
   .al-demo .al-player .al-demo__btn{width:40px;height:40px}
 }
-@media (orientation:portrait) and (max-width:639px) and (max-height:580px){   /* iPhone SE con barras */
-  #product .prod-h1{font-size:17.5px}
-  .al-demo__title{font-size:15px}
-  .al-demo__body{font-size:12px;line-height:1.38}
-}
-/* B · CELULAR HORIZONTAL: escena a la izquierda con todo el alto visible y el
-   texto a la derecha, anclado arriba. */
+/* B · CELULAR HORIZONTAL: el equipo a la izquierda con todo el alto visible; la frase y el texto del paso a la derecha */
 @media (orientation:landscape) and (max-height:560px){
-  #product .hp-tabs{margin-bottom:8px}
-  #product .hp-panel .prod-cab{margin-bottom:10px}
-  #product .prod-h1{font-size:19.5px;line-height:1.28;margin-bottom:0}
-  .prod-cab .prod-tagline,.prod-cab .alert-box{display:none}
-  .prod-cel{display:block;margin:-.6rem 0 2.5rem}
-  .prod-cel .prod-tagline{margin-bottom:1rem}
-  .prod-cel .alert-box{margin-bottom:0}
-  #product .demo-label{margin-bottom:.4rem}
-  .al-demo{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);column-gap:18px;align-items:start;padding:12px 16px;border-radius:16px}
-  .al-demo__grid{display:contents}
-  .al-demo__stage{grid-column:1;grid-row:1;order:0;height:clamp(150px, calc(100vh - 110px), 420px);height:clamp(150px, calc(100svh - 110px), 420px)}
-  .al-demo__copy{grid-column:2;grid-row:1;align-self:start;min-height:0}
-  .al-demo__extra{padding-top:0}
-  .al-demo__kicker{margin-bottom:.3rem}
-  .al-demo__title{font-size:15.5px;margin-bottom:.35rem}
-  .al-demo__body{font-size:13px;line-height:1.5}
-  .al-demo__stats,.al-demo__map,.al-demo__note{display:none}
+  .al-demo{padding:12px 16px;border-radius:16px}
+  .al-demo__grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);grid-template-rows:auto 1fr;column-gap:18px;align-items:start}
+  .al-demo__stage{grid-column:1;grid-row:1 / span 2;height:max(140px, calc(100svh - 110px))}
+  .al-demo__grid .al-frase{grid-column:2;grid-row:1;margin-top:34px;text-align:left}
+  .al-demo__copy{grid-column:2;grid-row:2;text-align:left}
+  .al-demo__note{display:none}
   .al-demo__cta{margin-top:.8rem}
   .al-demo__tip{margin-top:.45rem;padding:.4rem .7rem;font-size:12px;line-height:1.4}
   .al-demo__checks{margin-top:.45rem;gap:.2rem;font-size:12px}
 }
-/* D · TABLET HORIZONTAL Y COMPUTADOR (también ventanas casi cuadradas): el
-   encabezado en dos columnas (texto | "¿Qué es…?"); en la demo, el texto de la
-   etapa a la izquierda y la escena a la derecha con el alto que queda. */
-@media (min-width:640px) and (min-aspect-ratio:9/10) and (min-height:561px){
-  .prod-cab{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:center}
-  .prod-cab .prod-tagline{margin-bottom:0}
-  .prod-cab .alert-box{margin:0;font-size:13.5px;padding:1.1rem 1.2rem}
-  #product .prod-cab{margin-bottom:1.2rem}
-  #product .demo-label{margin-bottom:.5rem}
-  .al-demo{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);column-gap:clamp(20px,3vw,40px);align-items:start}
-  .al-demo__grid{display:contents}
-  .al-demo__copy{grid-column:1;grid-row:1;min-height:0;padding-top:.3rem}
-  .al-demo__stage{grid-column:2;grid-row:1;order:0;align-self:start;height:max(240px, min(52cqw, calc(100svh - 356px - var(--hp-alto))))}
-  /* 2026-10-01: la nota va abajo en la columna del texto (como en tablet vertical): el
-     recuadro mide lo que la escena. Antes ocupaba una fila propia bajo la escena y en el
-     iPad Pro 11 horizontal (unos 1194 × 760 con las barras de Safari) el recuadro quedaba cortado. */
-  .al-demo__note{grid-column:1;grid-row:1;align-self:end;margin-top:1rem}
-  .al-demo__extra{padding-top:0}
-  .al-demo__title{font-size:clamp(18px,1.6vw,22px)}
-  .al-demo__body{font-size:clamp(14px,1.15vw,15.5px);line-height:1.6}
-  .al-demo__stats strong{font-size:clamp(24px,2.3vw,34px)}
-}
-@media (min-width:640px) and (min-aspect-ratio:9/10) and (min-height:561px) and (max-height:860px){   /* iPad horizontal, portátiles */
-  .al-demo__body{font-size:14px;line-height:1.55}
-  .al-demo__cta{margin-top:.7rem;padding:7px 16px}
-  .al-demo__stats{gap:10px 12px}
-  .al-demo__stats strong{font-size:clamp(22px,2vw,28px)}
-}
-@media (min-width:640px) and (max-width:1099px) and (min-aspect-ratio:9/10) and (min-height:561px) and (max-height:760px),
-       (min-width:1100px) and (max-width:1439px) and (orientation:landscape) and (min-height:561px) and (max-height:680px){   /* ventanas angostas y bajas */
-  #product .prod-h1{font-size:19px}
-  #product .prod-cab .alert-box{font-size:12.5px;padding:.8rem 1rem}
-  .al-demo__kicker{margin-bottom:.25rem}
-  .al-demo__title{font-size:16px;margin-bottom:.25rem}
-  .al-demo__body{font-size:12.5px;line-height:1.4}
-  .al-demo__stats,.al-demo__note{display:none}
-}
-/* C · TABLET VERTICAL: escena a la derecha, más alta que ancha, y el texto de
-   la etapa a su izquierda, con la nota abajo en la misma celda (el alto lo da
-   solo la escena); la bajada y "¿Qué es…?" pasan bajo la demo. */
-@media (orientation:portrait) and (min-width:640px) and (max-aspect-ratio:9/10){
-  .prod-cab .prod-tagline,.prod-cab .alert-box{display:none}
-  .prod-cel{display:block;margin:1.6rem 0 2.5rem}
-  .prod-cel .prod-tagline{margin-bottom:1rem}
-  .prod-cel .alert-box{margin-bottom:0}
-  #product .prod-cab{margin-bottom:1rem}
-  #product .demo-label{margin-bottom:.5rem}
-  .al-demo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);column-gap:clamp(20px,3vw,32px);align-items:start}
-  .al-demo__grid{display:contents}
-  .al-demo__copy{grid-column:1;grid-row:1;min-height:0;padding-top:.3rem}
-  .al-demo__stage{grid-column:2;grid-row:1;order:0;align-self:start;height:max(380px, min(calc(100cqw * .8), calc(100svh - 330px - var(--hp-alto))))}
-  .al-demo__note{grid-column:1;grid-row:1;align-self:end;margin-top:1rem}
-  .al-demo__extra{padding-top:.6rem}
-  .al-demo__title{font-size:clamp(17px,2.3vw,21px)}
-  .al-demo__body{font-size:14px;line-height:1.55;max-width:620px}
-  .al-demo__stats{margin-top:0;flex-wrap:wrap;gap:10px 16px}
-}
+/* C · TABLET VERTICAL y D · TABLET HORIZONTAL Y COMPUTADOR: lo común basta */
 /* 2026-09-30: pantallas táctiles. Los controles de las demos quedaban bajo el
    mínimo de 44 px para tocar con el dedo (26-28 px en la barra, 24 px el
    selector de demo). En táctil: botones de 44 px, segmentos de pasos con 44 px
@@ -2132,7 +2095,419 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
 @media (pointer:coarse) and (max-width:639px){
   .demo-cambio button{padding:8px 14px}
 }
+/* 2026-10-07: en celular y tablet el cuadro del demo toma la forma del equipo del visitante con la app
+   (vertical al sostenerlo así, horizontal al girarlo; la proporción --al-forma-v / -h la pone alFoto)
+   y la barra de controles va debajo */
+@media (pointer:coarse){
+  #product .al-demo{padding:10px 12px}
+  .al-demo--player .al-demo__stage{height:auto;padding-bottom:var(--al-barra)}
+  .al-demo--player .al-demo__stage canvas{height:auto;aspect-ratio:var(--al-forma-v,.8);max-height:calc(100svh - 150px)}
+}
+@media (pointer:coarse) and (orientation:portrait) and (max-width:600px){   /* celular: el teléfono completo, lo más grande que cabe */
+  #product .al-demo{padding-left:6px;padding-right:6px}
+  .al-demo--player .al-demo__stage canvas{max-height:calc(100svh - 240px)}   /* equipo, barra y frase sobre la barra flotante de Safari (iOS 26, ~85 px) */
+  .al-chico #product .al-demo{padding-left:4px;padding-right:4px}   /* iPhone SE: la app sola, a todo el ancho */
+  .al-chico .al-demo--player .al-demo__stage canvas{max-height:calc(100svh - 160px)}
+}
+@media (pointer:coarse) and (orientation:landscape){
+  .al-demo--player .al-demo__stage canvas{aspect-ratio:var(--al-forma-h,1.26);max-height:calc(100svh - var(--al-barra) - 110px)}
+}
 </style>
+<script>
+/* Demos: aparato del visitante (2026-10-07), compartido por todas las demos de tarjetas.
+   En computador, la app se ve en la pantalla de un notebook. Fotos de estudio generadas con IA (Higgsfield · Z Image), en img/, con la
+   pantalla en negro, sin reflejos verdes y recortadas sin fondo (Higgsfield · remove_background), para que el
+   aparato se apoye directo en la página (img/preparar.py y img/quad.py).
+   La pantalla de la foto está en perspectiva: una homografía lleva el plano de la pantalla (x, y en unidades
+   del demo) a sus cuatro esquinas en la foto, y así lo que se dibuja en ella queda pegado al vidrio.
+   En celular y tablet se dibuja de frente el marco del equipo del visitante (iPhone, iPad o Android, con sus
+   medidas reales) y la app llena su pantalla; en pantallas chicas (iPhone SE) y en una ventana angosta de
+   computador la app va sola, de borde a borde del cuadro. */
+window.alFoto = (function(){
+  // q: esquinas de la pantalla (sup-izq, sup-der, inf-der, inf-izq, px de la foto) · caja: el aparato completo, para encuadrar
+  // prop: ancho/alto de la pantalla real · radio: esquinas redondeadas de la pantalla (fracción del ancho)
+  var FOTOS = {
+    notebook: { src: 'img/notebook.webp', w: 1800, h: 1111, prop: 1.6, radio: 0.008,
+      q: [[61.4, 73.6], [1207.0, 119.5], [1261.3, 816.7], [82.9, 842.5]], caja: [27.6, 27.6, 1772.4, 1083.9] } };
+  // ¿qué aparato tiene el visitante? (iPadOS se presenta como Mac: se distingue por la pantalla táctil)
+  var _eq = null;
+  function equipo(){
+    if (_eq) return _eq;
+    var tactil = navigator.maxTouchPoints > 0 && window.matchMedia && matchMedia('(pointer: coarse)').matches;
+    return (_eq = !tactil ? 'pc' : (Math.min(screen.width, screen.height) >= 600 ? 'tablet' : 'cel'));
+  }
+  function homografia(de, a){   // 4 pares de puntos → matriz 3×3 (h22 = 1)
+    var A = [], B = [], i, c, r, k;
+    for (i = 0; i < 4; i++) { var x = de[i][0], y = de[i][1], u = a[i][0], v = a[i][1];
+      A.push([x, y, 1, 0, 0, 0, -u*x, -u*y]); B.push(u); A.push([0, 0, 0, x, y, 1, -v*x, -v*y]); B.push(v); }
+    for (c = 0; c < 8; c++) {   // Gauss con pivoteo
+      var p = c; for (r = c + 1; r < 8; r++) if (Math.abs(A[r][c]) > Math.abs(A[p][c])) p = r;
+      var tA = A[c]; A[c] = A[p]; A[p] = tA; var tB = B[c]; B[c] = B[p]; B[p] = tB;
+      for (r = 0; r < 8; r++) if (r !== c) { var f = A[r][c] / A[c][c]; for (k = c; k < 8; k++) A[r][k] -= f * A[c][k]; B[r] -= f * B[c]; }
+    }
+    return B.map(function(v, i){ return v / A[i][i]; }).concat(1);
+  }
+  function rr(c, x, y, w, h, r){ c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+  function lienzo(T, w, h, f){ var c = document.createElement('canvas'); c.width = w; c.height = h; f(c.getContext('2d'), w, h); var t = new T.CanvasTexture(c); t.encoding = T.sRGBEncoding; return t; }
+  // fondo de pantalla: degradado de marca con dos halos (el mismo del escritorio de las ventanas)
+  function escritorio(c, w, h){
+    var l = c.createLinearGradient(0, 0, w, h); l.addColorStop(0, '#0d2742'); l.addColorStop(0.55, '#16477a'); l.addColorStop(1, '#0b3340'); c.fillStyle = l; c.fillRect(0, 0, w, h);
+    var r = c.createRadialGradient(w * 0.3, h * 0.25, 0, w * 0.3, h * 0.25, Math.max(w, h) * 0.6); r.addColorStop(0, 'rgba(110,170,240,.45)'); r.addColorStop(1, 'rgba(110,170,240,0)'); c.fillStyle = r; c.fillRect(0, 0, w, h);
+    var r2 = c.createRadialGradient(w * 0.85, h * 0.9, 0, w * 0.85, h * 0.9, Math.max(w, h) * 0.5); r2.addColorStop(0, 'rgba(20,170,150,.35)'); r2.addColorStop(1, 'rgba(20,170,150,0)'); c.fillStyle = r2; c.fillRect(0, 0, w, h);
+  }
+  // ── Marco del equipo del visitante (celular y tablet) ──────────────────────────────────────────────
+  // De frente, con las medidas reales en puntos (pt) de cada equipo. El panel se abre en el navegador, así
+  // que se ve como una página en Safari (o Chrome en Android): barra de estado, barra del navegador con la
+  // dirección e indicador de inicio. La app llena el ancho de la página; lo que sobra abajo es página en blanco.
+  //   iPhone 16 Pro: 402 × 874, esquinas de 55, isla de 125 × 37 a 11 del borde, barra de estado de 54.
+  //   iPhone con muesca (12 a 14): 390 × 844, esquinas de 47, muesca de 162 × 32.
+  //   iPad Pro 11: 834 × 1194, esquinas de 18, bisel de unos 28; barra de estado de 24 y Safari arriba (50).
+  //   Android: 412 × 915, esquinas de 40, cámara perforada; barra de estado de 32 y Chrome arriba (56).
+  function modelo(){
+    var ua = navigator.userAgent, w = Math.min(screen.width, screen.height), h = Math.max(screen.width, screen.height);
+    // pantallas chicas (iPhone SE, Android compactos): el teléfono del visitante ya es el marco; la app va sola,
+    // a todo el ancho, para que se vea grande sin desbordar
+    if (h <= 700 && equipo() === 'cel') return { tipo: 'chico' };
+    if (/iPhone/.test(ua)) return w <= 390 && h <= 844 ? { tipo: 'iphone', muesca: true, w: 390, h: 844, r: 47 } : { tipo: 'iphone', w: 402, h: 874, r: 55 };
+    if (/iPad/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) return { tipo: 'ipad', w: 834, h: 1194, r: 18 };
+    return equipo() === 'tablet' ? { tipo: 'tableta', w: 800, h: 1280, r: 20 } : { tipo: 'android', w: 412, h: 915, r: 40 };
+  }
+  // geometría en pt del equipo según la orientación: pantalla, franjas de sistema y bisel
+  function especie(m, vert){
+    var e = { W: vert ? m.w : m.h, H: vert ? m.h : m.w, r: m.r, top: 0, bot: 0, side: 0 };
+    if (m.tipo === 'iphone') {
+      e.bisel = 4.5; e.canto = 2.2;
+      if (vert) { e.top = m.muesca ? 47 : 54; e.bot = 96; }        // Safari compacto abajo (dirección + botones) e indicador
+      else { e.side = 62; e.top = 40; e.bot = 21; }                // horizontal: sin barra de estado; dirección arriba
+    } else if (m.tipo === 'ipad') { e.bisel = 26; e.canto = 2.5; e.top = 24 + 50; e.bot = 20; }
+    else { e.bisel = m.tipo === 'android' ? 5 : 22; e.canto = 2; e.top = 32 + 56; e.bot = 24; }
+    return e;
+  }
+  // medidas en unidades del demo: la app llena el ancho útil (o el alto, si así cabe mejor)
+  function medidas(vert, PW, PH, pestanas){
+    var m = modelo(), e = especie(m, vert), tel = m.tipo === 'iphone' || m.tipo === 'android', tab = vert && tel && pestanas ? 56 : 0;
+    var cw = e.W - 2 * e.side, chh = e.H - e.top - e.bot - tab;
+    // celular vertical: la app usa todo el ancho de la pantalla (su margen interno de los lados queda fuera)
+    var ancho = vert && (m.tipo === 'iphone' || m.tipo === 'android') ? 1.09 : 1;
+    var u = Math.max(PW / (cw * ancho), PH / chh);   // unidades por pt
+    // tablet horizontal: la pantalla es más ancha que la app; como en Safari de iPad, la barra lateral llena el resto
+    var lado = !vert && !tel ? Math.max(0, cw - PW / u) : 0;
+    var r = { m: m, e: e, u: u, top: e.top * u, bot: e.bot * u, side: e.side * u, radio: e.r * u, bisel: (e.bisel + e.canto) * u, canto: e.canto * u, tab: tab, lado: lado };
+    r.SW = e.W * u; r.SH = e.H * u; r.OW = r.SW + 2 * r.bisel; r.OH = r.SH + 2 * r.bisel;
+    r.appY = r.SH / 2 - r.top - PH / 2;   // la app, arriba de la página (bajo las barras)
+    r.appX = lado * u / 2;                 // a la derecha de la barra lateral, si la hay
+    return r;
+  }
+  // proporción del cuadro en táctil (la usa el CSS de las demos): la del equipo completo
+  if (equipo() !== 'pc' && modelo().tipo === 'chico') { document.documentElement.style.setProperty('--al-forma-v', '0.8'); document.documentElement.style.setProperty('--al-forma-h', '1.2632'); document.documentElement.classList.add('al-chico'); }
+  else if (equipo() !== 'pc') {
+    var _v = medidas(true, 3.84, 4.8, true), _h = medidas(false, 4.8, 3.8, true);
+    document.documentElement.style.setProperty('--al-forma-v', (_v.OW / _v.OH).toFixed(4));
+    document.documentElement.style.setProperty('--al-forma-h', (_h.OW / _h.OH).toFixed(4));
+  }
+  // íconos de la barra de estado, dibujados en pt (como los de iOS): x, y = esquina izquierda, centro vertical
+  function senal(c, x, y, P, col){ c.fillStyle = col; [4, 6.3, 8.6, 11].forEach(function(h, i){ rr(c, x + P(i * 4.6), y + P(5.5 - h), P(3.1), P(h), P(1)); c.fill(); }); return P(17); }
+  function wifi(c, x, y, P, col){
+    var cx = x + P(8), by = y + P(5.4);
+    c.fillStyle = col;
+    [[10.6, 7.9], [7.2, 4.6], [3.6, 0]].forEach(function(r){ c.beginPath(); c.arc(cx, by, P(r[0]), Math.PI * 1.25, Math.PI * 1.75); if (r[1]) c.arc(cx, by, P(r[1]), Math.PI * 1.75, Math.PI * 1.25, true); else c.lineTo(cx, by); c.closePath(); c.fill(); });
+    return P(16);
+  }
+  function bateria(c, x, y, P, col, pct){
+    c.strokeStyle = col; c.globalAlpha = 0.4; c.lineWidth = P(1); rr(c, x + P(0.5), y - P(6), P(24), P(12), P(3.8)); c.stroke();
+    c.fillStyle = col; rr(c, x + P(25.4), y - P(2), P(1.6), P(4), P(0.8)); c.fill(); c.globalAlpha = 1;
+    rr(c, x + P(2.5), y - P(4), P(20), P(8), P(2.2)); c.fill();
+    return P(27);
+  }
+  function fuenteSF(px, peso){ return (peso || 600) + ' ' + Math.round(px) + 'px -apple-system, "SF Pro Text", "Helvetica Neue", Inter, sans-serif'; }
+  function marco(T, g, pantalla, o){
+    var vert = o.vert, PW = o.ventana.w, PH = o.ventana.h, d = medidas(vert, PW, PH, o.menu), m = d.m, e = d.e;
+    var pad = 0.012 * Math.max(d.OW, d.OH), FW = d.OW + 2 * pad, FH = d.OH + 2 * pad;
+    var k = (equipo() === 'cel' ? 1536 : 2048) / Math.max(FW, FH), cw = Math.round(FW * k), ch = Math.round(FH * k);
+    var X = function(v){ return v * k; }, P = function(pt){ return pt * d.u * k; };   // unidades → px · pt → px
+    var ox = X(pad), oy = X(pad), OW = X(d.OW), OH = X(d.OH), bz = X(d.bisel), Ro = X(d.radio + d.bisel);
+    var sx = ox + bz, sy = oy + bz, SW = X(d.SW), SH = X(d.SH), Ri = X(d.radio);
+    var metal = m.tipo === 'iphone' ? ['#6f6c67', '#cfcbc4', '#9d9993', '#dcd8d1', '#6a6762'] : (m.tipo === 'ipad' ? ['#7d8086', '#d3d6da', '#a6a9ae', '#dcdfe2', '#76797e'] : ['#2a2c30', '#5d6066', '#3a3d42', '#62656b', '#25272a']);
+    var cuerpo = lienzo(T, cw, ch, function(c){
+      // botones laterales (asoman del canto), en pt sobre el lado largo
+      c.fillStyle = metal[2];
+      var largo = function(t0, t1, lado){   // tramo del lado largo (fracciones) en el canto izquierdo (-1) o derecho (1)
+        var g0 = (vert ? OH : OW) * t0, g1 = (vert ? OH : OW) * (t1 - t0), bw = X(pad) * 0.95;
+        if (vert) rr(c, lado < 0 ? ox - bw + 3 : ox + OW - 3, oy + g0, bw, g1, bw / 2);
+        else rr(c, ox + g0, lado < 0 ? oy - bw + 3 : oy + OH - 3, g1, bw, bw / 2);
+        c.fill();
+      };
+      if (m.tipo === 'iphone') { largo(0.195, 0.235, -1); largo(0.27, 0.335, -1); largo(0.355, 0.42, -1); largo(0.27, 0.375, 1); largo(0.6, 0.655, 1); }
+      else if (m.tipo === 'ipad') { if (vert) { largo(0.06, 0.11, 1); largo(0.12, 0.17, 1); } else { largo(0.06, 0.11, -1); largo(0.12, 0.17, -1); } }
+      else { largo(0.22, 0.32, 1); largo(0.36, 0.42, 1); }
+      var l = c.createLinearGradient(ox, oy, ox + OW, oy + OH);
+      metal.forEach(function(col, i){ l.addColorStop(i / (metal.length - 1), col); });
+      c.fillStyle = l; rr(c, ox, oy, OW, OH, Ro); c.fill();
+      var ec = X(d.canto);
+      c.strokeStyle = 'rgba(255,255,255,.45)'; c.lineWidth = Math.max(1, ec * 0.25); rr(c, ox + ec * 0.3, oy + ec * 0.3, OW - ec * 0.6, OH - ec * 0.6, Ro - ec * 0.3); c.stroke();
+      c.fillStyle = '#050506'; rr(c, ox + ec, oy + ec, OW - 2 * ec, OH - 2 * ec, Ro - ec); c.fill();
+      if (m.tipo === 'ipad') {   // cámara frontal en el bisel del lado largo (como el iPad Pro actual)
+        c.fillStyle = '#16202b'; c.beginPath();
+        if (vert) c.arc(ox + ec + (bz - ec) / 2, oy + OH / 2, (bz - ec) * 0.16, 0, 7); else c.arc(ox + OW / 2, oy + ec + (bz - ec) / 2, (bz - ec) * 0.16, 0, 7);
+        c.fill();
+      }
+      c.globalCompositeOperation = 'destination-out'; rr(c, sx, sy, SW, SH, Ri); c.fill();
+    });
+    // encima de la app: barras del sistema y del navegador, isla o muesca, indicador de inicio y brillo del vidrio
+    var capa = function(col){ return lienzo(T, cw, ch, function(c){
+      c.save(); rr(c, sx, sy, SW, SH, Ri); c.clip();
+      var px = function(pt){ return sx + P(pt); }, py = function(pt){ return sy + P(pt); };
+      var gris = 'rgba(246,246,248,.97)', azul = '#0a84ff', tinta = '#1c1c1e';
+      var direccion = function(x, y, w, h, tam){   // campo de dirección con candado
+        c.fillStyle = 'rgba(118,118,128,.14)'; rr(c, x, y, w, h, h * 0.3); c.fill();
+        c.fillStyle = tinta; c.font = fuenteSF(P(tam), 500); c.textAlign = 'center'; c.textBaseline = 'middle';
+        c.fillText('script.google.com', x + w / 2 + P(6), y + h / 2 + P(0.5));
+        var lw = c.measureText('script.google.com').width; c.fillStyle = '#3c3c43';
+        rr(c, x + w / 2 - lw / 2 - P(9), y + h / 2 - P(1.5), P(8), P(6.5), P(1.5)); c.fill();
+        c.strokeStyle = '#3c3c43'; c.lineWidth = P(1.4); c.beginPath(); c.arc(x + w / 2 - lw / 2 - P(5), y + h / 2 - P(2), P(2.6), Math.PI, 0); c.stroke();
+      };
+      var flecha = function(x, y, dir, col2){ c.strokeStyle = col2; c.lineWidth = P(2.2); c.lineCap = 'round'; c.lineJoin = 'round'; c.beginPath(); c.moveTo(x + dir * P(4), y - P(7)); c.lineTo(x - dir * P(4), y); c.lineTo(x + dir * P(4), y + P(7)); c.stroke(); };
+      var compartir = function(x, y, col2){ c.strokeStyle = col2; c.lineWidth = P(1.8); c.lineCap = 'round'; c.beginPath(); c.moveTo(x - P(6), y - P(2)); c.lineTo(x - P(8), y - P(2)); c.lineTo(x - P(8), y + P(9)); c.lineTo(x + P(8), y + P(9)); c.lineTo(x + P(8), y - P(2)); c.lineTo(x + P(6), y - P(2)); c.moveTo(x, y + P(3)); c.lineTo(x, y - P(10)); c.moveTo(x - P(4), y - P(6)); c.lineTo(x, y - P(10)); c.lineTo(x + P(4), y - P(6)); c.stroke(); };
+      var pestanas = function(x, y, col2){ c.strokeStyle = col2; c.lineWidth = P(1.8); rr(c, x - P(7), y - P(5), P(12), P(12), P(2.5)); c.stroke(); c.beginPath(); c.moveTo(x - P(3), y - P(9)); c.lineTo(x + P(5), y - P(9)); c.quadraticCurveTo(x + P(9), y - P(9), x + P(9), y - P(5)); c.lineTo(x + P(9), y + P(3)); c.stroke(); };
+      var libro = function(x, y, col2){ c.strokeStyle = col2; c.lineWidth = P(1.8); c.beginPath(); c.moveTo(x, y - P(6)); c.quadraticCurveTo(x - P(5), y - P(9), x - P(10), y - P(8)); c.lineTo(x - P(10), y + P(7)); c.quadraticCurveTo(x - P(5), y + P(6), x, y + P(9)); c.quadraticCurveTo(x + P(5), y + P(6), x + P(10), y + P(7)); c.lineTo(x + P(10), y - P(8)); c.quadraticCurveTo(x + P(5), y - P(9), x, y - P(6)); c.lineTo(x, y + P(9)); c.stroke(); };
+      var inicio = function(ancho, color){ c.fillStyle = color; rr(c, sx + SW / 2 - P(ancho / 2), sy + SH - P(8) - P(5), P(ancho), P(5), P(2.5)); c.fill(); };
+      var estadoDer = function(xd, y, col2, sen){ var x = xd - P(27); bateria(c, x, y, P, col2); x -= P(6 + 16); wifi(c, x, y, P, col2); if (sen) { x -= P(6 + 17); senal(c, x, y, P, col2); } };
+      if (m.tipo === 'iphone' && vert) {
+        var ih = 37, iw = 125, iy = 11, yc = py(iy + ih / 2);
+        c.fillStyle = '#000';
+        if (m.muesca) { var nw = 162, nh = 32; rr(c, px(e.W / 2 - nw / 2), sy - P(10), P(nw), P(nh + 10), P(20)); c.fill(); yc = py(23); }
+        else { rr(c, px(e.W / 2 - iw / 2), py(iy), P(iw), P(ih), P(ih / 2)); c.fill(); }
+        c.fillStyle = col; c.font = fuenteSF(P(17), 600); c.textAlign = 'center'; c.textBaseline = 'middle';
+        c.fillText('9:41', px(e.W * 0.165), yc + P(0.5));
+        estadoDer(px(e.W - 26), yc, col, true);
+        // Safari compacto: dirección y botones, sobre una barra translúcida
+        var by = e.H - e.bot;
+        c.fillStyle = gris; c.fillRect(sx, py(by), SW, SH - P(by)); c.fillStyle = 'rgba(60,60,67,.18)'; c.fillRect(sx, py(by), SW, Math.max(1, P(0.5)));
+        direccion(px(12), py(by + 6), P(e.W - 24), P(36), 15);
+        var fy = py(by + 6 + 36 + 17), xs = [0.1, 0.3, 0.5, 0.7, 0.9].map(function(f){ return px(e.W * f); });
+        flecha(xs[0], fy, 1, azul); flecha(xs[1], fy, -1, 'rgba(10,132,255,.35)'); compartir(xs[2], fy, azul); libro(xs[3], fy, azul); pestanas(xs[4], fy, azul);
+        inicio(140, '#000');
+      } else if (m.tipo === 'iphone') {
+        c.fillStyle = '#000';
+        if (m.muesca) { rr(c, sx - P(10), py(e.H / 2 - 81), P(42), P(162), P(20)); c.fill(); }
+        else { rr(c, px(11), py(e.H / 2 - 62.5), P(37), P(125), P(18.5)); c.fill(); }
+        c.fillStyle = gris; c.fillRect(sx, sy, SW, P(e.top)); c.fillStyle = 'rgba(60,60,67,.18)'; c.fillRect(sx, py(e.top), SW, Math.max(1, P(0.5)));
+        direccion(px(e.W / 2 - 150), py(5), P(300), P(30), 14);
+        inicio(210, '#000');
+      } else {
+        // tablet o Android: barra de estado y barra del navegador arriba
+        var ipad = m.tipo === 'ipad', sb = ipad ? 24 : 32;
+        c.fillStyle = gris; c.fillRect(sx, sy, SW, P(e.top)); c.fillStyle = 'rgba(60,60,67,.18)'; c.fillRect(sx, py(e.top), SW, Math.max(1, P(0.5)));
+        var ys = py(sb / 2 + (ipad ? 1 : 2));
+        c.fillStyle = tinta; c.textAlign = 'left'; c.textBaseline = 'middle';
+        if (ipad) { c.font = fuenteSF(P(14), 600); c.fillText('9:41', px(20), ys); var tw = c.measureText('9:41').width; c.font = fuenteSF(P(14), 500); c.fillText('lun 7 oct', px(20) + tw + P(6), ys); estadoDer(px(e.W - 20), ys, tinta, false); }
+        else { c.font = fuenteSF(P(14), 500); c.fillText('9:41', px(18), ys); estadoDer(px(e.W - 16), ys, tinta, true); c.fillStyle = '#000'; c.beginPath(); c.arc(px(e.W / 2), ys, P(6), 0, 7); c.fill(); }
+        var ty = sb + (e.top - sb) / 2;
+        if (ipad) {
+          direccion(px(e.W / 2 - Math.min(170, e.W * 0.22)), py(ty - 17), P(Math.min(340, e.W * 0.44)), P(34), 14);
+          flecha(px(26), py(ty), 1, azul); flecha(px(58), py(ty), -1, 'rgba(10,132,255,.35)');
+          compartir(px(e.W - 92), py(ty), azul); c.strokeStyle = azul; c.lineWidth = P(2); c.beginPath(); c.moveTo(px(e.W - 60), py(ty - 8)); c.lineTo(px(e.W - 60), py(ty + 8)); c.moveTo(px(e.W - 68), py(ty)); c.lineTo(px(e.W - 52), py(ty)); c.stroke(); pestanas(px(e.W - 28), py(ty), azul);
+        } else {
+          direccion(px(14), py(ty - 20), P(e.W - 28 - 64), P(40), 15);
+          c.fillStyle = tinta; [0, 1, 2].forEach(function(i){ c.beginPath(); c.arc(px(e.W - 24), py(ty - 6 + i * 6), P(1.7), 0, 7); c.fill(); });
+          rr(c, px(e.W - 58), py(ty - 9), P(18), P(18), P(4)); c.strokeStyle = tinta; c.lineWidth = P(1.8); c.stroke();
+        }
+        inicio(ipad ? 200 : 110, '#111');
+      }
+      var icono = function(x, y, t, col2){   // íconos simples de línea, en pt
+        c.strokeStyle = col2; c.fillStyle = col2; c.lineWidth = P(1.8); c.lineCap = 'round'; c.lineJoin = 'round'; c.beginPath();
+        if (t === 0) { rr(c, x - P(9), y - P(8), P(18), P(16), P(3)); c.stroke(); c.beginPath(); c.moveTo(x - P(5), y + P(3)); c.lineTo(x - P(5), y - P(1)); c.moveTo(x, y + P(3)); c.lineTo(x, y - P(4)); c.moveTo(x + P(5), y + P(3)); c.lineTo(x + P(5), y + P(1)); }
+        else if (t === 1) { for (var q = 0; q < 3; q++) { c.moveTo(x - P(8), y - P(6) + P(q * 6)); c.lineTo(x + P(8), y - P(6) + P(q * 6)); } }
+        else if (t === 2) { c.arc(x, y, P(8), 0, 7); c.moveTo(x, y - P(4)); c.lineTo(x, y); c.lineTo(x + P(3), y + P(3)); }
+        else if (t === 3) { c.arc(x, y, P(3.2), 0, 7); c.moveTo(x + P(8), y); c.arc(x, y, P(8), 0, 7); }
+        else { rr(c, x - P(8), y - P(9), P(16), P(18), P(3)); c.moveTo(x - P(4), y - P(3)); c.lineTo(x + P(4), y - P(3)); c.moveTo(x - P(4), y + P(2)); c.lineTo(x + P(4), y + P(2)); }
+        c.stroke();
+      };
+      if (d.lado > 1) {        // tablet horizontal: barra lateral de Safari
+        var lw = P(d.lado), ly = py(e.top);
+        c.fillStyle = '#f2f2f7'; c.fillRect(sx, ly, lw, SH - P(e.top)); c.fillStyle = 'rgba(60,60,67,.2)'; c.fillRect(sx + lw - Math.max(1, P(0.5)), ly, Math.max(1, P(0.5)), SH - P(e.top));
+        var fila = function(y, txt2, ico, on, gris2){ if (on) { c.fillStyle = 'rgba(10,132,255,.12)'; rr(c, px(10), py(y - 15), lw - P(20), P(30), P(8)); c.fill(); }
+          icono(px(30), py(y), ico, on ? azul : '#0a84ff'); c.fillStyle = gris2 ? '#8e8e93' : tinta; c.font = fuenteSF(P(15), on ? 600 : 400); c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillText(txt2, px(50), py(y)); };
+        var y0 = e.top + 30;
+        fila(y0, '3 pestañas', 0, false); fila(y0 + 36, 'Privado', 4, false);
+        c.fillStyle = '#8e8e93'; c.font = fuenteSF(P(12), 600); c.textAlign = 'left'; c.fillText('GRUPOS DE PESTAÑAS', px(16), py(y0 + 84));
+        fila(y0 + 112, 'Ambilor.Lab', 1, true); fila(y0 + 148, 'Contabilidad', 1, false); fila(y0 + 184, 'Clientes', 1, false);
+        c.fillStyle = '#8e8e93'; c.font = fuenteSF(P(12), 600); c.fillText('BIBLIOTECA', px(16), py(y0 + 232));
+        fila(y0 + 260, 'Favoritos', 3, false); fila(y0 + 296, 'Lista de lectura', 2, false); fila(y0 + 332, 'Historial', 2, false);
+      }
+      var gl = c.createLinearGradient(sx, sy, sx + SW, sy + SH); gl.addColorStop(0, 'rgba(255,255,255,.05)'); gl.addColorStop(0.42, 'rgba(255,255,255,0)'); gl.addColorStop(0.5, 'rgba(255,255,255,.04)'); gl.addColorStop(0.58, 'rgba(255,255,255,0)');
+      c.fillStyle = gl; c.fillRect(sx, sy, SW, SH);
+      c.restore();
+    }); };
+    // barra de pestañas de la app (celular): en su propia capa, porque solo va en las pantallas del panel
+    var barraTab = function(){ return lienzo(T, cw, ch, function(c){
+      c.save(); rr(c, sx, sy, SW, SH, Ri); c.clip();
+      var px = function(pt){ return sx + P(pt); }, py = function(pt){ return sy + P(pt); };
+      var icono = function(x, y, t, col2){   // íconos simples de línea, en pt
+        c.strokeStyle = col2; c.fillStyle = col2; c.lineWidth = P(1.8); c.lineCap = 'round'; c.lineJoin = 'round'; c.beginPath();
+        if (t === 0) { rr(c, x - P(9), y - P(8), P(18), P(16), P(3)); c.stroke(); c.beginPath(); c.moveTo(x - P(5), y + P(3)); c.lineTo(x - P(5), y - P(1)); c.moveTo(x, y + P(3)); c.lineTo(x, y - P(4)); c.moveTo(x + P(5), y + P(3)); c.lineTo(x + P(5), y + P(1)); }
+        else if (t === 1) { for (var q = 0; q < 3; q++) { c.moveTo(x - P(8), y - P(6) + P(q * 6)); c.lineTo(x + P(8), y - P(6) + P(q * 6)); } }
+        else if (t === 2) { c.arc(x, y, P(8), 0, 7); c.moveTo(x, y - P(4)); c.lineTo(x, y); c.lineTo(x + P(3), y + P(3)); }
+        else if (t === 3) { c.arc(x, y, P(3.2), 0, 7); c.moveTo(x + P(8), y); c.arc(x, y, P(8), 0, 7); }
+        else { rr(c, x - P(8), y - P(9), P(16), P(18), P(3)); c.moveTo(x - P(4), y - P(3)); c.lineTo(x + P(4), y - P(3)); c.moveTo(x - P(4), y + P(2)); c.lineTo(x + P(4), y + P(2)); }
+        c.stroke();
+      };
+      if (d.tab && o.menu) {   // celular: la barra de pestañas de la app, sobre la del navegador
+        var ty0 = e.H - e.bot - d.tab;
+        c.fillStyle = 'rgba(250,250,252,.98)'; c.fillRect(sx, py(ty0), SW, P(d.tab)); c.fillStyle = 'rgba(60,60,67,.18)'; c.fillRect(sx, py(ty0), SW, Math.max(1, P(0.5)));
+        o.menu.forEach(function(it, i){ var x = px(e.W * (i + 0.5) / o.menu.length), on = i === 0, col2 = on ? '#1f5c99' : '#8e8e93';
+          icono(x, py(ty0 + 20), i, col2); c.fillStyle = col2; c.font = fuenteSF(P(10), on ? 600 : 500); c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(it, x, py(ty0 + 41)); });
+      }
+      c.restore();
+    }); };
+    var MB = T.MeshBasicMaterial, mat = function(map){ return new MB({ map: map, transparent: true, depthWrite: false, toneMapped: false }); };
+    var plano = function(mt, z, orden){ var me = new T.Mesh(new T.PlaneGeometry(FW, FH), mt); me.position.z = z; me.renderOrder = orden; me.frustumCulled = false; g.add(me); return me; };
+    var fondo = new T.Mesh(new T.PlaneGeometry(d.SW, d.SH), new MB({ color: 0xffffff, toneMapped: false })); fondo.position.z = -0.02; fondo.renderOrder = 0; pantalla.add(fondo);
+    plano(mat(cuerpo), 0.05, 40);
+    var claro = plano(mat(capa('#ffffff')), 0.06, 41), oscuro = plano(mat(capa('#000000')), 0.06, 41); oscuro.visible = false;
+    var solo = !(m.tipo === 'iphone' && vert); if (solo) { oscuro.visible = true; claro.visible = false; }   // la barra de estado va sobre el navegador
+    var tabs = d.tab && o.menu ? plano(mat(barraTab()), 0.055, 41) : null;
+    var vis = { w: FW, h: FH, cy: 0 };
+    document.documentElement.style.setProperty(vert ? '--al-forma-v' : '--al-forma-h', (vis.w / vis.h).toFixed(4));
+    return { d: d, ext: vis, zoom: 1,   // sin acercamiento al tocar: el demo quieto se entiende mejor
+      // en el iPhone la barra de estado va sobre la página: blanca sobre fondo oscuro, negra sobre claro
+      // y la barra de pestañas va solo en las pantallas del panel (cabecera de color), no en las del cliente
+      tono: function(cx, sinTab){ if (solo && !tabs) return; try { var p = cx.getImageData(Math.round(cx.canvas.width / 2), 3, 1, 1).data, lum = (0.3 * p[0] + 0.59 * p[1] + 0.11 * p[2]) / 255; var os = p[3] > 10 && lum > 0.6;
+        if (!solo) { claro.visible = !os; oscuro.visible = os; } if (tabs) tabs.visible = !os && !sinTab; } catch (er) {} } };
+  }
+  // Ventana de frente, sin aparato: en computador (ventana angosta) con su sombra; en celular y tablet,
+  // dentro del marco del equipo del visitante, a pantalla completa.
+  function plana(T, escena, o){
+    var g = new T.Group(); escena.add(g);
+    var pantalla = new T.Group(); g.add(pantalla);
+    if (equipo() !== 'pc' && modelo().tipo === 'chico') {
+      g.userData = { plano: true, pantalla: pantalla, SW: o.ventana.w, SH: o.ventana.h, ext: { w: o.ventana.w, h: o.ventana.h, cy: 0 },
+        sombraVentana: { material: {} }, caja: { x: 0, y: 0, w: o.ventana.w, h: o.ventana.h } };
+      g.visible = false; return g;
+    }
+    if (equipo() !== 'pc') {
+      var mc = marco(T, g, pantalla, o), d = mc.d;
+      g.userData = { plano: true, pleno: true, pantalla: pantalla, SW: d.SW, SH: d.SH, ventanaY: d.appY, ventanaX: d.appX, marco: mc, ext: mc.ext,
+        sombraVentana: { material: {} }, caja: { x: 0, y: 0, w: mc.ext.w, h: mc.ext.h } };
+      g.visible = false; return g;
+    }
+    var c = document.createElement('canvas'); c.width = c.height = 256; var x = c.getContext('2d');
+    x.filter = 'blur(14px)'; x.fillStyle = 'rgba(0,8,20,.75)'; x.fillRect(36, 40, 184, 184);
+    var t = new T.CanvasTexture(c); t.encoding = T.sRGBEncoding;
+    var vs = new T.Mesh(new T.PlaneGeometry(o.ventana.w + 0.7, o.ventana.h + 0.7), new T.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false, toneMapped: false }));
+    vs.position.set(0, -0.1, -0.005); vs.renderOrder = 2; pantalla.add(vs);
+    // "aparato completo" = la ventana con algo de aire: el alejamiento entre pasos es leve
+    g.userData = { plano: true, pantalla: pantalla, SW: o.ventana.w, SH: o.ventana.h, sombraVentana: vs, caja: { x: 0, y: -o.ventana.h * 0.05, w: o.ventana.w * 1.3, h: o.ventana.h * 1.3 } };
+    g.visible = false; return g;
+  }
+  // ¿Con qué foto? null = sin aparato (ventana sola, de frente)
+  // en celular y tablet la pantalla del visitante ya es el aparato: la app va sola, de borde a borde del cuadro
+  function elegir(vert){ return equipo() === 'pc' && !vert ? FOTOS.notebook : null; }
+  // Arma el aparato dentro de la escena (ver elegir()).
+  // o: { vert, ventana: {w, h} (ventana centrada sobre un escritorio) o alto: alto de la pantalla, anis, listo }
+  function crear(T, escena, o){
+    var FOTO = elegir(o.vert), MB = T.MeshBasicMaterial;
+    if (!FOTO) return plana(T, escena, o);
+    var g = new T.Group(); escena.add(g);
+    // con ventana, la app va a pantalla completa: la pantalla tiene el alto de la ventana (o su ancho, si es más angosta)
+    var SH = o.ventana ? Math.max(o.ventana.h, o.ventana.w / FOTO.prop) : o.alto, SW = SH * FOTO.prop;
+    var q = FOTO.q, cx = (q[0][0] + q[1][0] + q[2][0] + q[3][0]) / 4, cy = (q[0][1] + q[1][1] + q[2][1] + q[3][1]) / 4;
+    var k = SH / (((q[3][1] - q[0][1]) + (q[2][1] - q[1][1])) / 2);   // unidades por píxel de la foto
+    var W = function(x, y){ return [(x - cx) * k, -(y - cy) * k]; };
+    // la foto
+    var tex = new T.TextureLoader().load(FOTO.src, o.listo); tex.encoding = T.sRGBEncoding; tex.anisotropy = o.anis || 1;
+    var foto = new T.Mesh(new T.PlaneGeometry(FOTO.w * k, FOTO.h * k), new MB({ map: tex, transparent: true, depthWrite: false, toneMapped: false }));
+    foto.position.set((FOTO.w / 2 - cx) * k, -(FOTO.h / 2 - cy) * k, -0.02); foto.renderOrder = -1; g.add(foto);
+    // la pantalla: grupo con matriz proyectiva (homografía) en vez de posición/rotación
+    var H = homografia([[-SW/2, SH/2], [SW/2, SH/2], [SW/2, -SH/2], [-SW/2, -SH/2]], q.map(function(p){ return W(p[0], p[1]); }));
+    var pantalla = new T.Group(); pantalla.matrixAutoUpdate = false;
+    pantalla.matrix.set(H[0], H[1], 0, H[2],  H[3], H[4], 0, H[5],  0, 0, 1, 0,  H[6], H[7], 0, H[8]);
+    g.add(pantalla);
+    var plano = function(w, h, mat, z, orden){ var m = new T.Mesh(new T.PlaneGeometry(w, h), mat); m.position.z = z; m.renderOrder = orden; m.frustumCulled = false; pantalla.add(m); return m; };
+    var mate = function(map){ return new MB({ map: map, side: T.DoubleSide, transparent: true, depthWrite: false, toneMapped: false }); };
+    var ancho = 512, alto = Math.round(ancho / FOTO.prop);
+    // esquinas redondeadas de la pantalla (para lo que se dibuje encima de ella)
+    var esquinas = lienzo(T, ancho, alto, function(c, w, h){ c.fillStyle = '#fff'; rr(c, 0, 0, w, h, FOTO.radio * w); c.fill(); });
+    var u = { pantalla: pantalla, SW: SW, SH: SH, esquinas: esquinas, escritorio: function(){ return lienzo(T, ancho, alto, escritorio); } };
+    if (o.ventana) {   // la ventana del paso se estira a lo ancho de la pantalla con su propio borde (ver el motor)
+      u.pleno = true; u.ventanaY = SH / 2 - o.ventana.h / 2;   // arriba, como una app
+      u.sombraVentana = { material: {} };
+    }
+    // brillo del vidrio: franja diagonal muy tenue sobre toda la pantalla
+    plano(SW, SH, mate(lienzo(T, 256, 256, function(c, w, h){
+      var l = c.createLinearGradient(0, 0, w, h); l.addColorStop(0, 'rgba(255,255,255,.07)'); l.addColorStop(0.38, 'rgba(255,255,255,0)'); l.addColorStop(0.5, 'rgba(255,255,255,.06)'); l.addColorStop(0.62, 'rgba(255,255,255,0)'); c.fillStyle = l; c.fillRect(0, 0, w, h); })), 0.06, 30);
+    var a = W(FOTO.caja[0], FOTO.caja[1]), b = W(FOTO.caja[2], FOTO.caja[3]);
+    u.caja = { x: (a[0] + b[0]) / 2, y: (a[1] + b[1]) / 2, w: b[0] - a[0], h: a[1] - b[1] };
+    // sombra de apoyo: el aparato descansa sobre la página
+    var piso = new T.Mesh(new T.PlaneGeometry(u.caja.w * 1.05, u.caja.h * 0.16), new MB({ transparent: true, depthWrite: false, toneMapped: false, map: lienzo(T, 256, 64, function(c, w, h){
+      var r = c.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 2); r.addColorStop(0, 'rgba(0,6,16,.55)'); r.addColorStop(0.6, 'rgba(0,6,16,.18)'); r.addColorStop(1, 'rgba(0,6,16,0)');
+      c.setTransform(1, 0, 0, h / w, 0, 0); c.fillStyle = r; c.fillRect(0, 0, w, w); }) }));
+    piso.position.set(u.caja.x, b[1] + u.caja.h * 0.01, -0.03); piso.renderOrder = -2; g.add(piso);
+    g.userData = u; g.visible = false; return g;
+  }
+  // Cámara estilo grabación de pantalla (Screen Studio), de frente a la foto. Tres encuadres, con resortes suaves:
+  // el aparato completo (al empezar y un alejamiento breve al cambiar de paso), la ventana llenando el cuadro
+  // (abajo queda la barra de controles) y un acercamiento que sigue al cursor mientras trabaja.
+  // st: estado { z, x, y, a } · o: { T, dt, ip, lt, quiere, foco: {x, y} o null, vent: {w, h}, vert, px: {x, y} }
+  function camara(cam, u, st, o){
+    var cl = function(v, a, b){ return Math.max(a, Math.min(b, v)); }, lerp = function(a, b, t){ return a + (b - a) * t; };
+    var ease = function(x){ x = cl(x, 0, 1); return x < 0.5 ? 4*x*x*x : 1 - Math.pow(-2*x + 2, 3) / 2; };
+    var dt = o.dt, tactil = equipo() !== 'pc';
+    if (tactil && u.plano) {   // en celular y tablet: el equipo completo y quieto (el acercamiento distraía de lo que se explica)
+      var tg0 = Math.tan(cam.fov * Math.PI / 360), e0 = u.ext || o.vent;
+      var lejos0 = Math.max(e0.h / 2 / tg0, e0.w / 2 / (tg0 * cam.aspect)), cerca0 = lejos0 * (u.marco ? u.marco.zoom : 1);
+      st.z += (o.quiere - st.z) * (1 - Math.exp(-dt * 3.2));
+      if (o.foco) { var kq = 1 - Math.exp(-dt * 4.5); st.x += (cl(o.foco.x, -u.SW * 0.3, u.SW * 0.3) - st.x) * kq; st.y += (cl(o.foco.y, -u.SH * 0.3, u.SH * 0.3) - st.y) * kq; }
+      var z0 = (u.marco && u.marco.zoom < 1) ? ease(st.z) : 0;
+      var cy0 = e0.cy || 0; cam.position.set(lerp(0, st.x, z0), lerp(cy0, st.y, z0), lerp(lejos0, cerca0, z0));
+      cam.lookAt(cam.position.x, cam.position.y, 0); return;
+    }
+    st.z += (o.quiere - st.z) * (1 - Math.exp(-dt * 3.2));
+    if (o.foco) { var kp = 1 - Math.exp(-dt * 4.5), lx = u.SW * 0.2, ly = u.SH * 0.2;
+      st.x += (cl(o.foco.x, -lx, lx) - st.x) * kp; st.y += (cl(o.foco.y, -ly, ly) - st.y) * kp; }
+    var ver = o.T < 1.4 ? 1 : (o.ip > 0 && o.lt < 0.55 ? 0.4 : 0);
+    st.a += (ver - st.a) * (1 - Math.exp(-dt * (ver > st.a ? 5 : 2.4)));
+    var cj = u.caja, tg = Math.tan(cam.fov * Math.PI / 360), as = cam.aspect, v = o.vert;
+    var aparatoD = Math.max(cj.h * (v ? 1.2 : 1.38) / 2 / tg, cj.w * (v ? 1.06 : 1.22) / 2 / (tg * as));
+    var fh = u.plano ? 1.04 : (v ? 1.1 : 1.24), fw = u.plano ? 1.03 : (v ? 1.06 : 1.1);   // sin aparato: la app de borde a borde
+    var ventanaD = Math.max(o.vent.h * fh / 2 / tg, o.vent.w * fw / 2 / (tg * as)), cerca = ventanaD * 0.84;   // acercamiento suave: el foco acompaña sin hacer perder el hilo
+    var z = ease(st.z), a = ease(st.a), px = o.px || { x: 0, y: 0 };
+    var mx = lerp(lerp(0, st.x, z), cj.x, a) + px.x * 0.12, my = lerp(lerp(-o.vent.h * (v || u.plano ? 0 : 0.06), st.y, z), cj.y - cj.h * 0.07, a) + px.y * 0.08;
+    cam.position.set(mx, my, lerp(lerp(ventanaD, cerca, z), aparatoD, a) * (1 - Math.sin(o.T * 0.3) * 0.008));
+    cam.lookAt(mx, my, 0);
+  }
+  // indicador de toque (en táctil, en vez de la flecha del mouse)
+  function dedo(T){
+    var t = lienzo(T, 128, 128, function(c, w){ c.beginPath(); c.arc(w/2, w/2, 46, 0, 7); c.fillStyle = 'rgba(18,48,77,.30)'; c.fill(); c.lineWidth = 6; c.strokeStyle = 'rgba(255,255,255,.95)'; c.stroke(); });
+    return t;
+  }
+  // Celular vertical: cuánto más alta se dibuja la app (diseñada en 800 × 1000) para llenar la pantalla del
+  // teléfono hasta la barra de abajo. Se reparte en alto (filas, campos, botones y espacios) y la letra y los
+  // círculos conservan su forma (ver el motor).
+  function estirar(vert, pestanas){
+    var m = modelo(); if (!vert || equipo() === 'pc' || !(m.tipo === 'iphone' || m.tipo === 'android')) return 1;
+    var e = especie(m, true), chh = e.H - e.top - e.bot - (pestanas ? 56 : 0), cw = e.W * 1.09;
+    return Math.max(1, (800 / 1000) * chh / cw);
+  }
+  return { crear: crear, camara: camara, elegir: elegir, estirar: estirar, tactil: function(){ return equipo() !== 'pc'; }, dedo: dedo };
+})();
+/* Demos: notas de cada paso (2026-10-07): una frase corta por paso, en una burbuja junto a lo que se toca
+   (o arriba, si el paso no tiene toque). Las dibuja el motor de tarjetas sobre la pantalla del demo. */
+window.AL_NOTAS = {
+  'ver-en-accion': ['Así se cuadra hoy: fila por fila, a mano', 'Importa la cartola tal como la entrega tu banco', 'Un clic: valida los datos y concilia',
+                    'Cada movimiento busca su contraparte solo', 'Lo que no calzó, lo emparejas tú', 'El resultado, listo para archivar'],
+  'como-se-instala': ['Haz una copia en tu Drive', 'Abre «Configurar herramienta» en el menú', 'Autoriza el acceso una sola vez',
+                      'Publica tu panel con «Implementar»', 'Ábrelo y empieza a conciliar', 'Listo: ya quedó instalado'],
+  'v2-accion': ['Un abono paga dos facturas: ¿cuáles?', 'Pega el enlace de cada Google Sheet', 'El grupo 1:2 se arma solo',
+                'Una regla y las comisiones quedan explicadas', 'Envía la vista a quien la necesita', 'Indicadores que llevan al detalle'],
+  'v2-instala': ['Haz una copia en tu Drive', 'Abre «Configurar herramienta» en el menú', 'Autoriza los permisos una sola vez',
+                 'Publica tu panel con «Implementar»', 'Ábrelo y conecta tus fuentes', 'Listo: tu panel quedó instalado'],
+  'ped-accion': ['Pedidos repartidos entre chats y notas', 'Tu catálogo en un enlace para compartir', 'Tu cliente elige y envía en un minuto',
+                 'El pedido aparece al instante en tu panel', 'Confirmas y avisas por WhatsApp', 'Ventas y lo más pedido, a la vista'],
+  'ped-instala': ['Haz una copia en tu Drive', 'Publica tu app con «Implementar»', 'Autoriza el acceso una sola vez',
+                  'Entra a tu panel con tu clave', 'Tu negocio y tu catálogo', 'Comparte tu formulario con tus clientes']
+};
+</script>
 </head>
 
 <body>
@@ -5239,7 +5614,7 @@ window.alDemoLinea = function(root, STEPS, o){
   L.go = i => {
     i = (i + STEPS.length) % STEPS.length;
     // en automático parte al inicio de la etapa; en manual muestra la etapa completa
-    L.T = L.playing ? STEPS[i].a + 0.001 : STEPS[i].b - HOLD;
+    L.T = L.playing ? STEPS[i].a + 0.001 : STEPS[i].b - HOLD; root.classList.remove('al-demo--fin');
     L.setStep(i); L.sucio = true;
   };
   L.setPlaying = p => {
@@ -5248,6 +5623,7 @@ window.alDemoLinea = function(root, STEPS, o){
     root.classList.toggle('al-demo--manual', !p);
     // al volver a automático sigue desde donde quedó (si terminó, vuelve a empezar)
     if (p && L.T >= DUR - 0.02) L.T = 0;
+    if (p) root.classList.remove('al-demo--fin');
     L.sucio = true;
   };
   L.restart = () => {
@@ -5256,7 +5632,7 @@ window.alDemoLinea = function(root, STEPS, o){
     if (rst && !reduce) { rst.classList.remove('gira'); void rst.offsetWidth; rst.classList.add('gira'); }
   };
   L.tick = (dt, visible) => {
-    if (L.playing && visible) { L.T += dt; if (L.T >= DUR) L.T = 0; L.sucio = true; }
+    if (L.playing && visible) { L.T += dt; if (L.T >= DUR) { L.T = DUR - 0.001; L.setPlaying(false); root.classList.add('al-demo--fin'); } L.sucio = true; }
     if (!L.sucio) return false;
     L.sucio = false;
     L.setStep(stepOf(L.T));
@@ -5280,717 +5656,6 @@ window.alDemoLinea = function(root, STEPS, o){
   return L;
 };
 </script>
-<script>alConTHREE(function(){
-/* Demo 3D del Conciliador Semiautomático V1.
-   Adaptada de ver-en-accion-conciliador.html al sitio (ancho 660px, dark mode).
-   El copy de los 6 pasos esta tambien en el HTML, asi que si three.js no carga
-   o el navegador no tiene WebGL la seccion cae en .al-demo--no3d y muestra los
-   6 pasos en texto en vez de una caja vacia. */
-(function(){
-var root = document.getElementById('ver-en-accion');
-if (!root) return;
-
-const STEPS = [
-  { a:0, b:3.6, short:'El problema', kicker:'El problema que resuelve',
-    title:'Cruzas movimientos a mano. Cada mes.',
-    body:'Cada factura debe coincidir con su pago, fila por fila, en planillas de cientos de filas. Hacerlo a mano toma horas, y un solo número mal copiado puede generar un problema después.',
-    stats:[['200','movimientos típicos'],['3 h','tiempo manual']] },
-  { a:3.6, b:8.0, short:'Conecta', kicker:'Paso 1: conecta tu fuente',
-    title:'Tu banco o ERP exporta a Google Sheets',
-    body:'Importa tu .xlsx o conecta un sheet externo. El sistema detecta los encabezados, te propone qué columna es cada dato (también Cargo y Abono por separado) y te confirma que son las correctas.',
-    map:[['Fecha','FECHA'],['Concepto','DESCRIPCION'],['Monto','IMPORTE']] },
-  { a:8.0, b:10.9, short:'Ejecuta', kicker:'Paso 2: ejecuta desde el panel',
-    title:'Abre el panel de control web y ejecuta con un clic',
-    body:'Resultados, gráfico y números clave en una sola vista. El sistema valida los datos antes de procesar.' },
-  { a:10.9, b:15.3, short:'Matching', kicker:'Algoritmo de matching',
-    title:'Cruza cada movimiento contra todos los demás',
-    body:'El sistema recorre todos los registros y empareja automáticamente cada movimiento con su contraparte, explicando el motivo de cada resultado.',
-    stats:[['~3.000','movimientos'],['~3 s','de proceso']] },
-  { a:15.3, b:21.0, short:'Revisa', kicker:'Paso 3: revisa y corrige',
-    title:'Lo que no calzó, lo resuelves tú',
-    body:'Cada pendiente queda a la vista. Si sabes que una transferencia sin referencia corresponde a una factura, la emparejas a mano o deshaces un pareo, y el ajuste queda guardado entre ejecuciones.' },
-  { a:21.0, b:28.8, short:'Resultado', kicker:'Resultado final',
-    title:'Así queda tu conciliación',
-    body:'Cada movimiento con su estado, su contraparte y el detalle del match. Filtra los pendientes y exporta los resultados con un clic, listos para compartir o archivar.',
-    stats:[['3 s','vs 3 horas manual'],['5 min','instalación']],
-    cta:'Ver qué incluye' }
-];
-/* Ancla real de la seccion de compra del index.html (id="incluye"). */
-const CTA_HREF = '#incluye';
-const DUR = 28.8;
-
-const canvas = root.querySelector('canvas');
-const stage = root.querySelector('.al-demo__stage');
-const copy = root.querySelector('.al-demo__copy');
-const elK = root.querySelector('.al-demo__kicker'), elT = root.querySelector('.al-demo__title');
-const elB = root.querySelector('.al-demo__body'), elX = root.querySelector('.al-demo__extra');
-const elCount = root.querySelector('.al-demo__count');
-const playBtn = root.querySelector('[data-act="play"]');
-const list = root.querySelector('.al-demo__steps');
-
-function hasWebGL(){ return window.alHayWebGL(); }
-function fallback(){
-  root.classList.add('al-demo--no3d');
-  if (window.console) console.warn('[al-demo] 3D no disponible, se muestra la version en texto.');
-}
-
-const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-let visible = true, needsRender = true;
-
-function fillCopy(i){
-  const s = STEPS[i];
-  elK.textContent = s.kicker; elT.textContent = s.title; elB.textContent = s.body;
-  elX.innerHTML = '';
-  if (s.stats) {
-    const ul = document.createElement('ul'); ul.className = 'al-demo__stats';
-    s.stats.forEach(([v, l]) => { const li = document.createElement('li'); li.innerHTML = '<strong></strong><span></span>'; li.children[0].textContent = v; li.children[1].textContent = l; ul.appendChild(li); });
-    elX.appendChild(ul);
-  }
-  if (s.cta) {
-    const a = document.createElement('a'); a.className = 'al-demo__cta'; a.href = CTA_HREF; a.textContent = s.cta;
-    elX.appendChild(a);
-  }
-  if (s.map) {
-    const ul = document.createElement('ul'); ul.className = 'al-demo__map';
-    s.map.forEach(([a, b]) => { const li = document.createElement('li'); li.innerHTML = '<b></b><span>→</span><code></code>'; li.children[0].textContent = '✓ ' + a; li.children[2].textContent = b; ul.appendChild(li); });
-    elX.appendChild(ul);
-  }
-}
-/* Simulación (2026-09-30): lo que pasa en la escena, dicho en el panel de la
-   demo. Mismos tiempos que la escena 3D; 12 movimientos de ejemplo. */
-const SIM = t => {
-  const cl = x => Math.min(1, Math.max(0, x));
-  const PARES = [['Factura F-101', 'Pago F-101', 11.75], ['Factura F-102', 'Pago F-102', 12.1], ['Factura F-103', 'Pago F-103', 12.45], ['Factura F-104', 'Pago F-104', 12.8]];
-  const anal = t < 11.2 ? 0 : Math.round(12 * cl((t - 11.2) / 3.0));
-  let evt = null;
-  PARES.forEach(p => { if (t >= p[2] && t < p[2] + 1.2) evt = '✓ ' + p[0] + ' → ' + p[1] + ' · coincidencia'; });
-  if (t >= 18.9 && t < 20.4) evt = '✓ Honorario B-23 → Transf. sin referencia · par manual';
-  if (t < 3.6) return { fase:'12 movimientos sin conciliar' };
-  if (t < 8.0) return t < 6.6 ? { fase:'Leyendo la planilla y sus columnas…', prog:cl((t - 3.6) / 3.0) } : { fase:'✓ Columnas: Fecha, Concepto, Monto', ok:true };
-  if (t < 10.9) return t < 9.45 ? { fase:'Listo para ejecutar' } : t < 10.2 ? { fase:'Validando datos…', prog:cl((t - 9.45) / 0.75) } : { fase:'✓ Datos validados', ok:true };
-  if (t < 15.3) return t < 11.2 ? { fase:'Iniciando conciliación…', prog:0 } : t < 14.2 ? { fase:'Analizando movimientos… ' + anal + ' de 12', prog:cl((t - 11.2) / 3.0), evt } : { fase:'✓ 4 pares encontrados · 4 pendientes', ok:true, evt };
-  if (t < 21.0) return t < 17.5 ? { fase:'Revisión: 4 pendientes por revisar' } : t < 18.9 ? { fase:'Emparejando a mano un pendiente…', prog:cl((t - 17.5) / 1.4) } : { fase:'✓ Par manual guardado · 2 pendientes', ok:true, evt };
-  if (t < 22.6) return { fase:'Generando la hoja de resultados…', prog:cl((t - 21.0) / 1.6) };
-  return { fase: t < 26.1 ? '✓ 10 de 12 conciliados (83%) en 3 s' : '✓ Resultados exportados', ok:true, fin:true };
-};
-const L = alDemoLinea(root, STEPS, { hold:0.05, sim:SIM, onStep(i, primero){
-  if (primero || reduce) { fillCopy(i); return; }
-  copy.classList.add('is-changing');
-  setTimeout(() => { fillCopy(i); copy.classList.remove('is-changing'); }, 280);
-} });
-const stepOf = t => { for (let i = STEPS.length - 1; i >= 0; i--) if (t >= STEPS[i].a) return i; return 0; };
-// 2026-09-28: el texto reserva el alto del paso mas largo (medido para el ancho
-// actual) para que los controles (anterior, pausa, siguiente) no cambien de
-// lugar al avanzar. Se recalcula si cambia el ancho (girar, pantalla dividida).
-let anchoReservado = 0;
-function reservarAlto(){
-  const w = copy.offsetWidth; if (!w || w === anchoReservado) return;
-  anchoReservado = w; copy.style.minHeight = '';
-  if (matchMedia('(orientation:landscape) and (max-height:560px)').matches) return;   // controles bajo la escena
-  let max = 0;
-  STEPS.forEach((s, i) => { fillCopy(i); max = Math.max(max, copy.offsetHeight); });
-  fillCopy(Math.max(0, L.current));
-  copy.style.minHeight = max + 'px';
-}
-if ('ResizeObserver' in window) new ResizeObserver(reservarAlto).observe(copy);
-if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { anchoReservado = 0; reservarAlto(); });
-
-if (!window.THREE || !hasWebGL()) { fallback(); return; }
-
-(async function init(){
-try { await Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 2500))]); } catch(e) {}
-try {
-const FONT = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
-/* Paleta del canvas 3D: se mantiene en tema claro a proposito, tambien en dark
-   mode. Representa una captura del panel real, no un elemento de la pagina. */
-const C = { paper:'#eef2f7', ink:'#12304d', muted:'#4f6983', brand:'#1f5c99', hi:'#f5c84c', soft:'#8aa2bb', line:'#c9d5e3' };
-
-const clamp = (x,a=0,b=1) => Math.min(b, Math.max(a, x));
-const ease = x => { x = clamp(x); return x < .5 ? 4*x*x*x : 1 - Math.pow(-2*x+2, 3)/2; };
-const easeOut = x => { x = clamp(x); return 1 - Math.pow(1-x, 3); };
-const lerp = (a,b,t) => a + (b-a)*t;
-function rng(seed){ return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
-const R = rng(11);
-const col = hex => new THREE.Color(hex).convertSRGBToLinear();
-
-const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
-renderer.outputEncoding = THREE.sRGBEncoding;
-// 2026-10-01: iOS quita los contextos 3D al cambiar de app o bloquear el teléfono; three.js
-// los recupera, pero una escena en pausa no se vuelve a dibujar sola: se pide un cuadro
-canvas.addEventListener('webglcontextrestored', () => { needsRender = true; });
-renderer.setClearColor(0x000000, 0);
-const scene = new THREE.Scene();
-
-// El paleta del canvas es FIJO en tema claro (ver C mas abajo): el panel 3D
-// representa una captura del producto real, no un elemento de la pagina, asi
-// que no sigue al toggle de tema. Por eso aca no hay observer de data-theme:
-// el 2026-09-27 se elimino el que habia, porque llamaba a getThemeColors(),
-// cards y DRAW, que pertenecen al demo de "Como se instala" (su scope) y
-// explotaban con ReferenceError en cada toggle de tema.
-const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
-scene.add(new THREE.HemisphereLight(0xffffff, 0xaebfd2, 0.9));
-const sun = new THREE.DirectionalLight(0xffffff, 0.6); sun.position.set(3, 5, 6); scene.add(sun);
-// Profundidad (AL3D): pared con cuadrícula + niebla, y parallax con el puntero
-AL3D.ambiente(scene, { z:-4.5, y:-0.85 });
-AL3D.piso(scene, { y:-3.95 });
-const PX = AL3D.parallax(stage, reduce);
-const TEX_S = Math.min(innerWidth, innerHeight) < 700 ? 1.25 : 1.6;   // celular: suficiente para su pantalla y ~40 % menos memoria
-const ANISO = renderer.capabilities.getMaxAnisotropy();
-function tex(w, h, draw){
-  const c = document.createElement('canvas'); c.width = w * TEX_S; c.height = h * TEX_S;
-  const g = c.getContext('2d'); g.scale(TEX_S, TEX_S); draw(g, w, h);
-  const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; t.anisotropy = ANISO;
-  return t;
-}
-function rr(g,x,y,w,h,r){ g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }
-const basic = (opts) => new THREE.MeshBasicMaterial(Object.assign({ transparent:true, side:THREE.DoubleSide, depthWrite:false }, opts));
-
-// ---------- datos de demo (mismo formato que el ejemplo de la web) ----------
-const C2 = { warn:'#e08a2c', ok:'#2f8a5b' };
-const DATA = [
-  ['03/09','Factura F-101','+500.000'], ['04/09','Pago F-101','-500.000'],
-  ['05/09','Honorario B-22','+120.000'], ['06/09','Comisión mantención','-6.200'],
-  ['08/09','Factura F-102','+245.000'], ['09/09','Factura F-103','+89.700'],
-  ['10/09','Pago F-103','-89.700'], ['11/09','Factura F-104','+410.500'],
-  ['12/09','Pago F-102','-245.000'], ['15/09','Honorario B-23','+64.000'],
-  ['16/09','Pago F-104','-410.500'], ['17/09','Transf. sin referencia','-64.000']
-];
-const PAIRS = [[0,1],[4,8],[5,6],[7,10]];
-const MANUAL = [9, 11];
-const PEND = [2, 3, 9, 11];
-
-function pillTex(label, fill, ink, w = 360, h = 100, size = 40){
-  return tex(w, h, (g) => {
-    g.fillStyle = fill; rr(g, 2, 2, w-4, h-4, (h-4)/2); g.fill();
-    g.fillStyle = ink; g.font = `800 ${size}px ${FONT}`; g.textBaseline = 'middle'; g.textAlign = 'center';
-    g.fillText(label, w/2, h/2+2);
-  });
-}
-
-// ---------- tabla ----------
-const TW = 3.7, TX = -0.3, RH = 0.28, TEXW = 1480;
-const slotY = i => 0.55 - i*0.34;
-const HEAD_Y = 0.92;
-const pxToX = px => TX - TW/2 + px/TEXW*TW;
-
-function rowTex(d){
-  return tex(TEXW, 112, (g,w,h) => {
-    g.fillStyle = '#ffffff'; g.fillRect(0,0,w,h);
-    g.strokeStyle = C.line; g.lineWidth = 4; g.strokeRect(2,2,w-4,h-4);
-    const inc = d[2][0] === '+';
-    g.fillStyle = inc ? C.ink : C.brand; g.fillRect(0,0,12,h);
-    g.textBaseline = 'middle';
-    g.fillStyle = C.soft; g.font = `600 38px ${FONT}`; g.fillText(d[0], 40, h/2+2);
-    g.fillStyle = C.ink; g.font = `600 40px ${FONT}`; g.fillText(d[1], 230, h/2+2);
-    g.textAlign = 'right'; g.fillStyle = inc ? C.ink : C.brand; g.font = `800 42px ${FONT}`; g.fillText(d[2], w-36, h/2+2);
-  });
-}
-const table = new THREE.Group(); scene.add(table);
-const rowGeo = new THREE.PlaneGeometry(TW, RH);
-const rows = DATA.map((d, i) => {
-  const m = new THREE.Mesh(rowGeo, basic({ map: rowTex(d) })); m.renderOrder = 3; table.add(m);
-  return { m, i, c:{ x:(R()-.5)*4.6, y:-4 + R()*7.4, z:-5 + R()*6, rx:(R()-.5)*2.2, ry:(R()-.5)*2.2, rz:(R()-.5)*1.6, s:R()*2-1 } };
-});
-const head = new THREE.Mesh(new THREE.PlaneGeometry(TW, RH), basic({ map: tex(TEXW, 112, (g,w,h) => {
-  g.fillStyle = C.brand; rr(g,0,0,w,h,18); g.fill();
-  g.fillStyle = '#fff'; g.font = `800 40px ${FONT}`; g.textBaseline = 'middle';
-  g.fillText('FECHA', 40, h/2+2); g.fillText('DESCRIPCION', 230, h/2+2);
-  g.textAlign = 'right'; g.fillText('IMPORTE', w-36, h/2+2);
-}) }));
-head.renderOrder = 3; table.add(head);
-
-// ── Fichas con volumen (2026-09-27): cada fila es una lámina sólida con canto
-// iluminado (luz real + contraluz azul). El texto sigue en la cara frontal,
-// en su textura de siempre: su nitidez no cambia.
-const FD = 0.07, fichaGeo = new THREE.BoxGeometry(TW, RH, FD);
-function ficha(m, colorCanto){
-  const mat = new THREE.MeshStandardMaterial({ color:col(colorCanto), roughness:.5, metalness:.08, transparent:true, depthWrite:false, emissive:col('#2f8a5b'), emissiveIntensity:0 });
-  const b = new THREE.Mesh(fichaGeo, mat); b.position.z = -FD/2 - 0.003; b.renderOrder = 2.5;
-  b.onBeforeRender = () => { mat.opacity = m.material.opacity; mat.depthWrite = mat.opacity > .9; };   // oclusión real cuando está opaca
-  m.add(b); return mat;
-}
-rows.forEach(r => { r.mat = ficha(r.m, '#e6ecf3'); });
-ficha(head, '#1f5c99');
-const luzRim = new THREE.PointLight(0x4c8ddb, 1.4, 22); luzRim.position.set(-4, 2.5, -3); scene.add(luzRim);
-const luzTop = new THREE.DirectionalLight(0xffffff, 0.35); luzTop.position.set(0, 8, 2); scene.add(luzTop);
-const sombraTabla = AL3D.sombra(scene, TW*1.3, 1.8);
-
-
-// column mapping chips: the tool's field -> the sheet's header
-const MAP = [['Fecha', 110], ['Concepto', 420], ['Monto', 1300]];
-const chips = MAP.map(([name, px]) => {
-  const off = pillTex(name, C.ink, '#fff'), on = pillTex('✓ ' + name, C2.ok, '#fff');
-  const m = new THREE.Mesh(new THREE.PlaneGeometry(1.0, 0.28), basic({ map:off })); m.renderOrder = 6; table.add(m);
-  const ln = new THREE.Mesh(new THREE.PlaneGeometry(0.03, 1), basic({ color:col(C.ink) })); ln.renderOrder = 5; table.add(ln);
-  return { m, ln, off, on, x: pxToX(px), checked:false };
-});
-const CHIP_Y = 1.55;
-
-// matching arcs on the right edge of the table
-const ARC_X = TX + TW/2 + 0.02, TUB = 48, RAD = 6;
-const arcs = PAIRS.map(([a, b]) => {
-  const d = 0.2 + 0.08*Math.abs(b - a);
-  const curve = new THREE.CubicBezierCurve3(
-    new THREE.Vector3(ARC_X, slotY(a), 0), new THREE.Vector3(ARC_X + d, slotY(a), 0),
-    new THREE.Vector3(ARC_X + d, slotY(b), 0), new THREE.Vector3(ARC_X, slotY(b), 0));
-  const m = new THREE.Mesh(new THREE.TubeGeometry(curve, TUB, 0.02, RAD, false), basic({ color:col(C.brand) }));
-  m.userData.curve = curve;
-  m.renderOrder = 4; table.add(m); return m;
-});
-const hiGeo = new THREE.PlaneGeometry(1, RH + 0.06);
-const his = PAIRS.map(pair => pair.map(i => { const m = new THREE.Mesh(hiGeo, basic({ color:col(C.hi) })); m.renderOrder = 1; m.position.set(0, slotY(i), -0.02); table.add(m); return m; }));
-const pends = PEND.map(i => {
-  const m = new THREE.Mesh(new THREE.PlaneGeometry(1.0, 0.24), basic({ map:pillTex('Sin par', C2.warn, '#fff', 360, 90, 40) }));
-  m.renderOrder = 7; m.position.set(0.35, slotY(i), 0.05); table.add(m); return m;
-});
-
-// ---------- panel de control web ----------
-const PW = 4.3, PH = 2.75;
-const pcan = document.createElement('canvas'); pcan.width = 1000 * TEX_S; pcan.height = 640 * TEX_S;
-const pg = pcan.getContext('2d'); pg.scale(TEX_S, TEX_S);
-const ptex = new THREE.CanvasTexture(pcan); ptex.encoding = THREE.sRGBEncoding; ptex.anisotropy = ANISO;
-const panel = new THREE.Mesh(new THREE.PlaneGeometry(PW, PH), basic({ map:ptex })); panel.renderOrder = 10; scene.add(panel);
-const panelShadow = new THREE.Mesh(new THREE.PlaneGeometry(PW + 0.1, PH + 0.1), basic({ color:col(C.ink) })); panelShadow.renderOrder = 9; scene.add(panelShadow);
-const fmtCLP = n => '$' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-
-function drawPanel(t){
-  const g = pg, w = 1000, h = 640;
-  g.clearRect(0,0,w,h);
-  g.fillStyle = '#ffffff'; rr(g, 0, 0, w, h, 34); g.fill();
-  g.save(); rr(g, 0, 0, w, h, 34); g.clip();
-  g.fillStyle = C.brand; g.fillRect(0, 0, w, 96);
-  g.restore();
-  g.textBaseline = 'middle';
-  g.fillStyle = '#fff'; g.font = `800 36px ${FONT}`; g.textAlign = 'left'; g.fillText('Ambilor.Lab', 38, 50);
-  g.font = `600 30px ${FONT}`; g.textAlign = 'right'; g.fillText('Conciliador V1', w-38, 50);
-  g.textAlign = 'left';
-  // Pestañas del panel = V1 actual (2026-09-27)
-  let tabX = 38;
-  [['Resumen', true], ['Resultados', false], ['Ajustes', false], ['Configuración', false], ['Historial', false]].forEach(([s, on]) => {
-    g.fillStyle = on ? C.ink : C.soft; g.font = `${on ? 800 : 600} 26px ${FONT}`; g.fillText(s, tabX, 140);
-    const tw2 = g.measureText(s).width;
-    if (on) { g.fillStyle = C.brand; g.fillRect(tabX, 162, tw2, 5); }
-    tabX += tw2 + 32;
-  });
-  const pr = clamp(1 - Math.abs(t - 9.45) / 0.18);
-  const inset = pr * 8;
-  g.fillStyle = pr > 0 ? '#164a7d' : C.brand; rr(g, 38 + inset, 196 + inset, w - 76 - inset*2, 92 - inset*2, 46 - inset); g.fill();
-  g.fillStyle = '#fff'; g.font = `800 38px ${FONT}`; g.textAlign = 'center'; g.fillText('▶  Ejecutar conciliación', w/2, 244);
-  const p1 = t > 15 ? easeOut((t - 16.0) / 1.0) : 0, p2 = easeOut((t - 19.8) / 0.8);
-  const V1 = [67, 4, 4, 1245200], V2 = [83, 5, 2, 1309200];
-  const V = V1.map((x, i) => lerp(x*p1, V2[i], p2));
-  let st = 'Listo para ejecutar', stc = C.soft;
-  if (t > 9.45 && t < 10.2) st = 'Validando datos…';
-  else if (t >= 10.2 && t < 15) { st = '✓ Datos validados'; stc = C2.ok; }
-  else if (t >= 15 && t < 19.3) { st = p1 < 1 ? 'Conciliando…' : '✓ 4 pares conciliados, 4 pendientes'; stc = p1 < 1 ? C.soft : C2.ok; }
-  else if (t >= 19.3) { st = p2 < 1 ? 'Guardando ajuste manual…' : '✓ Ajuste guardado: 5 pares, 2 pendientes'; stc = p2 < 1 ? C.soft : C2.ok; }
-  g.textAlign = 'left'; g.fillStyle = stc; g.font = `600 30px ${FONT}`; g.fillText(st, 40, 330);
-  const vals = [Math.round(V[0]) + '%', String(Math.round(V[1])), String(Math.round(V[2])), fmtCLP(Math.round(V[3]/100)*100)];
-  const labels = ['conciliación', 'pares', 'pendientes', 'conciliado'];
-  const tw = (w - 76 - 3*16) / 4;
-  vals.forEach((v, i) => {
-    const x = 38 + i*(tw + 16);
-    g.fillStyle = '#eef2f7'; rr(g, x, 372, tw, 226, 22); g.fill();
-    let size = 66; g.font = `800 ${size}px ${FONT}`;
-    while (g.measureText(v).width > tw - 28 && size > 20) { size -= 2; g.font = `800 ${size}px ${FONT}`; }
-    g.fillStyle = i === 2 ? C2.warn : C.ink; g.textAlign = 'left'; g.fillText(v, x + 16, 468);
-    g.fillStyle = C.muted; g.font = `600 28px ${FONT}`; g.fillText(labels[i], x + 16, 550);
-  });
-  ptex.needsUpdate = true;
-}
-function panelState(t){
-  if (t < 13) {
-    const a = ease((t - 8.0) / 0.6), o = ease((t - 10.6) / 0.5);
-    return { pres:a*(1-o), y:lerp(-2.8, -1.0, a) + o*4.5, z:1.4, rx:lerp(-0.6, -0.06, a) };
-  }
-  if (t < 18.9) {
-    const a = ease((t - 15.4) / 0.6), o = ease((t - 17.1) / 0.45);
-    return { pres:a*(1-o), y:lerp(-3.4, -1.0, a) + o*4.5, z:1.4, rx:lerp(-0.6, -0.06, a) };
-  }
-  const a = ease((t - 19.3) / 0.5), o = ease((t - 20.5) / 0.6);
-  return { pres:a*(1-o), y:lerp(3.4, -1.0, a) + o*1.2, z:1.4 - o*8, rx:lerp(0.4, -0.06, a) + o*0.4 };
-}
-function updatePanel(t){
-  const s = panelState(t);
-  panel.visible = panelShadow.visible = s.pres > 0.001;
-  if (!panel.visible) return s;
-  drawPanel(t);
-  panel.position.set(0, s.y, s.z); panel.rotation.set(s.rx, Math.sin(t*0.5)*0.05, 0);
-  panelShadow.position.set(0.06, s.y - 0.08, s.z - 0.05); panelShadow.rotation.copy(panel.rotation);
-  panel.material.opacity = s.pres; panelShadow.material.opacity = s.pres * 0.14;
-  return s;
-}
-
-
-// ---------- escala: contador de movimientos procesados ----------
-const ccan = document.createElement('canvas'); ccan.width = 1480 * TEX_S; ccan.height = 180 * TEX_S;
-const cg = ccan.getContext('2d'); cg.scale(TEX_S, TEX_S);
-const ctex = new THREE.CanvasTexture(ccan); ctex.encoding = THREE.sRGBEncoding; ctex.anisotropy = ANISO;
-const counter = new THREE.Mesh(new THREE.PlaneGeometry(TW, TW*180/1480), basic({ map:ctex })); counter.renderOrder = 6; table.add(counter);
-const scan = new THREE.Mesh(new THREE.PlaneGeometry(TW + 0.1, 0.55), basic({ color:col(C.brand) })); scan.renderOrder = 5; table.add(scan);
-const fmtN = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-function updateScale(t, fade){
-  const inA = easeOut((t - 11.0) / 0.3), outA = ease((t - 15.0) / 0.3);
-  const op = inA * (1 - outA) * fade;
-  counter.visible = op > 0.001;
-  const run = clamp((t - 11.2) / 3.0);
-  if (counter.visible) {
-    const g = cg, w = 1480, h = 180;
-    g.clearRect(0, 0, w, h);
-    g.fillStyle = '#ffffff'; rr(g, 2, 2, w-4, h-4, 30); g.fill();
-    g.strokeStyle = C.line; g.lineWidth = 4; g.stroke();
-    g.textBaseline = 'middle'; g.textAlign = 'left';
-    const n = fmtN(Math.round(3000 * run));
-    g.fillStyle = C.brand; g.font = `800 92px ${FONT}`; g.fillText(n, 44, h/2 + 4);
-    const nw = g.measureText('3.000').width;
-    g.fillStyle = C.ink; g.font = `600 44px ${FONT}`; g.fillText('movimientos procesados', 44 + nw + 28, h/2 + 6);
-    g.textAlign = 'right'; g.fillStyle = run >= 1 ? C2.ok : C.ink; g.font = `800 60px ${FONT}`;
-    g.fillText((run >= 1 ? '✓ ' : '') + (3.0 * run).toFixed(1).replace('.', ',') + ' s', w - 44, h/2 + 4);
-    ctex.needsUpdate = true;
-    counter.position.set(TX, 1.5 + (1 - inA)*0.2, 0.03);
-    counter.material.opacity = op;
-  }
-  // a scan band sweeps the rows while the counter runs
-  const scanning = t > 11.2 && t < 14.2;
-  scan.visible = scanning;
-  if (scanning) {
-    const ph = ((t - 11.2) / 0.5) % 1;
-    scan.position.set(TX, lerp(slotY(0) + 0.3, slotY(11) - 0.3, ph), 0.02);
-    scan.material.opacity = 0.13 * fade * Math.sin(ph * Math.PI);
-  }
-}
-
-// ---------- corrección manual ----------
-const [M1, M2] = MANUAL;
-const manualArc = (() => {
-  const d = 0.2 + 0.08*Math.abs(M2 - M1);
-  const curve = new THREE.CubicBezierCurve3(
-    new THREE.Vector3(ARC_X, slotY(M1), 0), new THREE.Vector3(ARC_X + d, slotY(M1), 0),
-    new THREE.Vector3(ARC_X + d, slotY(M2), 0), new THREE.Vector3(ARC_X, slotY(M2), 0));
-  const m = new THREE.Mesh(new THREE.TubeGeometry(curve, TUB, 0.024, RAD, false), basic({ color:col(C2.ok) }));
-  m.userData.curve = curve;
-  m.renderOrder = 4; table.add(m); return m;
-})();
-// Partículas de luz que viajan por los arcos de cada par (2026-09-27)
-const chispaGeo = new THREE.SphereGeometry(0.034, 12, 10);
-const chispas = [...arcs, manualArc].map((a, k) => [0, 1].map(j => {
-  const m = new THREE.Mesh(chispaGeo, basic({ color:col(k === arcs.length ? '#bff0d4' : '#ffffff') }));
-  m.renderOrder = 8; table.add(m); return { m, a, j };
-}));
-// Momento de "encaje" de cada fila: los pares automáticos y el par manual
-const ENCAJE = {}, GIRO = {};
-PAIRS.forEach(([a, b], k) => { ENCAJE[a] = ENCAJE[b] = 11.75 + k*0.35; GIRO[a] = 1; GIRO[b] = -1; });
-MANUAL.forEach((i, k) => { ENCAJE[i] = 18.9; GIRO[i] = k ? -1 : 1; });
-const manualHis = MANUAL.map(i => { const m = new THREE.Mesh(hiGeo, basic({ color:col(C.hi) })); m.renderOrder = 1; m.position.set(0, slotY(i), -0.02); table.add(m); return m; });
-const rings = MANUAL.map(i => { const m = new THREE.Mesh(new THREE.PlaneGeometry(TW + 0.12, RH + 0.1), basic({ color:col(C.brand) })); m.renderOrder = 2; m.position.set(TX, slotY(i), -0.015); table.add(m); return m; });
-const manualChipTex = pillTex('✓ Par manual', C2.ok, '#fff', 400, 90, 38);
-const manualChips = MANUAL.map(i => { const m = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 0.24), basic({ map:manualChipTex })); m.renderOrder = 7; m.position.set(0.35, slotY(i), 0.05); table.add(m); return m; });
-const cursorGeo = new THREE.PlaneGeometry(0.26, 0.34); cursorGeo.translate(0.13, -0.17, 0);
-const cursor = new THREE.Mesh(cursorGeo, basic({ map: tex(104, 136, (g) => {
-  g.beginPath(); g.moveTo(8, 6); g.lineTo(8, 110); g.lineTo(34, 86); g.lineTo(52, 128); g.lineTo(70, 120); g.lineTo(52, 80); g.lineTo(88, 80); g.closePath();
-  g.fillStyle = C.ink; g.fill(); g.strokeStyle = '#ffffff'; g.lineWidth = 7; g.lineJoin = 'round'; g.stroke();
-}) }));
-cursor.renderOrder = 20; table.add(cursor);
-function updateManual(t, fade){
-  const P0 = [1.9, -3.7], P1 = [0.55, slotY(M1) - 0.02], P2 = [0.55, slotY(M2) - 0.02];
-  const m1 = ease((t - 17.6) / 0.5), m2 = ease((t - 18.3) / 0.4);
-  const x = lerp(lerp(P0[0], P1[0], m1), P2[0], m2), y = lerp(lerp(P0[1], P1[1], m1), P2[1], m2);
-  const click = Math.max(clamp(1 - Math.abs(t - 18.15)/0.1), clamp(1 - Math.abs(t - 18.75)/0.1));
-  const cv = easeOut((t - 17.45) / 0.2) * (1 - ease((t - 19.2) / 0.25));
-  cursor.visible = cv > 0.001;
-  cursor.position.set(x, y, 0.12);
-  cursor.scale.setScalar(1 - click*0.18);
-  cursor.material.opacity = cv * fade;
-  const ringOut = ease((t - 19.05) / 0.3);
-  rings.forEach((r, k) => {
-    const on = easeOut((t - (k ? 18.75 : 18.15)) / 0.15);
-    r.material.opacity = on * (1 - ringOut) * fade;
-  });
-  const p = ease((t - 18.85) / 0.4);
-  manualArc.geometry.setDrawRange(0, Math.floor(p*TUB)*RAD*6);
-  manualArc.material.opacity = p > 0 ? fade : 0;
-  const HW = TW + 0.1;
-  manualHis.forEach(m => {
-    const s = easeOut((t - 19.05) / 0.4);
-    m.scale.x = Math.max(HW*s, 1e-4); m.position.x = TX - HW/2 + HW*s/2;
-    m.material.opacity = s > 0 ? fade*0.95 : 0;
-  });
-  manualChips.forEach((m, k) => {
-    const a = easeOut((t - 19.1 - k*0.1) / 0.3);
-    m.scale.setScalar(Math.max(lerp(0.6, 1, a), 1e-4)); m.material.opacity = a * fade;
-  });
-}
-
-function updateTable(t, pres){
-  const ex = ease((t - 21.0) / 0.8);
-  table.visible = t < 22.0;
-  if (!table.visible) { sombraTabla.visible = false; return; }
-  sombraTabla.visible = true;
-  table.position.set(0, ex*1.5, -ex*10); table.rotation.x = -ex*0.5;
-  const fade = (1 - ex) * (1 - 0.8*pres);
-  rows.forEach(r => {
-    const c = r.c, i = r.i;
-    const dx = Math.sin(t*0.7 + c.s*6)*0.25, dy = Math.cos(t*0.55 + c.s*5)*0.3;
-    const a = ease((t - 3.6 - i*0.05) / 1.3);
-    r.m.position.set(lerp(c.x+dx, TX, a), lerp(c.y+dy, slotY(i), a), lerp(c.z, 0, a));
-    r.m.rotation.set(lerp(c.rx + t*0.15*c.s, 0, a), lerp(c.ry + t*0.2*c.s, 0, a), lerp(c.rz, 0, a));
-    r.m.material.opacity = fade * easeOut(t/0.6 - i*0.015);
-    // Encaje: la ficha sale hacia adelante, se inclina hacia su par y vuelve
-    // a su lugar con un rebote; el canto destella en verde.
-    const sn = ENCAJE[i] !== undefined ? AL3D.encaje(t - ENCAJE[i]) : null;
-    if (sn) { r.m.position.z += sn.z; r.m.rotation.x += sn.r * 0.24 * GIRO[i]; r.mat.emissiveIntensity = sn.f * 0.9; }
-  });
-  const ha = ease((t - 4.8) / 0.5);
-  head.position.set(TX, HEAD_Y + (1-ha)*0.2, 0); head.material.opacity = ha * fade;
-  chips.forEach((c, i) => {
-    const inA = easeOut((t - 5.5 - i*0.2) / 0.35), outA = ease((t - 7.8) / 0.4);
-    const chk = t > 6.6 + i*0.18;
-    if (chk !== c.checked) { c.checked = chk; c.m.material.map = chk ? c.on : c.off; c.m.material.needsUpdate = true; }
-    const pop = chk ? 1 + Math.sin(clamp((t - 6.6 - i*0.18)/0.25)*Math.PI)*0.12 : 1;
-    c.m.position.set(c.x, CHIP_Y + (1-inA)*0.3, 0.02);
-    c.m.scale.setScalar(Math.max(inA*pop, 1e-4));
-    c.m.material.opacity = inA * (1-outA) * fade;
-    const lg = ease((t - 5.9 - i*0.2) / 0.3), top = CHIP_Y - 0.14, bot = HEAD_Y + RH/2, len = top - bot;
-    c.ln.scale.y = Math.max(len*lg, 1e-4); c.ln.position.set(c.x, top - len*lg/2, 0.01);
-    c.ln.material.color = col(chk ? C2.ok : C.ink);
-    c.ln.material.opacity = (lg > 0 ? 1 : 0) * (1-outA) * fade;
-  });
-  arcs.forEach((m, k) => {
-    const p = ease((t - 11.3 - k*0.35) / 0.6);
-    m.geometry.setDrawRange(0, Math.floor(p*TUB)*RAD*6);
-    m.material.opacity = p > 0 ? fade : 0;
-  });
-  const HW = TW + 0.1;
-  his.forEach((pair, k) => pair.forEach(m => {
-    const s = easeOut((t - 11.8 - k*0.35) / 0.4);
-    m.scale.x = Math.max(HW*s, 1e-4); m.position.x = TX - HW/2 + HW*s/2;
-    m.material.opacity = s > 0 ? fade*0.95 : 0;
-  }));
-  pends.forEach((m, i) => {
-    const a = easeOut((t - 13.9 - i*0.15) / 0.35);
-    const gone = MANUAL.includes(PEND[i]) ? ease((t - 18.85) / 0.25) : 0;
-    m.scale.setScalar(Math.max(lerp(0.6, 1, a) * (1 - gone*0.4), 1e-4)); m.material.opacity = a * (1 - gone) * fade;
-  });
-  chispas.forEach((par, k) => par.forEach(c => {
-    const manual = k === arcs.length;
-    const p = manual ? ease((t - 18.85) / 0.4) : ease((t - 11.3 - k*0.35) / 0.6);
-    const on = p >= 1 && t < (manual ? 20.9 : 15.1);
-    c.m.visible = on; if (!on) return;
-    const u = (t*0.55 + c.j*0.5 + k*0.13) % 1;
-    c.m.position.copy(c.a.userData.curve.getPoint(u)); c.m.position.z += 0.03;
-    c.m.material.opacity = fade * Math.sin(u * Math.PI);
-  }));
-  const ensamble = ease((t - 3.6) / 1.6);
-  sombraTabla.position.set(TX + table.position.x, -3.93, table.position.z);
-  sombraTabla.material.opacity = fade * (0.35 + 0.65*ensamble);
-  updateScale(t, fade);
-  updateManual(t, fade);
-}
-
-// ---------- cierre: hoja de resultados ----------
-const T5 = 21.2;
-// rows grouped as the result sheet shows them: each pair together, pendientes at the end
-const RES_ORDER = [0,1,4,8,5,6,7,10,9,11,2,3];
-const PARTNER = {}; [...PAIRS, MANUAL].forEach(([a,b]) => { PARTNER[a] = b; PARTNER[b] = a; });
-const rid = i => 'M-' + String(i + 1).padStart(2, '0');
-const RS = 4.4;
-const rcan = document.createElement('canvas'); rcan.width = 1000 * TEX_S; rcan.height = 1000 * TEX_S;
-const rg = rcan.getContext('2d'); rg.scale(TEX_S, TEX_S);
-const rtex = new THREE.CanvasTexture(rcan); rtex.encoding = THREE.sRGBEncoding; rtex.anisotropy = ANISO;
-const result = new THREE.Mesh(new THREE.PlaneGeometry(RS, RS), basic({ map:rtex })); result.renderOrder = 10; scene.add(result);
-const resultShadow = new THREE.Mesh(new THREE.PlaneGeometry(RS + 0.1, RS + 0.1), basic({ color:col(C.ink) })); resultShadow.renderOrder = 9; scene.add(resultShadow);
-const sombraRes = AL3D.sombra(scene, RS*1.1, 1.8);
-
-function chip(g, x, y, w, h, label, on, size = 24){
-  rr(g, x, y, w, h, h/2);
-  if (on) { g.fillStyle = C.brand; g.fill(); } else { g.strokeStyle = C.line; g.lineWidth = 3; g.stroke(); }
-  g.fillStyle = on ? '#fff' : C.ink; g.font = `700 ${size}px ${FONT}`; g.textAlign = 'center'; g.textBaseline = 'middle';
-  g.fillText(label, x + w/2, y + h/2 + 1);
-}
-function drawResult(t){
-  const g = rg, w = 1000, h = 1000;
-  g.clearRect(0,0,w,h);
-  g.fillStyle = '#ffffff'; rr(g, 0, 0, w, h, 34); g.fill();
-  g.save(); rr(g, 0, 0, w, h, 34); g.clip(); g.fillStyle = C.brand; g.fillRect(0, 0, w, 90); g.restore();
-  g.textBaseline = 'middle'; g.textAlign = 'left';
-  g.fillStyle = '#fff'; g.font = `800 34px ${FONT}`; g.fillText('Ambilor.Lab', 36, 47);
-  g.font = `600 28px ${FONT}`; g.textAlign = 'right'; g.fillText('Resultados', w - 36, 47);
-  const shown = RES_ORDER.filter((_, n) => t > T5 + 0.75 + n*0.09).length;
-  const done = shown === 12;
-  g.textAlign = 'left'; g.fillStyle = C.ink; g.font = `800 32px ${FONT}`; g.fillText('Conciliación de septiembre', 36, 138);
-  const exported = t > 26.35;
-  g.fillStyle = done ? C2.ok : C.soft; g.font = `600 24px ${FONT}`; g.textAlign = 'right';
-  g.fillText(exported ? '✓ Resultados exportados' : done ? '✓ 10 conciliados, 2 pendientes' : 'Cargando resultados…', w - 36, 140);
-  // filters, and the export / print actions
-  const pf = clamp(Math.min(ease((t - 24.0) / 0.3), 1 - ease((t - 25.1) / 0.3)));
-  const pendOn = pf > 0.5;
-  chip(g, 36, 184, 150, 50, 'Todos 12', !pendOn);
-  chip(g, 198, 184, 210, 50, 'Conciliados 10', false);
-  chip(g, 420, 184, 190, 50, 'Pendientes 2', pendOn);
-  const pe = clamp(1 - Math.abs(t - 25.9) / 0.22);
-  chip(g, 700 + pe*3, 184 + pe*3, 128 - pe*6, 50 - pe*6, 'Exportar', pe > 0 || (t > 25.9 && t < 26.7), 22);
-  chip(g, 840, 184, 124, 50, 'Reporte', false, 22);
-  // column header
-  const HY = 256, RH2 = 56, X = { est:36, id:212, con:300, mon:700, det:726 };
-  g.fillStyle = '#eef2f7'; g.fillRect(20, HY, w - 40, 46);
-  g.fillStyle = C.muted; g.font = `700 22px ${FONT}`; g.textAlign = 'left';
-  g.fillText('Estado', X.est, HY + 24); g.fillText('ID', X.id, HY + 24); g.fillText('Concepto', X.con, HY + 24); g.fillText('Detalle del match', X.det, HY + 24);
-  g.textAlign = 'right'; g.fillText('Monto', X.mon, HY + 24);
-  RES_ORDER.forEach((i, n) => {
-    const a = easeOut((t - T5 - 0.75 - n*0.09) / 0.3);
-    if (a <= 0) return;
-    const pend = !(i in PARTNER);
-    const y = HY + 50 + n*RH2 + (1 - a)*14;
-    g.globalAlpha = a * (pend ? 1 : 1 - 0.8*pf);
-    if (pend && pf > 0) { g.fillStyle = `rgba(245,200,76,${0.55*pf})`; g.fillRect(20, y, w - 40, RH2); }
-    g.strokeStyle = C.line; g.lineWidth = 2; g.beginPath(); g.moveTo(20, y + RH2); g.lineTo(w - 20, y + RH2); g.stroke();
-    rr(g, X.est, y + 11, 150, 34, 17); g.fillStyle = pend ? C2.warn : C2.ok; g.fill();
-    g.fillStyle = '#fff'; g.font = `700 20px ${FONT}`; g.textAlign = 'center'; g.fillText(pend ? 'Pendiente' : 'Conciliado', X.est + 75, y + 29);
-    g.textAlign = 'left'; g.fillStyle = C.soft; g.font = `600 22px ${FONT}`; g.fillText(rid(i), X.id, y + 29);
-    g.fillStyle = C.ink; g.font = `600 23px ${FONT}`; g.fillText(DATA[i][1], X.con, y + 29);
-    g.textAlign = 'right'; g.font = `800 23px ${FONT}`; g.fillStyle = DATA[i][2][0] === '+' ? C.ink : C.brand; g.fillText(DATA[i][2], X.mon, y + 29);
-    g.textAlign = 'left'; g.font = `600 22px ${FONT}`; g.fillStyle = pend ? C2.warn : C.muted;
-    g.fillText(pend ? 'Sin contraparte' : (MANUAL.includes(i) ? 'Par manual con ' : 'Par con ') + rid(PARTNER[i]), X.det, y + 29);
-    g.globalAlpha = 1;
-  });
-  rtex.needsUpdate = true;
-}
-
-// ---------- exportación ----------
-const exportCard = new THREE.Mesh(new THREE.PlaneGeometry(1.9, 2.4), basic({ map: tex(380, 480, (g, w, h) => {
-  g.fillStyle = '#ffffff'; rr(g, 3, 3, w-6, h-6, 26); g.fill();
-  g.strokeStyle = C.line; g.lineWidth = 4; g.stroke();
-  // sheet icon
-  g.fillStyle = C2.ok; rr(g, 28, 28, 64, 78, 10); g.fill();
-  g.strokeStyle = '#ffffff'; g.lineWidth = 3;
-  for (let k = 0; k < 3; k++) { g.beginPath(); g.moveTo(40, 52 + k*16); g.lineTo(80, 52 + k*16); g.stroke(); }
-  g.beginPath(); g.moveTo(60, 44); g.lineTo(60, 92); g.stroke();
-  g.fillStyle = C.ink; g.font = `800 25px ${FONT}`; g.textBaseline = 'middle'; g.textAlign = 'left';
-  g.fillText('Resultados_sept', 108, 56);
-  g.fillStyle = C.muted; g.font = `600 20px ${FONT}`; g.fillText('12 filas, 5 columnas', 108, 88);
-  // mini preview of the exported sheet
-  const top = 138;
-  g.fillStyle = C.brand; g.fillRect(28, top, w - 56, 28);
-  g.fillStyle = '#fff'; g.font = `700 15px ${FONT}`;
-  ['Estado','ID','Concepto','Monto'].forEach((c, k) => g.fillText(c, 36 + [0, 88, 138, 262][k], top + 15));
-  RES_ORDER.forEach((i, n) => {
-    const y = top + 28 + n*24, pend = !(i in PARTNER);
-    g.fillStyle = n % 2 ? '#f6f8fb' : '#ffffff'; g.fillRect(28, y, w - 56, 24);
-    g.fillStyle = pend ? C2.warn : C2.ok; rr(g, 34, y + 5, 72, 14, 7); g.fill();
-    g.fillStyle = C.soft; g.font = `600 13px ${FONT}`; g.fillText(rid(i), 124, y + 13);
-    g.fillStyle = C.ink; g.fillText(DATA[i][1].slice(0, 16), 174, y + 13);
-    g.textAlign = 'right'; g.font = `700 13px ${FONT}`; g.fillText(DATA[i][2], w - 36, y + 13); g.textAlign = 'left';
-  });
-  g.strokeStyle = C.line; g.lineWidth = 2; g.strokeRect(28, top, w - 56, 28 + 12*24);
-}) }));
-exportCard.renderOrder = 12; scene.add(exportCard);
-const exportShadow = new THREE.Mesh(new THREE.PlaneGeometry(1.96, 2.46), basic({ color:col(C.ink) })); exportShadow.renderOrder = 11; scene.add(exportShadow);
-function updateExport(t){
-  const a = ease((t - 26.1) / 0.75);
-  exportCard.visible = exportShadow.visible = a > 0.001;
-  if (!exportCard.visible) return;
-  const from = new THREE.Vector3(1.16, -0.42, 0.55), to = new THREE.Vector3(1.05, -1.45, 2.0);
-  const arc = Math.sin(a * Math.PI) * 0.45;
-  exportCard.position.set(lerp(from.x, to.x, a) + arc*0.4, lerp(from.y, to.y, a) + arc + Math.sin(t*1.6)*0.03*a, lerp(from.z, to.z, a));
-  exportCard.rotation.set(lerp(-0.05, -0.06, a), lerp(0, -0.28, a), lerp(0.25, -0.04, a));
-  exportCard.scale.setScalar(Math.max(lerp(0.08, 1, a), 1e-4));
-  exportCard.material.opacity = clamp(a * 2);
-  exportShadow.position.set(exportCard.position.x + 0.07, exportCard.position.y - 0.09, exportCard.position.z - 0.05);
-  exportShadow.rotation.copy(exportCard.rotation); exportShadow.scale.copy(exportCard.scale);
-  exportShadow.material.opacity = 0.16 * a;
-}
-function updateCube(t){
-  const a = ease((t - T5) / 0.7);
-  result.visible = resultShadow.visible = sombraRes.visible = a > 0.001;
-  if (!result.visible) return;
-  sombraRes.position.set(0, -3.93, 0.5); sombraRes.material.opacity = a;
-  drawResult(t);
-  result.position.set(0, lerp(-3.6, -0.85, a), 0.5);
-  result.rotation.set(lerp(-0.7, -0.05, a), Math.sin(t*0.45)*0.05, 0);
-  resultShadow.position.set(0.06, result.position.y - 0.08, 0.45); resultShadow.rotation.copy(result.rotation);
-  result.material.opacity = a; resultShadow.material.opacity = a * 0.14;
-}
-
-// Canto físico en los paneles grandes
-AL3D.grosor([panel, result], 0.08, { radio:0.15 });
-AL3D.grosor([exportCard], 0.06, { radio:0.13 });
-
-// ── Cámara por paso (2026-09-27): cada paso tiene su plano y el cambio entre
-// pasos es un movimiento continuo de 1,1 s (desde el final del plano anterior).
-const V3 = (x, y, z) => new THREE.Vector3(x, y, z);
-const TOMAS = [
-  { p0:V3(-2.8, 0.9, 9.6),  p1:V3(2.2, -0.3, 10.2), m0:V3(0, -0.7, -1.2),   m1:V3(0, -0.8, -1.2) },   // El problema: recorre las fichas flotando
-  { p0:V3(1.3, 0.5, 10.4),  p1:V3(0.2, 0.1, 10.1),  m0:V3(-0.2, -0.6, 0),   m1:V3(-0.3, -0.7, 0) },   // Conecta
-  { p0:V3(0, -0.6, 9.7),    p1:V3(0.3, -0.9, 9.3),  m0:V3(0, -0.95, 0),     m1:V3(0, -1.0, 0.4) },    // Ejecuta
-  { p0:V3(4.4, -3.2, 7.8),  p1:V3(3.0, -2.4, 8.8),  m0:V3(-0.3, -1.1, 0),   m1:V3(-0.3, -1.1, 0) },   // Matching: plano bajo lateral
-  { p0:V3(-2.6, 0.7, 9.4),  p1:V3(-1.3, 0.2, 9.1),  m0:V3(0, -1.2, 0),      m1:V3(0, -1.3, 0) },      // Revisa
-  { p0:V3(0, -0.5, 11.3),   p1:V3(0.9, -0.95, 9.9), m0:V3(0, -0.85, 0.5),   m1:V3(0.2, -0.9, 0.5) }   // Resultado
-];
-const _p = V3(0, 0, 0), _m = V3(0, 0, 0), _pp = V3(0, 0, 0), _mp = V3(0, 0, 0);
-function toma(i, u, pos, mira){ const k = TOMAS[i], e = ease(u); pos.lerpVectors(k.p0, k.p1, e); mira.lerpVectors(k.m0, k.m1, e); }
-function camara(t){
-  const i = stepOf(t), s = STEPS[i];
-  toma(i, (t - s.a) / (s.b - s.a), _p, _m);
-  const b = ease((t - s.a) / 1.1);
-  if (b < 1) { toma((i + STEPS.length - 1) % STEPS.length, 1, _pp, _mp); _p.lerpVectors(_pp, _p, b); _m.lerpVectors(_mp, _m, b); }
-  // parallax del puntero + leve respiración
-  camera.position.set(_p.x + PX.x*1.15 + Math.sin(t*0.35)*0.12, _p.y + PX.y*0.7 + Math.cos(t*0.3)*0.08, _p.z * zAlto);
-  camera.lookAt(_m);
-}
-
-
-function resize(){
-  const w = Math.max(1, canvas.clientWidth), h = Math.max(1, canvas.clientHeight);
-  // Tope en 3 (no en 2): nativo en DPR 1, 2 y 3, o sea todo escritorio y todo
-  // telefono. Con el tope anterior de 1.5, en una pantalla DPR 2 el buffer
-  // quedaba en 510x510 cuando el nativo es 680x680: el navegador reescala
-  // 1.33x y el texto del canvas se ve borroso. Medido el 2026-09-27 a DPR 1, 2,
-  // 3 y 4: 60.4 fps con tope 1.5, 2, 3 o sin tope (el stage es de 340px y el
-  // upload de textura no satura el hilo), o sea que el tope no compraba
-  // rendimiento, solo bajaba la resolucion.
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-  renderer.setSize(w, h, false);
-  camera.aspect = w / h; camera.updateProjectionMatrix();
-  // recuadro más alto que ancho (vertical): la cámara se aleja lo justo para
-  // que la tabla y la hoja de resultados quepan a lo ancho
-  zAlto = 1 + Math.max(0, 1 / camera.aspect - 1) * 0.55;
-  needsRender = true;
-}
-let zAlto = 1;
-new ResizeObserver(resize).observe(stage); resize();
-// 2026-10-01: el navegador puede entregar varios avisos juntos (al abrir la pestaña: "no visible" y
-// luego "visible"); vale el último. Antes se leía el primero y la escena quedaba creyéndose oculta.
-if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible = es[es.length - 1].isIntersecting; if (visible) needsRender = true; }, { threshold:0.05 }).observe(stage);
-// No renderizar con la pestana en segundo plano: la demo es un RAF perpetuo.
-document.addEventListener('visibilitychange', () => { visible = !document.hidden; needsRender = true; });
-
-let last = performance.now();
-function frame(now){
-  const dt = Math.min(0.05, (now - last) / 1000); last = now;
-  if (PX.update(dt)) needsRender = true;
-  const mueve = L.tick(dt, visible && !document.hidden);
-  if (visible && !document.hidden && (mueve || needsRender)) {
-    const t = L.T;
-    camara(t);
-    const ps = updatePanel(t);
-    updateTable(t, ps.pres); updateCube(t); updateExport(t);
-    renderer.render(scene, camera);
-    needsRender = false;
-  }
-  requestAnimationFrame(frame);
-}
-requestAnimationFrame(frame);
-} catch(err) {
-  /* Si three.js o WebGL fallan a mitad de la inicializacion, la seccion no
-     puede quedar en blanco: caemos al modo texto. */
-  if (window.console) console.warn('[al-demo] error al iniciar el 3D:', err);
-  fallback();
-}
-})();
-})();
-});</script>
-
-
 <script>
 /* ═══ Motor de demos por tarjetas (2026-09-30, Ambilor.Lab) ═══
    Generaliza el demo "Cómo se instala" del Conciliador V1 (una ventana por
@@ -6081,11 +5746,37 @@ window.alDemoTarjetas = function(root, cfg){
   renderer.setClearColor(0x000000, 0);
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
-  AL3D.ambiente(scene, { z:-4.5 });
-  AL3D.piso(scene, { y:-2.35 });
+  scene.fog = null;   // sin sala: el aparato se apoya directo en la página
+  const SS = { z: 0, x: 0, y: 0, a: 1 };   // zoom automático (como Screen Studio): z = acercamiento al cursor, a = vista del aparato completo
+
+  // aparato del visitante (alFoto, en el <head>): notebook en computador, marco del equipo en celular y tablet
+  // señal dentro de la app: un anillo suave que late donde se va a tocar (la frase del paso va bajo el demo,
+  // así no tapa nada de la pantalla)
+  function notaPaso(g, i, lt){
+    const cf = J.CURSOR[i]; if (!cf || !cf.clicks || !cf.clicks.length) return;
+    const ck = cf.clicks[0]; let k0 = cf.keys[0];
+    cf.keys.forEach(k => { if (Math.abs(k[0] - ck) < Math.abs(k0[0] - ck)) k0 = k; });
+    const a = clamp((lt - (ck - 1.1)) / 0.3) * (1 - clamp((lt - ck) / 0.25)); if (a <= 0) return;
+    const p = (lt * 1.6) % 1, r = (J.vert ? 34 : 30) * (1 + p * 0.8);
+    g.save(); g.globalAlpha = a * (1 - p) * 0.9; g.strokeStyle = '#3d7fd6'; g.lineWidth = 5;
+    g.beginPath(); g.arc(k0[1], k0[2], r, 0, Math.PI * 2); g.stroke(); g.restore();
+  }
+  // pestañas de la app (barra inferior en el celular), solo en los demos del panel; en los de instalación se
+  // ven Drive y Apps Script, que no las tienen
+  const MENU = /instala/.test(root.id) ? null : /^ped/.test(root.id) ? ['Pedidos','Catálogo','Reportes','Clientes','Ajustes']
+    : /^v2/.test(root.id) ? ['Resumen','Resultados','Sugerencias','Historial','Ajustes'] : ['Resumen','Resultados','Ajustes','Historial','Config.'];
+  function aparato(vert, PW, PH){ return alFoto.crear(THREE, scene, { vert, ventana: { w: PW, h: PH }, menu: MENU, anis: ANISO, listo: () => { needsRender = true; } }); }
+  // pantalla completa: la tarjeta cubre toda la pantalla del aparato; fuera de su dibujo la textura repite el
+  // borde (ClampToEdge), así la barra superior y el fondo de la app llegan de lado a lado sin deformar la letra
+  function pantallaCompleta(m, u, PW, PH){
+    const geo = new THREE.PlaneGeometry(u.SW, u.SH); geo.translate(-(u.ventanaX || 0), -u.ventanaY, 0);
+    const p = geo.attributes.position, uv = geo.attributes.uv;
+    for (let i = 0; i < p.count; i++) uv.setXY(i, p.getX(i) / PW + 0.5, p.getY(i) / PH + 0.5);
+    m.geometry.dispose(); m.geometry = geo;
+  }
   const PX = AL3D.parallax(stage, reduce);
   const ANISO = renderer.capabilities.getMaxAnisotropy();
-  const basic = (opts) => new THREE.MeshBasicMaterial(Object.assign({ transparent:true, side:THREE.DoubleSide, depthWrite:false }, opts));
+  const basic = (opts) => new THREE.MeshBasicMaterial(Object.assign({ transparent:true, side:THREE.DoubleSide, depthWrite:false, toneMapped:false }, opts));
   const col = hex => new THREE.Color(hex).convertSRGBToLinear();
 
   // 2026-09-30: cada demo tiene dos diseños. Apaisado (1200×950, cfg.draw)
@@ -6093,7 +5784,8 @@ window.alDemoTarjetas = function(root, cfg){
   // cfg.drawV) para recuadros angostos o altos. Los ayudantes se arman para
   // el tamaño de cada uno.
   function mkH(CW, CH){
-  function rr(g,x,y,w,h,r){ g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }
+  const PLENO = !!(window.alFoto && (alFoto.elegir(CH > CW) || alFoto.tactil()));   // app a pantalla completa (en el notebook, o en celular y tablet)
+  function rr(g,x,y,w,h,r){ if (PLENO && !x && !y && w === CW && h === CH) r = 0; g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }
   function txt(g, s, x, y, size, weight, color, align = 'left', maxW = 0){ g.font = weight + ' ' + size + 'px ' + FONT; while (maxW && size > 12 && g.measureText(s).width > maxW) { size -= 1; g.font = weight + ' ' + size + 'px ' + FONT; } g.fillStyle = color; g.textAlign = align; g.textBaseline = 'middle'; g.fillText(s, x, y); }
   function wrap(g, s, x, y, maxW, size, weight, color, lh = 1.3){
     g.font = weight + ' ' + size + 'px ' + FONT; g.fillStyle = color; g.textAlign = 'left'; g.textBaseline = 'middle';
@@ -6119,13 +5811,30 @@ window.alDemoTarjetas = function(root, cfg){
     g.fillStyle = C.brand; g.fillRect(0, 0, CW, 76);
     g.fillStyle = C.line; g.fillRect(0, 76, CW, 2);
     g.restore();
-    g.strokeStyle = C.line; g.lineWidth = 4; rr(g, 2, 2, CW - 4, CH - 4, 32); g.stroke();
+    if (!PLENO) { g.strokeStyle = C.line; g.lineWidth = 4; rr(g, 2, 2, CW - 4, CH - 4, 32); g.stroke(); }
     g.fillStyle = 'rgba(255,255,255,.9)'; rr(g, 30, 22, 32, 32, 8); g.fill();
     txt(g, title, 78, 39, 38, 700, '#ffffff');
   }
   function overlay(g, a){ g.save(); rr(g, 0, 0, CW, CH, 34); g.clip(); g.fillStyle = 'rgba(18,48,77,' + (0.32*a) + ')'; g.fillRect(0, 0, CW, CH); g.restore(); }
   function dialog(g, x, y, w, h){ g.save(); g.shadowColor = 'rgba(18,48,77,.25)'; g.shadowBlur = 40; g.shadowOffsetY = 12; g.fillStyle = '#fff'; rr(g, x, y, w, h, 24); g.fill(); g.restore(); }
-  function banner(g, x, y, w, h, label, color = C.ok){ g.fillStyle = color; rr(g, x, y, w, h, h/2); g.fill(); txt(g, label, x + w/2, y + h/2 + 1, 35, 800, '#fff', 'center', w - h*0.7); }
+  function banner(g, x, y, w, h, label, color = C.ok){
+    const a = g.globalAlpha, p = Math.min(1, a), cx = x + w/2, cy = y + h/2, pop = p < 1 ? 1 + Math.sin(p * Math.PI) * 0.07 : 1;
+    g.save(); g.translate(cx, cy); g.scale(pop, pop); g.translate(-cx, -cy);
+    if (p < 1) { const e = p * 28; g.globalAlpha = a * (1 - p) * 0.55; g.strokeStyle = color; g.lineWidth = 6; rr(g, x - e, y - e, w + 2*e, h + 2*e, h/2 + e); g.stroke(); g.globalAlpha = a; }
+    g.fillStyle = color; rr(g, x, y, w, h, h/2); g.fill();
+    if (label.indexOf('✓ ') === 0) {
+      const s = label.slice(2), maxW = w - h*0.7 - 44; let size = 35; g.font = '800 ' + size + 'px ' + FONT;
+      while (size > 14 && g.measureText(s).width > maxW) { size -= 1; g.font = '800 ' + size + 'px ' + FONT; }
+      const tw = g.measureText(s).width, kx = cx - tw/2 - 14, k = size / 35, q = p < 1 ? p : 1;
+      const P = [[kx - 13*k, cy + 1*k], [kx - 4*k, cy + 10*k], [kx + 13*k, cy - 9*k]], l1 = Math.hypot(9, 9), l2 = Math.hypot(17, 19), t = q * (l1 + l2);
+      g.strokeStyle = '#fff'; g.lineWidth = 6*k; g.lineCap = 'round'; g.lineJoin = 'round'; g.beginPath(); g.moveTo(P[0][0], P[0][1]);
+      if (t <= l1) g.lineTo(P[0][0] + (P[1][0] - P[0][0]) * t / l1, P[0][1] + (P[1][1] - P[0][1]) * t / l1);
+      else { g.lineTo(P[1][0], P[1][1]); const u = (t - l1) / l2; g.lineTo(P[1][0] + (P[2][0] - P[1][0]) * u, P[1][1] + (P[2][1] - P[1][1]) * u); }
+      g.stroke();
+      txt(g, s, cx + 18, cy + 1, size, 800, '#fff', 'center', maxW);
+    } else txt(g, label, cx, cy + 1, 35, 800, '#fff', 'center', w - h*0.7);
+    g.restore();
+  }
   function checkDot(g, x, y, on, pop = 1){
     g.beginPath(); g.arc(x, y, 18 * (on ? pop : 1), 0, Math.PI*2);
     if (on) { g.fillStyle = C.ok; g.fill(); txt(g, '✓', x, y + 1, 32, 800, '#fff', 'center'); }
@@ -6182,7 +5891,7 @@ window.alDemoTarjetas = function(root, cfg){
 
   // Un juego de tarjetas por diseño; el vertical se arma recién cuando se usa
   function juego(vert){
-    const CW = vert ? 800 : 1200, CH = vert ? 1000 : 950, PW = vert ? 3.84 : 4.8, PH = PW * CH / CW;
+    const CW = vert ? 800 : 1200, CH = vert ? 1000 : 950, PW = vert ? 3.84 : 4.8, K = alFoto.estirar(vert, !!MENU), PH = PW * CH / CW * K;
     const DRAW = (vert ? cfg.drawV : cfg.draw)(mkH(CW, CH)), CURSOR = (vert ? cfg.cursorV : cfg.cursor) || [];
     // 2026-09-30: cada tarjeta dibuja su lienzo solo mientras está en pantalla
     // (a lo más 2 a la vez) y lo libera al salir. Antes las 6 de cada demo
@@ -6192,16 +5901,25 @@ window.alDemoTarjetas = function(root, cfg){
       const m = new THREE.Mesh(new THREE.PlaneGeometry(PW, PH), basic({ map:null })); m.renderOrder = 5; scene.add(m);
       const sh = new THREE.Mesh(new THREE.PlaneGeometry(PW + 0.08, PH + 0.08), basic({ color:col(C.ink) })); sh.renderOrder = 4; scene.add(sh);
       m.visible = sh.visible = false;
-      return { m, sh, g:null, tx:null, cv:null, CW, CH };
+      return { m, sh, g:null, tx:null, cv:null, CW, CH, K };
     });
     AL3D.grosor(cards.map(c => c.m), 0.09, { radio:0.136 });
     const sombraCard = AL3D.sombra(scene, PW*1.1, 1.6); sombraCard.visible = false;
-    return { vert, CW, CH, PW, PH, DRAW, CURSOR, cards, sombraCard };
+    const disp = aparato(vert, PW, PH);
+    cards.forEach(c => { disp.userData.pantalla.add(c.m); disp.userData.pantalla.add(c.sh); c.m.frustumCulled = false; c.m.children.forEach(h => { h.visible = false; }); });   // ventanas planas, sin canto
+    if (disp.userData.pleno) cards.forEach(c => pantallaCompleta(c.m, disp.userData, PW, PH));
+    return { vert, CW, CH, PW, PH, DRAW, CURSOR, cards, sombraCard, disp };
   }
   function tomarLienzo(c){
     if (c.cv) return;
-    c.cv = document.createElement('canvas'); c.cv.width = c.CW * TEX_S; c.cv.height = c.CH * TEX_S;
-    c.g = c.cv.getContext('2d'); c.g.scale(TEX_S, TEX_S);
+    c.cv = document.createElement('canvas'); c.cv.width = c.CW * TEX_S; c.cv.height = Math.round(c.CH * TEX_S * (c.K || 1));
+    c.g = c.cv.getContext('2d'); c.g.scale(TEX_S, TEX_S * (c.K || 1));
+    if (c.K > 1) {   // lienzo estirado en alto (celular); el texto y los círculos, compensados
+      const g = c.g, k = c.K, ft = g.fillText.bind(g), st = g.strokeText.bind(g);
+      g.fillText = (s, x, y, w) => { g.save(); g.translate(x, y); g.scale(1, 1 / k); w == null ? ft(s, 0, 0) : ft(s, 0, 0, w); g.restore(); };
+      g.strokeText = (s, x, y, w) => { g.save(); g.translate(x, y); g.scale(1, 1 / k); w == null ? st(s, 0, 0) : st(s, 0, 0, w); g.restore(); };
+      g.arc = (x, y, r, a0, a1, ccw) => g.ellipse(x, y, r, r / k, 0, a0, a1, !!ccw);
+    }
     c.tx = new THREE.CanvasTexture(c.cv); c.tx.encoding = THREE.sRGBEncoding; c.tx.anisotropy = ANISO;
     c.m.material.map = c.tx; c.m.material.needsUpdate = true;
   }
@@ -6217,47 +5935,42 @@ window.alDemoTarjetas = function(root, cfg){
   function usar(vert){
     if (vert && !cfg.drawV) vert = false;
     if (J && J.vert === vert) return;
-    if (J) { J.cards.forEach(c => { c.m.visible = c.sh.visible = false; soltarLienzo(c); }); J.sombraCard.visible = false; }
+    if (J) { J.cards.forEach(c => { c.m.visible = c.sh.visible = false; soltarLienzo(c); }); J.sombraCard.visible = false; J.disp.visible = false; }
     J = vert ? (JV || (JV = juego(true))) : (JH || (JH = juego(false)));
+    J.disp.visible = true;
     needsRender = true;
   }
-  const cursorGeo = new THREE.PlaneGeometry(0.24, 0.31); cursorGeo.translate(0.12, -0.155, 0);
+  const DEDO = alFoto.tactil();   // en celular y tablet se toca con el dedo, no hay flecha
+  const cursorGeo = DEDO ? new THREE.PlaneGeometry(0.36, 0.36) : new THREE.PlaneGeometry(0.24, 0.31); if (!DEDO) cursorGeo.translate(0.12, -0.155, 0);
   const ctex = (() => { const c = document.createElement('canvas'); c.width = 104 * TEX_S; c.height = 136 * TEX_S; const g = c.getContext('2d'); g.scale(TEX_S, TEX_S);
     g.beginPath(); g.moveTo(8, 6); g.lineTo(8, 110); g.lineTo(34, 86); g.lineTo(52, 128); g.lineTo(70, 120); g.lineTo(52, 80); g.lineTo(88, 80); g.closePath();
     g.fillStyle = C.ink; g.fill(); g.strokeStyle = '#fff'; g.lineWidth = 7; g.lineJoin = 'round'; g.stroke();
     const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; return t; })();
-  const cursor = new THREE.Mesh(cursorGeo, basic({ map:ctex })); cursor.renderOrder = 20; scene.add(cursor);
+  const cursor = new THREE.Mesh(cursorGeo, basic({ map: DEDO ? alFoto.dedo(THREE) : ctex })); cursor.renderOrder = 20; scene.add(cursor);
   const ring = new THREE.Mesh(new THREE.RingGeometry(0.06, 0.085, 40), basic({ color:col(C.brand) })); ring.renderOrder = 19; scene.add(ring);
   const tmp = new THREE.Vector3();
   const pxToLocal = (x, y) => tmp.set((x / J.CW - 0.5) * J.PW, (0.5 - y / J.CH) * J.PH, 0.04);
 
   function updateCards(t){
     const sombraCard = J.sombraCard;
+    J.disp.updateMatrixWorld(true);
     sombraCard.visible = false;
     J.cards.forEach((c, i) => {
       const s = STEPS[i];
-      const ein = i === 0 ? clamp((t + 0.3) / 0.9) : clamp((t - (s.a - 0.35)) / 0.9);
-      const e = AL3D.rebote(ein);
-      const x = i === STEPS.length - 1 ? 0 : ease((t - (s.b - 0.35)) / 0.8);
-      const vis = ein > 0.001 && x < 0.999;
-      c.m.visible = c.sh.visible = vis;
+      const cur = stepOf(t), dist = i - cur;
+      const ein = i === 0 ? 1 : clamp((t - s.a + 0.05) / 0.38);                       // entra
+      const sale = dist === -1 ? clamp((t - STEPS[cur].a + 0.05) / 0.38) : 0;        // la anterior se va
+      const vis = dist === 0 || (dist === -1 && sale < 1);
+      c.m.visible = vis; c.sh.visible = false;
       if (!vis) { soltarLienzo(c); return; }
       tomarLienzo(c);
-      J.DRAW[i](c.g, t - s.a); c.tx.needsUpdate = true;
-      const cf = J.CURSOR[i], lt = t - s.a;
-      let hundir = 0;
-      if (cf) cf.clicks.forEach(ck => { const d = lt - ck; if (d >= 0 && d < 0.8) hundir = Math.max(hundir, Math.exp(-7*d) * Math.cos(9*d)); });
-      c.m.position.set(lerp(5.6, 0, e) - 3.2*x, -0.05 + 0.7*x, -1.6*(1 - e) - 4.6*x - 0.16*hundir);
-      c.m.rotation.set(-0.04 + 0.14*x, 0.55*(1 - e) - 0.5*x + Math.sin(t*0.5)*0.04*e*(1 - x), 0.05*x);
-      c.m.material.opacity = Math.min(clamp(ein*1.6), 1 - clamp(x*1.8));
-      if (i === stepOf(t)) {
-        sombraCard.visible = true;
-        sombraCard.position.set(c.m.position.x, -2.33, c.m.position.z + 0.2);
-        sombraCard.material.opacity = 0.8 * c.m.material.opacity;
-      }
-      c.sh.position.set(c.m.position.x + 0.06, c.m.position.y - 0.08, c.m.position.z - 0.05);
-      c.sh.rotation.copy(c.m.rotation);
-      c.sh.material.opacity = 0.13 * Math.min(e, 1 - x);
+      J.DRAW[i](c.g, Math.max(0, t - s.a)); if (dist === 0) notaPaso(c.g, i, Math.max(0, t - s.a)); c.tx.needsUpdate = true;
+      const e = ease(ein), sx = dist === 0 ? (1 - e) * 0.35 : -ease(sale) * 0.35;
+      c.m.position.set(sx * (J.disp.userData.marco ? 0 : J.disp.userData.pleno ? 0.25 : 1) + (J.disp.userData.ventanaX || 0), J.disp.userData.ventanaY || 0, dist === 0 ? 0.004 : 0.002);
+      if (dist === 0 && J.disp.userData.marco && J.tonoPaso !== i && t - s.a > 0.2) { J.tonoPaso = i; J.disp.userData.marco.tono(c.g, root.id === 'ped-accion' && i === 0); }   // barra de estado según la app (una vez por paso: leer píxeles es caro en Safari)
+      c.m.rotation.set(0, 0, 0);
+      c.m.material.opacity = dist === 0 ? e : 1 - ease(sale);
+      if (dist === 0) J.disp.userData.sombraVentana.material.opacity = 0.9 * e;
       c.m.updateMatrixWorld();
     });
   }
@@ -6274,14 +5987,14 @@ window.alDemoTarjetas = function(root, cfg){
     }
     const card = J.cards[i].m;
     card.localToWorld(pxToLocal(px, py));
-    cursor.position.copy(tmp); cursor.rotation.copy(card.rotation);
+    cursor.position.copy(tmp); cursor.rotation.set(0, 0, 0);
     const click = Math.max(0, ...cf.clicks.map(c => clamp(1 - Math.abs(lt - c) / 0.1)));
     cursor.scale.setScalar(1 - click*0.18);
     cursor.material.opacity = op * card.material.opacity;
     cursor.visible = true;
     const rp = Math.max(...cf.clicks.map(c => (lt >= c && lt < c + 0.45) ? (lt - c) / 0.45 : -1));
     if (rp >= 0) {
-      ring.visible = true; ring.position.copy(tmp); ring.position.z -= 0.01; ring.rotation.copy(card.rotation);
+      ring.visible = true; ring.position.copy(tmp); ring.position.z -= 0.01; ring.rotation.set(0, 0, 0);
       ring.scale.setScalar(0.6 + rp*1.6); ring.material.opacity = (1 - rp) * 0.8 * op;
     }
   }
@@ -6293,7 +6006,7 @@ window.alDemoTarjetas = function(root, cfg){
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(w, h, false);
     camera.aspect = w / h; camera.updateProjectionMatrix();
-    usar(w / h < 1.2);   // el diseño sigue la forma del recuadro: así la tarjeta siempre llena su marco
+    usar(alFoto.tactil() ? matchMedia('(orientation: portrait)').matches : w / h < 1.2);   // en táctil, la orientación del equipo
     const tg = Math.tan(camera.fov * Math.PI / 360);
     zV = Math.max(4.8 * 0.6 / tg, 3.84 * 0.62 / (tg * camera.aspect));
     needsRender = true;
@@ -6304,23 +6017,17 @@ window.alDemoTarjetas = function(root, cfg){
 
   let last = performance.now();
   function frame(now){
-    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    const dt = Math.min(0.12, (now - last) / 1000); last = now;
     if (PX.update(dt)) needsRender = true;
     const mueve = L.tick(dt, visible);
     if (visible && (mueve || needsRender)) {
       const T = L.T;
       updateCards(T); updateCursor(T);
-      const ip = stepOf(T), sp = STEPS[ip], lt = T - sp.a, lado = ip % 2 ? -1 : 1;
-      const u = ease(clamp(lt / (sp.b - sp.a)));
-      const bx = lerp(-lado*0.4, lado*0.4, u), by = 0.22 + Math.sin(T*0.4)*0.06;
-      let fx = 0, fy = 0, f = 0;
+      const ip = stepOf(T), sp = STEPS[ip], lt = T - sp.a;
       const cf = J.CURSOR[ip];
-      if (cf && cursor.visible) {
-        cf.clicks.forEach(ck => { f = Math.max(f, clamp(1 - Math.abs(lt - ck) / 0.9)); });
-        f = ease(f); fx = (cursor.position.x - bx*0.3)*0.55*f; fy = (cursor.position.y - by*0.4)*0.55*f;
-      }
-      camera.position.set(bx + PX.x*1.05 + fx*0.6, by + PX.y*0.65 + fy*0.6, (J.vert ? zV : 9.55) - 0.7*f);
-      camera.lookAt(bx*0.3 + fx, by*0.4 + fy, 0);
+      let quiere = 0;
+      if (cf && cursor.visible) { const k = cf.keys; quiere = clamp((lt - k[0][0] + 0.15) / 0.35) * (1 - clamp((lt - k[k.length - 1][0] - 0.9) / 0.4)); }
+      alFoto.camara(camera, J.disp.userData, SS, { T, dt, ip, lt, quiere, foco: cursor.visible ? cursor.position : null, vent: J.disp.userData.pleno ? { w: J.disp.userData.SW, h: J.disp.userData.SH } : { w: J.PW, h: J.PH }, vert: J.vert, px: PX });
       renderer.render(scene, camera);
       needsRender = false;
     }
@@ -6333,6 +6040,65 @@ window.alDemoTarjetas = function(root, cfg){
   }
   });
 };
+</script>
+<script>
+/* Demos: etiqueta, frase, resumen y deslizar (2026-10-07). Se suman a cada demo de tarjetas al iniciarse:
+   · la etapa en una etiqueta sobre el recuadro (fuera de la pantalla de la app);
+   · bajo el demo, la frase del paso (AL_NOTAS), que no tapa nada de la pantalla;
+   · al terminar, el resumen de los pasos (cada uno lleva a su paso) con «Ver de nuevo» y «Ver qué incluye»;
+   · en celular y tablet, deslizar el demo hacia el lado pasa de paso (con una pista la primera vez). */
+(function(){
+  var orig = window.alDemoTarjetas; if (!orig) return;
+  var tactil = window.alFoto && alFoto.tactil(), pistaVista = false;
+  function pasoActual(d){ var b = d.querySelectorAll('.al-demo__step'), i = 0; b.forEach(function(x, j){ if (x.getAttribute('aria-current') === 'step') i = j; }); return i; }
+  function suave(e, t){ if (t === e.textContent) return; e.classList.add('cambia'); setTimeout(function(){ e.textContent = t; e.classList.remove('cambia'); }, 170); }
+  function extras(d){
+    if (d._alExtras) return; d._alExtras = true;
+    var st = d.querySelector('.al-demo__stage'), k = d.querySelector('.al-demo__kicker'); if (!st) return;
+    // etiqueta de la etapa y frase del paso
+    var et = document.createElement('div'); et.className = 'al-paso'; et.setAttribute('aria-hidden', 'true'); st.appendChild(et);
+    var N = window.AL_NOTAS && AL_NOTAS[d.id], fr = null;
+    if (N) { fr = document.createElement('p'); fr.className = 'al-frase'; fr.setAttribute('aria-live', 'polite'); st.insertAdjacentElement('afterend', fr); }
+    var poner = function(){ if (k) suave(et, k.textContent.trim()); if (fr) suave(fr, N[pasoActual(d)] || ''); };
+    poner(); new MutationObserver(poner).observe(d, { subtree: true, attributes: true, attributeFilter: ['aria-current'] });
+    // resumen al terminar
+    var fb = d.querySelectorAll('.al-demo__fblist > li');
+    if (fb.length) {
+      var r = document.createElement('div'), h = '<p class="al-resumen__k">Así funciona</p><ol>';
+      r.className = 'al-resumen';
+      fb.forEach(function(li, i){ var t = li.querySelector('.al-demo__fbt'); h += '<li><button type="button" data-i="' + i + '"></button></li>'; });
+      r.innerHTML = h + '</ol><div class="al-resumen__acc"><button type="button" class="al-resumen__otra">↻ Ver de nuevo</button></div>';
+      fb.forEach(function(li, i){ var t = li.querySelector('.al-demo__fbt'); r.querySelectorAll('ol button')[i].textContent = t ? t.textContent : ''; });
+      st.appendChild(r);
+      var acc = r.querySelector('.al-resumen__acc');
+      r.querySelector('.al-resumen__otra').addEventListener('click', function(){ var b = d.querySelector('[data-act="restart"]'); if (b) b.click(); });
+      r.querySelectorAll('ol button').forEach(function(b){ b.addEventListener('click', function(){ var s = d.querySelectorAll('.al-demo__step')[+b.getAttribute('data-i')]; if (s) s.click(); var p = d.querySelector('[data-act="play"]'); if (p && d.classList.contains('al-demo--manual')) p.click(); }); });
+      new MutationObserver(function(){   // «Ver qué incluye»: el del último paso, que el demo pone al llegar a él
+        if (acc.querySelector('.al-resumen__cta') || !d.classList.contains('al-demo--fin')) return;
+        var cta = d.querySelector('.al-demo__copy .al-demo__cta') || d.querySelector('.al-demo__fallback .al-demo__cta'); if (!cta) return;
+        var a = document.createElement('a'); a.className = 'al-resumen__cta'; a.href = cta.getAttribute('href') || '#'; a.textContent = cta.textContent;
+        a.addEventListener('click', function(ev){ ev.preventDefault(); cta.click(); }); acc.appendChild(a);
+      }).observe(d, { attributes: true, attributeFilter: ['class'] });
+    }
+    // deslizar en táctil
+    var cv = st.querySelector('canvas'); if (!tactil || !cv) return;
+    cv.style.touchAction = 'pan-y';
+    var x0 = 0, y0 = 0, dx = 0, activo = false, horizontal = null;
+    cv.addEventListener('touchstart', function(e){ var t = e.touches[0]; x0 = t.clientX; y0 = t.clientY; dx = 0; activo = true; horizontal = null; }, { passive: true });
+    cv.addEventListener('touchmove', function(e){ if (!activo) return; var t = e.touches[0]; dx = t.clientX - x0; var dy = t.clientY - y0;
+      if (horizontal === null && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) horizontal = Math.abs(dx) > Math.abs(dy) * 1.3;
+      if (horizontal) cv.style.transform = 'translateX(' + (dx * 0.35) + 'px)'; }, { passive: true });
+    cv.addEventListener('touchend', function(){ if (!activo) return; activo = false;
+      if (horizontal && Math.abs(dx) > 50) { var b = d.querySelector('[data-act="' + (dx < 0 ? 'next' : 'prev') + '"]'); if (b) b.click(); }
+      var de = cv.style.transform || 'translateX(0px)'; cv.style.transform = '';
+      if (horizontal && cv.animate) cv.animate([{ transform: de }, { transform: 'translateX(' + (dx < 0 ? 4 : -4) + 'px)', offset: .6 }, { transform: 'translateX(0)' }], { duration: 420, easing: 'cubic-bezier(.2,.8,.2,1)' });
+    }, { passive: true });
+    if (!pistaVista && d.offsetParent) { pistaVista = true;
+      var p = document.createElement('div'); p.className = 'al-pista'; p.setAttribute('aria-hidden', 'true'); p.innerHTML = '<span>‹</span> Desliza para cambiar de paso <span>›</span>';
+      st.appendChild(p); setTimeout(function(){ p.classList.add('fuera'); setTimeout(function(){ p.remove(); }, 600); }, 4200); }
+  }
+  window.alDemoTarjetas = function(root, cfg){ var r = orig.apply(this, arguments); if (root && root._alDemo) extras(root); return r; };
+})();
 </script>
 <script>
 /* Demos del Conciliador Semiautomático V2 (2026-09-30). Pantallas dibujadas a
@@ -6816,8 +6582,9 @@ AL_DEMOS['ped-accion'] = {
         if (p > 0) { g.globalAlpha = p; pill(g, 600, 790, '¿Quién pidió qué? ¿Quién ya pagó?', C.bad, '#fff', 32, 64, 'center'); g.globalAlpha = 1; }
       },
       (g, lt) => {
-        g.clearRect(0, 0, CW, CH); g.fillStyle = '#f4f7fb'; rr(g, 0, 0, CW, CH, 34); g.fill();
-        const a = celular(g, 380, 30, 440, 890);
+        g.clearRect(0, 0, CW, CH);
+        const a = (window.alFoto && alFoto.tactil()) ? (g.fillStyle = '#ffffff', g.fillRect(0, 0, CW, CH), { x: 330, y: 94, w: 540, h: 830 })   // en la tablet, página centrada
+          : (g.fillStyle = '#f4f7fb', rr(g, 0, 0, CW, CH, 34), g.fill(), celular(g, 380, 30, 440, 890));
         tienda(g, a);
         let x = a.x;
         ['Destacados', 'Panadería', 'Lácteos'].forEach((c, k) => { x += pill(g, x, a.y + 112, c, k ? '#eef2f7' : C.brand, k ? C.muted : '#fff', 20, 38) + 8; });
@@ -6836,8 +6603,9 @@ AL_DEMOS['ped-accion'] = {
         if (l > 0) { g.globalAlpha = l; pill(g, 90, 200, '🔗 Un enlace', '#fff', C.brand, 28, 56); pill(g, 90, 280, 'Sin instalar nada', '#fff', C.ink, 26, 52); pill(g, 1110, 520, 'Precios por cantidad', '#fff', C.ok, 26, 52, 'right'); g.globalAlpha = 1; }
       },
       (g, lt) => {
-        g.clearRect(0, 0, CW, CH); g.fillStyle = '#f4f7fb'; rr(g, 0, 0, CW, CH, 34); g.fill();
-        const a = celular(g, 380, 30, 440, 890);
+        g.clearRect(0, 0, CW, CH);
+        const a = (window.alFoto && alFoto.tactil()) ? (g.fillStyle = '#ffffff', g.fillRect(0, 0, CW, CH), { x: 330, y: 94, w: 540, h: 830 })   // en la tablet, página centrada
+          : (g.fillStyle = '#f4f7fb', rr(g, 0, 0, CW, CH, 34), g.fill(), celular(g, 380, 30, 440, 890));
         const env = lt > 2.9;
         if (!env) {
           txt(g, 'Tu pedido', a.x, a.y + 30, 32, 800, C.ink);
@@ -7955,8 +7723,9 @@ AL_DEMOS['como-se-instala'] = {
     const TABS = ['Pedidos','Catálogo','Reportes','Ajustes'];
     const PROD = [['Pan amasado (kg)','$2.490'],['Queso mantecoso','$6.990'],['Café molido 500 g','$5.490'],['Huevos x 30','$7.290']];
     // el formulario del cliente ocupa la tarjeta completa: un celular de frente
-    const cel = (g, top = 18) => { g.clearRect(0, 0, CW, CH); g.fillStyle = '#f4f7fb'; rr(g, 0, 0, CW, CH, 34); g.fill(); return celular(g, 150 + (top - 18)*0.25, top, 500 - (top - 18)*0.5, 982 - top); };
-    const flota = (g, x, y, s, ink, size, h, align) => { g.save(); g.shadowColor = 'rgba(18,48,77,.28)'; g.shadowBlur = 22; g.shadowOffsetY = 8; pill(g, x, y, s, '#fff', ink, size, h, align); g.restore(); };
+    const TELEFONO = !!(window.alFoto && alFoto.tactil());   // en celular y tablet, a pantalla completa
+    const cel = (g, top = 18) => { g.clearRect(0, 0, CW, CH); if (TELEFONO) { g.fillStyle = '#ffffff'; g.fillRect(0, 0, CW, CH); return { x: 48, y: 82, w: CW - 96, h: CH - 110 }; } g.fillStyle = '#f4f7fb'; rr(g, 0, 0, CW, CH, 34); g.fill(); return celular(g, 150 + (top - 18)*0.25, top, 500 - (top - 18)*0.5, 982 - top); };
+    const flota = (g, x, y, s, ink, size, h, align) => { if (TELEFONO) return; g.save(); g.shadowColor = 'rgba(18,48,77,.28)'; g.shadowBlur = 22; g.shadowOffsetY = 8; pill(g, x, y, s, '#fff', ink, size, h, align); g.restore(); };
     return [
       (g, lt) => {
         base(g, 'WhatsApp · 37 chats sin leer');
@@ -8102,6 +7871,242 @@ AL_DEMOS['como-se-instala'] = {
   ];
 
   // el V1 es la sub-pestaña visible al cargar: su demo de instalación parte ya
+/* "Ver en acción" del Conciliador V1 (2026-10-07), como grabación de pantalla: pantallas planas (motor de
+   tarjetas, igual que V2 y PedidoApp) en vez de la escena 3D con partidas flotando. Cada paso se ve como se
+   usa de verdad: la hoja de Google Sheets, el panel del complemento y el cursor haciendo cada acción.
+   Mismos textos, tiempos y datos de ejemplo que la escena 3D. Un solo dibujo sirve a los dos formatos
+   (horizontal 1200×950 y vertical 800×1000): las medidas salen de CW y CH. */
+AL_DEMOS['ver-en-accion'] = (function(){
+  const DATA = [
+    ['03/09','Factura F-101','+500.000'], ['04/09','Pago F-101','-500.000'],
+    ['05/09','Honorario B-22','+120.000'], ['06/09','Comisión mantención','-6.200'],
+    ['08/09','Factura F-102','+245.000'], ['09/09','Factura F-103','+89.700'],
+    ['10/09','Pago F-103','-89.700'], ['11/09','Factura F-104','+410.500'],
+    ['12/09','Pago F-102','-245.000'], ['15/09','Honorario B-23','+64.000'],
+    ['16/09','Pago F-104','-410.500'], ['17/09','Transf. sin referencia','-64.000']
+  ];
+  const PAIRS = [[0,1],[4,8],[5,6],[7,10]], MANUAL = [9, 11], PEND = [2, 3, 9, 11];
+  const PAR = {}; PAIRS.forEach((p, k) => { PAR[p[0]] = PAR[p[1]] = k; });
+  const TABS = ['Resumen','Resultados','Ajustes','Configuración','Historial'];
+  const M = 40;
+  // medidas de cada formato (las comparten el dibujo y el recorrido del cursor)
+  function L(CW, CH){
+    const V = CH > CW, W = CW - 2*M;
+    return { V, W, CW, CH,
+      hojaY: V ? 212 : 196, fila: V ? 55 : 50,                                  // hoja: primera fila y alto de fila
+      col: V ? { n: M + 22, f: M + 64, d: M + 168, dW: 300, m: CW - M - 18, e: 0 }
+             : { n: M + 22, f: M + 70, d: M + 200, dW: 360, m: M + 740, e: M + 790 },
+      imp: V ? { x: M, y: 262, w: W } : { x: M, y: 262, w: 380 },             // Conecta: botón Importar
+      ext: V ? { x: M, y: 342, w: W } : { x: M + 400, y: 262, w: 440 },
+      arch: V ? 438 : 362, mapY: V ? 540 : 460, mapH: V ? 86 : 74,
+      conf: V ? { x: M, y: 832, w: W } : { x: M, y: 742, w: 460 },
+      bannerConf: V ? { x: M, y: 914, w: W } : { x: M + 490, y: 742, w: W - 490 },
+      ejec: { x: M, y: 250, w: W },                                             // Ejecuta
+      revY: V ? 318 : 312, revH: V ? 104 : 90,                                  // Revisa: filas de pendientes
+      empa: V ? { x: M, y: 770, w: W } : { x: M, y: 700, w: 420 },
+      expo: V ? { x: M, y: 870, w: W } : { x: CW - M - 420, y: 820, w: 420 }
+    };
+  }
+  const centro = r => [r.x + r.w/2, r.y + 32];
+  function recorrido(l){
+    const y = i => l.hojaY + 52 + i*l.fila, xm = l.col.d + 120;
+    const [ix, iy] = centro(l.imp), [cx, cy] = centro(l.conf), [ex, ey] = [l.CW/2, l.ejec.y + 36];
+    const rv = k => l.revY + k*l.revH + l.revH/2 - 8, [px, py] = centro(l.empa), [ox, oy] = centro(l.expo);
+    const reposo = [l.CW * 0.8, l.CH * 0.92];
+    return [
+      { keys:[[0.3, xm, y(0)], [1.0, xm, y(5)], [1.25, xm, y(5)], [1.9, xm, y(6)], [2.15, xm, y(6)], [3.0, reposo[0], reposo[1]]], clicks:[1.12, 2.02] },
+      { keys:[[0.2, reposo[0], reposo[1]], [0.75, ix, iy], [1.0, ix, iy], [3.0, cx, cy], [3.3, cx, cy], [4.0, reposo[0], reposo[1]]], clicks:[0.88, 3.15] },
+      { keys:[[0.1, reposo[0], reposo[1]], [0.75, ex, ey], [1.0, ex, ey], [1.8, reposo[0], reposo[1]]], clicks:[0.88] },
+      null,
+      { keys:[[0.3, reposo[0], reposo[1]], [1.0, M + 34, rv(2)], [1.25, M + 34, rv(2)], [1.8, M + 34, rv(3)], [2.05, M + 34, rv(3)], [2.7, px, py], [2.95, px, py], [3.7, reposo[0], reposo[1]]], clicks:[1.12, 1.92, 2.82] },
+      { keys:[[2.6, reposo[0], reposo[1]], [3.3, ox, oy], [3.6, ox, oy], [4.4, reposo[0], reposo[1]]], clicks:[3.45] }
+    ];
+  }
+  function dibujo(H){
+    const { C, CW, CH, clamp, ease, easeOut, lerp, rr, txt, press, btn, base, banner, pill, campo, panelBar, checkDot } = H;
+    const l = L(CW, CH), V = l.V, W = l.W;
+    const SHEET = '#188038';
+    const tinte = (g, y, color, a) => { if (a <= 0) return; g.globalAlpha = a; g.fillStyle = color; g.fillRect(M, y - l.fila/2 + 2, W, l.fila - 4); g.globalAlpha = 1; };
+    // hoja de cálculo: barra de fórmulas, letras de columna, encabezados y filas
+    function hoja(g, titulo, celda, filas, extra){
+      base(g, titulo);
+      g.fillStyle = '#f1f4f8'; g.fillRect(4, 78, CW - 8, 52);
+      txt(g, celda, M + 8, 104, 24, 700, C.muted); g.fillStyle = C.line; g.fillRect(M + 84, 88, 2, 32);
+      txt(g, 'fx', M + 104, 104, 24, 700, C.soft, 'left');
+      const y0 = l.hojaY, c = l.col;
+      g.fillStyle = '#f6f8fb'; g.fillRect(M, y0 - 52, W, 36);
+      ['A','B','C','D'].slice(0, V ? 3 : 4).forEach((k, i) => txt(g, k, [c.f + 30, c.d + 120, c.m - 60, c.e + 90][i], y0 - 34, 20, 700, C.soft, 'center'));
+      txt(g, 'Fecha', c.f, y0, 25, 800, C.ink); txt(g, 'Descripción', c.d, y0, 25, 800, C.ink); txt(g, 'Monto', c.m, y0, 25, 800, C.ink, 'right');
+      if (!V) txt(g, 'Estado', c.e, y0, 25, 800, C.ink);
+      g.fillStyle = C.line; g.fillRect(M, y0 + 24, W, 2);
+      filas.forEach((r, i) => {
+        const y = y0 + 52 + i*l.fila;
+        if (extra) extra(g, i, y);
+        txt(g, String(i + 2), c.n, y, 20, 600, C.soft, 'center');
+        txt(g, r[0], c.f, y, V ? 24 : 25, 600, C.muted);
+        txt(g, r[1], c.d, y, V ? 25 : 26, 600, C.ink, 'left', c.dW);
+        txt(g, r[2], c.m, y, V ? 25 : 26, 800, r[2][0] === '-' ? C.muted : C.ink, 'right');
+        g.fillStyle = '#e3e9f0'; g.fillRect(M, y + l.fila/2 - 1, W, 1);
+      });
+    }
+    const estado = (g, y, label, fill, ink) => { if (V) { g.fillStyle = ink; g.beginPath(); g.arc(M + 6, y, 9, 0, 7); g.fill(); txt(g, '✓', M + 6, y + 1, 13, 800, '#fff', 'center'); } else pill(g, l.col.e, y - 20, label, fill, ink, 21, 38); };
+    return [
+      // 0 · El problema: la hoja, revisada a mano fila por fila
+      (g, lt) => {
+        const marca = i => (i === 5 || i === 6) ? easeOut((lt - 1.1 - (i - 5)*0.9) / 0.25) : 0;
+        hoja(g, 'Movimientos septiembre', 'B' + (lt < 1.5 ? 7 : 8), DATA, (g, i, y) => {
+          const busca = clamp((lt - 0.3) / 0.7) * 5;
+          if (Math.abs(i - busca) < 0.6 && lt < 1.3) tinte(g, y, '#dbe8f7', 1);
+          tinte(g, y, 'rgba(245,200,76,.45)', marca(i));
+        });
+        const q = easeOut((lt - 2.2) / 0.3);
+        if (q > 0 && !V) { g.globalAlpha = q; const y = l.hojaY + 52 + 6*l.fila; pill(g, l.col.e, y - 22, '¿calza con F-103?', '#fdf1e2', C.warn, 22, 42); g.globalAlpha = 1; }
+        const r = easeOut((lt - 2.6) / 0.35);
+        if (r > 0) { g.globalAlpha = r; pill(g, CW/2, CH - (V ? 80 : 70), '2 h 40 min revisando… y quedan 188 filas', C.bad, '#fff', V ? 24 : 28, V ? 50 : 56, 'center'); g.globalAlpha = 1; }
+      },
+      // 1 · Conecta: importa el .xlsx, detecta las columnas y las confirma
+      (g, lt) => {
+        base(g, 'Conciliador V1'); panelBar(g, 'Conciliador V1', TABS, 3);
+        btn(g, l.imp.x, l.imp.y, l.imp.w, 64, 'Importar .xlsx', 'primary', press(lt, 0.88), 32);
+        btn(g, l.ext.x, l.ext.y, l.ext.w, 64, 'Conectar sheet externo', 'secondary', 0, 32);
+        const f = easeOut((lt - 1.1) / 0.35);
+        if (f > 0) { g.globalAlpha = f; pill(g, M, l.arch, 'cartola_septiembre.xlsx · 12 filas', '#e6f2eb', SHEET, V ? 24 : 26, 50); g.globalAlpha = 1; }
+        const t = easeOut((lt - 1.5) / 0.3);
+        if (t > 0) { g.globalAlpha = t; txt(g, 'Encabezados detectados', M, l.mapY - 30, 30, 800, C.ink); g.globalAlpha = 1; }
+        [['Fecha','FECHA'],['Concepto','DESCRIPCION'],['Monto','IMPORTE']].forEach((m, k) => {
+          const a = easeOut((lt - 1.7 - k*0.35) / 0.3); if (a <= 0) return;
+          const y = l.mapY + k*l.mapH, w = V ? 300 : 340;
+          g.globalAlpha = a;
+          g.fillStyle = '#f6f8fb'; rr(g, M, y, w, 58, 12); g.fill(); txt(g, m[0], M + 20, y + 30, 28, 700, C.ink);
+          txt(g, '→', M + w + 34, y + 30, 32, 800, C.soft, 'center');
+          campo(g, M + w + 70, y, V ? W - w - 150 : 380, 58, '', m[1] + ' ▾', false);
+          checkDot(g, V ? CW - M - 24 : M + w + 500, y + 29, lt > 1.95 + k*0.35, 1);
+          g.globalAlpha = 1;
+        });
+        btn(g, l.conf.x, l.conf.y, l.conf.w, 64, 'Confirmar columnas', 'primary', press(lt, 3.15), 32);
+        const b = easeOut((lt - 3.4) / 0.3);
+        if (b > 0) { g.globalAlpha = b; banner(g, l.bannerConf.x, l.bannerConf.y, l.bannerConf.w, 64, '✓ 12 movimientos listos'); g.globalAlpha = 1; }
+      },
+      // 2 · Ejecuta: un clic en el panel; valida los datos antes de procesar
+      (g, lt) => {
+        base(g, 'Conciliador V1'); panelBar(g, 'Conciliador V1', TABS, 0);
+        btn(g, l.ejec.x, l.ejec.y, l.ejec.w, 72, '▶ Ejecutar conciliación', 'primary', press(lt, 0.88), 36);
+        const v = lt > 1.0;
+        txt(g, !v ? 'Listo para ejecutar' : (lt < 2.0 ? 'Validando datos…' : '✓ Datos validados'), M, l.ejec.y + 120, 30, 700, lt < 2.0 ? C.soft : C.ok);
+        if (v && lt < 2.0) { g.fillStyle = '#e3e9f0'; rr(g, M, l.ejec.y + 150, W, 10, 5); g.fill(); g.fillStyle = C.brand; rr(g, M, l.ejec.y + 150, W * clamp((lt - 1.0) / 1.0), 10, 5); g.fill(); }
+        const tiles = [['0%','conciliación', C.ok], ['0','pares', C.ink], ['12','pendientes', C.warn], ['$0','conciliado', C.ink]];
+        const tw = V ? (W - 20) / 2 : (W - 60) / 4, th = V ? 150 : 170, ty = l.ejec.y + 190;
+        tiles.forEach(([n, s, c], i) => {
+          const x = M + (V ? (i % 2) : i) * (tw + 20), y = ty + (V ? Math.floor(i / 2) * (th + 20) : 0);
+          g.fillStyle = '#f6f8fb'; rr(g, x, y, tw, th, 20); g.fill();
+          txt(g, n, x + 28, y + th*0.42, V ? 56 : 62, 800, c); txt(g, s, x + 28, y + th*0.78, 26, 700, C.muted);
+        });
+        const y2 = ty + (V ? 2*th + 50 : th + 50);
+        txt(g, 'Historial', M, y2, 28, 800, C.ink);
+        for (let k = 0; k < 3; k++) { g.fillStyle = '#e3e9f0'; rr(g, M, y2 + 36 + k*44, [W*0.7, W*0.55, W*0.62][k], 14, 7); g.fill(); }
+      },
+      // 3 · Matching: recorre la hoja y empareja cada movimiento con su contraparte
+      (g, lt) => {
+        const run = clamp((lt - 0.2) / 3.0);
+        hoja(g, 'Movimientos septiembre', 'D2', DATA, (g, i, y) => {
+          const k = PAR[i];
+          if (k !== undefined) { const a = easeOut((lt - 0.5 - k*0.55) / 0.3); tinte(g, y, 'rgba(47,138,91,.13)', a); if (a > 0) { g.globalAlpha = a; estado(g, y, '✓ Par ' + (k + 1), '#e6f2eb', C.ok); g.globalAlpha = 1; } }
+          const barre = (lt - 0.2) / 0.5 % 1 * 12;
+          if (lt < 3.2 && Math.abs(i - barre) < 0.5) tinte(g, y, 'rgba(31,92,153,.12)', 1);
+        });
+        // franja del motor con el contador
+        const n = Math.round(3000 * run).toLocaleString('es-CL');
+        pill(g, CW/2, CH - (V ? 76 : 66), (run >= 1 ? '✓ ' : '') + n + ' movimientos · ' + (3.0 * run).toFixed(1).replace('.', ',') + ' s', run >= 1 ? C.ok : C.brand, '#fff', V ? 24 : 28, V ? 50 : 56, 'center');
+        const k = Math.min(3, Math.floor((lt - 0.5) / 0.55));
+        if (k >= 0 && lt < 3.4 && !V) { const p = PAIRS[k]; g.globalAlpha = 0.95; pill(g, CW/2, CH - 128, DATA[p[0]][1] + ' ↔ ' + DATA[p[1]][1] + ' · mismo monto', C.ok, '#fff', 23, 44, 'center'); g.globalAlpha = 1; }
+      },
+      // 4 · Revisa: lo que no calzó; empareja a mano y el ajuste queda guardado
+      (g, lt) => {
+        base(g, 'Conciliador V1'); panelBar(g, 'Conciliador V1', TABS, 1);
+        let x = M; [['Todos (12)', false], ['Pendientes (4)', true], ['Conciliados (8)', false]].forEach(([s, on]) => { x += pill(g, x, 236, s, on ? C.brand : '#eef2f7', on ? '#fff' : C.muted, V ? 21 : 24, 46) + 12; });
+        const sel = [lt > 1.12, lt > 1.92], hecho = lt > 3.0;
+        PEND.forEach((i, k) => {
+          const y = l.revY + k*l.revH, r = DATA[i], man = MANUAL.indexOf(i), h = l.revH - 16;
+          const on = man >= 0 && sel[man];
+          g.fillStyle = on ? (hecho ? 'rgba(47,138,91,.1)' : '#e8f0fa') : '#f6f8fb'; rr(g, M, y, W, h, 16); g.fill();
+          if (on && !hecho) { g.strokeStyle = C.brand; g.lineWidth = 3; rr(g, M, y, W, h, 16); g.stroke(); }
+          g.strokeStyle = on ? C.brand : C.line; g.lineWidth = 3; rr(g, M + 22, y + h/2 - 15, 30, 30, 7); g.stroke();
+          if (on) { g.fillStyle = C.brand; rr(g, M + 22, y + h/2 - 15, 30, 30, 7); g.fill(); txt(g, '✓', M + 37, y + h/2 + 1, 22, 800, '#fff', 'center'); }
+          if (V) { txt(g, r[1], M + 74, y + h*0.34, 27, 700, C.ink, 'left', 380); txt(g, r[0], M + 74, y + h*0.72, 22, 600, C.soft); }
+          else { txt(g, r[0], M + 74, y + h/2, 25, 600, C.soft); txt(g, r[1], M + 170, y + h/2, 28, 700, C.ink, 'left', 420); }
+          txt(g, r[2], V ? CW - M - 22 : M + 760, V ? y + h*0.34 : y + h/2, 28, 800, C.ink, 'right');
+          const ok = man >= 0 && hecho, pop = ok ? 1 + Math.sin(clamp((lt - 3.0) / 0.3) * Math.PI) * 0.1 : 1;
+          g.save(); g.translate(V ? CW - M - 22 : CW - M - 24, V ? y + h*0.72 : y + h/2); g.scale(pop, pop);
+          pill(g, 0, -19, ok ? '✓ Par manual' : 'Sin par', ok ? C.ok : '#fdf1e2', ok ? '#fff' : C.warn, 21, 38, 'right');
+          g.restore();
+        });
+        btn(g, l.empa.x, l.empa.y, l.empa.w, 64, 'Emparejar a mano', sel[1] ? 'primary' : 'disabled', press(lt, 2.82), 32);
+        const b = easeOut((lt - 3.3) / 0.35);
+        if (b > 0) { g.globalAlpha = b; const y = l.empa.y + (V ? 90 : 0), x0 = V ? M : M + 450; banner(g, x0, y, V ? W : W - 450, 64, '✓ Guardado para la próxima ejecución'); g.globalAlpha = 1; }
+      },
+      // 5 · Resultado: indicadores, estado de cada movimiento y exportación
+      (g, lt) => {
+        base(g, 'Conciliador V1'); panelBar(g, 'Conciliador V1', TABS, 0);
+        const p = ease((lt - 0.2) / 1.4);
+        const tiles = [[Math.round(lerp(0, 83, p)) + '%','conciliación', C.ok], [String(Math.round(lerp(0, 5, p))),'pares', C.ok], [String(Math.round(lerp(12, 2, p))),'pendientes', C.warn], ['$' + Math.round(lerp(0, 1309200, p)).toLocaleString('es-CL'),'conciliado', C.ink]];
+        const tw = V ? (W - 20) / 2 : (W - 60) / 4, th = V ? 140 : 160, ty = 240;
+        tiles.forEach(([n, s, c], i) => {
+          const x = M + (V ? (i % 2) : i) * (tw + 20), y = ty + (V ? Math.floor(i / 2) * (th + 20) : 0);
+          g.fillStyle = '#f6f8fb'; rr(g, x, y, tw, th, 20); g.fill();
+          txt(g, n, x + 26, y + th*0.42, i === 3 ? (V ? 40 : 44) : (V ? 54 : 60), 800, c, 'left', tw - 40); txt(g, s, x + 26, y + th*0.78, 25, 700, C.muted);
+        });
+        // estado de los movimientos: barra apilada
+        const by = ty + (V ? 2*th + 60 : th + 60), q = ease((lt - 1.0) / 0.9);
+        txt(g, 'Estado de los 12 movimientos', M, by, 28, 800, C.ink);
+        const partes = [[8, C.ok, 'Conciliados'], [2, '#6fbf8f', 'Manual'], [2, C.warn, 'Pendientes']]; let x = M;
+        partes.forEach(([n, c, s]) => { const w = (W * n / 12) * q; g.fillStyle = c; rr(g, x, by + 30, Math.max(0, w - 6), 34, 8); g.fill(); x += w; });
+        if (q > 0.9) { let lx = M; partes.forEach(([n, c, s]) => { g.fillStyle = c; rr(g, lx, by + 88, 18, 18, 4); g.fill(); txt(g, s + ' ' + n, lx + 28, by + 98, 22, 700, C.muted); lx += V ? 220 : 260; }); }
+        // filas del detalle
+        const dy = by + 150;
+        [[0, 'Par 1'], [9, 'Par manual'], [3, 'Pendiente']].slice(0, V ? 2 : 3).forEach(([i, s], k) => {
+          const a = easeOut((lt - 1.6 - k*0.2) / 0.35); if (a <= 0) return; const y = dy + k*56, r = DATA[i];
+          g.globalAlpha = a; txt(g, r[1], M, y, 26, 600, C.ink, 'left', V ? 340 : 420); txt(g, r[2], V ? M + 520 : M + 640, y, 26, 800, C.ink, 'right');
+          pill(g, CW - M, y - 18, s, s === 'Pendiente' ? '#fdf1e2' : '#e6f2eb', s === 'Pendiente' ? C.warn : C.ok, 20, 36, 'right');
+          g.fillStyle = '#e3e9f0'; g.fillRect(M, y + 26, W, 1); g.globalAlpha = 1;
+        });
+        if (!V || lt < 3.7) btn(g, l.expo.x, l.expo.y, l.expo.w, 64, 'Exportar resultados', 'primary', press(lt, 3.45), 32);
+        const b = easeOut((lt - 3.7) / 0.35);
+        if (b > 0) { g.globalAlpha = b; banner(g, M, l.expo.y, V ? W : W - 450, 64, '✓ resultados_septiembre.xlsx', SHEET); g.globalAlpha = 1; }
+      }
+    ];
+  }
+  return {
+    steps: [
+      { a:0, b:3.6, short:'El problema', kicker:'El problema que resuelve',
+        title:'Cruzas movimientos a mano. Cada mes.',
+        body:'Cada factura debe coincidir con su pago, fila por fila, en planillas de cientos de filas. Hacerlo a mano toma horas, y un solo número mal copiado puede generar un problema después.',
+        stats:[['200','movimientos típicos'],['3 h','tiempo manual']] },
+      { a:3.6, b:8.0, short:'Conecta', kicker:'Paso 1: conecta tu fuente',
+        title:'Tu banco o ERP exporta a Google Sheets',
+        body:'Importa tu .xlsx o conecta un sheet externo. El sistema detecta los encabezados, te propone qué columna es cada dato (también Cargo y Abono por separado) y te confirma que son las correctas.' },
+      { a:8.0, b:10.9, short:'Ejecuta', kicker:'Paso 2: ejecuta desde el panel',
+        title:'Abre el panel de control web y ejecuta con un clic',
+        body:'Resultados, gráfico y números clave en una sola vista. El sistema valida los datos antes de procesar.' },
+      { a:10.9, b:15.3, short:'Matching', kicker:'Algoritmo de matching',
+        title:'Cruza cada movimiento contra todos los demás',
+        body:'El sistema recorre todos los registros y empareja automáticamente cada movimiento con su contraparte, explicando el motivo de cada resultado.',
+        stats:[['~3.000','movimientos'],['~3 s','de proceso']] },
+      { a:15.3, b:21.0, short:'Revisa', kicker:'Paso 3: revisa y corrige',
+        title:'Lo que no calzó, lo resuelves tú',
+        body:'Cada pendiente queda a la vista. Si sabes que una transferencia sin referencia corresponde a una factura, la emparejas a mano o deshaces un pareo, y el ajuste queda guardado entre ejecuciones.' },
+      { a:21.0, b:28.8, short:'Resultado', kicker:'Resultado final',
+        title:'Así queda tu conciliación',
+        body:'Cada movimiento con su estado, su contraparte y el detalle del match. Filtra los pendientes y exporta los resultados con un clic, listos para compartir o archivar.',
+        stats:[['3 s','vs 3 horas manual'],['5 min','instalación']],
+        cta:['Ver qué incluye', 'incluye'] }
+    ],
+    cursor: recorrido(L(1200, 950)), cursorV: recorrido(L(800, 1000)),
+    draw: dibujo, drawV: dibujo
+  };
+})();
+
+  const r0 = document.getElementById('ver-en-accion');
+  if (r0 && window.alDemoTarjetas) alDemoTarjetas(r0, AL_DEMOS['ver-en-accion']);
   const r1 = document.getElementById('como-se-instala');
   if (r1 && v1i && window.alDemoTarjetas) alDemoTarjetas(r1, v1i);
 })();

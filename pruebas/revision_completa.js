@@ -40,10 +40,11 @@
      recuperar    iOS quita las escenas 3D al cambiar de app o bloquear el
                   teléfono: al recuperarlas se vuelven a dibujar (también en
                   pausa) y no quedan en blanco
-     primera      al abrir Herramientas en celular vertical, la escena con su
-                  barra y el título de la etapa se ven sin desplazar; en Safari
-                  de iOS 26 (barra de direcciones flotante, ~85 px sobre el
-                  final de la página) también las 2 primeras líneas del texto
+     primera      al abrir Herramientas en celular vertical se ven el nombre,
+                  el selector y el comienzo de la demo (también con la barra
+                  flotante de Safari de iOS 26, ~85 px), y el equipo con su
+                  barra y la frase del paso caben en una pantalla; en tablet
+                  horizontal, el equipo con su barra cabe en el alto visible
    Límite conocido: aquí solo corre Chromium. Safari (WebKit) real, el
    giroscopio real y las barras que se esconden al desplazar se confirman en
    un iPhone/iPad (ver la lista en ESTANDAR_Diseno_Adaptable.md). */
@@ -235,15 +236,19 @@ async function primera(b){
     await p.goto(BASE + '/index.html?p=product'); await espera(1500);
     for (const hp of ['v1', 'v2', 'ped']) {
       await p.evaluate(hp => { showHP(hp); window.scrollTo(0, 0); }, hp); await espera(700);
+      // 2026-10-07: la demo es el equipo completo; al abrir se ven el nombre, qué hace, el selector y el comienzo
+      // de la demo, y el equipo con su barra y la frase del paso caben juntos en una pantalla
       const r = await p.evaluate(() => {
-        const d = document.querySelector('#product .hp-panel.on .al-demo:not([hidden])'), q = s => d.querySelector(s).getBoundingClientRect();
-        const lh = parseFloat(getComputedStyle(d.querySelector('.al-demo__body')).lineHeight);
-        return { barra: q('.al-player').bottom, titulo: q('.al-demo__title').bottom, texto: q('.al-demo__body').top + 2 * lh };
+        const pn = document.querySelector('#product .hp-panel.on'), d = pn.querySelector('.al-demo:not([hidden])'), q = (e, s) => e.querySelector(s).getBoundingClientRect();
+        const fr = d.querySelector('.al-frase');
+        return { nombre: q(pn, '.prod-h1').bottom, selector: q(pn, '.demo-section:not([hidden]) .demo-cambio').bottom, demo: q(d, '.al-demo__stage').top,
+          alto: (fr ? fr.getBoundingClientRect().bottom : q(d, '.al-player').bottom) - q(d, '.al-paso').top };
       });
       const vis = h - tapa, mal = [];
-      if (r.barra > vis + 1) mal.push('la barra de la demo queda ' + Math.round(r.barra - vis) + ' px bajo el borde');
-      if (r.titulo > vis + 1) mal.push('el título de la etapa queda ' + Math.round(r.titulo - vis) + ' px bajo el borde');
-      if (tapa && r.texto > vis + 1) mal.push('el texto queda ' + Math.round(r.texto - vis) + ' px bajo la barra de Safari');
+      if (r.nombre > vis + 1) mal.push('el nombre de la app queda ' + Math.round(r.nombre - vis) + ' px bajo el borde');
+      if (r.selector > vis + 1) mal.push('el selector de demo queda ' + Math.round(r.selector - vis) + ' px bajo el borde');
+      if (r.demo + 60 > vis + 1) mal.push('la demo empieza ' + Math.round(r.demo + 60 - vis) + ' px bajo el borde');
+      if (r.alto > vis + 1) mal.push('el equipo con su barra y la frase mide ' + Math.round(r.alto) + ' px y no cabe en ' + vis);
       if (mal.length) fallas.push(t + ' ' + w + '×' + h + ' ' + hp + ': ' + mal.join(', '));
     }
     await ctx.close();
@@ -255,12 +260,12 @@ async function primera(b){
     await p.goto(BASE + '/index.html?p=product'); await espera(1500);
     for (const hp of ['v1', 'v2', 'ped']) for (const d of ['accion', 'instala']) {
       await p.evaluate(([hp, d]) => { showHP(hp); const bt = document.querySelector('#hp-' + hp + ' .demo-cambio button[data-d="' + d + '"]'); if (bt && !bt.classList.contains('on')) bt.click(); window.scrollTo(0, 0); }, [hp, d]); await espera(900);
-      const fin = await p.evaluate(() => { const e = [...document.querySelectorAll('#product .hp-panel.on .al-demo')].find(x => x.offsetHeight > 0); return e ? e.getBoundingClientRect().bottom : 0; });
-      if (fin > h + 1) fallas.push(t + ' ' + w + '×' + h + ' ' + hp + '/' + d + ': el recuadro de la demo queda ' + Math.round(fin - h) + ' px bajo el borde');
+      const alto = await p.evaluate(() => { const e = [...document.querySelectorAll('#product .hp-panel.on .al-demo')].find(x => x.offsetHeight > 0); if (!e) return 0; const st = e.querySelector('.al-demo__stage').getBoundingClientRect(), pa = e.querySelector('.al-paso'); return st.bottom - (pa ? pa.getBoundingClientRect().top : st.top); });
+      if (alto > h + 1) fallas.push(t + ' ' + w + '×' + h + ' ' + hp + '/' + d + ': el equipo con su barra mide ' + Math.round(alto) + ' px y no cabe en ' + h);
     }
     await ctx.close();
   }
-  informe('Primera pantalla del celular (incluye Safari de iOS 26) y de la tablet horizontal', fallas);
+  informe('Primera pantalla del celular (incluye Safari de iOS 26) y de la tablet horizontal', fallas);   // regla de 2026-10-07
 }
 // iOS quita los contextos 3D al cambiar de app; la prueba los quita y devuelve con
 // WEBGL_lose_context y cuenta los dibujos de cada escena después de devolverlos
