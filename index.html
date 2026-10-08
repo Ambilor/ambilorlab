@@ -2022,7 +2022,8 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
 .al-demo__grid .al-frase::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:#3d7fd6;margin-right:.55em;vertical-align:.12em;box-shadow:0 0 0 4px rgba(61,127,214,.18)}
 .al-demo__grid .al-frase.cambia{opacity:0}
 .al-resumen{position:absolute;left:0;right:0;top:0;bottom:var(--al-barra);z-index:6;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:18px;text-align:left;
-  background:rgba(7,13,22,.86);opacity:0;visibility:hidden;transition:opacity .45s ease,visibility .45s}
+  background:rgba(7,13,22,.95);   /* 2026-10-08: .86 dejaba leer la pantalla de atrás entre las filas */
+  opacity:0;visibility:hidden;transition:opacity .45s ease,visibility .45s}
 .al-demo--fin .al-resumen{opacity:1;visibility:visible}
 .al-resumen__k{margin:0 0 .6rem;font:600 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:#8fc1ff}
 .al-resumen ol{margin:0;padding:0;list-style:none;counter-reset:p;display:grid;gap:4px;width:min(100%,460px)}
@@ -2538,11 +2539,17 @@ window.alFoto = (function(){
   // Celular vertical: cuánto más alta se dibuja la app (diseñada en 800 × 1000) para llenar la pantalla del
   // teléfono hasta la barra de abajo. Se reparte en alto (filas, campos, botones y espacios) y la letra y los
   // círculos conservan su forma (ver el motor).
-  function estirar(vert, pestanas){
+  function estirar(vert, pestanas, todo){
     var m = modelo(); if (!vert || equipo() === 'pc' || !(m.tipo === 'iphone' || m.tipo === 'android')) return 1;
     var e = especie(m, true), chh = e.H - e.top - e.bot - (pestanas ? 56 : 0), cw = e.W;
-    // solo una parte del alto que sobra: las filas quedan compactas, como en la app; abajo sigue la página de la app
-    return Math.max(1, 1 + ((800 / 1000) * chh / cw - 1) * 0.3);
+    // solo una parte del alto que sobra: las filas quedan compactas, como en la app (todo: el alto completo de la pantalla)
+    return Math.max(1, 1 + ((800 / 1000) * chh / cw - 1) * (todo ? 1 : 0.3));
+  }
+  // 2026-10-08: lo que falta para llegar a la barra de abajo, en unidades del dibujo (bajo los 1000 del diseño);
+  // cada pantalla lo llena con más contenido de la app (más filas, el resto de la vista), en vez de dejarlo en blanco
+  function extra(vert, pestanas){
+    var k = estirar(vert, pestanas), t = estirar(vert, pestanas, true);
+    return k > 1 ? Math.floor(1000 * (t / k - 1)) : 0;
   }
   // simular: solo en computador; 'tablet' (iPad horizontal), 'cel' (iPhone vertical) o null (el notebook).
   // Avisa a las demos con el evento «al-equipo» para que rearmen su aparato.
@@ -2552,7 +2559,7 @@ window.alFoto = (function(){
     _sim = t;
     document.dispatchEvent(new Event('al-equipo'));
   }
-  return { crear: crear, camara: camara, elegir: elegir, estirar: estirar, tactil: function(){ return equipo() !== 'pc'; }, dedo: dedo,
+  return { crear: crear, camara: camara, elegir: elegir, estirar: estirar, extra: extra, tactil: function(){ return equipo() !== 'pc'; }, dedo: dedo,
     real: real, simular: simular, redondo: redondo, simulado: function(){ return _sim; }, vertSim: function(){ return _sim === 'cel'; } };
 })();
 /* Demos: notas de cada paso (2026-10-07): una frase corta por paso, en una burbuja junto a lo que se toca
@@ -5900,6 +5907,9 @@ window.alDemoTarjetas = function(root, cfg){
   // aparato del visitante (alFoto, en el <head>): notebook en computador, marco del equipo en celular y tablet
   // señal dentro de la app: un anillo suave que late donde se va a tocar (la frase del paso va bajo el demo,
   // así no tapa nada de la pantalla)
+  // posición del puntero: una y negativa se cuenta desde abajo de la pantalla (botones anclados abajo,
+  // que en el celular quedan al final de su alto real)
+  const abajo = y => y < 0 ? J.CH + y : y;
   function notaPaso(g, i, lt){
     const cf = J.CURSOR[i]; if (!cf || !cf.clicks || !cf.clicks.length) return;
     const ck = cf.clicks[0]; let k0 = cf.keys[0];
@@ -5907,7 +5917,7 @@ window.alDemoTarjetas = function(root, cfg){
     const a = clamp((lt - (ck - 1.1)) / 0.3) * (1 - clamp((lt - ck) / 0.25)); if (a <= 0) return;
     const p = (lt * 1.6) % 1, r = (J.vert ? 34 : 30) * (1 + p * 0.8);
     g.save(); g.globalAlpha = a * (1 - p) * 0.9; g.strokeStyle = '#3d7fd6'; g.lineWidth = 5;
-    g.beginPath(); g.arc(k0[1], k0[2], r, 0, Math.PI * 2); g.stroke(); g.restore();
+    g.beginPath(); g.arc(k0[1], abajo(k0[2]), r, 0, Math.PI * 2); g.stroke(); g.restore();
   }
   // barra de pestañas abajo en el celular: solo la tiene el panel real de PedidoApp (en ese orden); el V1 y el V2
   // llevan sus pestañas arriba, y en los de instalación se ven Drive y Apps Script
@@ -6041,7 +6051,7 @@ window.alDemoTarjetas = function(root, cfg){
 
   // Un juego de tarjetas por diseño; el vertical se arma recién cuando se usa
   function juego(vert){
-    const CW = vert ? 800 : 1200, CH = vert ? 1000 : 950, PW = vert ? 3.84 : 4.8, K = alFoto.estirar(vert, !!MENU), PH = PW * CH / CW * K;
+    const CW = vert ? 800 : 1200, CH = vert ? 1000 + alFoto.extra(vert, !!MENU) : 950, PW = vert ? 3.84 : 4.8, K = alFoto.estirar(vert, !!MENU), PH = PW * CH / CW * K;
     const DRAW = (vert ? cfg.drawV : cfg.draw)(mkH(CW, CH)), CURSOR = (vert ? cfg.cursorV : cfg.cursor) || [];
     // 2026-09-30: cada tarjeta dibuja su lienzo solo mientras está en pantalla
     // (a lo más 2 a la vez) y lo libera al salir. Antes las 6 de cada demo
@@ -6146,9 +6156,9 @@ window.alDemoTarjetas = function(root, cfg){
     const k = cf.keys, first = k[0][0], last = k[k.length - 1][0];
     const op = easeOut((lt - first + 0.2) / 0.2) * (1 - ease((lt - last) / 0.3));
     if (op <= 0) return;
-    let px = k[0][1], py = k[0][2];
+    let px = k[0][1], py = abajo(k[0][2]);
     for (let n = 1; n < k.length; n++) {
-      if (lt >= k[n-1][0]) { const p = ease((lt - k[n-1][0]) / (k[n][0] - k[n-1][0])); px = lerp(k[n-1][1], k[n][1], p); py = lerp(k[n-1][2], k[n][2], p); }
+      if (lt >= k[n-1][0]) { const p = ease((lt - k[n-1][0]) / (k[n][0] - k[n-1][0])); px = lerp(k[n-1][1], k[n][1], p); py = lerp(abajo(k[n-1][2]), abajo(k[n][2]), p); }
     }
     const card = J.cards[i].m;
     pxToLocal(px, py);
@@ -7369,7 +7379,7 @@ AL_DEMOS['como-se-instala'] = {
   // ── pasos de instalación que comparten las tres herramientas ──
   const I = {
     copia(H, archivo, otros){
-      const { C, CW, ease, easeOut, rr, txt, wrap, press, btn, base, overlay, dialog, sheetIcon } = H;
+      const { C, CW, CH, ease, easeOut, rr, txt, wrap, press, btn, base, overlay, dialog, sheetIcon } = H;
       return (g, lt) => {
         base(g, 'Google Drive');
         txt(g, 'Mi Drive', 40, 128, 40, 800, C.ink);
@@ -7383,8 +7393,8 @@ AL_DEMOS['como-se-instala'] = {
           txt(g, 'ahora', CW - 40, rowY(0), 28, 600, C.soft, 'right');
           g.globalAlpha = 1;
         }
-        otros.forEach((f, k) => {
-          const y = rowY(k + nIn);
+        otros.concat(['Facturas 2025', 'Notas de reuniones', 'Contactos', 'Fotos del negocio']).forEach((f, k) => {
+          const y = rowY(k + nIn); if (k >= otros.length && y + 45 > CH - 150) return;   // en el celular, Mi Drive sigue con más archivos
           g.strokeStyle = C.line; g.lineWidth = 2; g.beginPath(); g.moveTo(20, y + 45); g.lineTo(CW - 20, y + 45); g.stroke();
           sheetIcon(g, 44, y - 24, 40, C.soft); txt(g, f, 108, y, 36, 600, C.ink, 'left', CW - 150);
         });
@@ -7404,7 +7414,7 @@ AL_DEMOS['como-se-instala'] = {
           g.globalAlpha = 1;
         }
         const ts = easeOut((lt - 3.0) / 0.35);
-        if (ts > 0) { g.globalAlpha = ts; g.fillStyle = C.ink; rr(g, 110, 880 + (1-ts)*20, 580, 72, 36); g.fill(); txt(g, '✓ Copia creada en Mi Drive', 400, 917 + (1-ts)*20, 34, 700, '#fff', 'center'); g.globalAlpha = 1; }
+        if (ts > 0) { g.globalAlpha = ts; g.fillStyle = C.ink; rr(g, 110, CH - 120 + (1-ts)*20, 580, 72, 36); g.fill(); txt(g, '✓ Copia creada en Mi Drive', 400, CH - 83 + (1-ts)*20, 34, 700, '#fff', 'center'); g.globalAlpha = 1; }
       };
     },
     // Planilla con el menú de la herramienta; el asistente sube desde abajo
@@ -7421,7 +7431,7 @@ AL_DEMOS['como-se-instala'] = {
         g.fillStyle = '#f6f8fb'; g.fillRect(4, 200, CW - 8, 38);
         g.strokeStyle = C.line; g.lineWidth = 1.5;
         for (let c = 0; c <= 5; c++) { const cx = 60 + c*150; g.beginPath(); g.moveTo(cx, 200); g.lineTo(cx, CH - 20); g.stroke(); if (c < 5) txt(g, 'ABCDE'[c], cx + 75, 219, 26, 700, C.soft, 'center'); }
-        for (let r = 0; r < 18; r++) { const ry = 238 + r*42; g.beginPath(); g.moveTo(4, ry); g.lineTo(CW - 4, ry); g.stroke(); txt(g, String(r + 1), 30, ry + 21, 23, 600, C.soft, 'center'); }
+        for (let r = 0; 238 + r*42 < CH - 20; r++) { const ry = 238 + r*42; g.beginPath(); g.moveTo(4, ry); g.lineTo(CW - 4, ry); g.stroke(); txt(g, String(r + 1), 30, ry + 21, 23, 600, C.soft, 'center'); }
         if (datos) {
           [[0, 'FECHA'], [1, 'DESCRIPCION'], [2, 'IMPORTE']].forEach(([c, s]) => txt(g, s, 72 + c*150, 259, 25, 800, C.ink, 'left', 136));
           for (let r = 1; r < 8; r++) for (let c = 0; c < 3; c++) { g.fillStyle = '#dde5ee'; rr(g, 72 + c*150, 269 + r*42 - 6, [70, 110, 80][c], 12, 6); g.fill(); }
@@ -7457,7 +7467,7 @@ AL_DEMOS['como-se-instala'] = {
     },
     // Pantalla de permisos de Google (casillas: el V2 pide marcar cada una)
     permisos(H, titulo, items, boton, casillas, sub){
-      const { C, CW, easeOut, rr, txt, wrap, press, btn, base, banner, sheetIcon } = H;
+      const { C, CW, CH, easeOut, rr, txt, wrap, press, btn, base, banner, sheetIcon } = H;
       const tOk = casillas ? 2.1 : 1.5, tClic = casillas ? 1.95 : 1.35;
       return (g, lt) => {
         base(g, 'Google');
@@ -7479,6 +7489,10 @@ AL_DEMOS['como-se-instala'] = {
         g.globalAlpha = 1;
         const b = easeOut((lt - tOk) / 0.35);
         if (b > 0) { g.globalAlpha = b; banner(g, 60, 900 + (1-b)*16, 680, 72, casillas ? '✓ Permisos autorizados' : '✓ Acceso autorizado'); g.globalAlpha = 1; }
+        if (CH > 1060) {   // en el celular, el pie de la página de Google
+          g.fillStyle = C.line; g.fillRect(60, CH - 130, CW - 120, 2);
+          wrap(g, 'Asegúrate de que confías en esta app: revisa qué datos pide antes de permitir.', 60, CH - 92, 680, 24, 600, C.muted, 1.3);
+        }
       };
     },
     // Apps Script → Implementar → Aplicación web
@@ -7489,8 +7503,8 @@ AL_DEMOS['como-se-instala'] = {
         btn(g, 540, 12, 240, 52, 'Implementar ▾', 'primary', press(lt, 0.95), 30);
         g.fillStyle = 'rgba(31,92,153,.1)'; rr(g, 30, 96, 280, 54, 10); g.fill(); txt(g, archivo, 50, 123, 30, 700, C.ink, 'left', 240);
         g.fillStyle = C.line; g.fillRect(4, 164, CW - 8, 2);
-        [320, 520, 410, 280, 600, 460, 350, 540, 300, 480, 390, 260, 440, 330].forEach((w, k) => {
-          const y = 212 + k*54;
+        [320, 520, 410, 280, 600, 460, 350, 540, 300, 480, 390, 260, 440, 330, 510, 290, 450, 370, 560, 310].forEach((w, k) => {
+          const y = 212 + k*54; if (y > CH - 20) return;
           txt(g, String(k + 1), 64, y, 26, 600, C.soft, 'right');
           g.fillStyle = k % 4 === 0 ? '#c9dcef' : '#e3e9f0'; rr(g, 92 + (k % 3 ? 30 : 0), y - 8, Math.min(w, CW - 170), 16, 8); g.fill();
         });
@@ -7558,6 +7572,7 @@ AL_DEMOS['como-se-instala'] = {
       return (g, lt) => {
         g.clearRect(0, 0, CW, CH);
         g.fillStyle = '#ffffff'; rr(g, 0, 0, CW, CH, 34); g.fill();
+        g.save(); g.translate(0, Math.max(0, CH - 1000) / 2);   // en el celular, centrado en la pantalla
         const p = easeOut((lt - 0.1) / 0.4), pop = 1 + Math.sin(clamp((lt - 0.1)/0.4)*Math.PI)*0.18;
         if (p > 0) { g.beginPath(); g.arc(400, 130, 62*p*pop, 0, Math.PI*2); g.fillStyle = C.ok; g.fill(); txt(g, '✓', 400, 134, 68*p, 800, '#fff', 'center'); }
         txt(g, 'Listo.', 400, 248, 58, 800, C.ink, 'center');
@@ -7575,6 +7590,7 @@ AL_DEMOS['como-se-instala'] = {
         });
         const l = easeOut((lt - 1.7) / 0.4);
         if (l > 0) { g.globalAlpha = l; lineas.forEach((s, k) => txt(g, s, 60, 880 + k*60, 32, 700, C.ink, 'left', 690)); g.globalAlpha = 1; }
+        g.restore();
       };
     }
   };
@@ -7616,6 +7632,7 @@ AL_DEMOS['como-se-instala'] = {
             g.fillStyle = '#eef2f7'; rr(g, x, y, 350, 150, 20); g.fill();
             txt(g, v, x + 24, y + 62, 64, 800, C.ink); txt(g, l, x + 24, y + 118, 30, 600, C.muted);
           });
+          if (H.CH > 1060) { txt(g, 'Historial', 40, y0 + 730, 34, 800, C.ink); txt(g, 'Aún no hay ejecuciones: la primera aparece aquí.', 40, y0 + 790, 28, 600, C.muted); }   // en el celular, el panel sigue
         }),
         I.listo(H, [['Planilla', 'tus datos', C.ok], ['Panel', 'solo tú lo ves', C.brand], ['Apps Script', 'el código', C.ink]], ['✓ Privado: nada sale de tu cuenta.', '✓ Tuyo: sin suscripción ni cuota de uso.'])
       ];
@@ -7641,6 +7658,7 @@ AL_DEMOS['como-se-instala'] = {
           txt(g, v, x + 24, y + 72, 72, 800, C.ink); txt(g, l, x + 24, y + 136, 30, 600, C.muted);
         });
         btn(g, 40, 790, CW - 80, 84, '▶  Ejecutar conciliación', 'primary', 0, 38);
+        if (H.CH > 1060) { txt(g, 'Sugerencias', 40, 950, 34, 800, C.ink); txt(g, '1 grupo dudoso para que lo decidas tú.', 40, 1010, 28, 600, C.muted); }   // en el celular, el resumen sigue
       }),
       I.listo(H, [['Planillas', 'tus fuentes', C.ok], ['Panel', 'solo tú lo ves', C.brand], ['Correos', 'desde tu Gmail', C.ink]], ['✓ Privado: tus datos quedan en tus planillas.', '✓ IA opcional, con tu propia clave.'])
     ];
@@ -7663,7 +7681,7 @@ AL_DEMOS['como-se-instala'] = {
           [['Archivo', 34], ['Editar', 160], ['Ver', 262]].forEach(([m, x]) => txt(g, m, x, 172, 27, 600, C.muted));
           txt(g, 'PedidoApp', 380, 172, 27, 800, C.brand);
           g.strokeStyle = C.line; g.lineWidth = 1.5;
-          for (let r = 0; r < 18; r++) { const ry = 238 + r*42; g.beginPath(); g.moveTo(4, ry); g.lineTo(CW - 4, ry); g.stroke(); }
+          for (let r = 0; 238 + r*42 < CH - 20; r++) { const ry = 238 + r*42; g.beginPath(); g.moveTo(4, ry); g.lineTo(CW - 4, ry); g.stroke(); }
           if (lt > 0.75 && lt < 1.35) { dialog(g, 320, 200, 440, 76); if (lt > 1.15) { g.fillStyle = '#eef2f7'; g.fillRect(328, 208, 424, 60); } txt(g, 'Abrir panel de pedidos', 342, 238, 30, 700, C.ink, 'left', 400); }
           const d = easeOut((lt - 1.4) / 0.3);
           if (d > 0) {
@@ -7709,6 +7727,10 @@ AL_DEMOS['como-se-instala'] = {
         const b = easeOut((lt - 3.75) / 0.35);
         if (b < 1) btn(g, 40, 885, 720, 72, 'Importar productos', 'primary', press(lt, 3.55), 32);
         if (b > 0) { g.globalAlpha = b; banner(g, 40, 885, 720, 72, '✓ 1.500 productos importados'); g.globalAlpha = 1; }
+        if (CH > 1060) {   // en el celular, Ajustes sigue: el horario de atención
+          txt(g, 'Horario de atención', 40, 1012, 30, 800, C.ink);
+          campo(g, 40, 1076, 350, 64, 'Abre', '09:00', false); campo(g, 410, 1076, 350, 64, 'Cierra', '20:00', false);
+        }
       },
       (g, lt) => {
         base(g, 'Panel de pedidos');
@@ -7741,7 +7763,7 @@ AL_DEMOS['como-se-instala'] = {
 
   // ── Conciliador V2 · Ver en acción ──
   const v2a = AL_DEMOS['v2-accion'];
-  v2a.drawV = H => { const { C, CW, clamp, ease, easeOut, lerp, rr, txt, wrap, press, btn, base, overlay, dialog, banner, pill, campo, panelBar } = H;
+  v2a.drawV = H => { const { C, CW, CH, clamp, ease, easeOut, lerp, rr, txt, wrap, press, btn, base, overlay, dialog, banner, pill, campo, panelBar } = H;
     const TABS = ['Resumen','Resultados','Sugerencias','Historial','Configuración'];
     function tabla(g, x, y, w, titulo, filas, marca, a){
       g.fillStyle = '#f6f8fb'; rr(g, x, y, w, 62, 14); g.fill();
@@ -7770,13 +7792,14 @@ AL_DEMOS['como-se-instala'] = {
       (g, lt) => {
         base(g, 'Cierre de marzo');
         const izq = [['03/03 Abono cliente','$2.000.000'],['04/03 Transferencia','-$1.190.000'],['12/03 Comisión mantención','-$12.990'],['15/03 Pago proveedores','-$780.000'],['20/03 Intereses','$1.250'],['22/03 Depósito','$45.000']];
-        const der = [['Factura 1002','$1.200.000'],['Factura 1002 saldo','$800.000'],['Pago fact. 1001','-$1.190.000'],['Pago fact. 1003-1004','-$780.000'],['Depósito cliente','$45.000']];
+        const der = [['Factura 1002','$1.200.000'],['Factura 1002 saldo','$800.000'],['Pago fact. 1001','-$1.190.000'],['Pago fact. 1003-1004','-$780.000'],['Depósito cliente','$45.000'],['Pago fact. 1005','-$320.000'],['Nota de crédito 88','$12.000'],['Factura 1006','$96.500']]
+          .filter((f, k) => 516 + 96 + k*56 + 28 < CH - 130);   // en el celular, las filas que caben sobre el aviso
         const ml = k => (k === 0 || k === 2 || k === 4) ? easeOut((lt - 1.8 - k*0.15) / 0.4) : 0;
         const mr = k => (k <= 1) ? easeOut((lt - 1.9) / 0.4) : 0;
         tabla(g, 40, 96, 720, 'Cartola banco', izq, ml, lt - 0.2);
         tabla(g, 40, 516, 720, 'Libro mayor', der, mr, lt - 0.5);
         const p = easeOut((lt - 2.8) / 0.4);
-        if (p > 0) { g.globalAlpha = p; pill(g, 400, 892 + (1-p)*14, 'No cuadra: faltan $645.390', C.bad, '#fff', 34, 68, 'center'); g.globalAlpha = 1; }
+        if (p > 0) { g.globalAlpha = p; pill(g, 400, CH - 108 + (1-p)*14, 'No cuadra: faltan $645.390', C.bad, '#fff', 34, 68, 'center'); g.globalAlpha = 1; }
       },
       (g, lt) => {
         base(g, 'Conciliador V2');
@@ -7803,6 +7826,12 @@ AL_DEMOS['como-se-instala'] = {
         const b = easeOut((lt - 3.3) / 0.35);
         if (b < 1) btn(g, 40, 870, 720, 72, 'Guardar fuentes', 'primary', press(lt, 3.05), 34);
         if (b > 0) { g.globalAlpha = b; banner(g, 40, 870, 720, 72, '✓ 2 fuentes listas'); g.globalAlpha = 1; }
+        if (CH > 1060) {   // en el celular, la página sigue: la tarjeta de reglas
+          g.fillStyle = C.line; g.fillRect(40, 984, 720, 2);
+          txt(g, '2 · Reglas', 40, 1036, 34, 800, C.ink);
+          campo(g, 40, 1110, 340, 64, 'Tolerancia de monto ($)', '1', false);
+          campo(g, 410, 1110, 350, 64, 'Ventana de fechas', '30 días', false);
+        }
       },
       (g, lt) => {
         base(g, 'Conciliador V2');
@@ -7823,6 +7852,12 @@ AL_DEMOS['como-se-instala'] = {
         if (b > 0) { g.globalAlpha = b; pill(g, 400, 772, 'Grupo 1:2 · Conciliado', C.ok, '#fff', 32, 62, 'center'); g.globalAlpha = 1; }
         const m = easeOut((lt - 3.1) / 0.4);
         if (m > 0) { g.globalAlpha = m; wrap(g, 'Motivo: suman lo mismo · 17 días de diferencia · «1002» en ambos conceptos', 60, 890, 680, 28, 600, C.muted, 1.3); g.globalAlpha = 1; }
+        // en el celular, la lista de Resultados sigue con los demás grupos
+        [['Grupo 2 · 1:1', 'Pago fact. 1001', '-$1.190.000'], ['Grupo 3 · 2:1', 'Pago fact. 1003-1004', '-$780.000'], ['Grupo 4 · 1:1', 'Depósito cliente', '$45.000']].forEach((r, k) => {
+          const y = 1000 + k*72; if (y + 30 > CH) return;
+          g.fillStyle = C.line; g.fillRect(40, y - 36, 720, 2);
+          pill(g, 40, y - 21, r[0], '#e6f2eb', C.ok, 23, 42); txt(g, r[1], 250, y, 27, 600, C.ink, 'left', 300); txt(g, r[2], 760, y, 28, 800, C.ink, 'right');
+        });
       },
       (g, lt) => {
         base(g, 'Conciliador V2');
@@ -7841,8 +7876,8 @@ AL_DEMOS['como-se-instala'] = {
           g.globalAlpha = 1;
         });
         btn(g, 40, 690, 720, 66, 'Guardar estas reglas', 'primary', press(lt, 2.15), 32);
-        [['12/03','Comisión mantención','-$12.990'],['14/03','Comisión transferencia','-$490'],['28/03','Comisión por giro','-$1.200']].forEach((r, k) => {
-          const y = 808 + k*64, t0 = 2.5 + k*0.3, on = lt > t0;
+        [['12/03','Comisión mantención','-$12.990'],['14/03','Comisión transferencia','-$490'],['28/03','Comisión por giro','-$1.200'],['29/03','Comisión cheque','-$2.100'],['30/03','Comisión transferencia','-$490'],['31/03','Comisión mantención','-$12.990']].forEach((r, k) => {
+          const y = 808 + k*64, t0 = 2.5 + k*0.25, on = lt > t0; if (y + 24 > CH) return;   // en el celular, la lista sigue hasta abajo
           txt(g, r[0], 50, y, 26, 600, C.muted); txt(g, r[1], 130, y, 29, 600, C.ink, 'left', 330); txt(g, r[2], 590, y, 29, 800, C.ink, 'right');
           const pop = 1 + Math.sin(clamp((lt - t0) / 0.3) * Math.PI) * 0.12;
           g.save(); g.translate(690, y); g.scale(pop, pop);
@@ -7853,7 +7888,7 @@ AL_DEMOS['como-se-instala'] = {
       (g, lt) => {
         base(g, 'Conciliador V2');
         panelBar(g, 'Conciliador V2', TABS, 1);
-        for (let r = 0; r < 9; r++) { g.fillStyle = r % 2 ? '#f6f8fb' : '#fff'; g.fillRect(40, 240 + r*80, 720, 80); g.fillStyle = '#dde5ee'; rr(g, 70, 272 + r*80, 280, 14, 7); g.fill(); rr(g, 560, 272 + r*80, 170, 14, 7); g.fill(); }
+        for (let r = 0; 240 + r*80 < CH; r++) { g.fillStyle = r % 2 ? '#f6f8fb' : '#fff'; g.fillRect(40, 240 + r*80, 720, 80); g.fillStyle = '#dde5ee'; rr(g, 70, 272 + r*80, 280, 14, 7); g.fill(); rr(g, 560, 272 + r*80, 170, 14, 7); g.fill(); }
         const d = easeOut((lt - 0.25) / 0.35);
         overlay(g, d); g.globalAlpha = d;
         dialog(g, 40, 236, 720, 730);
@@ -7890,6 +7925,14 @@ AL_DEMOS['como-se-instala'] = {
         });
         const s = easeOut((lt - 2.6) / 0.4);
         if (s > 0) { g.globalAlpha = s; pill(g, 400, 900, 'IA opcional: 1 propuesta en Sugerencias', '#eef2f7', C.brand, 26, 56, 'center'); g.globalAlpha = 1; }
+        if (CH > 1060) {   // en el celular, el Resumen sigue: las últimas ejecuciones
+          txt(g, 'Últimas ejecuciones', 40, 1000, 30, 800, C.ink);
+          [['Hoy 09:14', '5.000 movimientos', '94 %'], ['Ayer 18:02', '4.870 movimientos', '91 %'], ['05/03 08:40', '4.512 movimientos', '88 %']].forEach((r, k) => {
+            const y = 1060 + k*58; if (y + 24 > CH) return;
+            txt(g, r[0], 40, y, 26, 700, C.ink); txt(g, r[1], 300, y, 25, 600, C.muted); txt(g, r[2], 760, y, 27, 800, C.ok, 'right');
+            g.fillStyle = C.line; g.fillRect(40, y + 28, 720, 2);
+          });
+        }
       }
     ];
   };
@@ -7906,7 +7949,7 @@ AL_DEMOS['como-se-instala'] = {
   const pa = AL_DEMOS['ped-accion'];
   pa.drawV = H => { const { C, CW, CH, FONT, clamp, ease, easeOut, rr, txt, wrap, press, btn, base, overlay, dialog, banner, pill, panelBar, celular } = H;
     const TABS = ['Pedidos','Catálogo','Clientes','Reportes','Ajustes'];   // las pestañas del panel real
-    const PROD = [['Pan amasado (kg)','$2.490'],['Queso mantecoso','$6.990'],['Café molido 500 g','$5.490'],['Huevos x 30','$7.290']];
+    const PROD = [['Pan amasado (kg)','$2.490'],['Queso mantecoso','$6.990'],['Café molido 500 g','$5.490'],['Huevos x 30','$7.290'],['Leche entera 1 L','$1.190'],['Mantequilla 250 g','$2.890'],['Arroz grado 1 (kg)','$1.590'],['Aceite maravilla 1 L','$2.390']];
     // el formulario del cliente ocupa la tarjeta completa: un celular de frente
     const TELEFONO = !!(window.alFoto && alFoto.tactil());   // en celular y tablet, a pantalla completa
     const cel = (g, top = 18) => { g.clearRect(0, 0, CW, CH); if (TELEFONO) { g.fillStyle = '#ffffff'; g.fillRect(0, 0, CW, CH); return { x: 48, y: 82, w: CW - 96, h: CH - 110 }; } g.fillStyle = '#f4f7fb'; rr(g, 0, 0, CW, CH, 34); g.fill(); return celular(g, 150 + (top - 18)*0.25, top, 500 - (top - 18)*0.5, 982 - top); };
@@ -7914,9 +7957,10 @@ AL_DEMOS['como-se-instala'] = {
     return [
       (g, lt) => {
         base(g, 'WhatsApp · 37 chats sin leer');
-        const msgs = [['Hola! me mandas 2 kg de pan?', 0], ['cuánto sale el queso mantecoso?', 1], ['y el despacho a Maipú cuánto es?', 0], ['ya transferí 👍', 1], ['me cambias el café por el de 1 kg?', 0], ['sigue disponible la oferta?', 1]];
+        const msgs = [['Hola! me mandas 2 kg de pan?', 0], ['cuánto sale el queso mantecoso?', 1], ['y el despacho a Maipú cuánto es?', 0], ['ya transferí 👍', 1], ['me cambias el café por el de 1 kg?', 0], ['sigue disponible la oferta?', 1], ['hacen despacho el domingo?', 0], ['me confirmas el total porfa 🙏', 1]];
         msgs.forEach(([m, lado], k) => {
-          const a = easeOut((lt - 0.2 - k*0.35) / 0.3); if (a <= 0) return;
+          if (110 + k*112 + 82 > CH - 170) return;   // en el celular, los que caben sobre el aviso
+          const a = easeOut((lt - 0.2 - k*0.3) / 0.3); if (a <= 0) return;
           g.globalAlpha = a;
           g.font = '600 31px ' + FONT; const w = Math.min(g.measureText(m).width + 60, 640);
           const x = lado ? CW - 40 - w : 40, y = 110 + k*112 + (1 - a)*14;
@@ -7925,7 +7969,7 @@ AL_DEMOS['como-se-instala'] = {
           g.globalAlpha = 1;
         });
         const p = easeOut((lt - 2.6) / 0.4);
-        if (p > 0) { g.globalAlpha = p; pill(g, 400, 846, '¿Quién pidió qué? ¿Quién ya pagó?', C.bad, '#fff', 31, 66, 'center'); g.globalAlpha = 1; }
+        if (p > 0) { g.globalAlpha = p; pill(g, 400, CH - 154, '¿Quién pidió qué? ¿Quién ya pagó?', C.bad, '#fff', 31, 66, 'center'); g.globalAlpha = 1; }
       },
       (g, lt) => {
         const a = cel(g, 104);   // arriba queda lugar para las etiquetas
@@ -7934,11 +7978,11 @@ AL_DEMOS['como-se-instala'] = {
         let x = a.x;
         ['Destacados', 'Panadería', 'Lácteos'].forEach((c, k) => { x += pill(g, x, a.y + 118, c, k ? '#eef2f7' : C.brand, k ? C.muted : '#fff', 21, 40) + 8; });
         PROD.forEach(([n, p], k) => {
-          const e = easeOut((lt - 0.4 - k*0.25) / 0.35); if (e <= 0) return;
-          const y = a.y + 180 + k*150;
+          const y = a.y + 180 + k*150; if (y + 134 > CH - 4) return;   // la lista sigue hasta abajo (el último borde del dibujo queda en blanco: bajo él va la zona de la barra de pestañas)
+          const e = easeOut((lt - 0.4 - k*0.22) / 0.35); if (e <= 0) return;
           g.globalAlpha = e;
           g.fillStyle = '#f6f8fb'; rr(g, a.x, y, a.w, 134, 16); g.fill();
-          g.fillStyle = ['#e9c99b','#f3dfa2','#8a5a3c','#f1e4c8'][k]; rr(g, a.x + 14, y + 14, 106, 106, 14); g.fill();
+          g.fillStyle = ['#e9c99b','#f3dfa2','#8a5a3c','#f1e4c8','#e8eef6','#f6e3a1','#efe9dc','#f2d36b'][k]; rr(g, a.x + 14, y + 14, 106, 106, 14); g.fill();
           txt(g, n, a.x + 136, y + 40, 25, 700, C.ink, 'left', a.w - 200); txt(g, p, a.x + 136, y + 80, 28, 800, C.ink);
           if (k === 0) txt(g, 'Desde 6 u.: $2.190 c/u', a.x + 136, y + 112, 19, 700, C.ok, 'left', a.w - 200);
           g.fillStyle = C.brand; g.beginPath(); g.arc(a.x + a.w - 34, y + 96, 23, 0, Math.PI*2); g.fill(); txt(g, '+', a.x + a.w - 34, y + 97, 30, 800, '#fff', 'center');
@@ -7960,16 +8004,17 @@ AL_DEMOS['como-se-instala'] = {
             g.strokeStyle = (lt > 0.8 + k*0.6) ? C.brand : C.line; g.lineWidth = 3; rr(g, a.x, y + 18, a.w, 62, 12); g.stroke();
             txt(g, v, a.x + 16, y + 50, 23, 700, C.ink, 'left', a.w - 30);
           });
-          g.fillStyle = C.line; g.fillRect(a.x, a.y + 560, a.w, 2);
-          txt(g, 'Total', a.x, a.y + 602, 28, 800, C.ink); txt(g, '$20.460', a.x + a.w, a.y + 602, 34, 800, C.ink, 'right');
-          btn(g, a.x, a.y + 690, a.w, 76, 'Enviar pedido', 'primary', press(lt, 2.75), 30);
+          const pie = CH - 1000;   // en el celular, el total y el botón quedan abajo, al alcance del pulgar
+          g.fillStyle = C.line; g.fillRect(a.x, a.y + 560 + pie, a.w, 2);
+          txt(g, 'Total', a.x, a.y + 602 + pie, 28, 800, C.ink); txt(g, '$20.460', a.x + a.w, a.y + 602 + pie, 34, 800, C.ink, 'right');
+          btn(g, a.x, a.y + 690 + pie, a.w, 76, 'Enviar pedido', 'primary', press(lt, 2.75), 30);
         } else {
-          const p = easeOut((lt - 2.9) / 0.4), pop = 1 + Math.sin(clamp((lt - 2.9)/0.4)*Math.PI)*0.15;
-          g.beginPath(); g.arc(400, a.y + 170, 62*p*pop, 0, Math.PI*2); g.fillStyle = C.ok; g.fill(); txt(g, '✓', 400, a.y + 174, 66*p, 800, '#fff', 'center');
-          txt(g, '¡Pedido recibido!', 400, a.y + 300, 34, 800, C.ink, 'center');
-          txt(g, 'N° 341 · $20.460', 400, a.y + 350, 28, 700, C.muted, 'center');
+          const p = easeOut((lt - 2.9) / 0.4), pop = 1 + Math.sin(clamp((lt - 2.9)/0.4)*Math.PI)*0.15, cy = a.y + (CH - 1000) / 2 + 60;   // centrada en la pantalla
+          g.beginPath(); g.arc(400, cy + 170, 62*p*pop, 0, Math.PI*2); g.fillStyle = C.ok; g.fill(); txt(g, '✓', 400, cy + 174, 66*p, 800, '#fff', 'center');
+          txt(g, '¡Pedido recibido!', 400, cy + 300, 34, 800, C.ink, 'center');
+          txt(g, 'N° 341 · $20.460', 400, cy + 350, 28, 700, C.muted, 'center');
           const s = easeOut((lt - 3.4) / 0.4);
-          if (s > 0) { g.globalAlpha = s; btn(g, a.x, a.y + 430, a.w, 68, 'Seguir mi pedido', 'ghost', 0, 26); btn(g, a.x, a.y + 514, a.w, 68, 'Escribir por WhatsApp', 'wa', 0, 26); g.globalAlpha = 1; }
+          if (s > 0) { g.globalAlpha = s; btn(g, a.x, cy + 430, a.w, 68, 'Seguir mi pedido', 'ghost', 0, 26); btn(g, a.x, cy + 514, a.w, 68, 'Escribir por WhatsApp', 'wa', 0, 26); g.globalAlpha = 1; }
         }
       },
       (g, lt) => {
@@ -7989,13 +8034,15 @@ AL_DEMOS['como-se-instala'] = {
           txt(g, tot, 736, y + 84, 29, 800, C.ink, 'right');
         };
         const b0 = 500 + 126*n;
-        fila(b0, 340, 'Benjamín Fuentes', '$104.300', 'En camino', false);
-        g.globalAlpha = 1 - n; fila(b0 + 126, 339, 'Ignacio Castro', '$53.990', 'Entregado', false); g.globalAlpha = 1;
+        [[340, 'Benjamín Fuentes', '$104.300', 'En camino'], [339, 'Ignacio Castro', '$53.990', 'Entregado'], [338, 'Martina Rojas', '$31.490', 'Entregado'], [337, 'Tomás Vera', '$12.980', 'Entregado']].forEach((f, k) => {
+          const y = b0 + 126*k; if (y > CH) return;   // la lista sigue hasta el borde de la pantalla
+          g.globalAlpha = y + 110 > CH - 60 && k ? 1 - n : 1; fila(y, f[0], f[1], f[2], f[3], false); g.globalAlpha = 1;
+        });
         if (n > 0) { g.globalAlpha = n; fila(500, 341, 'Josefa Morales', '$20.460', 'Nuevo', true); g.globalAlpha = 1; }
         const t = easeOut((lt - 1.3) / 0.35) * (1 - ease((lt - 3.6) / 0.4));
-        if (t > 0) { g.globalAlpha = t; g.fillStyle = C.ink; rr(g, 80, 790, 640, 72, 36); g.fill(); txt(g, '🔔 Pedido #341 · Josefa · $20.460', 400, 826, 28, 700, '#fff', 'center', 600); g.globalAlpha = 1; }
+        if (t > 0) { g.globalAlpha = t; g.fillStyle = C.ink; rr(g, 80, CH - 210, 640, 72, 36); g.fill(); txt(g, '🔔 Pedido #341 · Josefa · $20.460', 400, CH - 174, 28, 700, '#fff', 'center', 600); g.globalAlpha = 1; }
         const s = easeOut((lt - 2.2) / 0.4);
-        if (s > 0) { g.globalAlpha = s; pill(g, 400, 900, 'Stock: Pan amasado 24 → 22', '#eef2f7', C.ink, 26, 50, 'center'); g.globalAlpha = 1; }
+        if (s > 0) { g.globalAlpha = s; pill(g, 400, CH - 100, 'Stock: Pan amasado 24 → 22', '#eef2f7', C.ink, 26, 50, 'center'); g.globalAlpha = 1; }
       },
       (g, lt) => {
         base(g, 'Panel de pedidos');
@@ -8041,15 +8088,22 @@ AL_DEMOS['como-se-instala'] = {
           const x = 40 + (k % 2)*370, y = 830 + (k >> 1)*52, w = 320 * v * ease((lt - 0.9 - k*0.12) / 0.5);
           txt(g, n, x, y, 23, 600, C.ink); g.fillStyle = C.ok; rr(g, x, y + 16, Math.max(1, w), 12, 6); g.fill();
         });
+        if (CH > 1100) {   // en el celular, la vista sigue: pedidos por comuna
+          txt(g, 'Pedidos por comuna', 40, 960, 28, 800, C.ink);
+          [['Providencia', '112'], ['Ñuñoa', '87'], ['Maipú', '64'], ['Las Condes', '41']].forEach(([c, v], k) => {
+            const y = 1010 + k*52; if (y > CH - 120) return; txt(g, c, 40, y, 25, 600, C.ink); txt(g, v, CW - 40, y, 25, 800, C.ink, 'right');
+            g.fillStyle = C.line; g.fillRect(40, y + 24, 720, 2);
+          });
+        }
         const r = easeOut((lt - 2.8) / 0.4);
-        if (r > 0) { g.globalAlpha = r; pill(g, 400, 928, '📊 Resumen de hoy: 19 pedidos · $412.300', C.ink, '#fff', 26, 58, 'center'); g.globalAlpha = 1; }
+        if (r > 0) { g.globalAlpha = r; pill(g, 400, CH - 72, '📊 Resumen de hoy: 19 pedidos · $412.300', C.ink, '#fff', 26, 58, 'center'); g.globalAlpha = 1; }
       }
     ];
   };
   pa.cursorV = [
     null,
     null,
-    { keys:[[0.3,650,960],[2.6,400,810],[2.85,400,810],[3.6,650,960]], clicks:[2.75] },
+    { keys:[[0.3,650,960],[2.6,400,-190],[2.85,400,-190],[3.6,650,960]], clicks:[2.75] },
     null,
     { keys:[[0.3,650,960],[0.9,400,596],[1.1,400,596],[2.6,400,872],[2.85,400,872],[3.6,650,980]], clicks:[1.0,2.75] },
     { keys:[[0.3,650,960],[2.4,311,259],[2.65,311,259],[3.3,650,980]], clicks:[2.55] }
@@ -8070,6 +8124,8 @@ AL_DEMOS['ver-en-accion'] = (function(){
     ['12/09','Pago F-102','-245.000'], ['15/09','Honorario B-23','+64.000'],
     ['16/09','Pago F-104','-410.500'], ['17/09','Transf. sin referencia','-64.000']
   ];
+  // el resto del mes, que en el celular se ve bajo la planilla (no entra en el ejemplo)
+  const MAS = [['18/09','Factura F-105','+132.000'], ['19/09','Pago F-105','-132.000'], ['22/09','Comisión transferencia','-490'], ['23/09','Honorario B-24','+88.000'], ['24/09','Factura F-106','+57.300'], ['25/09','Pago F-106','-57.300']];
   const PAIRS = [[0,1],[4,8],[5,6],[7,10]], MANUAL = [9, 11], PEND = [2, 3, 9, 11];
   const PAR = {}; PAIRS.forEach((p, k) => { PAR[p[0]] = PAR[p[1]] = k; });
   const TABS = ['Resumen','Resultados','Historial','Configuración'];   // las pestañas del panel real del V1
@@ -8133,6 +8189,13 @@ AL_DEMOS['ver-en-accion'] = (function(){
         txt(g, r[2], c.m, y, V ? 25 : 26, 800, r[2][0] === '-' ? C.muted : C.ink, 'right');
         g.fillStyle = '#e3e9f0'; g.fillRect(M, y + l.fila/2 - 1, W, 1);
       });
+      if (V) MAS.forEach((r, k) => {   // en el celular, la planilla sigue (el resto del mes) hasta el aviso de abajo
+        const i = filas.length + k, y = y0 + 52 + i*l.fila; if (y + l.fila/2 > CH - 112) return;
+        txt(g, String(i + 2), c.n, y, 20, 600, C.soft, 'center');
+        txt(g, r[0], c.f, y, 24, 600, C.muted); txt(g, r[1], c.d, y, 25, 600, C.ink, 'left', c.dW);
+        txt(g, r[2], c.m, y, 25, 800, r[2][0] === '-' ? C.muted : C.ink, 'right');
+        g.fillStyle = '#e3e9f0'; g.fillRect(M, y + l.fila/2 - 1, W, 1);
+      });
     }
     const estado = (g, y, label, fill, ink) => { if (V) { g.fillStyle = ink; g.beginPath(); g.arc(M + 6, y, 9, 0, 7); g.fill(); txt(g, '✓', M + 6, y + 1, 13, 800, '#fff', 'center'); } else pill(g, l.col.e, y - 20, label, fill, ink, 21, 38); };
     return [
@@ -8172,6 +8235,13 @@ AL_DEMOS['ver-en-accion'] = (function(){
         btn(g, l.conf.x, l.conf.y, l.conf.w, 64, 'Confirmar columnas', 'primary', press(lt, 3.15), 32);
         const b = easeOut((lt - 3.4) / 0.3);
         if (b > 0) { g.globalAlpha = b; banner(g, l.bannerConf.x, l.bannerConf.y, l.bannerConf.w, 64, '✓ 12 movimientos listos'); g.globalAlpha = 1; }
+        if (V && CH > 1060) {   // en el celular, la configuración sigue: vista previa de la fuente
+          g.fillStyle = C.line; g.fillRect(M, 1008, W, 2);
+          txt(g, 'Vista previa', M, 1052, 28, 800, C.ink);
+          DATA.slice(0, 4).forEach((r, k) => { const y = 1104 + k*52; if (y + 24 > CH) return;
+            txt(g, r[0], M, y, 24, 600, C.muted); txt(g, r[1], M + 110, y, 25, 600, C.ink, 'left', 360); txt(g, r[2], CW - M, y, 25, 800, r[2][0] === '-' ? C.muted : C.ink, 'right');
+            g.fillStyle = '#e3e9f0'; g.fillRect(M, y + 25, W, 1); });
+        }
       },
       // 2 · Ejecuta: un clic en el panel; valida los datos antes de procesar
       (g, lt) => {
@@ -8189,7 +8259,7 @@ AL_DEMOS['ver-en-accion'] = (function(){
         });
         const y2 = ty + (V ? 2*th + 50 : th + 50);
         txt(g, 'Historial', M, y2, 28, 800, C.ink);
-        for (let k = 0; k < 3; k++) { g.fillStyle = '#e3e9f0'; rr(g, M, y2 + 36 + k*44, [W*0.7, W*0.55, W*0.62][k], 14, 7); g.fill(); }
+        for (let k = 0; y2 + 36 + k*44 + 14 < CH - 20 && k < 8; k++) { g.fillStyle = '#e3e9f0'; rr(g, M, y2 + 36 + k*44, W * [0.7, 0.55, 0.62, 0.5, 0.66][k % 5], 14, 7); g.fill(); }
       },
       // 3 · Matching: recorre la hoja y empareja cada movimiento con su contraparte
       (g, lt) => {
@@ -8229,6 +8299,12 @@ AL_DEMOS['ver-en-accion'] = (function(){
         btn(g, l.empa.x, l.empa.y, l.empa.w, 64, 'Emparejar a mano', sel[1] ? 'primary' : 'disabled', press(lt, 2.82), 32);
         const b = easeOut((lt - 3.3) / 0.35);
         if (b > 0) { g.globalAlpha = b; const y = l.empa.y + (V ? 90 : 0), x0 = V ? M : M + 450; banner(g, x0, y, V ? W : W - 450, 64, '✓ Guardado para la próxima ejecución'); g.globalAlpha = 1; }
+        if (V && CH > 1060) {   // en el celular, la lista sigue: los ya conciliados
+          txt(g, 'Conciliados (8)', M, 1010, 28, 800, C.ink);
+          PAIRS.forEach((pr, k) => { const y = 1062 + k*56; if (y + 24 > CH) return;
+            txt(g, DATA[pr[0]][1] + ' ↔ ' + DATA[pr[1]][1], M, y, 25, 600, C.ink, 'left', 470); pill(g, CW - M, y - 18, 'Par ' + (k + 1), '#e6f2eb', C.ok, 20, 36, 'right');
+            g.fillStyle = '#e3e9f0'; g.fillRect(M, y + 26, W, 1); });
+        }
       },
       // 5 · Resultado: indicadores, estado de cada movimiento y exportación
       (g, lt) => {
@@ -8258,6 +8334,12 @@ AL_DEMOS['ver-en-accion'] = (function(){
         if (!V || lt < 3.7) btn(g, l.expo.x, l.expo.y, l.expo.w, 64, 'Reporte', 'primary', press(lt, 3.45), 32);
         const b = easeOut((lt - 3.7) / 0.35);
         if (b > 0) { g.globalAlpha = b; banner(g, M, l.expo.y, V ? W : W - 450, 64, '✓ Reporte listo: imprimir o guardar en PDF', SHEET); g.globalAlpha = 1; }
+        if (V && CH > 1060) [[3, 'Pendiente'], [4, 'Par 2'], [5, 'Par 3'], [7, 'Par 4']].forEach(([i, s], k) => {   // en el celular, el detalle sigue
+          const y = 1000 + k*56, r = DATA[i]; if (y + 24 > CH) return;
+          txt(g, r[1], M, y, 26, 600, C.ink, 'left', 340); txt(g, r[2], M + 520, y, 26, 800, C.ink, 'right');
+          pill(g, CW - M, y - 18, s, s === 'Pendiente' ? '#fdf1e2' : '#e6f2eb', s === 'Pendiente' ? C.warn : C.ok, 20, 36, 'right');
+          g.fillStyle = '#e3e9f0'; g.fillRect(M, y + 26, W, 1);
+        });
       }
     ];
   }
