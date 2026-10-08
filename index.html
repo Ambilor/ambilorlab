@@ -2151,6 +2151,19 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
 @media (pointer:coarse) and (orientation:landscape){
   .al-demo--player .al-demo__stage canvas{aspect-ratio:var(--al-forma-h,1.26);max-height:calc(100svh - var(--al-barra) - 110px)}
 }
+/* 2026-10-08: celular girado (B en táctil). La app va sola (sin el marco del teléfono) y con casi todo el alto:
+   la barra de controles pasa a la columna de la derecha, bajo la frase del paso (la columna derecha mide
+   0,8 del ancho de la escena: 1fr junto a 1,25fr). Antes la barra iba bajo el equipo y la app quedaba en
+   unos 190 px de alto, con letra ilegible. */
+@media (pointer:coarse) and (orientation:landscape) and (max-height:560px){
+  .al-demo{--al-barra:0px}
+  .al-demo--player .al-demo__stage{padding-bottom:0}
+  .al-demo--player .al-demo__stage canvas{max-height:calc(100svh - 72px)}
+  .al-demo--player .al-player{position:absolute;left:calc(100% + 18px);right:auto;bottom:0;width:80%;margin:0;flex-wrap:wrap;row-gap:8px;padding:8px}
+  .al-demo .al-player .al-demo__steps{order:-1;flex:0 0 100%;margin:0}   /* la línea de avance en su fila: en el SE girado no cabe junto a los botones */
+  .al-demo .al-player .al-demo__btn--rst{margin-left:auto}
+  .al-demo__copy{padding-bottom:88px}
+}
 </style>
 <script>
 /* Demos: aparato del visitante (2026-10-07), compartido por todas las demos de tarjetas.
@@ -2256,7 +2269,7 @@ window.alFoto = (function(){
   else if (equipo() !== 'pc') {
     var _v = medidas(true, 3.84, 4.8, true), _h = medidas(false, 4.8, 3.8, true);
     document.documentElement.style.setProperty('--al-forma-v', (_v.OW / _v.OH).toFixed(4));
-    document.documentElement.style.setProperty('--al-forma-h', (_h.OW / _h.OH).toFixed(4));
+    document.documentElement.style.setProperty('--al-forma-h', equipo() === 'cel' ? '1.2632' : (_h.OW / _h.OH).toFixed(4));   // celular girado: la app sola (1200 × 950)
   }
   // íconos de la barra de estado, dibujados en pt (como los de iOS): x, y = esquina izquierda, centro vertical
   function senal(c, x, y, P, col){ c.fillStyle = col; [4, 6.3, 8.6, 11].forEach(function(h, i){ rr(c, x + P(i * 4.6), y + P(5.5 - h), P(3.1), P(h), P(1)); c.fill(); }); return P(17); }
@@ -2433,7 +2446,9 @@ window.alFoto = (function(){
   function plana(T, escena, o){
     var g = new T.Group(); escena.add(g);
     var pantalla = new T.Group(); g.add(pantalla);
-    if (equipo() !== 'pc' && modelo().tipo === 'chico') {
+    // celular chico (SE) o celular girado: el teléfono del visitante ya es el marco; la app va sola y grande
+    // (2026-10-08: girado, el marco del iPhone dejaba la app a 190 px de alto, con letra de 5 px)
+    if (equipo() !== 'pc' && (modelo().tipo === 'chico' || (equipo() === 'cel' && !o.vert))) {
       g.userData = { plano: true, pantalla: pantalla, SW: o.ventana.w, SH: o.ventana.h, ext: { w: o.ventana.w, h: o.ventana.h, cy: 0 },
         sombraVentana: { material: {} }, caja: { x: 0, y: 0, w: o.ventana.w, h: o.ventana.h } };
       g.visible = false; return g;
