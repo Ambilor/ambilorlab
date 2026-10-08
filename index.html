@@ -372,6 +372,11 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
    espera del doble toque en el celular. */
 :is(.cta-home,.buy-btn,.i3-btn,.al-demo__btn,.gp-tab,.btn-top,.rc-copiar,.nav-dark-btn){touch-action:manipulation}
 :is(.cta-home,.buy-btn,.i3-btn,.al-demo__btn,.gp-tab,.btn-top,.rc-copiar,.nav-dark-btn):active{scale:.97;transition-duration:0s}
+/* 2026-10-08 (criterio shadcn/ui y TailGrids): los demás botones de la página con la misma respuesta al tocar
+   y el mismo anillo de foco con teclado */
+:is(.demo-cambio button,.al-equipo button,.al-resumen ol button,.al-resumen__otra,.al-resumen__cta,.rc-f,.rc-boton,.rc-ver,.rc-volver,.gp-ctrl button){touch-action:manipulation}
+:is(.demo-cambio button,.al-equipo button,.al-resumen ol button,.al-resumen__otra,.al-resumen__cta,.rc-f,.rc-boton,.rc-ver,.rc-volver,.gp-ctrl button):active{scale:.97}
+:is(.cta-home,.buy-btn,.i3-btn,.gp-tab,.btn-top,.rc-copiar,.nav-dark-btn,.al-equipo button,.al-resumen ol button,.al-resumen__otra,.al-resumen__cta,.rc-f,.rc-boton,.rc-ver,.rc-volver,.gp-ctrl button):focus-visible{outline:2px solid var(--azul);outline-offset:2px}
 @keyframes shimmer-btn{from{transform:translateX(-150%) skewX(-22deg)}to{transform:translateX(450%) skewX(-22deg)}}
 .gvw-tc{transition:transform .2s,filter .2s}
 .gvw-tc:hover{transform:translateY(-4px)!important;filter:brightness(1.04)}
