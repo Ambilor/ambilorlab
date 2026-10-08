@@ -2489,7 +2489,7 @@ window.alFoto = (function(){
       if (o.foco) { var kq = 1 - Math.exp(-dt * 4.5); st.x += (cl(o.foco.x, -u.SW * 0.3, u.SW * 0.3) - st.x) * kq; st.y += (cl(o.foco.y, -u.SH * 0.3, u.SH * 0.3) - st.y) * kq; }
       var z0 = (u.marco && u.marco.zoom < 1) ? ease(st.z) : 0;
       var cy0 = e0.cy || 0;
-      if (_sim) { lejos0 *= 1.1; cerca0 *= 1.1; }   // equipo elegido en computador: con aire (los bordes del lienzo se desvanecen)
+      if (_sim) { lejos0 *= 1.03; cerca0 *= 1.03; }   // equipo elegido en computador: llena el alto del recuadro, como el notebook (apenas aire para el borde que se desvanece)
       cam.position.set(lerp(0, st.x, z0), lerp(cy0, st.y, z0), lerp(lejos0, cerca0, z0));
       cam.lookAt(cam.position.x, cam.position.y, 0); return;
     }
