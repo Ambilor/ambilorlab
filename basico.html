@@ -6,6 +6,9 @@
 <title>Ambilor.Lab · Automatización contable y financiera</title>
 <meta name="description" content="Ambilor Lab: herramientas de automatización contable y financiera para contadores, equipos financieros y PyMEs, dentro de Google Sheets.">
 <meta name="robots" content="noindex, follow">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <link rel="canonical" href="https://ambilor.github.io/ambilorlab/">
 <!--
   Versión básica (2026-10-08) para navegadores antiguos que no entienden el JavaScript ni el CSS
@@ -152,14 +155,21 @@ h3{font-size:18px;line-height:1.3;margin:22px 0 6px;color:#fff}
 
 <p class="pie">Estás viendo la versión básica de Ambilor.Lab, para navegadores antiguos.<br>Las demostraciones animadas se ven en un celular, tablet o computador más reciente.</p>
 <script>
-/* marca la pestaña de la sección a la vista y vuelve arriba al cambiar de sección (JavaScript antiguo) */
+/* pestañas: muestra solo la sección elegida (#ancla; sin ancla, Inicio), marca su pestaña y vuelve arriba.
+   JavaScript antiguo (Safari 6). El CSS con :target hace lo mismo si el script no corre. */
 (function(){
-  var as = document.querySelectorAll('.menu a');
-  function marcar(){ var h = location.hash || '#inicio';
-    if (!document.getElementById(h.slice(1))) h = '#inicio';
-    for (var i = 0; i < as.length; i++) as[i].className = as[i].getAttribute('href') === h ? 'on' : '';
-    window.scrollTo(0, 0); }
-  window.onhashchange = marcar; marcar();
+  var secs = document.querySelectorAll('.sec'), as = document.querySelectorAll('.menu a');
+  function mostrar(){
+    var id = (location.hash || '#inicio').slice(1);
+    if (!document.getElementById(id)) id = 'inicio';
+    for (var i = 0; i < secs.length; i++) secs[i].style.display = secs[i].id === id ? 'block' : 'none';
+    for (var j = 0; j < as.length; j++) as[j].className = as[j].getAttribute('href') === '#' + id ? 'on' : '';
+    window.scrollTo(0, 0);
+  }
+  for (var k = 0; k < as.length; k++) as[k].onclick = function(){ var h = this.getAttribute('href'); if (location.hash === h) { mostrar(); return false; } location.hash = h; mostrar(); return false; };
+  var sig = document.querySelectorAll('.sig a, .btn[href^="#"]');
+  for (var m = 0; m < sig.length; m++) sig[m].onclick = function(){ location.hash = this.getAttribute('href'); mostrar(); return false; };
+  window.onhashchange = mostrar; mostrar();
 })();
 </script>
 </body>
