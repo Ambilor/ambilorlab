@@ -2083,12 +2083,12 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
    (iPhone vertical), en el mismo recuadro que el notebook: al cambiar no se mueve nada de la página. En celular y tablet no
    aparece (ya se ve en el equipo del visitante) ni en ventanas de formato A o B, donde no cabe. */
 .al-equipo{display:none}
-/* D en computador ancho (2026-10-08): a la izquierda, la guía con los pasos numerados (el actual resaltado con su
+/* D ancha, computador e iPad horizontal (2026-10-08): a la izquierda, la guía con los pasos numerados (el actual resaltado con su
    frase; tocar uno lleva a él) y, a la derecha, el demo con el alto de la pantalla. Así se entiende de un vistazo qué
    hace la herramienta y en qué paso vas, sin texto que quede bajo el demo. El nombre de la app ya está en la pestaña de
    arriba: aquí no se repite como título (el panel se nombra por su pestaña) y lo que hace va en una línea. Al cambiar
    de equipo o de demo el recuadro no cambia: nada de la página se mueve. */
-@media (pointer:fine) and (min-width:1100px) and (min-height:561px) and (orientation:landscape){
+@media (min-width:1100px) and (min-height:561px) and (orientation:landscape){
   #product .hp-panel.on>.prod-cab{max-width:none;margin:0 auto .5rem}
   #product .hp-panel.on>.prod-cab .prod-cab-txt{display:flex;align-items:center;justify-content:center;gap:12px}
   #product .hp-panel.on>.prod-cab .prod-eyebrow{margin:0}
@@ -2096,6 +2096,7 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
   #product .hp-panel.on>.prod-cab .prod-tagline{margin:0;max-width:none}
   .al-demo__grid{display:grid;grid-template-columns:minmax(230px,.5fr) minmax(0,1.7fr);column-gap:clamp(24px,3vw,44px);align-items:center}
   .al-demo__stage{grid-column:2;grid-row:1;height:max(300px, min(62cqw, calc(100svh - 316px)))}
+  #product .al-demo--player .al-demo__stage canvas{max-height:calc(100svh - 346px)}   /* en táctil (iPad), el equipo y su barra caben bajo las pestañas */
   .al-demo__grid .al-frase,.al-demo__copy{display:none}
   .al-guia{display:flex;flex-direction:column;gap:4px;grid-column:1;grid-row:1;margin:30px 0 0;padding:0;list-style:none;counter-reset:none}
   .al-guia button{display:grid;grid-template-columns:28px 1fr;column-gap:12px;align-items:center;width:100%;padding:9px 12px;border:0;border-radius:12px;background:none;text-align:left;cursor:pointer;color:#9fb0c6;font:500 14px/1.35 var(--sans);transition:background-color .2s,color .2s}
@@ -2107,6 +2108,10 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
   .al-guia li.on button{background:rgba(61,127,214,.16);color:#fff;font-weight:600}
   .al-guia li.on .al-guia__n{background:#3d7fd6;color:#fff}
   .al-guia li.on .al-guia__f{display:block;font-weight:400}
+  .al-guia__p{display:none;grid-column:2;height:3px;margin-top:8px;border-radius:2px;background:rgba(255,255,255,.12);overflow:hidden}
+  .al-guia__p i{display:block;height:100%;width:0;background:linear-gradient(90deg,#4c8ddb,#6fb0f0)}
+  .al-guia li.on .al-guia__p{display:block}
+  [data-theme="light"] .al-guia__p{background:rgba(18,48,77,.12)}
   /* con la guía al lado, la línea de avance y el «5 de 6» de la barra repetían lo mismo: la barra queda con los botones y el equipo */
   .al-demo .al-player .al-demo__steps,.al-demo .al-player .al-demo__count{display:none}
   .al-demo .al-player .al-equipo{margin-left:auto}
@@ -5828,7 +5833,7 @@ window.alDemoLinea = function(root, STEPS, o){
     if (!L.sucio) return false;
     L.sucio = false;
     L.setStep(stepOf(L.T));
-    fills.forEach((f, i) => { const s = STEPS[i]; f.fill.style.width = (Math.min(1, Math.max(0, (L.T - s.a) / (s.b - s.a))) * 100) + '%'; });
+    fills.forEach((f, i) => { const s = STEPS[i], w = (Math.min(1, Math.max(0, (L.T - s.a) / (s.b - s.a))) * 100) + '%'; f.fill.style.width = w; if (f.fill._espejo) f.fill._espejo.style.width = w; });   // _espejo: el avance en la guía de pasos
     pintarSim();
     return true;
   };
@@ -6295,7 +6300,8 @@ window.alDemoTarjetas = function(root, cfg){
     var gu = document.createElement('ol'); gu.className = 'al-guia';
     d.querySelectorAll('.al-demo__step').forEach(function(b, j){
       var li = document.createElement('li'), bt = document.createElement('button'), lb = b.querySelector('.al-demo__label');
-      bt.type = 'button'; bt.innerHTML = '<span class="al-guia__n"></span><span class="al-guia__t"></span><span class="al-guia__f"></span>';
+      bt.type = 'button'; bt.innerHTML = '<span class="al-guia__n"></span><span class="al-guia__t"></span><span class="al-guia__f"></span><span class="al-guia__p"><i></i></span>';
+      var tr = b.querySelector('.al-demo__track i'); if (tr) tr._espejo = bt.querySelector('.al-guia__p i');   // el motor copia ahí el avance del paso
       bt.querySelector('.al-guia__n').textContent = j + 1; bt.querySelector('.al-guia__t').textContent = lb ? lb.textContent : '';
       if (N) bt.querySelector('.al-guia__f').textContent = N[j] || '';
       bt.addEventListener('click', function(){ b.click(); });
