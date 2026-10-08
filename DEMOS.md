@@ -28,6 +28,16 @@ La escena 3D de "Ver en acción" del **Conciliador V1** es la referencia más co
 
   Una demo nueva los hereda sin escribir CSS. Un ajuste de disposición se hace **dentro** del formato que corresponde, nunca con una regla suelta en otra parte.
 
+## Pantallas reales (desde 2026-10-08)
+
+Los demos «Ver en acción» muestran la app de verdad, no un dibujo:
+
+- `img/demos/capturar.js` abre cada app con los simuladores de su repo (sin Google), recorre el guion de cada paso y saca la pantalla en cada equipo: `web` (notebook 1200×750), `tab-h` / `tab-v` (iPad Pro 11 con Safari), `cel-v` / `cel-h` (iPhone 16 Pro con Safari) y `se` (iPhone SE). Guarda dónde se toca y qué se resalta en `img/demos/<app>/manifiesto.json` y arma `img/demos/capturas.js`.
+- `alCapturas(app, cfg)` (en `index.html`) suma `cfg.capturas`: el motor arma la tarjeta del tamaño de la pantalla del equipo (`alFoto.conjunto`), sin la barra de pestañas falsa, y anima encima el puntero o el dedo, los toques, el cambio de pantalla y los resaltados. Los tiempos de los pasos salen del manifiesto.
+- El paso del problema (que no es la app) sigue dibujado con `draw` / `drawV`, escalado a la pantalla.
+- Una app nueva: su guion en `capturar.js` (un paso por etapa, `R.foto({ toca, marca, lee })`) y `alCapturas('<app>', AL_DEMOS['<id>'])`.
+- Al cambiar una app: `node img/demos/capturar.js <app>` y regenerar `img/basico/` desde el juego `se`.
+
 ## Pasos para un aplicativo nuevo
 
 1. **Sub-pestaña y panel.** Copiar el panel `#hp-ped` completo (botón `#hpt-ped` en `.hp-tabs` y `div.hp-panel`). Luego cambiar:
