@@ -19,8 +19,8 @@ body{margin:0;background:#0b1220;color:#dfe7f1;font-family:"Helvetica Neue",Helv
 a{color:#8fc1ff}
 .cab{background:#060a12;border-bottom:1px solid #1d2a3d;padding:12px 16px}
 .marca{font-family:Menlo,Courier,monospace;font-weight:bold;font-size:17px;color:#fff;text-decoration:none}
-.menu{margin:8px 0 0;padding:0;list-style:none;font-size:14px}
-.menu li{display:inline-block;margin:4px 14px 0 0}
+.menu{margin:8px 0 0;padding:0;list-style:none;font-size:13.5px;white-space:nowrap}
+.menu li{display:inline-block;margin:4px 9px 0 0}
 .menu a{color:#c7d3e2;text-decoration:none}
 .sec{padding:26px 16px;border-bottom:1px solid #16212f;max-width:720px;margin:0 auto}
 h1{font-size:28px;line-height:1.2;margin:6px 0 12px;color:#fff}
@@ -40,6 +40,14 @@ h3{font-size:18px;line-height:1.3;margin:22px 0 6px;color:#fff}
 .datos li{display:inline-block;width:46%;margin:0 2% 10px 0;vertical-align:top;font-size:14px;color:#aebdd0}
 .datos b{display:block;font-size:22px;color:#fff}
 .pie{padding:22px 16px 40px;text-align:center;color:#7d8da3;font-size:13px}
+/* pestañas: se ve una sección a la vez (la del #ancla); sin ancla, Inicio. Inicio va última en el HTML
+   para poder ocultarla cuando hay otra elegida (.sec:target ~ #inicio) */
+.sec{display:none;border-bottom:0}
+#inicio,.sec:target{display:block}
+.sec:target ~ #inicio{display:none}
+.menu a{display:inline-block;padding:6px 2px;border-bottom:2px solid transparent}
+.menu a.on{color:#fff;border-bottom-color:#3d7fd6}
+.sig{margin-top:22px;padding-top:14px;border-top:1px solid #16212f;font-size:15px}
 </style>
 </head>
 <body>
@@ -54,27 +62,6 @@ h3{font-size:18px;line-height:1.3;margin:22px 0 6px;color:#fff}
   </ul>
 </div>
 
-<div class="sec" id="inicio">
-  <p class="ceja">Ambilor.Lab / Automatización contable</p>
-  <h1>Procesos financieros automatizados.</h1>
-  <p class="bajada">Soluciones simples y de bajo costo que automatizan el trabajo repetitivo de tu equipo, dentro de Google Sheets, Excel y las herramientas que ya usan. Se instalan en minutos: sin software caro ni proyectos eternos.</p>
-  <a class="btn" href="#herramientas">Ver herramientas</a><a class="btn claro" href="#contacto">Conversemos</a>
-
-  <h3>Qué automatizo</h3>
-  <ul class="lista">
-    <li><b>Conciliación: cada movimiento encuentra su par</b>Pegas tu listado de movimientos. El sistema empareja cada uno con su contraparte y te muestra lo que quedó sin par.</li>
-    <li><b>Reportes: números que se vuelven gráficos solos</b>Tus datos pasan a un panel visual que se actualiza solo. Sin armar tablas de cero cada mes.</li>
-    <li><b>Automatización: lo que repites cada mes, que pase solo</b>Reportes, alertas, limpiezas de datos: cualquier tarea repetida puede ocurrir sola, siempre igual.</li>
-  </ul>
-
-  <h3>Para quién</h3>
-  <ul class="lista">
-    <li><b>Contadores</b>El sistema empareja cada movimiento en minutos: tú solo validas lo que no cuadra.</li>
-    <li><b>PyMEs</b>Lo mismo que un software especializado, con Google Sheets o Excel, que ya usas y ya pagas.</li>
-    <li><b>Equipos financieros</b>El informe de cierre se actualiza solo cuando cambian los datos base.</li>
-  </ul>
-</div>
-
 <div class="sec" id="sobre-mi">
   <p class="ceja">Sobre mí</p>
   <h2>Jordan.R.</h2>
@@ -85,6 +72,7 @@ h3{font-size:18px;line-height:1.3;margin:22px 0 6px;color:#fff}
     <li><b>Formación</b>Contador Público y Auditor (Usach) · Analista de Datos (AIEP / UNAB, en curso) · SQL en Gestión de Bases de Datos (Usach, 2025)</li>
     <li><b>Herramientas</b>SQL, Python, Apps Script, Looker Studio, Power BI, Dynamics, Bantotal, IA</li>
   </ul>
+  <p class="sig"><a href="#herramientas">Ver herramientas →</a></p>
 </div>
 
 <div class="sec" id="herramientas">
@@ -126,6 +114,7 @@ h3{font-size:18px;line-height:1.3;margin:22px 0 6px;color:#fff}
     <li><b>Confirmas y avisas por WhatsApp</b>El panel abre WhatsApp con el mensaje listo para tu cliente.</li>
     <li><b>Sabes cuánto vendes y qué se pide más</b>Ventas por día, ticket promedio y lo más pedido.</li>
   </ol>
+  <p class="sig"><a href="#contacto">¿Te interesa? Conversemos →</a></p>
 </div>
 
 <div class="sec" id="contacto">
@@ -140,6 +129,38 @@ h3{font-size:18px;line-height:1.3;margin:22px 0 6px;color:#fff}
   </ul>
 </div>
 
+<div class="sec" id="inicio">
+  <p class="ceja">Ambilor.Lab / Automatización contable</p>
+  <h1>Procesos financieros automatizados.</h1>
+  <p class="bajada">Soluciones simples y de bajo costo que automatizan el trabajo repetitivo de tu equipo, dentro de Google Sheets, Excel y las herramientas que ya usan. Se instalan en minutos: sin software caro ni proyectos eternos.</p>
+  <a class="btn" href="#herramientas">Ver herramientas</a><a class="btn claro" href="#contacto">Conversemos</a>
+
+  <h3>Qué automatizo</h3>
+  <ul class="lista">
+    <li><b>Conciliación: cada movimiento encuentra su par</b>Pegas tu listado de movimientos. El sistema empareja cada uno con su contraparte y te muestra lo que quedó sin par.</li>
+    <li><b>Reportes: números que se vuelven gráficos solos</b>Tus datos pasan a un panel visual que se actualiza solo. Sin armar tablas de cero cada mes.</li>
+    <li><b>Automatización: lo que repites cada mes, que pase solo</b>Reportes, alertas, limpiezas de datos: cualquier tarea repetida puede ocurrir sola, siempre igual.</li>
+  </ul>
+
+  <h3>Para quién</h3>
+  <ul class="lista">
+    <li><b>Contadores</b>El sistema empareja cada movimiento en minutos: tú solo validas lo que no cuadra.</li>
+    <li><b>PyMEs</b>Lo mismo que un software especializado, con Google Sheets o Excel, que ya usas y ya pagas.</li>
+    <li><b>Equipos financieros</b>El informe de cierre se actualiza solo cuando cambian los datos base.</li>
+  </ul>
+</div>
+
 <p class="pie">Estás viendo la versión básica de Ambilor.Lab, para navegadores antiguos.<br>Las demostraciones animadas se ven en un celular, tablet o computador más reciente.</p>
+<script>
+/* marca la pestaña de la sección a la vista y vuelve arriba al cambiar de sección (JavaScript antiguo) */
+(function(){
+  var as = document.querySelectorAll('.menu a');
+  function marcar(){ var h = location.hash || '#inicio';
+    if (!document.getElementById(h.slice(1))) h = '#inicio';
+    for (var i = 0; i < as.length; i++) as[i].className = as[i].getAttribute('href') === h ? 'on' : '';
+    window.scrollTo(0, 0); }
+  window.onhashchange = marcar; marcar();
+})();
+</script>
 </body>
 </html>
