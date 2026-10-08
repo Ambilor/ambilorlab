@@ -22,7 +22,7 @@ La escena 3D de "Ver en acción" del **Conciliador V1** es la referencia más co
 - **Movimiento reducido** (`prefers-reduced-motion`): parte en pausa, con la primera etapa completa.
 - **Cuatro formatos:** la disposición de Herramientas vive en un solo bloque del CSS, "HERRAMIENTAS: CUATRO FORMATOS", y cada tamaño de pantalla cae en uno solo:
   - **A · celular vertical:** la escena va arriba, cuadrada y con la tarjeta vertical; el texto va debajo.
-  - **B · celular horizontal:** la escena va a la izquierda con todo el alto; el texto, a la derecha.
+  - **B · celular horizontal:** la escena va a la izquierda con todo el alto; el texto, a la derecha. En el celular girado la app va sola (sin el marco del teléfono, como en el iPhone SE) y la barra de controles pasa a la columna derecha, bajo la frase: así la app usa casi todo el alto y se lee.
   - **C · tablet vertical:** el texto va a la izquierda y la escena a la derecha, más alta que ancha.
   - **D · tablet horizontal y computador:** el texto va a la izquierda y la escena a la derecha, con el alto que queda.
 

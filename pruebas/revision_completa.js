@@ -181,7 +181,7 @@ async function tactil(b){
         pn.querySelectorAll('.demo-section:not([hidden]) .demo-cambio button').forEach(e => { const r = e.getBoundingClientRect(); if (r.height < 40) f.push('selector ' + Math.round(r.height) + ' px'); });
         document.querySelectorAll('#product .hp-tabs .gp-tab').forEach(e => { const r = e.getBoundingClientRect(); if (r.height < 44) f.push('pestaña ' + Math.round(r.height) + ' px'); });
         const bar = d.querySelector('.al-player'), c = d.querySelector('canvas');
-        if (bar && c) { const rb = bar.getBoundingClientRect(), rc = c.getBoundingClientRect(); if (rc.bottom > rb.top + 1) f.push('la barra tapa ' + Math.round(rc.bottom - rb.top) + ' px de la escena'); d.querySelectorAll('.al-player .al-demo__btn').forEach(e => { const r = e.getBoundingClientRect(); if (r.bottom > rb.bottom + 1 || r.top < rb.top - 1) f.push('botón fuera de la barra'); }); }
+        if (bar && c) { const rb = bar.getBoundingClientRect(), rc = c.getBoundingClientRect(); if (rc.bottom > rb.top + 1 && rc.right > rb.left + 1 && rc.left < rb.right - 1) f.push('la barra tapa ' + Math.round(rc.bottom - rb.top) + ' px de la escena');   /* se cruzan (en el celular girado la barra va al lado, 2026-10-08) */ d.querySelectorAll('.al-player .al-demo__btn').forEach(e => { const r = e.getBoundingClientRect(); if (r.bottom > rb.bottom + 1 || r.top < rb.top - 1) f.push('botón fuera de la barra'); }); }
         return [...new Set(f)];
       }, hp);
       if (r.length) fallas.push(t + ' ' + hp + ': ' + r.join(', '));
