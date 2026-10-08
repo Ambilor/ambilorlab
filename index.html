@@ -6,7 +6,7 @@
 <script>/* 2026-10-08: navegadores antiguos (p. ej. Safari 6 en iOS 6) no entienden el JavaScript del sitio y
    solo mostraban los nombres de las pestañas: si no reconoce let, funciones flecha ni class, va a la
    versión básica (basico.html). Escrito en JavaScript antiguo a propósito. */
-(function(){var ok=true;try{ok=!!new Function("let a=()=>1;class B{};return a()===1")();}catch(e){ok=false;}if(!ok){location.replace("basico.html?v=3");}})();</script>
+(function(){var ok=true;try{ok=!!new Function("let a=()=>1;class B{};return a()===1")();}catch(e){ok=false;}if(!ok){location.replace("basico.html?v=4");}})();</script>
 <script>try{var t=localStorage.getItem("al-theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}
 /* 2026-09-27: el sitio siempre abre arriba, en Inicio. Safari (iPad/iPhone)
    restauraba el scroll de la visita anterior o saltaba a un #ancla guardado
