@@ -11,4 +11,5 @@
 - Recurso nuevo: un `<article class="rc-doc" data-r data-tipo data-min data-gancho data-app>` dentro de `#rc-art`; la tarjeta se arma sola. Sumar su `?r=` a `sitemap.xml`.
 - **Animación y microinteracciones**: usar la skill `ui-animation` (`.claude/skills/ui-animation`, ver su `PROCEDENCIA.md`). Solo recetas CSS / Web Animations API (el sitio no usa framework); siempre dentro de las reglas de este archivo y del estándar adaptable.
 - Demos de Herramientas (2026-10-07): se ven como la app en el equipo del visitante (notebook en computador, marco del iPhone/iPad/Android en táctil; `alFoto` en el `<head>`). Foto del notebook en `img/` (generar o cambiar con `img/preparar.py` y `img/quad.py`). La frase de cada paso vive en `AL_NOTAS`; un demo nuevo suma la suya.
+- `basico.html`: versión simple para navegadores antiguos (Safari 6 / iOS 6), sin JavaScript ni CSS moderno; `index.html` redirige ahí si el navegador no entiende `let`, funciones flecha ni `class`. Al cambiar textos de Inicio, Herramientas o Contacto, copiarlos también ahí.
 - `revisar.html` es una herramienta interna: no se enlaza en el menú y mantiene `noindex`.
