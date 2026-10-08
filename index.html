@@ -6036,7 +6036,7 @@ window.alDemoTarjetas = function(root, cfg){
     const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; return t; })();
   const cursor = new THREE.Mesh(cursorGeo, basic({ map: DEDO ? alFoto.dedo(THREE) : ctex })); cursor.renderOrder = 20; scene.add(cursor);
   const ring = new THREE.Mesh(new THREE.RingGeometry(0.06, 0.085, 40), basic({ color:col(C.brand) })); ring.renderOrder = 19; scene.add(ring);
-  const tmp = new THREE.Vector3();
+  const tmp = new THREE.Vector3(), esc = new THREE.Vector3();
   const pxToLocal = (x, y) => tmp.set((x / J.CW - 0.5) * J.PW, (0.5 - y / J.CH) * J.PH, 0.04);
 
   function updateCards(t){
@@ -6074,7 +6074,16 @@ window.alDemoTarjetas = function(root, cfg){
       if (lt >= k[n-1][0]) { const p = ease((lt - k[n-1][0]) / (k[n][0] - k[n-1][0])); px = lerp(k[n-1][1], k[n][1], p); py = lerp(k[n-1][2], k[n][2], p); }
     }
     const card = J.cards[i].m;
-    card.localToWorld(pxToLocal(px, py));
+    pxToLocal(px, py);
+    // la flecha (o el dedo) nunca se sale de la pantalla del equipo: se limita
+    // al área visible, contando su propio tamaño
+    const u = J.disp.userData, hw = u.pleno ? u.SW / 2 : J.PW / 2, hh = u.pleno ? u.SH / 2 : J.PH / 2,
+          ox = u.pleno ? -(u.ventanaX || 0) : 0, oy = u.pleno ? -(u.ventanaY || 0) : 0;
+    card.getWorldScale(esc);
+    const aw = (DEDO ? 0.2 : 0.24) / esc.x, ah = (DEDO ? 0.2 : 0.31) / esc.y, mx = 0.03 / esc.x, my = 0.03 / esc.y;
+    tmp.x = DEDO ? clamp(tmp.x, ox - hw + aw, ox + hw - aw) : clamp(tmp.x, ox - hw + mx, ox + hw - aw - mx);
+    tmp.y = DEDO ? clamp(tmp.y, oy - hh + ah, oy + hh - ah) : clamp(tmp.y, oy - hh + ah + my, oy + hh - my);
+    card.localToWorld(tmp);
     cursor.position.copy(tmp); cursor.rotation.set(0, 0, 0);
     const click = Math.max(0, ...cf.clicks.map(c => clamp(1 - Math.abs(lt - c) / 0.1)));
     cursor.scale.setScalar(1 - click*0.18);
@@ -6522,9 +6531,9 @@ AL_DEMOS['v2-instala'] = {
           g.fillStyle = k % 4 === 0 ? '#c9dcef' : '#e3e9f0'; rr(g, 310 + (k % 3 ? 30 : 0), y - 8, w, 16, 8); g.fill();
         });
         if (lt > 0.95 && lt < 1.65) {
-          dialog(g, 880, 72, 290, 70);
-          if (lt > 1.4) { g.fillStyle = '#eef2f7'; g.fillRect(888, 80, 274, 54); }
-          txt(g, 'Nueva implementación', 904, 107, 32, 700, C.ink);
+          dialog(g, 800, 72, 340, 70);
+          if (lt > 1.4) { g.fillStyle = '#eef2f7'; g.fillRect(808, 80, 324, 54); }
+          txt(g, 'Nueva implementación', 826, 107, 32, 700, C.ink, 'left', 296);
         }
         const d = ease((lt - 1.6) / 0.3);
         if (d > 0) {
@@ -6874,9 +6883,9 @@ AL_DEMOS['ped-instala'] = {
           g.fillStyle = k % 4 === 0 ? '#c9dcef' : '#e3e9f0'; rr(g, 310 + (k % 3 ? 30 : 0), y - 8, w, 16, 8); g.fill();
         });
         if (lt > 0.95 && lt < 1.65) {
-          dialog(g, 880, 72, 290, 70);
-          if (lt > 1.4) { g.fillStyle = '#eef2f7'; g.fillRect(888, 80, 274, 54); }
-          txt(g, 'Nueva implementación', 904, 107, 32, 700, C.ink);
+          dialog(g, 800, 72, 340, 70);
+          if (lt > 1.4) { g.fillStyle = '#eef2f7'; g.fillRect(808, 80, 324, 54); }
+          txt(g, 'Nueva implementación', 826, 107, 32, 700, C.ink, 'left', 296);
         }
         const d = ease((lt - 1.6) / 0.3);
         if (d > 0) {
@@ -7152,9 +7161,9 @@ AL_DEMOS['como-se-instala'] = {
           g.fillStyle = k % 4 === 0 ? '#c9dcef' : '#e3e9f0'; rr(g, 310 + (k % 3 ? 30 : 0), y - 8, w, 16, 8); g.fill();
         });
         if (lt > 0.95 && lt < 1.65) {
-          dialog(g, 880, 72, 290, 70);
-          if (lt > 1.4) { g.fillStyle = '#eef2f7'; g.fillRect(888, 80, 274, 54); }
-          txt(g, 'Nueva implementación', 904, 107, 32, 700, C.ink);
+          dialog(g, 800, 72, 340, 70);
+          if (lt > 1.4) { g.fillStyle = '#eef2f7'; g.fillRect(808, 80, 324, 54); }
+          txt(g, 'Nueva implementación', 826, 107, 32, 700, C.ink, 'left', 296);
         }
         const d = ease((lt - 1.6) / 0.3);
         if (d > 0) {
@@ -7328,9 +7337,9 @@ AL_DEMOS['como-se-instala'] = {
           for (let r = 1; r < 8; r++) for (let c = 0; c < 3; c++) { g.fillStyle = '#dde5ee'; rr(g, 72 + c*150, 269 + r*42 - 6, [70, 110, 80][c], 12, 6); g.fill(); }
         }
         if (open) {
-          dialog(g, 340, 200, 440, 16 + opciones.length*72);
-          if (lt > 1.65) { g.fillStyle = '#eef2f7'; g.fillRect(348, 208, 424, 64); }
-          opciones.forEach((o, k) => txt(g, o, 366, 240 + k*72, 31, k ? 600 : 700, k ? C.muted : C.ink, 'left', 390));
+          dialog(g, 320, 200, 440, 16 + opciones.length*72);
+          if (lt > 1.65) { g.fillStyle = '#eef2f7'; g.fillRect(328, 208, 424, 64); }
+          opciones.forEach((o, k) => txt(g, o, 346, 240 + k*72, 31, k ? 600 : 700, k ? C.muted : C.ink, 'left', 390));
         }
         const sp = ease((lt - 2.0) / 0.5);
         if (sp > 0) {
@@ -7396,9 +7405,9 @@ AL_DEMOS['como-se-instala'] = {
           g.fillStyle = k % 4 === 0 ? '#c9dcef' : '#e3e9f0'; rr(g, 92 + (k % 3 ? 30 : 0), y - 8, Math.min(w, CW - 170), 16, 8); g.fill();
         });
         if (lt > 0.95 && lt < 1.65) {
-          dialog(g, 470, 72, 310, 72);
-          if (lt > 1.4) { g.fillStyle = '#eef2f7'; g.fillRect(478, 80, 294, 56); }
-          txt(g, 'Nueva implementación', 490, 108, 30, 700, C.ink, 'left', 280);
+          dialog(g, 440, 72, 310, 72);
+          if (lt > 1.4) { g.fillStyle = '#eef2f7'; g.fillRect(448, 80, 294, 56); }
+          txt(g, 'Nueva implementación', 460, 108, 30, 700, C.ink, 'left', 274);
         }
         const d = ease((lt - 1.6) / 0.3);
         if (d > 0) {
@@ -7565,7 +7574,7 @@ AL_DEMOS['como-se-instala'] = {
           txt(g, 'PedidoApp', 380, 172, 27, 800, C.brand);
           g.strokeStyle = C.line; g.lineWidth = 1.5;
           for (let r = 0; r < 18; r++) { const ry = 238 + r*42; g.beginPath(); g.moveTo(4, ry); g.lineTo(CW - 4, ry); g.stroke(); }
-          if (lt > 0.75 && lt < 1.35) { dialog(g, 340, 200, 440, 76); if (lt > 1.15) { g.fillStyle = '#eef2f7'; g.fillRect(348, 208, 424, 60); } txt(g, 'Abrir panel de pedidos', 362, 238, 30, 700, C.ink, 'left', 400); }
+          if (lt > 0.75 && lt < 1.35) { dialog(g, 320, 200, 440, 76); if (lt > 1.15) { g.fillStyle = '#eef2f7'; g.fillRect(328, 208, 424, 60); } txt(g, 'Abrir panel de pedidos', 342, 238, 30, 700, C.ink, 'left', 400); }
           const d = easeOut((lt - 1.4) / 0.3);
           if (d > 0) {
             overlay(g, d * (1 - login)); g.globalAlpha = d * (1 - login);
