@@ -2082,17 +2082,20 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
    (iPhone vertical), en el mismo recuadro que el notebook: al cambiar no se mueve nada de la página. En celular y tablet no
    aparece (ya se ve en el equipo del visitante) ni en ventanas de formato A o B, donde no cabe. */
 .al-equipo{display:none}
-/* D en computador ancho (2026-10-08): el nombre y lo que hace a la izquierda y el demo a la derecha, con el alto
-   de la pantalla. Así el celular y la tablet del selector de equipo se ven grandes, el notebook no pierde nada y,
-   al cambiar de equipo o de demo, el recuadro no cambia: nada de la página se mueve. */
+/* D en computador ancho (2026-10-08): el demo a la derecha con el alto de la pantalla y, a su izquierda, la frase,
+   el título y la explicación del paso (antes quedaban bajo el demo, fuera de la primera pantalla). El nombre de la
+   app ya está en la pestaña de arriba: aquí no se repite como título (el panel se nombra por su pestaña) y lo que hace
+   va en una línea. Al cambiar de equipo o de demo el recuadro no cambia: nada de la página se mueve. */
 @media (pointer:fine) and (min-width:1100px) and (min-height:561px) and (orientation:landscape){
-  #product .hp-panel.on{display:grid;grid-template-columns:minmax(240px,.62fr) minmax(0,1.7fr);column-gap:clamp(24px,3vw,48px);align-items:start}
-  #product .hp-panel.on>*{grid-column:1/-1}
-  #product .hp-panel.on>.prod-cab{grid-column:1;grid-row:1;align-self:center;text-align:left;margin:0;max-width:none}
-  #product .hp-panel.on>.prod-cab .prod-eyebrow{justify-content:flex-start}
-  #product .hp-panel.on>.prod-cab .prod-tagline{margin:0}
-  #product .hp-panel.on>.demo-par{grid-column:2;grid-row:1;min-width:0}
-  .al-demo__stage{height:max(360px, min(68cqw, calc(100svh - 304px)))}
+  #product .hp-panel.on>.prod-cab{max-width:none;margin:0 auto .5rem}
+  #product .hp-panel.on>.prod-cab .prod-cab-txt{display:flex;align-items:center;justify-content:center;gap:12px}
+  #product .hp-panel.on>.prod-cab .prod-eyebrow{margin:0}
+  #product .hp-panel.on>.prod-cab .prod-h1{display:none}   /* el panel ya se nombra por su pestaña (aria-labelledby) */
+  #product .hp-panel.on>.prod-cab .prod-tagline{margin:0;max-width:none}
+  .al-demo__grid{display:grid;grid-template-columns:minmax(220px,.55fr) minmax(0,1.7fr);grid-template-rows:auto 1fr;column-gap:clamp(24px,3vw,44px);align-items:start}
+  .al-demo__stage{grid-column:2;grid-row:1 / span 2;height:max(300px, min(62cqw, calc(100svh - 316px)))}
+  .al-demo__grid .al-frase{grid-column:1;grid-row:1;margin:72px 0 0;max-width:none;height:auto;-webkit-line-clamp:3;text-align:left;font-size:clamp(16px,1.4vw,19px);font-weight:600}
+  .al-demo__copy{grid-column:1;grid-row:2;max-width:none;margin:14px 0 0;text-align:left;align-items:flex-start}
 }
 @media (min-width:640px) and (min-height:561px){
   .al-equipo{display:inline-flex;flex:none;gap:2px;padding:2px;margin-left:4px;border-radius:999px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
@@ -4958,7 +4961,7 @@ window.AL3D = (function(){
   }
   function intentar(i){
     if (iniciados[i] || i >= URLS.length) return; iniciados[i] = true;
-    var s = document.createElement('script'); s.src = URLS[i];
+    var s = document.createElement('script'); s.crossOrigin = 'anonymous'; s.src = URLS[i];   // 2026-10-08: con CORS, un error dentro de three.js trae su mensaje real (sin esto el navegador lo reduce a «Script error.»)
     s.onload = function(){ if (listo) { if (guardado) window.THREE = guardado; return; } if (window.THREE) soltar(); else s.onerror(); };
     s.onerror = function(){ fallos++; if (i + 1 < URLS.length) intentar(i + 1); else if (fallos >= URLS.length) soltar(); };
     document.head.appendChild(s);
@@ -5958,8 +5961,13 @@ window.alDemoTarjetas = function(root, cfg){
   function mkH(CW, CH){
   const PLENO = !!(window.alFoto && (alFoto.elegir(CH > CW) || alFoto.tactil()));   // app a pantalla completa (en el notebook, o en celular y tablet)
   function rr(g,x,y,w,h,r){ if (PLENO && !x && !y && w === CW && h === CH) r = 0; g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }
-  function txt(g, s, x, y, size, weight, color, align = 'left', maxW = 0){ g.font = weight + ' ' + size + 'px ' + FONT; while (maxW && size > 12 && g.measureText(s).width > maxW) { size -= 1; g.font = weight + ' ' + size + 'px ' + FONT; } g.fillStyle = color; g.textAlign = align; g.textBaseline = 'middle'; g.fillText(s, x, y); }
+  // 2026-10-08: en el celular (lienzo más alto que 1000: el alto real del teléfono) la app se ve a ~0,37 px por unidad;
+  // la letra tiene un piso para no bajar de ~10 px en pantalla (los símbolos sueltos, como ✓ o +, no cambian)
+  const PISO = CH > 1000 ? 28 : 0; let libre = false;   // libre: un texto que ya ajusta su tamaño para caber (las pestañas del panel)
+  const piso = (s, size) => (PISO && !libre && String(s).length > 2) ? Math.max(size, PISO) : size;
+  function txt(g, s, x, y, size, weight, color, align = 'left', maxW = 0){ size = piso(s, size); g.font = weight + ' ' + size + 'px ' + FONT; while (maxW && size > 12 && g.measureText(s).width > maxW) { size -= 1; g.font = weight + ' ' + size + 'px ' + FONT; } g.fillStyle = color; g.textAlign = align; g.textBaseline = 'middle'; g.fillText(s, x, y); }
   function wrap(g, s, x, y, maxW, size, weight, color, lh = 1.3){
+    size = piso(s, size);
     g.font = weight + ' ' + size + 'px ' + FONT; g.fillStyle = color; g.textAlign = 'left'; g.textBaseline = 'middle';
     let line = '', yy = y;
     s.split(' ').forEach(w => { const t = line ? line + ' ' + w : w; if (g.measureText(t).width > maxW && line) { g.fillText(line, x, yy); line = w; yy += size*lh; } else line = t; });
@@ -6020,6 +6028,7 @@ window.alDemoTarjetas = function(root, cfg){
   }
   // etiqueta redondeada; devuelve su ancho
   function pill(g, x, y, label, fill, ink, size = 28, h = 46, align = 'left'){
+    if (PISO && size < 26) { const h2 = Math.round(h * 26 / size); y -= (h2 - h) / 2; h = h2; size = 26; }   // en el celular, etiquetas legibles (crece hacia ambos lados, en su mismo centro)
     g.font = '800 ' + size + 'px ' + FONT; const w = g.measureText(label).width + h*0.8;
     const x0 = align === 'right' ? x - w : (align === 'center' ? x - w/2 : x);
     g.fillStyle = fill; rr(g, x0, y, w, h, h/2); g.fill(); txt(g, label, x0 + w/2, y + h/2 + 1, size, 800, ink, 'center'); return w;
@@ -6042,11 +6051,14 @@ window.alDemoTarjetas = function(root, cfg){
     tabs.forEach((s, k) => { g.font = (k === activa ? 800 : 600) + ' ' + T + 'px ' + FONT; const w = g.measureText(s).width; pos.push([x, w]); x += w + E; });
     const fin = x - E, off = Math.max(0, Math.min(fin - (CW - 36), pos[activa][0] + pos[activa][1] / 2 - CW / 2));
     g.save(); g.beginPath(); g.rect(4, 150, CW - 8, 62); g.clip();
+    libre = true;
     tabs.forEach((s, k) => {
       const [tx, w] = pos[k];
-      txt(g, s, tx - off, 186, T, k === activa ? 800 : 600, k === activa ? C.ink : C.soft);
-      if (k === activa) { g.fillStyle = C.brand; g.fillRect(tx - off, 204, w, 4); }
+      // la activa como botón relleno suave (como las pestañas de las apps desde 2026-10-08), no subrayada
+      if (k === activa) { g.fillStyle = '#e4eef9'; rr(g, tx - off - 12, 162, w + 24, 48, 10); g.fill(); }
+      txt(g, s, tx - off, 186, T, k === activa ? 800 : 600, k === activa ? C.brand : C.soft);
     });
+    libre = false;
     const borde = (x0, x1) => { const gr = g.createLinearGradient(x0, 0, x1, 0); gr.addColorStop(0, '#ffffff'); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.fillRect(Math.min(x0, x1), 150, Math.abs(x1 - x0), 52); };
     if (off > 0) borde(4, 70);
     if (fin - off > CW - 36) borde(CW - 4, CW - 70);
@@ -7635,10 +7647,10 @@ AL_DEMOS['como-se-instala'] = {
           txt(g, 'Ambilor.Lab', 70, y0 + 42, 40, 800, '#fff'); txt(g, 'Conciliador V1', CW - 70, y0 + 42, 32, 600, '#fff', 'right', 300);
           let tx = 50;
           ['Resumen', 'Resultados', 'Historial', 'Configuración'].forEach((s, k) => {
-            txt(g, s, tx, y0 + 130, 28, k ? 600 : 800, k ? C.soft : C.ink);
-            const w = g.measureText(s).width;
-            if (!k) { g.fillStyle = C.brand; g.fillRect(tx, y0 + 148, w, 4); }
-            tx += w + 28;
+            g.font = (k ? 600 : 800) + ' 28px ' + H.FONT; const w = g.measureText(s).width;
+            if (!k) { g.fillStyle = '#e4eef9'; rr(g, tx - 12, y0 + 106, w + 24, 48, 10); g.fill(); }   // activa: botón relleno suave, como en la app
+            txt(g, s, tx, y0 + 130, 28, k ? 600 : 800, k ? C.soft : C.brand);
+            tx += w + 34;
           });
           btn(g, 40, y0 + 180, CW - 80, 84, '▶  Ejecutar conciliación', 'primary', 0, 40);
           txt(g, 'Listo para ejecutar', 40, y0 + 305, 32, 600, C.soft);
