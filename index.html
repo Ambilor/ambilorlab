@@ -2228,8 +2228,8 @@ window.alFoto = (function(){
   function medidas(vert, PW, PH, pestanas){
     var m = modelo(), e = especie(m, vert), tel = m.tipo === 'iphone' || m.tipo === 'android', tab = vert && tel && pestanas ? 56 : 0;
     var cw = e.W - 2 * e.side, chh = e.H - e.top - e.bot - tab;
-    // celular vertical: la app usa todo el ancho de la pantalla (su margen interno de los lados queda fuera)
-    var ancho = vert && (m.tipo === 'iphone' || m.tipo === 'android') ? 1.09 : 1;
+    // la app completa de borde a borde, con su propio margen a los lados (antes se recortaba y el texto tocaba el borde)
+    var ancho = 1;
     var u = Math.max(PW / (cw * ancho), PH / chh);   // unidades por pt
     // tablet horizontal: la pantalla es más ancha que la app; como en Safari de iPad, la barra lateral llena el resto
     var lado = !vert && !tel ? Math.max(0, cw - PW / u) : 0;
@@ -2529,8 +2529,9 @@ window.alFoto = (function(){
   // círculos conservan su forma (ver el motor).
   function estirar(vert, pestanas){
     var m = modelo(); if (!vert || equipo() === 'pc' || !(m.tipo === 'iphone' || m.tipo === 'android')) return 1;
-    var e = especie(m, true), chh = e.H - e.top - e.bot - (pestanas ? 56 : 0), cw = e.W * 1.09;
-    return Math.max(1, (800 / 1000) * chh / cw);
+    var e = especie(m, true), chh = e.H - e.top - e.bot - (pestanas ? 56 : 0), cw = e.W;
+    // solo una parte del alto que sobra: las filas quedan compactas, como en la app; abajo sigue la página de la app
+    return Math.max(1, 1 + ((800 / 1000) * chh / cw - 1) * 0.3);
   }
   // simular: solo en computador; 'tablet' (iPad horizontal), 'cel' (iPhone vertical) o null (el notebook).
   // Avisa a las demos con el evento «al-equipo» para que rearmen su aparato.
