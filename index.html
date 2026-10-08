@@ -2541,7 +2541,7 @@ window.alFoto = (function(){
     var aparatoD = Math.max(cj.h * (v ? 1.2 : 1.38) / 2 / tg, cj.w * (v ? 1.06 : 1.22) / 2 / (tg * as));
     var fh = u.plano ? 1.04 : (v ? 1.1 : 1.24), fw = u.plano ? 1.03 : (v ? 1.06 : 1.1);   // sin aparato: la app de borde a borde
     var ventanaD = Math.max(o.vent.h * fh / 2 / tg, o.vent.w * fw / 2 / (tg * as)), cerca = ventanaD * 0.84;   // acercamiento suave: el foco acompaña sin hacer perder el hilo
-    var z = ease(st.z), a = ease(st.a), px = o.px || { x: 0, y: 0 };
+    var z = u.plano ? 0 : ease(st.z), a = ease(st.a), px = o.px || { x: 0, y: 0 };   // sin aparato: la app quieta y completa (ni se acerca ni sigue al cursor)
     var mx = lerp(lerp(0, st.x, z), cj.x, a) + px.x * 0.12, my = lerp(lerp(-o.vent.h * (v || u.plano ? 0 : 0.06), st.y, z), cj.y - cj.h * 0.07, a) + px.y * 0.08;
     cam.position.set(mx, my, lerp(lerp(ventanaD, cerca, z), aparatoD, a) * (1 - Math.sin(o.T * 0.3) * 0.008));
     cam.lookAt(mx, my, 0);
