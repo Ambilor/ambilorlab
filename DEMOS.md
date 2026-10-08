@@ -60,8 +60,12 @@ AL_DEMOS['xxx-accion'] = {
       // …
     ];
   },
-  // Dibujo vertical (800×1000) y su cursor, con la misma estructura
+  // Dibujo vertical (800 de ancho) y su cursor, con la misma estructura. El alto es H.CH: 1000 en tablet y en el
+  // iPhone SE, y en el celular, el alto real de la pantalla hasta la barra de abajo (unas 1200 a 1340). Cada
+  // pantalla usa ese extra como la app: las listas siguen hasta el borde y lo que va abajo se ancla a CH
+  // (por ejemplo, un aviso en CH - 120). Nada se estira para llenar.
   drawV: H => [ /* … */ ],
+  // En el cursor, una y negativa se cuenta desde abajo (−190 = CH − 190), para los botones anclados abajo
   cursorV: [ /* … */ ],
   // Simulación: qué está pasando en el segundo t (tiempo total de la demo)
   sim: t => ({
