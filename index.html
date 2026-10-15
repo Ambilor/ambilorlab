@@ -1990,6 +1990,7 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
 #product .hp-panel .prod-cab{display:block;text-align:center;margin:0 auto .7rem;max-width:680px}
 #product .prod-cab .prod-eyebrow{display:flex;justify-content:center;margin-bottom:.35rem}
 #product .prod-h1{font-size:clamp(20px,2.6vw,30px);line-height:1.18;margin:0 0 .35rem;letter-spacing:-.01em}
+#product .hp-panel .prod-cab .prod-h1{display:none}   /* 2026-10-15, en los 4 formatos: el nombre de la app ya está en su pestaña de arriba (el panel se nombra por ella con aria-labelledby) */
 #product .prod-cab .prod-tagline{font-size:clamp(13px,1.3vw,15px);line-height:1.45;margin:0 auto;max-width:580px;opacity:.82}
 #product .prod-cab .alert-box{display:none}
 .prod-cel{display:block;margin:1.4rem auto 2rem;max-width:680px}
@@ -2085,14 +2086,13 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
 .al-equipo{display:none}
 /* D ancha, computador e iPad horizontal (2026-10-08): a la izquierda, la guía con los pasos numerados (el actual resaltado con su
    frase; tocar uno lleva a él) y, a la derecha, el demo con el alto de la pantalla. Así se entiende de un vistazo qué
-   hace la herramienta y en qué paso vas, sin texto que quede bajo el demo. El nombre de la app ya está en la pestaña de
-   arriba: aquí no se repite como título (el panel se nombra por su pestaña) y lo que hace va en una línea. Al cambiar
+   hace la herramienta y en qué paso vas, sin texto que quede bajo el demo. El nombre de la app va solo en la pestaña de
+   arriba (en todos los formatos) y lo que hace va en una línea. Al cambiar
    de equipo o de demo el recuadro no cambia: nada de la página se mueve. */
 @media (min-width:1100px) and (min-height:561px) and (orientation:landscape){
   #product .hp-panel.on>.prod-cab{max-width:none;margin:0 auto .5rem}
   #product .hp-panel.on>.prod-cab .prod-cab-txt{display:flex;align-items:center;justify-content:center;gap:12px}
   #product .hp-panel.on>.prod-cab .prod-eyebrow{margin:0}
-  #product .hp-panel.on>.prod-cab .prod-h1{display:none}   /* el panel ya se nombra por su pestaña (aria-labelledby) */
   #product .hp-panel.on>.prod-cab .prod-tagline{margin:0;max-width:none}
   .al-demo__grid{display:grid;grid-template-columns:minmax(230px,.5fr) minmax(0,1.7fr);column-gap:clamp(24px,3vw,44px);align-items:center}
   .al-demo__stage{grid-column:2;grid-row:1;height:max(300px, min(62cqw, calc(100svh - 316px)))}
