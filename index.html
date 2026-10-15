@@ -1735,8 +1735,9 @@ html.i3-encaje{scroll-snap-type:y mandatory}
    Variables propias por tema; el resto usa las del sitio (--gris-*, --glow...).
    INICIO: FORMATOS (2026-10-01): los ajustes por tamaño de Inicio viven más
    abajo en esta misma sección, en orden: ventanas de 340 px, ancho de la
-   estación (700/701 px), poco alto, celular horizontal (≤ 560 px de alto) y
-   celular bajo (640, 480 y 300 px de alto). Un ajuste nuevo va ahí. */
+   estación (700/701 px), poco alto, celular horizontal (≤ 560 px de alto),
+   celular bajo (640, 480 y 300 px de alto) y la viñeta en celular (al final de
+   la sección, tras las reglas de fuera de Inicio). Un ajuste nuevo va ahí. */
 :root,[data-theme="dark"]{--i3-fondo:#06080C;--i3-texto:#E8EDF5;--i3-vidrio:rgba(10,14,20,.72);--i3-vidrio-borde:rgba(143,193,255,.14)}
 [data-theme="light"]{--i3-fondo:#EEF2F7;--i3-texto:#12304D;--i3-vidrio:rgba(255,255,255,.78);--i3-vidrio-borde:rgba(31,92,153,.16)}
 #home.visible{animation:none}
@@ -1818,6 +1819,14 @@ body.i3-inicio>footer{position:relative;z-index:4;background:linear-gradient(tra
 body:not(.i3-inicio) #i3CapaHada,body:not(.i3-inicio) #i3Aviso{display:none}
 body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50% 45%,rgba(6,8,12,.82),rgba(6,8,12,.55) 70%,rgba(6,8,12,.4))}
 [data-theme="light"] body:not(.i3-inicio) .i3-vineta{background:rgba(238,242,247,.8)}
+/* celular (2026-10-15): el óvalo de la viñeta está pensado para pantallas anchas; en 390 px cubría ~230 px al centro y
+   los gráficos, sobres y tarjetas del fondo pasaban por los bordes del texto. Aquí cubre todo el ancho de lectura. */
+@media (max-width:700px),(orientation:landscape) and (max-height:560px){
+  .i3-vineta{background:radial-gradient(ellipse 120% 75% at 50% 45%,rgba(6,8,12,.8),rgba(6,8,12,.55) 65%,rgba(6,8,12,.3))}
+  [data-theme="light"] .i3-vineta{background:radial-gradient(ellipse 120% 75% at 50% 45%,rgba(238,242,247,.86),rgba(238,242,247,.6) 65%,rgba(238,242,247,.35))}
+  body:not(.i3-inicio) .i3-vineta{background:rgba(6,8,12,.9)}   /* fuera de Inicio los objetos quedan bajo el texto: el fondo apenas se insinúa */
+  [data-theme="light"] body:not(.i3-inicio) .i3-vineta{background:rgba(238,242,247,.9)}
+}
 /* tarjetas de vidrio en todas las pestanas (tema oscuro): el mismo lenguaje del inicio */
 [data-theme="dark"] .pi-card,[data-theme="dark"] .pi-nums,[data-theme="dark"] .alert-box,[data-theme="dark"] .gvw,
 [data-theme="dark"] .gp-step,[data-theme="dark"] .gp-tab:not(.on),[data-theme="dark"] .ct-lista,[data-theme="dark"] .al-demo,[data-theme="dark"] .cf-field{
