@@ -241,7 +241,8 @@ async function primera(b){
       const r = await p.evaluate(() => {
         const pn = document.querySelector('#product .hp-panel.on'), d = pn.querySelector('.al-demo:not([hidden])'), q = (e, s) => e.querySelector(s).getBoundingClientRect();
         const fr = d.querySelector('.al-frase');
-        return { nombre: q(pn, '.prod-h1').bottom, selector: q(pn, '.demo-section:not([hidden]) .demo-cambio').bottom, demo: q(d, '.al-demo__stage').top,
+        return { nombre: document.querySelector('#product .hp-tabs .gp-tab[aria-selected="true"]').getBoundingClientRect().bottom,   // el nombre va en la pestaña (2026-10-15)
+         selector: q(pn, '.demo-section:not([hidden]) .demo-cambio').bottom, demo: q(d, '.al-demo__stage').top,
           alto: (fr ? fr.getBoundingClientRect().bottom : q(d, '.al-player').bottom) - q(d, '.al-paso').top };
       });
       const vis = h - tapa, mal = [];
