@@ -605,6 +605,10 @@ nav.scrolled .nav-links a{font-size:12px}
 .al-demo__btn--play{background:var(--azul); border-color:var(--azul); color:#fff}
 .al-demo__btn:hover{border-color:var(--azul); color:var(--azul)}
 .al-demo__btn--play:hover{background:var(--azul-dark); border-color:var(--azul-dark); color:#fff}
+/* 2026-10-15: pausa y reproducir dibujados con CSS (antes «▮▮» y «▶»: ▮ no está en las fuentes propias y cada sistema lo
+   dibujaba distinto; en Windows quedaba desalineado). Miden en em: crecen con el botón en táctil. */
+.al-pp{display:block;width:.74em;height:.86em;box-sizing:border-box;border-left:.27em solid currentColor;border-right:.27em solid currentColor}
+.al-pp--play .al-pp{border:0;background:currentColor;clip-path:polygon(0 0,100% 50%,0 100%);transform:translateX(.08em)}
 .al-demo__btn:focus-visible, .al-demo__step:focus-visible{outline:2px solid var(--azul); outline-offset:2px}
 .al-demo__steps{flex:1; display:grid; grid-template-columns:repeat(6,1fr); gap:6px; margin:0 0 0 8px; padding:0; list-style:none}
 .al-demo__step{width:100%; background:none; border:0; padding:4px 0; cursor:pointer; text-align:left; font-family:var(--mono); color:var(--gris-2)}
@@ -2924,7 +2928,7 @@ window.AL_NOTAS = {
         </div>
         <div class="al-demo__controls">
           <button class="al-demo__btn" type="button" data-act="prev" aria-label="Paso anterior">&#8592;</button>
-          <button class="al-demo__btn al-demo__btn--play" type="button" data-act="play" aria-label="Pausar">&#9646;&#9646;</button>
+          <button class="al-demo__btn al-demo__btn--play" type="button" data-act="play" aria-label="Pausar"><i class="al-pp" aria-hidden="true"></i></button>
           <button class="al-demo__btn" type="button" data-act="next" aria-label="Paso siguiente">&#8594;</button>
           <ol class="al-demo__steps"></ol>
           <span class="al-demo__count">1 de 6</span>
@@ -2982,7 +2986,7 @@ window.AL_NOTAS = {
         </div>
         <div class="al-demo__controls">
           <button class="al-demo__btn" type="button" data-act="prev" aria-label="Paso anterior">&#8592;</button>
-          <button class="al-demo__btn al-demo__btn--play" type="button" data-act="play" aria-label="Pausar">&#9646;&#9646;</button>
+          <button class="al-demo__btn al-demo__btn--play" type="button" data-act="play" aria-label="Pausar"><i class="al-pp" aria-hidden="true"></i></button>
           <button class="al-demo__btn" type="button" data-act="next" aria-label="Paso siguiente">&#8594;</button>
           <ol class="al-demo__steps"></ol>
           <span class="al-demo__count">1 de 6</span>
@@ -3118,7 +3122,7 @@ window.AL_NOTAS = {
         </div>
         <div class="al-demo__controls">
           <button class="al-demo__btn" type="button" data-act="prev" aria-label="Paso anterior">&#8592;</button>
-          <button class="al-demo__btn al-demo__btn--play" type="button" data-act="play" aria-label="Pausar">&#9646;&#9646;</button>
+          <button class="al-demo__btn al-demo__btn--play" type="button" data-act="play" aria-label="Pausar"><i class="al-pp" aria-hidden="true"></i></button>
           <button class="al-demo__btn" type="button" data-act="next" aria-label="Paso siguiente">&#8594;</button>
           <ol class="al-demo__steps"></ol>
           <span class="al-demo__count">1 de 6</span>
@@ -3144,7 +3148,7 @@ window.AL_NOTAS = {
         </div>
         <div class="al-demo__controls">
           <button class="al-demo__btn" type="button" data-act="prev" aria-label="Paso anterior">&#8592;</button>
-          <button class="al-demo__btn al-demo__btn--play" type="button" data-act="play" aria-label="Pausar">&#9646;&#9646;</button>
+          <button class="al-demo__btn al-demo__btn--play" type="button" data-act="play" aria-label="Pausar"><i class="al-pp" aria-hidden="true"></i></button>
           <button class="al-demo__btn" type="button" data-act="next" aria-label="Paso siguiente">&#8594;</button>
           <ol class="al-demo__steps"></ol>
           <span class="al-demo__count">1 de 6</span>
@@ -3221,7 +3225,7 @@ window.AL_NOTAS = {
         </div>
         <div class="al-demo__controls">
           <button class="al-demo__btn" type="button" data-act="prev" aria-label="Paso anterior">&#8592;</button>
-          <button class="al-demo__btn al-demo__btn--play" type="button" data-act="play" aria-label="Pausar">&#9646;&#9646;</button>
+          <button class="al-demo__btn al-demo__btn--play" type="button" data-act="play" aria-label="Pausar"><i class="al-pp" aria-hidden="true"></i></button>
           <button class="al-demo__btn" type="button" data-act="next" aria-label="Paso siguiente">&#8594;</button>
           <ol class="al-demo__steps"></ol>
           <span class="al-demo__count">1 de 6</span>
@@ -3247,7 +3251,7 @@ window.AL_NOTAS = {
         </div>
         <div class="al-demo__controls">
           <button class="al-demo__btn" type="button" data-act="prev" aria-label="Paso anterior">&#8592;</button>
-          <button class="al-demo__btn al-demo__btn--play" type="button" data-act="play" aria-label="Pausar">&#9646;&#9646;</button>
+          <button class="al-demo__btn al-demo__btn--play" type="button" data-act="play" aria-label="Pausar"><i class="al-pp" aria-hidden="true"></i></button>
           <button class="al-demo__btn" type="button" data-act="next" aria-label="Paso siguiente">&#8594;</button>
           <ol class="al-demo__steps"></ol>
           <span class="al-demo__count">1 de 6</span>
@@ -5816,7 +5820,7 @@ window.alDemoLinea = function(root, STEPS, o){
   };
   L.setPlaying = p => {
     L.playing = p;
-    if (playBtn) { playBtn.textContent = p ? '▮▮' : '▶'; playBtn.setAttribute('aria-label', p ? 'Pausar' : 'Reproducir'); }
+    if (playBtn) { playBtn.classList.toggle('al-pp--play', !p); playBtn.setAttribute('aria-label', p ? 'Pausar' : 'Reproducir'); }
     root.classList.toggle('al-demo--manual', !p);
     // al volver a automático sigue desde donde quedó (si terminó, vuelve a empezar)
     if (p && L.T >= DUR - 0.02) L.T = 0;
@@ -5847,7 +5851,7 @@ window.alDemoLinea = function(root, STEPS, o){
     if (e.key === 'ArrowLeft') { L.go(L.current - 1); e.preventDefault(); }
     if (e.key === 'Home') { L.restart(); e.preventDefault(); }
   });
-  if (reduce) { L.T = STEPS[0].b - HOLD; root.classList.add('al-demo--manual'); if (playBtn) { playBtn.textContent = '▶'; playBtn.setAttribute('aria-label', 'Reproducir'); } }
+  if (reduce) { L.T = STEPS[0].b - HOLD; root.classList.add('al-demo--manual'); if (playBtn) { playBtn.classList.add('al-pp--play'); playBtn.setAttribute('aria-label', 'Reproducir'); } }
   L.setStep(stepOf(L.T));
   L.tick(0, false);
   return L;

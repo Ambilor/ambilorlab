@@ -366,7 +366,7 @@ async function recursos(b){
   const { execSync } = require('child_process');
   try {
     const falta = execSync('python3 ' + JSON.stringify(path.join(__dirname, 'caracteres_fuentes.py')) + ' ' + JSON.stringify(RAIZ)).toString().trim();
-    const conocidos = '⊞⏰▮';   // símbolos que ninguna de las dos fuentes trae (también antes): los dibuja el sistema
+    const conocidos = '⊞⏰';   // símbolos que ninguna de las dos fuentes trae (también antes): los dibuja el sistema
     const nuevos = [...falta].filter(c => !conocidos.includes(c));
     if (nuevos.length) fallas.push('caracteres que no están en las fuentes recortadas: ' + nuevos.join(' ') + ' (regenerar con pyftsubset)');
   } catch (e) { fallas.push('no se pudo revisar los caracteres (¿falta fontTools?): ' + e.message.split('\n')[0]); }
