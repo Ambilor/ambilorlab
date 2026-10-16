@@ -1819,9 +1819,10 @@ body.i3-inicio>footer{position:relative;z-index:4;background:linear-gradient(tra
 body:not(.i3-inicio) #i3CapaHada,body:not(.i3-inicio) #i3Aviso{display:none}
 body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50% 45%,rgba(6,8,12,.82),rgba(6,8,12,.55) 70%,rgba(6,8,12,.4))}
 [data-theme="light"] body:not(.i3-inicio) .i3-vineta{background:rgba(238,242,247,.8)}
-/* celular (2026-10-15): el óvalo de la viñeta está pensado para pantallas anchas; en 390 px cubría ~230 px al centro y
-   los gráficos, sobres y tarjetas del fondo pasaban por los bordes del texto. Aquí cubre todo el ancho de lectura. */
-@media (max-width:700px),(orientation:landscape) and (max-height:560px){
+/* celular y tablet (2026-10-15): el óvalo de la viñeta está pensado para pantallas anchas; en 390 px cubría ~230 px al
+   centro y en tablet (y ventanas de hasta 1180 px) el texto llega casi a los bordes, así que los gráficos, sobres y
+   tarjetas del fondo pasaban por el título y el párrafo. Aquí cubre todo el ancho de lectura. */
+@media (max-width:1180px),(pointer:coarse),(orientation:landscape) and (max-height:560px){
   .i3-vineta{background:radial-gradient(ellipse 120% 75% at 50% 45%,rgba(6,8,12,.8),rgba(6,8,12,.55) 65%,rgba(6,8,12,.3))}
   [data-theme="light"] .i3-vineta{background:radial-gradient(ellipse 120% 75% at 50% 45%,rgba(238,242,247,.86),rgba(238,242,247,.6) 65%,rgba(238,242,247,.35))}
   body:not(.i3-inicio) .i3-vineta{background:rgba(6,8,12,.9)}   /* fuera de Inicio los objetos quedan bajo el texto: el fondo apenas se insinúa */
