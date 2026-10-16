@@ -2630,7 +2630,7 @@ window.AL_NOTAS = {
   'v2-instala': ['Haz una copia en tu Drive', 'Abre «Configurar herramienta» en el menú', 'Autoriza los permisos una sola vez',
                  'Publica tu panel con «Implementar»', 'Ábrelo y conecta tus fuentes', 'Listo: tu panel quedó instalado'],
   'ped-accion': ['Pedidos repartidos entre chats y notas', 'Tu catálogo en un enlace para compartir', 'Tu cliente elige y envía en un minuto',
-                 'El pedido aparece al instante en tu panel', 'Confirmas y avisas por WhatsApp', 'Ventas y lo más pedido, a la vista'],
+                 'Llega con aviso y campanita a tu panel', 'Un toque: confirmado y pagado', 'Ventas y lo más pedido, a la vista'],
   'ped-instala': ['Haz una copia en tu Drive', 'Publica tu app con «Implementar»', 'Autoriza el acceso una sola vez',
                   'Entra a tu panel con tu clave', 'Tu negocio y tu catálogo', 'Comparte tu formulario con tus clientes']
 };
@@ -6821,13 +6821,13 @@ AL_DEMOS['ped-accion'] = {
       body:'Tus clientes abren el enlace desde el celular y ven tus productos por categoría, los destacados primero y los precios por cantidad. Sin instalar nada.' },
     { a:9.0, b:14.0, short:'Pedido', kicker:'Paso 2: el cliente pide solo',
       title:'Arma su pedido en un minuto',
-      body:'Elige productos, despacho a su comuna o retiro en tienda y forma de pago. Al enviarlo recibe su número de pedido y un enlace para seguirlo.' },
+      body:'Elige productos, despacho a su comuna o retiro en tienda y forma de pago. Si activas el descuento por monto, ve cuánto le falta para lograrlo. Al enviarlo recibe su número de pedido y un enlace para seguirlo.' },
     { a:14.0, b:18.6, short:'En vivo', kicker:'Paso 3: te llega al panel',
       title:'Cada pedido, en vivo en tu panel',
-      body:'El pedido aparece al instante con su total, entrega y pago. El stock se descuenta solo y, si quieres, también te llega por correo.' },
-    { a:18.6, b:23.8, short:'WhatsApp', kicker:'Paso 4: avisa con un toque',
-      title:'Confirmas y avisas por WhatsApp',
-      body:'Al cambiar el estado (Confirmado, En camino, Entregado), el panel abre WhatsApp con el mensaje listo para tu cliente. Tú solo presionas enviar.' },
+      body:'Con el panel abierto, el pedido llega en segundos con un aviso arriba de la lista y una campanita. El stock se descuenta solo y, si quieres, también te llega por correo.' },
+    { a:18.6, b:23.8, short:'WhatsApp', kicker:'Paso 4: un toque y avisas',
+      title:'Confirmas con un toque y avisas por WhatsApp',
+      body:'Desde la lista, un toque confirma el pedido (y lo deja pagado si fue por transferencia). «Avisar» abre WhatsApp con el mensaje listo para tu cliente, y «Deshacer» lo revierte si te equivocaste.' },
     { a:23.8, b:29.4, short:'Reportes', kicker:'Resultado final',
       title:'Sabes cuánto vendes y qué se pide más',
       body:'Ventas por día, ticket promedio, lo más pedido y el resumen de hoy. Exportas todo a CSV cuando lo necesites.',
@@ -6839,12 +6839,20 @@ AL_DEMOS['ped-accion'] = {
     null,
     { keys:[[0.3,900,900],[2.6,600,826],[2.85,600,826],[3.6,900,900]], clicks:[2.75] },
     null,
-    { keys:[[0.3,1000,900],[0.9,1000,470],[1.1,1000,470],[2.6,760,800],[2.85,760,800],[3.6,1000,900]], clicks:[1.0,2.75] },
+    { keys:[[0.3,1000,900],[0.9,1015,305],[1.1,1015,305],[2.6,690,698],[2.85,690,698],[3.6,1000,900]], clicks:[1.0,2.75] },
     { keys:[[0.3,1000,900],[2.4,1050,246],[2.65,1050,246],[3.3,900,900]], clicks:[2.55] }
   ],
   draw: H => { const { C, CW, CH, clamp, ease, easeOut, lerp, rr, txt, wrap, press, btn, base, overlay, dialog, banner, pill, panelBar, celular } = H;
     const TABS = ['Pedidos','Catálogo','Clientes','Reportes','Ajustes'];   // las pestañas del panel real
     const PROD = [['Pan amasado (kg)','$2.490'],['Queso mantecoso','$6.990'],['Café molido 500 g','$5.490'],['Huevos x 30','$7.290']];
+    // «Te faltan $X para 5 % de descuento» (descuento por monto, opcional en Ajustes)
+    function barraDesc(g, x, y, w, h, size, lt){
+      const e = easeOut((lt - 0.3) / 0.4); if (e <= 0) return;
+      g.globalAlpha = e; g.fillStyle = '#f2f7fd'; rr(g, x, y, w, h, 12); g.fill(); g.strokeStyle = C.line; g.lineWidth = 2; rr(g, x, y, w, h, 12); g.stroke();
+      txt(g, 'Te faltan $2.540 para 5 % de descuento', x + 16, y + h*0.4, size, 700, C.ink, 'left', w - 32);
+      g.fillStyle = C.line; rr(g, x + 16, y + h - 14, w - 32, 6, 3); g.fill(); g.fillStyle = C.ok; rr(g, x + 16, y + h - 14, (w - 32) * 0.87 * e, 6, 3); g.fill();
+      g.globalAlpha = 1;
+    }
     function tienda(g, a, x, y, w, h){
       g.fillStyle = C.brand; rr(g, a.x, a.y, a.w, 96, 18); g.fill();
       txt(g, 'Almacén Don Pepe', a.x + 22, a.y + 36, 28, 800, '#fff'); txt(g, 'Todo para tu casa', a.x + 22, a.y + 72, 20, 600, 'rgba(255,255,255,.85)');
@@ -6896,9 +6904,10 @@ AL_DEMOS['ped-accion'] = {
           [['2× Pan amasado (kg)','$4.980'],['1× Queso mantecoso','$6.990'],['1× Café molido 500 g','$5.490']].forEach(([n, p], k) => {
             const y = a.y + 90 + k*62; txt(g, n, a.x, y, 22, 600, C.ink, 'left', 260); txt(g, p, a.x + a.w, y, 22, 800, C.ink, 'right');
           });
+          barraDesc(g, a.x, a.y + 238, a.w, 48, 18, lt);
           const pasos = [['Entrega', lt > 0.8 ? 'Despacho · Providencia $3.000' : 'Elige…'], ['Pago', lt > 1.4 ? 'Transferencia' : 'Elige…']];
           pasos.forEach(([k2, v], k) => {
-            const y = a.y + 300 + k*110;
+            const y = a.y + 318 + k*110;
             txt(g, k2, a.x, y, 20, 700, C.muted);
             g.strokeStyle = (lt > 0.8 + k*0.6) ? C.brand : C.line; g.lineWidth = 3; rr(g, a.x, y + 18, a.w, 58, 12); g.stroke();
             txt(g, v, a.x + 16, y + 48, 21, 700, C.ink, 'left', a.w - 30);
@@ -6934,32 +6943,52 @@ AL_DEMOS['ped-accion'] = {
         };
         const base0 = 410 + 124*n;
         fila(base0, 340, 'Benjamín Fuentes', '$104.300', 'En camino', false);
-        fila(base0 + 124, 339, 'Ignacio Castro', '$53.990', 'Entregado', false);
+        g.globalAlpha = 1 - n; fila(base0 + 124, 339, 'Ignacio Castro', '$53.990', 'Entregado', false); g.globalAlpha = 1;
         if (n > 0) { g.globalAlpha = n; fila(410, 341, 'Josefa Morales', '$20.460', 'Nuevo', true); g.globalAlpha = 1; }
-        const t = easeOut((lt - 1.3) / 0.35) * (1 - ease((lt - 3.6) / 0.4));
-        if (t > 0) { g.globalAlpha = t; g.fillStyle = C.ink; rr(g, 300, 800, 600, 70, 35); g.fill(); txt(g, '🔔 Pedido #341 · Josefa · $20.460', 600, 836, 28, 700, '#fff', 'center'); g.globalAlpha = 1; }
+        const t = easeOut((lt - 1.3) / 0.35);
+        if (t > 0) {   // el aviso del panel: queda hasta que lo ves, con campanita
+          g.globalAlpha = t; const by = 790 + (1 - t)*16, sw = Math.sin(lt*18) * Math.max(0, 1 - (lt - 1.3)/0.9) * 0.35;
+          g.fillStyle = '#e8f6ee'; rr(g, 40, by, 1120, 84, 16); g.fill(); g.strokeStyle = 'rgba(22,138,82,.45)'; g.lineWidth = 2; rr(g, 40, by, 1120, 84, 16); g.stroke();
+          g.save(); g.translate(86, by + 42); g.rotate(sw); txt(g, '🔔', 0, 0, 34, 700, C.ok, 'center'); g.restore();
+          txt(g, 'Nuevo pedido #341 · Josefa Morales · $20.460', 124, by + 42, 28, 800, C.ink, 'left', 780);
+          btn(g, 960, by + 14, 180, 56, 'Ver', 'primary', 0, 26); g.globalAlpha = 1;
+        }
         const s = easeOut((lt - 2.2) / 0.4);
         if (s > 0) { g.globalAlpha = s; pill(g, 1160, 720, 'Stock: Pan amasado 24 → 22', '#eef2f7', C.ink, 24, 46, 'right'); g.globalAlpha = 1; }
       },
       (g, lt) => {
         base(g, 'Panel de pedidos');
         panelBar(g, 'Almacén Don Pepe', TABS, 0);
-        txt(g, 'Pedido #341 · Josefa Morales', 40, 262, 36, 800, C.ink);
-        [['2× Pan amasado (kg)','$4.980'],['1× Queso mantecoso','$6.990'],['1× Café molido 500 g','$5.490'],['Despacho Providencia','$3.000']].forEach(([n, p], k) => { const y = 320 + k*52; txt(g, n, 40, y, 27, 600, C.ink); txt(g, p, 700, y, 27, 800, C.ink, 'right'); });
-        btn(g, 880, 440, 240, 60, 'Confirmar', 'primary', press(lt, 1.0), 28);
-        const d = easeOut((lt - 1.15) / 0.3);
+        const hecho = lt > 1.15;
+        const fila = (y, cli, sub, tot, est, ec, boton) => {
+          g.fillStyle = '#fff'; rr(g, 40, y, 1120, 110, 14); g.fill(); g.strokeStyle = C.line; g.lineWidth = 2; rr(g, 40, y, 1120, 110, 14); g.stroke();
+          txt(g, cli, 70, y + 40, 30, 800, C.ink, 'left', 420); txt(g, sub, 70, y + 78, 22, 600, C.muted, 'left', 440);
+          txt(g, tot, 700, y + 55, 30, 800, C.ink, 'right'); pill(g, 730, y + 33, est, ec === C.ok ? '#e6f2eb' : '#fdf1e2', ec, 22, 44);
+          if (boton) boton(y);
+        };
+        fila(250, 'Josefa Morales', hecho ? '#341 · Providencia · Transferencia · pagado' : '#341 · Providencia · Transferencia · por pagar', '$20.460', hecho ? 'Confirmado' : 'Pendiente', hecho ? C.ok : C.warn,
+          y => { if (!hecho) btn(g, 900, y + 25, 230, 60, 'Confirmar y pagó', 'primary', press(lt, 1.0), 24); else btn(g, 900, y + 25, 230, 60, 'En camino', 'ghost', 0, 24); });
+        fila(380, 'Benjamín Fuentes', '#340 · Ñuñoa · Efectivo', '$104.300', 'En camino', C.ok, y => btn(g, 900, y + 25, 230, 60, 'Entregado', 'ghost', 0, 24));
+        fila(510, 'Ignacio Castro', '#339 · Maipú · Transferencia', '$53.990', 'Entregado', C.ok, null);
+        const t = easeOut((lt - 1.2) / 0.3) * (1 - ease((lt - 2.95) / 0.25));
+        if (t > 0) {   // aviso con acciones, abajo: Avisar abre WhatsApp, Deshacer lo revierte
+          g.globalAlpha = t; g.fillStyle = C.ink; rr(g, 200, 650 + (1 - t)*20, 800, 96, 24); g.fill();
+          txt(g, '#341: Confirmado y pagado', 232, 698 + (1 - t)*20, 27, 700, '#fff', 'left', 340);
+          btn(g, 600, 668 + (1 - t)*20, 180, 60, 'Avisar', 'wa', press(lt, 2.75), 24); g.strokeStyle = 'rgba(255,255,255,.55)'; g.lineWidth = 2; rr(g, 796, 668 + (1 - t)*20, 180, 60, 30); g.stroke(); txt(g, 'Deshacer', 886, 699 + (1 - t)*20, 24, 700, '#fff', 'center');
+          g.globalAlpha = 1;
+        }
+        const d = easeOut((lt - 2.95) / 0.3);
         if (d > 0) {
           overlay(g, d); g.globalAlpha = d;
-          dialog(g, 160, 300, 880, 580);
-          txt(g, '¿Cambiar a Confirmado?', 200, 360, 38, 800, C.ink);
-          txt(g, 'MENSAJE PARA EL CLIENTE', 200, 420, 20, 700, C.soft);
-          g.fillStyle = '#dcf8c6'; rr(g, 200, 446, 800, 230, 18); g.fill();
+          dialog(g, 220, 250, 760, 560);
+          g.fillStyle = C.wa; rr(g, 220, 250, 760, 84, 24); g.fill(); g.fillRect(220, 300, 760, 34);
+          txt(g, 'WhatsApp · Josefa Morales', 256, 292, 28, 800, '#0b3d1f', 'left', 690);
+          g.fillStyle = '#dcf8c6'; rr(g, 260, 370, 680, 250, 18); g.fill();
           const msg = 'Hola Josefa, confirmamos tu pedido #341 por $20.460. Te lo llevamos hoy a Providencia. Sigue tu pedido aquí: ambilor.lab/…';
-          const n = Math.floor(clamp((lt - 1.4) / 0.9) * msg.length);
-          wrap(g, msg.slice(0, n), 226, 488, 750, 27, 600, C.ink, 1.35);
-          if (lt < 3.1) { btn(g, 200, 780, 180, 60, 'Volver', 'ghost', 0, 26); btn(g, 400, 780, 600, 60, 'Confirmar y avisar por WhatsApp', 'wa', press(lt, 2.75), 26); }
-          const b = easeOut((lt - 3.1) / 0.35);
-          if (b > 0) { g.globalAlpha = d * b; banner(g, 200, 780, 800, 60, '✓ Confirmado · WhatsApp abierto con el mensaje', '#1da851'); }
+          const n = Math.floor(clamp((lt - 3.1) / 0.8) * msg.length);
+          wrap(g, msg.slice(0, n), 286, 412, 630, 27, 600, C.ink, 1.35);
+          const b = easeOut((lt - 4.0) / 0.35);
+          if (b > 0) { g.globalAlpha = d * b; banner(g, 260, 700, 680, 64, '✓ Mensaje listo: solo presionas enviar', '#1da851'); }
           g.globalAlpha = 1;
         }
       },
@@ -8040,6 +8069,13 @@ AL_DEMOS['como-se-instala'] = {
     // el formulario del cliente ocupa la tarjeta completa: un celular de frente
     const TELEFONO = !!(window.alFoto && alFoto.tactil());   // en celular y tablet, a pantalla completa
     const cel = (g, top = 18) => { g.clearRect(0, 0, CW, CH); if (TELEFONO) { g.fillStyle = '#ffffff'; g.fillRect(0, 0, CW, CH); return { x: 48, y: 82, w: CW - 96, h: CH - 110 }; } g.fillStyle = '#f4f7fb'; rr(g, 0, 0, CW, CH, 34); g.fill(); return celular(g, 150 + (top - 18)*0.25, top, 500 - (top - 18)*0.5, 982 - top); };
+    function barraDesc(g, x, y, w, h, size, lt){   // «Te faltan $X para 5 % de descuento» (opcional en Ajustes)
+      const e = easeOut((lt - 0.3) / 0.4); if (e <= 0) return;
+      g.globalAlpha = e; g.fillStyle = '#f2f7fd'; rr(g, x, y, w, h, 12); g.fill(); g.strokeStyle = C.line; g.lineWidth = 2; rr(g, x, y, w, h, 12); g.stroke();
+      txt(g, 'Te faltan $2.540 para 5 % de descuento', x + 14, y + h*0.4, size, 700, C.ink, 'left', w - 28);
+      g.fillStyle = C.line; rr(g, x + 14, y + h - 13, w - 28, 6, 3); g.fill(); g.fillStyle = C.ok; rr(g, x + 14, y + h - 13, (w - 28) * 0.87 * e, 6, 3); g.fill();
+      g.globalAlpha = 1;
+    }
     const flota = (g, x, y, s, ink, size, h, align) => { if (TELEFONO) return; g.save(); g.shadowColor = 'rgba(18,48,77,.28)'; g.shadowBlur = 22; g.shadowOffsetY = 8; pill(g, x, y, s, '#fff', ink, size, h, align); g.restore(); };
     return [
       (g, lt) => {
@@ -8085,8 +8121,9 @@ AL_DEMOS['como-se-instala'] = {
           [['2× Pan amasado (kg)','$4.980'],['1× Queso mantecoso','$6.990'],['1× Café molido 500 g','$5.490']].forEach(([n, p], k) => {
             const y = a.y + 92 + k*62; txt(g, n, a.x, y, 24, 600, C.ink, 'left', 290); txt(g, p, a.x + a.w, y, 24, 800, C.ink, 'right');
           });
+          barraDesc(g, a.x, a.y + 250, a.w, 58, 20, lt);
           [['Entrega', lt > 0.8 ? 'Despacho · Providencia $3.000' : 'Elige…'], ['Pago', lt > 1.4 ? 'Transferencia' : 'Elige…']].forEach(([k2, v], k) => {
-            const y = a.y + 300 + k*112;
+            const y = a.y + 342 + k*112;
             txt(g, k2, a.x, y, 22, 700, C.muted);
             g.strokeStyle = (lt > 0.8 + k*0.6) ? C.brand : C.line; g.lineWidth = 3; rr(g, a.x, y + 18, a.w, 62, 12); g.stroke();
             txt(g, v, a.x + 16, y + 50, 23, 700, C.ink, 'left', a.w - 30);
@@ -8123,33 +8160,55 @@ AL_DEMOS['como-se-instala'] = {
         const b0 = 500 + 126*n;
         [[340, 'Benjamín Fuentes', '$104.300', 'En camino'], [339, 'Ignacio Castro', '$53.990', 'Entregado'], [338, 'Martina Rojas', '$31.490', 'Entregado'], [337, 'Tomás Vera', '$12.980', 'Entregado']].forEach((f, k) => {
           const y = b0 + 126*k; if (y > CH) return;   // la lista sigue hasta el borde de la pantalla
-          g.globalAlpha = y + 110 > CH - 60 && k ? 1 - n : 1; fila(y, f[0], f[1], f[2], f[3], false); g.globalAlpha = 1;
+          g.globalAlpha = y + 110 > CH - 250 && k ? 1 - n : 1; fila(y, f[0], f[1], f[2], f[3], false); g.globalAlpha = 1;   // las filas bajo el aviso se van
         });
         if (n > 0) { g.globalAlpha = n; fila(500, 341, 'Josefa Morales', '$20.460', 'Nuevo', true); g.globalAlpha = 1; }
-        const t = easeOut((lt - 1.3) / 0.35) * (1 - ease((lt - 3.6) / 0.4));
-        if (t > 0) { g.globalAlpha = t; g.fillStyle = C.ink; rr(g, 80, CH - 210, 640, 72, 36); g.fill(); txt(g, '🔔 Pedido #341 · Josefa · $20.460', 400, CH - 174, 28, 700, '#fff', 'center', 600); g.globalAlpha = 1; }
+        const t = easeOut((lt - 1.3) / 0.35);
+        if (t > 0) {   // el aviso del panel: queda hasta que lo ves, con campanita
+          g.globalAlpha = t; const by = CH - 236 + (1 - t)*16, sw = Math.sin(lt*18) * Math.max(0, 1 - (lt - 1.3)/0.9) * 0.35;
+          g.fillStyle = '#e8f6ee'; rr(g, 40, by, 720, 104, 16); g.fill(); g.strokeStyle = 'rgba(22,138,82,.45)'; g.lineWidth = 2; rr(g, 40, by, 720, 104, 16); g.stroke();
+          g.save(); g.translate(84, by + 52); g.rotate(sw); txt(g, '🔔', 0, 0, 34, 700, C.ok, 'center'); g.restore();
+          txt(g, 'Nuevo pedido #341', 122, by + 36, 27, 800, C.ink, 'left', 440); txt(g, 'Josefa Morales · $20.460', 122, by + 72, 24, 600, C.muted, 'left', 440);
+          btn(g, 590, by + 22, 150, 60, 'Ver', 'primary', 0, 26); g.globalAlpha = 1;
+        }
         const s = easeOut((lt - 2.2) / 0.4);
         if (s > 0) { g.globalAlpha = s; pill(g, 400, CH - 100, 'Stock: Pan amasado 24 → 22', '#eef2f7', C.ink, 26, 50, 'center'); g.globalAlpha = 1; }
       },
       (g, lt) => {
         base(g, 'Panel de pedidos');
         panelBar(g, 'Almacén Don Pepe', TABS, 0);
-        txt(g, 'Pedido #341 · Josefa Morales', 40, 262, 34, 800, C.ink, 'left', 720);
-        [['2× Pan amasado (kg)','$4.980'],['1× Queso mantecoso','$6.990'],['1× Café molido 500 g','$5.490'],['Despacho Providencia','$3.000']].forEach(([n, p], k) => { const y = 322 + k*54; txt(g, n, 40, y, 28, 600, C.ink); txt(g, p, CW - 40, y, 28, 800, C.ink, 'right'); });
-        btn(g, 40, 560, 720, 72, 'Confirmar', 'primary', press(lt, 1.0), 32);
-        const d = easeOut((lt - 1.15) / 0.3);
+        const hecho = lt > 1.15;
+        const fila = (y, cli, sub, tot, est, ec, boton) => {
+          g.fillStyle = '#fff'; rr(g, 40, y, 720, 170, 14); g.fill(); g.strokeStyle = C.line; g.lineWidth = 2; rr(g, 40, y, 720, 170, 14); g.stroke();
+          txt(g, cli, 66, y + 38, 30, 800, C.ink, 'left', 440); txt(g, tot, 734, y + 38, 30, 800, C.ink, 'right');
+          txt(g, sub, 66, y + 76, 22, 600, C.muted, 'left', 660);
+          pill(g, 66, y + 102, est, ec === C.ok ? '#e6f2eb' : '#fdf1e2', ec, 22, 46);
+          if (boton) boton(y);
+        };
+        fila(250, 'Josefa Morales', hecho ? '#341 · Providencia · Transferencia · pagado' : '#341 · Providencia · Transferencia · por pagar', '$20.460', hecho ? 'Confirmado' : 'Pendiente', hecho ? C.ok : C.warn,
+          y => { if (!hecho) btn(g, 440, y + 98, 294, 58, 'Confirmar y pagó', 'primary', press(lt, 1.0), 25); else btn(g, 440, y + 98, 294, 58, 'En camino', 'ghost', 0, 25); });
+        fila(440, 'Benjamín Fuentes', '#340 · Ñuñoa · Efectivo', '$104.300', 'En camino', C.ok, y => btn(g, 440, y + 98, 294, 58, 'Entregado', 'ghost', 0, 25));
+        if (CH > 1100) fila(630, 'Ignacio Castro', '#339 · Maipú · Transferencia', '$53.990', 'Entregado', C.ok, null);
+        const t = easeOut((lt - 1.2) / 0.3) * (1 - ease((lt - 2.95) / 0.25));
+        if (t > 0) {   // aviso con acciones, abajo: Avisar abre WhatsApp, Deshacer lo revierte
+          const ty = 820 + (1 - t)*20;
+          g.globalAlpha = t; g.fillStyle = C.ink; rr(g, 40, ty, 720, 158, 24); g.fill();
+          txt(g, '#341: Confirmado y pagado', 72, ty + 40, 27, 700, '#fff', 'left', 650);
+          btn(g, 72, ty + 76, 316, 62, 'Avisar', 'wa', press(lt, 2.75), 25); g.strokeStyle = 'rgba(255,255,255,.55)'; g.lineWidth = 2; rr(g, 412, ty + 76, 316, 62, 31); g.stroke(); txt(g, 'Deshacer', 570, ty + 108, 25, 700, '#fff', 'center');
+          g.globalAlpha = 1;
+        }
+        const d = easeOut((lt - 2.95) / 0.3);
         if (d > 0) {
           overlay(g, d); g.globalAlpha = d;
-          dialog(g, 40, 290, 720, 680);
-          txt(g, '¿Cambiar a Confirmado?', 80, 350, 38, 800, C.ink);
-          txt(g, 'MENSAJE PARA EL CLIENTE', 80, 405, 21, 700, C.soft);
-          g.fillStyle = '#dcf8c6'; rr(g, 80, 430, 640, 290, 18); g.fill();
+          dialog(g, 40, 290, 720, 600);
+          g.fillStyle = C.wa; rr(g, 40, 290, 720, 90, 24); g.fill(); g.fillRect(40, 340, 720, 40);
+          txt(g, 'WhatsApp · Josefa Morales', 76, 336, 28, 800, '#0b3d1f', 'left', 650);
+          g.fillStyle = '#dcf8c6'; rr(g, 80, 416, 640, 290, 18); g.fill();
           const msg = 'Hola Josefa, confirmamos tu pedido #341 por $20.460. Te lo llevamos hoy a Providencia. Sigue tu pedido aquí: ambilor.lab/…';
-          const n = Math.floor(clamp((lt - 1.4) / 0.9) * msg.length);
-          wrap(g, msg.slice(0, n), 106, 474, 590, 30, 600, C.ink, 1.35);
-          if (lt < 3.1) { btn(g, 80, 750, 640, 66, 'Volver', 'ghost', 0, 28); btn(g, 80, 834, 640, 76, 'Confirmar y avisar por WhatsApp', 'wa', press(lt, 2.75), 30); }
-          const b = easeOut((lt - 3.1) / 0.35);
-          if (b > 0) { g.globalAlpha = d * b; banner(g, 80, 834, 640, 76, '✓ Confirmado · WhatsApp abierto con el mensaje', '#1da851'); }
+          const n = Math.floor(clamp((lt - 3.1) / 0.8) * msg.length);
+          wrap(g, msg.slice(0, n), 106, 460, 590, 30, 600, C.ink, 1.35);
+          const b = easeOut((lt - 4.0) / 0.35);
+          if (b > 0) { g.globalAlpha = d * b; banner(g, 80, 770, 640, 76, '✓ Mensaje listo: solo presionas enviar', '#1da851'); }
           g.globalAlpha = 1;
         }
       },
@@ -8192,7 +8251,7 @@ AL_DEMOS['como-se-instala'] = {
     null,
     { keys:[[0.3,650,960],[2.6,400,-190],[2.85,400,-190],[3.6,650,960]], clicks:[2.75] },
     null,
-    { keys:[[0.3,650,960],[0.9,400,596],[1.1,400,596],[2.6,400,872],[2.85,400,872],[3.6,650,980]], clicks:[1.0,2.75] },
+    { keys:[[0.3,650,960],[0.9,587,377],[1.1,587,377],[2.6,230,927],[2.85,230,927],[3.6,650,980]], clicks:[1.0,2.75] },
     { keys:[[0.3,650,960],[2.4,311,259],[2.65,311,259],[3.3,650,980]], clicks:[2.55] }
   ];
 
