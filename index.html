@@ -5475,6 +5475,13 @@ window.AL3D = (function(){
   var gEst = new THREE.BufferGeometry(); gEst.setAttribute('position', new THREE.BufferAttribute(estelaPos, 3));
   var estela = new THREE.Points(gEst, new THREE.PointsMaterial({ color: 0x8FC1FF, size: movil ? 0.05 : 0.06, transparent: true, opacity: .8, depthWrite: false, blending: THREE.AdditiveBlending }));
   escenaHada.add(estela);
+  // en tablet la estela pasa sobre el titulo y el parrafo de Inicio: mas tenue y fina
+  var mqTactil = matchMedia('(pointer: coarse)');
+  function estelaSegunEquipo(){
+    var tab = innerWidth >= 701 && mqTactil.matches;
+    estela.material.opacity = tab ? .32 : .8; estela.material.size = tab ? 0.042 : (innerWidth < 701 ? 0.05 : 0.06);
+  }
+  estelaSegunEquipo(); addEventListener('resize', estelaSegunEquipo);
   var historia = [];
   // giro de una capa cada tanto (como el cubo del inicio)
   // El cubo se resuelve al ritmo del desplazamiento: arriba esta desordenado con
@@ -5715,8 +5722,9 @@ window.AL3D = (function(){
     }
     if (grupoActivo) { var ga = tViaje; if (ga !== grupoActivo.userData.al) { grupoActivo.userData.al = ga; grupoActivo.userData.mats.forEach(function(m){ m.opacity = m.userData.op * ga; }); } }
     if (home) colocar();
-    renderer.render(scene, camera);
-    if (home && renderHada) renderHada.render(escenaHada, camera);
+    // con el contexto 3D perdido (iOS en segundo plano, demasiadas escenas) no se dibuja: three.js fallaría al compilar
+    if (!renderer.getContext().isContextLost()) renderer.render(scene, camera);
+    if (home && renderHada && !renderHada.getContext().isContextLost()) renderHada.render(escenaHada, camera);
     requestAnimationFrame(bucle);
   }
   requestAnimationFrame(bucle);
@@ -6270,7 +6278,7 @@ window.alDemoTarjetas = function(root, cfg){
     const dt = Math.min(0.12, (now - last) / 1000); last = now;
     if (PX.update(dt)) needsRender = true;
     const mueve = L.tick(dt, visible);
-    if (visible && (mueve || needsRender)) {
+    if (visible && (mueve || needsRender) && !renderer.getContext().isContextLost()) {   // sin contexto 3D no se dibuja
       const T = L.T;
       updateCards(T); updateCursor(T);
       const ip = stepOf(T), sp = STEPS[ip], lt = T - sp.a;
