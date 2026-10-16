@@ -5475,6 +5475,13 @@ window.AL3D = (function(){
   var gEst = new THREE.BufferGeometry(); gEst.setAttribute('position', new THREE.BufferAttribute(estelaPos, 3));
   var estela = new THREE.Points(gEst, new THREE.PointsMaterial({ color: 0x8FC1FF, size: movil ? 0.05 : 0.06, transparent: true, opacity: .8, depthWrite: false, blending: THREE.AdditiveBlending }));
   escenaHada.add(estela);
+  // en tablet la estela pasa sobre el titulo y el parrafo de Inicio: mas tenue y fina
+  var mqTactil = matchMedia('(pointer: coarse)');
+  function estelaSegunEquipo(){
+    var tab = innerWidth >= 701 && mqTactil.matches;
+    estela.material.opacity = tab ? .32 : .8; estela.material.size = tab ? 0.042 : (innerWidth < 701 ? 0.05 : 0.06);
+  }
+  estelaSegunEquipo(); addEventListener('resize', estelaSegunEquipo);
   var historia = [];
   // giro de una capa cada tanto (como el cubo del inicio)
   // El cubo se resuelve al ritmo del desplazamiento: arriba esta desordenado con
