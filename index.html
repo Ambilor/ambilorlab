@@ -5722,8 +5722,9 @@ window.AL3D = (function(){
     }
     if (grupoActivo) { var ga = tViaje; if (ga !== grupoActivo.userData.al) { grupoActivo.userData.al = ga; grupoActivo.userData.mats.forEach(function(m){ m.opacity = m.userData.op * ga; }); } }
     if (home) colocar();
-    renderer.render(scene, camera);
-    if (home && renderHada) renderHada.render(escenaHada, camera);
+    // con el contexto 3D perdido (iOS en segundo plano, demasiadas escenas) no se dibuja: three.js fallaría al compilar
+    if (!renderer.getContext().isContextLost()) renderer.render(scene, camera);
+    if (home && renderHada && !renderHada.getContext().isContextLost()) renderHada.render(escenaHada, camera);
     requestAnimationFrame(bucle);
   }
   requestAnimationFrame(bucle);
@@ -6277,7 +6278,7 @@ window.alDemoTarjetas = function(root, cfg){
     const dt = Math.min(0.12, (now - last) / 1000); last = now;
     if (PX.update(dt)) needsRender = true;
     const mueve = L.tick(dt, visible);
-    if (visible && (mueve || needsRender)) {
+    if (visible && (mueve || needsRender) && !renderer.getContext().isContextLost()) {   // sin contexto 3D no se dibuja
       const T = L.T;
       updateCards(T); updateCursor(T);
       const ip = stepOf(T), sp = STEPS[ip], lt = T - sp.a;
