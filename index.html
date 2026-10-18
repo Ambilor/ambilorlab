@@ -4975,7 +4975,10 @@ window.AL3D = (function(){
    su version fija (legible y desplazable) y las demos muestran sus pasos en texto. */
 (function(){
   var cola = [], listo = false, guardado = null, iniciados = {}, fallos = 0;
-  var URLS = ['https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js',
+  // 2026-10-18: primero la copia del propio sitio (vendor/, la misma r128 oficial de npm): no depende de que un
+  // servidor ajeno responda rápido (a veces cdnjs tardaba y la portada salía sin animación). Los CDN quedan de respaldo.
+  var URLS = ['vendor/three-r128.min.js',
+              'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js',
               'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js'];
   window.alConTHREE = function(f){ if (listo) f(); else cola.push(f); };
   /* 2026-09-30: una sola verificación de WebGL para toda la página, y su
@@ -5005,7 +5008,8 @@ window.AL3D = (function(){
     document.head.appendChild(s);
   }
   intentar(0);
-  setTimeout(function(){ if (!listo) intentar(1); }, 3000);                 // cdnjs lento: probar el otro
+  setTimeout(function(){ if (!listo) intentar(1); }, 3000);                 // la copia propia lenta: probar cdnjs
+  setTimeout(function(){ if (!listo) intentar(2); }, 5500);                 // y luego jsdelivr
   setTimeout(function(){ if (!listo) { window.AL_SIN3D = true; soltar(); } }, 8000);
 })();
 </script>
