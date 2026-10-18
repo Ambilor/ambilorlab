@@ -7,6 +7,7 @@
 - Herramientas: la disposición de las demos vive solo en el bloque "HERRAMIENTAS: CUATRO FORMATOS" de `index.html` (A celular vertical, B celular horizontal, C tablet vertical, D tablet horizontal / computador). Los ajustes se hacen dentro del formato que corresponde; no se agregan reglas sueltas ni `!important`.
 - Recursos (la pestaña `#guias`: lista, artículos `?r=` y guías paso a paso): sus ajustes por tamaño viven solo en el bloque "RECURSOS Y GUÍAS: FORMATOS"; los de Inicio, en su sección ("INICIO: FORMATOS"). Mismo criterio: nada de reglas sueltas en otra parte.
 - Antes de un cambio grande de CSS, comparar la página antes y después elemento por elemento; una limpieza o un reordenamiento debe dar 0 diferencias.
+- three.js (r128 oficial de npm, sin modificar) vive en `vendor/three-r128.min.js` y se carga primero desde ahí; cdnjs y jsdelivr quedan de respaldo. Si se cambia de versión, reemplazar el archivo y las tres URL juntas.
 - Fuentes e íconos viven en `fuentes/`, recortados. No volver a enlazar Google Fonts ni la colección completa de íconos: un ícono o carácter nuevo se agrega regenerando con `pyftsubset`.
 - Recurso nuevo: un `<article class="rc-doc" data-r data-tipo data-min data-gancho data-app>` dentro de `#rc-art`; la tarjeta se arma sola. Sumar su `?r=` a `sitemap.xml`.
 - **Animación y microinteracciones**: usar la skill `ui-animation` (`.claude/skills/ui-animation`, ver su `PROCEDENCIA.md`). Solo recetas CSS / Web Animations API (el sitio no usa framework); siempre dentro de las reglas de este archivo y del estándar adaptable.
