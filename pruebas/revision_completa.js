@@ -120,7 +120,7 @@ async function errores(b){
     const ctx = await contexto(b, w < 1300 ? movil(w, h) : { viewport: { width: w, height: h } }), p = await ctx.newPage(), err = [];
     p.on('pageerror', e => err.push(e.message));
     for (const tab of TABS) { await p.goto(BASE + '/index.html?p=' + tab); await espera(2500); }
-    for (const h2 of ['v2', 'ped']) { await p.goto(BASE + '/index.html?p=product&h=' + h2); await espera(2500); }
+    for (const h2 of ['ped', 'fin']) { await p.goto(BASE + '/index.html?p=product&h=' + h2); await espera(2500); }
     if (err.length) fallas.push(t + ': ' + [...new Set(err)].slice(0, 3).join(' · '));
     await ctx.close();
   }
@@ -130,7 +130,7 @@ async function estabilidad(b){
   const fallas = [];
   for (const [w, h, t] of [].concat(CEL_V, CEL_H, TAB, WEB)) {
     const esMovil = w < 1300, ctx = await contexto(b, esMovil ? movil(w, h) : { viewport: { width: w, height: h } }), p = await ctx.newPage();
-    for (const hp of ['v1', 'v2', 'ped']) {
+    for (const hp of ['v2', 'ped', 'fin']) {
       await p.goto(BASE + '/index.html?p=product&h=' + hp); await espera(2500); await p.evaluate(() => scrollTo(0, 0)); await espera(300);
       await p.evaluate(hp => {
         const pn = document.getElementById('hp-' + hp);
@@ -159,10 +159,10 @@ async function cambio(b){
   for (const [w, h, t] of [CEL_V[0], CEL_H[0], TAB[0]]) {
     const ctx = await contexto(b, movil(w, h)), p = await ctx.newPage();
     await p.goto(BASE + '/index.html?p=product'); await espera(2500);
-    await p.evaluate(() => { const lb = document.querySelector('#hp-v1 .demo-cambio'); scrollTo(0, Math.max(0, lb.getBoundingClientRect().top + scrollY - 70)); });
+    await p.evaluate(() => { const lb = document.querySelector('#hp-v2 .demo-cambio'); scrollTo(0, Math.max(0, lb.getBoundingClientRect().top + scrollY - 70)); });
     await espera(600);
-    await p.evaluate(() => { window.__s = new Set(); const t0 = performance.now(); (function f(){ const c = document.querySelector('#hp-v1 .prod-cel'); window.__s.add(Math.round(scrollY) + '/' + Math.round(c.getBoundingClientRect().top)); if (performance.now() - t0 < 5000) requestAnimationFrame(f); })(); });
-    for (const d of ['instala', 'accion']) { const bx = await (await p.$('#hp-v1 .demo-section:not([hidden]) .demo-cambio button[data-d="' + d + '"]')).boundingBox(); await p.touchscreen.tap(bx.x + bx.width / 2, bx.y + bx.height / 2); await espera(2300); }
+    await p.evaluate(() => { window.__s = new Set(); const t0 = performance.now(); (function f(){ const c = document.querySelector('#hp-v2 .prod-cel'); window.__s.add(Math.round(scrollY) + '/' + Math.round(c.getBoundingClientRect().top)); if (performance.now() - t0 < 5000) requestAnimationFrame(f); })(); });
+    for (const d of ['instala', 'accion']) { const bx = await (await p.$('#hp-v2 .demo-section:not([hidden]) .demo-cambio button[data-d="' + d + '"]')).boundingBox(); await p.touchscreen.tap(bx.x + bx.width / 2, bx.y + bx.height / 2); await espera(2300); }
     const s = await p.evaluate(() => [...window.__s]);
     if (s.length > 1) fallas.push(t + ': desplazamiento/texto de abajo ' + s.slice(0, 4).join(' → '));
     await ctx.close();
@@ -173,7 +173,7 @@ async function tactil(b){
   const fallas = [];
   for (const [w, h, t] of [CEL_V[0], CEL_H[0], TAB[0], TAB[1]]) {
     const ctx = await contexto(b, movil(w, h)), p = await ctx.newPage();
-    for (const hp of ['v1', 'v2', 'ped']) {
+    for (const hp of ['v2', 'ped', 'fin']) {
       await p.goto(BASE + '/index.html?p=product&h=' + hp); await espera(2200);
       const r = await p.evaluate(hp => {
         const pn = document.getElementById('hp-' + hp), d = pn.querySelector('.demo-section:not([hidden]) .al-demo'), f = [];
@@ -198,7 +198,7 @@ async function memoria(b){
   const medir = () => p.evaluate(() => { let mb = 0, gl = 0; window.__cv.forEach(x => { if (/webgl/.test(x.t)) { if (!(x.g.isContextLost && x.g.isContextLost())) gl++; } else mb += x.c.width * x.c.height * 4 / 1048576; }); return { gl: gl, mb: Math.round(mb) }; });
   await p.goto(BASE + '/index.html'); await espera(3500); const m0 = await medir();
   await p.evaluate(() => show('product')); await espera(2500);
-  for (const hp of ['v2', 'ped', 'v1']) { await p.click('#product .hp-tabs .gp-tab[data-hp="' + hp + '"]'); await espera(1500); await p.click('#hp-' + hp + ' .demo-section:not([hidden]) .demo-cambio button[data-d="instala"]'); await espera(2000); }
+  for (const hp of ['ped', 'fin', 'v2']) { await p.click('#product .hp-tabs .gp-tab[data-hp="' + hp + '"]'); await espera(1500); await p.click('#hp-' + hp + ' .demo-section:not([hidden]) .demo-cambio button[data-d="instala"]'); await espera(2000); }
   const m1 = await medir();
   notas.push('al abrir: ' + m0.gl + ' contextos 3D, ' + m0.mb + ' MB de lienzos · con las 3 herramientas y sus 6 demos: ' + m1.gl + ' contextos, ' + m1.mb + ' MB');
   if (m1.gl > 10) fallas.push(m1.gl + ' contextos 3D activos (máximo 10)');
@@ -208,7 +208,7 @@ async function memoria(b){
 async function sin3d(){
   const b = await PW.chromium.launch({ args: ['--disable-webgl', '--disable-3d-apis'] }), fallas = [];
   const ctx = await contexto(b, movil(390, 664)), p = await ctx.newPage(), err = []; p.on('pageerror', e => err.push(e.message));
-  for (const hp of ['v1', 'v2', 'ped']) {
+  for (const hp of ['v2', 'ped', 'fin']) {
     await p.goto(BASE + '/index.html?p=product&h=' + hp); await espera(3000);
     const r = await p.evaluate(hp => [...document.querySelectorAll('#hp-' + hp + ' .al-demo')].filter(d => d.offsetParent && !d.classList.contains('al-demo--no3d')).map(d => d.id), hp);
     if (r.length) fallas.push(hp + ': sin versión en texto: ' + r.join(', '));
@@ -222,7 +222,7 @@ async function movimiento(b){
   const fallas = [];
   const ctx = await contexto(b, movil(390, 664, { reducedMotion: 'reduce' })), p = await ctx.newPage(), err = []; p.on('pageerror', e => err.push(e.message));
   await p.goto(BASE + '/index.html?p=product'); await espera(3000);
-  if (!await p.evaluate(() => document.getElementById('ver-en-accion').classList.contains('al-demo--manual'))) fallas.push('con "reducir movimiento" la demo no parte en pausa');
+  if (!await p.evaluate(() => document.getElementById('v2-accion').classList.contains('al-demo--manual'))) fallas.push('con "reducir movimiento" la demo no parte en pausa');
   if (err.length) fallas.push('errores: ' + err[0]);
   await ctx.close(); informe('Reducir movimiento', fallas);
 }
@@ -234,7 +234,7 @@ async function primera(b){
   for (const [w, h, t, tapa] of CEL_V.map(c => c.concat(0)).concat(IOS26.map(c => c.concat(85)))) {
     const ctx = await contexto(b, movil(w, h)), p = await ctx.newPage();
     await p.goto(BASE + '/index.html?p=product'); await espera(1500);
-    for (const hp of ['v1', 'v2', 'ped']) {
+    for (const hp of ['v2', 'ped', 'fin']) {
       await p.evaluate(hp => { showHP(hp); window.scrollTo(0, 0); }, hp); await espera(700);
       // 2026-10-07: la demo es el equipo completo; al abrir se ven el nombre, qué hace, el selector y el comienzo
       // de la demo, y el equipo con su barra y la frase del paso caben juntos en una pantalla
@@ -259,7 +259,7 @@ async function primera(b){
   for (const [w, h, t] of [[1194, 760, 'iPad Pro 11 horizontal (Safari)'], [1194, 710, 'iPad Pro 11 horizontal (Chrome)'], [1180, 750, 'iPad Air horizontal'], [1133, 680, 'iPad mini horizontal'], [1366, 950, 'iPad Pro 13 horizontal'], [1366, 900, 'iPad Pro 13 horizontal (Chrome)']]) {
     const ctx = await contexto(b, movil(w, h)), p = await ctx.newPage();
     await p.goto(BASE + '/index.html?p=product'); await espera(1500);
-    for (const hp of ['v1', 'v2', 'ped']) for (const d of ['accion', 'instala']) {
+    for (const hp of ['v2', 'ped', 'fin']) for (const d of ['accion', 'instala']) {
       await p.evaluate(([hp, d]) => { showHP(hp); const bt = document.querySelector('#hp-' + hp + ' .demo-cambio button[data-d="' + d + '"]'); if (bt && !bt.classList.contains('on')) bt.click(); window.scrollTo(0, 0); }, [hp, d]); await espera(900);
       const alto = await p.evaluate(() => { const e = [...document.querySelectorAll('#product .hp-panel.on .al-demo')].find(x => x.offsetHeight > 0); if (!e) return 0; const st = e.querySelector('.al-demo__stage').getBoundingClientRect(), pa = e.querySelector('.al-paso'); return st.bottom - (pa ? pa.getBoundingClientRect().top : st.top); });
       if (alto > h + 1) fallas.push(t + ' ' + w + '×' + h + ' ' + hp + '/' + d + ': el equipo con su barra mide ' + Math.round(alto) + ' px y no cabe en ' + h);
@@ -286,7 +286,7 @@ async function recuperar(b){
   });
   const p = await ctx.newPage();
   await p.goto(BASE + '/index.html?p=product'); await espera(2500);
-  for (const hp of ['v1', 'v2']) {
+  for (const hp of ['v2', 'fin']) {
     await p.evaluate(hp => { showHP(hp); window.scrollTo(0, 0); }, hp); await espera(2500);
     const r = await p.evaluate(async hp => {
       const esc = [...document.querySelectorAll('#hp-' + hp + ' .al-demo__stage canvas')].find(c => c.__gl && c.offsetHeight > 0);

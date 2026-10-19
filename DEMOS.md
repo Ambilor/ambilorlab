@@ -8,9 +8,9 @@ Guía para armar la demo de un aplicativo nuevo sobre lo que ya existe, sin part
 |---|---|---|
 | `alDemoLinea(root, steps, opciones)` | Controlador común de todas las demos: modo **automático** y **manual**, ← Anterior, ▶/⏸, → Siguiente, **↻ Reiniciar** (lo agrega solo), barra de pasos, teclado (← → e Inicio) y el **panel de simulación** opcional. Mueve los controles del HTML a una **barra de reproductor dentro de la escena**; el canvas deja libre ese alto (`--al-barra`). | Bloque "Línea de tiempo de las demos" |
 | `alDemoTarjetas(root, cfg)` | Motor de demos por **tarjetas**: una pantalla por etapa, dibujada en canvas y mostrada en 3D, con cursor que hace clic. Elige solo el diseño **apaisado** (`draw`) o el **vertical** (`drawV`) según la forma del recuadro. | Bloque "Motor de demos por tarjetas" |
-| `AL_DEMOS['id']` | La configuración de cada demo: etapas, textos, dibujos, cursor y simulación. **Es lo único que se escribe para una demo nueva.** | Bloques "Demos del Conciliador V2", "Demos de PedidoApp" y "Diseños verticales" |
+| `AL_DEMOS['id']` | La configuración de cada demo: etapas, textos, dibujos, cursor y simulación. **Es lo único que se escribe para una demo nueva.** | Bloques "Demos del Conciliador", "Demos de PedidoApp", "Demos de FinanzApp" y "Diseños verticales" |
 
-La escena 3D de "Ver en acción" del **Conciliador V1** es la referencia más completa de simulación (fichas que se ordenan, arcos de coincidencia, panel y hoja de resultados). Usa el mismo controlador y su `SIM` sirve de ejemplo.
+"Ver en acción" de **FinanzApp** es el ejemplo de un solo dibujo para los dos formatos (`draw` y `drawV` son la misma función: en lo apaisado la app va en dos columnas, como en la web; en lo vertical, en una, como en el celular). Sus ayudantes de la app (`AL_DEMOS['fin-accion'].app(H)`) también los usa su instalación.
 
 ## Comportamiento que se obtiene gratis
 
@@ -35,7 +35,7 @@ La escena 3D de "Ver en acción" del **Conciliador V1** es la referencia más co
    - los textos y la nota `.al-demo__note`.
 
    Las demos del panel se inician solas la primera vez que se abre la sub-pestaña (`showHP`).
-2. **Configuración.** Crear `AL_DEMOS['xxx-accion']` y `AL_DEMOS['xxx-instala']` con la plantilla de abajo, en un bloque `<script>` después de los de V2 y PedidoApp.
+2. **Configuración.** Crear `AL_DEMOS['xxx-accion']` y `AL_DEMOS['xxx-instala']` con la plantilla de abajo, en un bloque `<script>` después de los del Conciliador, PedidoApp y FinanzApp.
 3. **Diseño vertical.** Agregar `drawV` y `cursorV`. Los pasos de instalación comunes ya existen en "Diseños verticales" (`I.copia`, `I.menu`, `I.permisos`, `I.publicar`, `I.verificar`, `I.listo`, con sus cursores en `K`), así que una instalación nueva se arma casi solo con ellos.
 4. **Simulación (recomendada).** Agregar `sim(t)` para que la demo muestre la automatización: barra de progreso, avisos de lo que acaba de pasar y, si la escena no las muestra, cifras. La etiqueta de arriba solo dice el modo (Automático o Manual). Los valores son de ejemplo y el panel lo dice ("Datos de ejemplo").
 5. **Revisar.** Correr `revisar.html`, `?dividida` y `?ventana` en las cinco pestañas: todo en verde. Mirar a ojo celular vertical y horizontal, iPad ⅓ y web a media pantalla.
@@ -92,6 +92,6 @@ Ayudantes de dibujo (`H`), en coordenadas de la tarjeta:
 
 - Los números de las demos son **de ejemplo**: nunca se presentan como resultados de un usuario. El panel de simulación lo indica y la nota de la demo lo repite.
 - En la tarjeta vertical, el texto va de 28 a 46 px (en la tarjeta de 800 de ancho) y los botones van a lo ancho.
-- Los contadores del panel (`kpis`) son opcionales: si la escena ya muestra las cifras (como el V1), no se repiten. En celular caben hasta 4.
+- Los contadores del panel (`kpis`) son opcionales: si la escena ya muestra las cifras, no se repiten. En celular caben hasta 4.
 - Una demo nueva no copia el motor ni el controlador: solo agrega su `AL_DEMOS[...]`.
 - En pantallas táctiles todo control de la demo mide al menos 44 px (botones de la barra 44×44, selector de demo 40 px con 48 de toque). La barra va en una sola fila (← ▮▮ →, la línea de avance y ↻), y en dos filas solo en pantallas de menos de 360 px. Esto lo da el CSS común; no se configura por demo.
