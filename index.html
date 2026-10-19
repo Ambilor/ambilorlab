@@ -2621,10 +2621,6 @@ window.alFoto = (function(){
 /* Demos: notas de cada paso (2026-10-07): una frase corta por paso, en una burbuja junto a lo que se toca
    (o arriba, si el paso no tiene toque). Las dibuja el motor de tarjetas sobre la pantalla del demo. */
 window.AL_NOTAS = {
-  'ver-en-accion': ['Así se cuadra hoy: fila por fila, a mano', 'Pega el enlace de tu cartola en Google Sheets', 'Un clic: valida los datos y concilia',
-                    'Cada movimiento con su contraparte y su motivo', 'Lo que no calzó, lo emparejas tú', 'El reporte, listo para imprimir o guardar en PDF'],
-  'como-se-instala': ['Haz una copia en tu Drive', 'Abre «Configurar herramienta» en el menú', 'Autoriza el acceso una sola vez',
-                      'Publica tu panel con «Implementar»', 'Ábrelo y empieza a conciliar', 'Listo: ya quedó instalado'],
   'v2-accion': ['Un abono paga dos facturas: ¿cuáles?', 'Pega el enlace de cada Google Sheet', 'El grupo 1:2 se arma solo',
                 'Una regla y las comisiones quedan explicadas', 'Envía la vista a quien la necesita', 'Indicadores que llevan al detalle'],
   'v2-instala': ['Haz una copia en tu Drive', 'Abre «Configurar herramienta» en el menú', 'Autoriza los permisos una sola vez',
@@ -2632,7 +2628,11 @@ window.AL_NOTAS = {
   'ped-accion': ['Pedidos repartidos entre chats y notas', 'Tu catálogo en un enlace para compartir', 'Tu cliente elige y envía en un minuto',
                  'Llega con aviso y campanita a tu panel', 'Un toque: confirmado y pagado', 'Ventas y lo más pedido, a la vista'],
   'ped-instala': ['Haz una copia en tu Drive', 'Publica tu app con «Implementar»', 'Autoriza el acceso una sola vez',
-                  'Entra a tu panel con tu clave', 'Tu negocio y tu catálogo', 'Comparte tu formulario con tus clientes']
+                  'Entra a tu panel con tu clave', 'Tu negocio y tu catálogo', 'Comparte tu formulario con tus clientes'],
+  'fin-accion': ['Compras sueltas que nadie anota', 'Monto y categoría: dos toques', 'Cuánto te queda para el mes',
+                 'Te avisa cuando te pasas', 'Tarjetas, cuotas y deudas al día', 'Cómo terminarás el mes'],
+  'fin-instala': ['Haz una copia en tu Drive', 'Abre «Instalar o abrir el panel»', 'Autoriza los permisos una sola vez',
+                  'Publica tu panel con «Implementar»', 'Escanea el código con tu celular', 'Listo: tus finanzas en tu bolsillo']
 };
 </script>
 <script>/* la portada se presenta una vez por visita: hasta que arranca, su título y texto esperan ocultos */
@@ -2904,223 +2904,24 @@ window.AL_NOTAS = {
          formato en las tres: cabecera, "Ver en acción", "Cómo se instala", qué incluye,
          lo que necesitas saber y preguntas frecuentes. -->
     <div class="gp-tabs hp-tabs" role="tablist" aria-label="Herramientas">
-      <button class="gp-tab on" id="hpt-v1" data-hp="v1" role="tab" aria-selected="true" aria-controls="hp-v1"><span class="gp-tab-name">Conciliador V1</span><span class="hp-prox">Pronto</span></button>
-      <button class="gp-tab" id="hpt-v2" data-hp="v2" role="tab" aria-selected="false" aria-controls="hp-v2"><span class="gp-tab-name">Conciliador V2</span><span class="hp-prox">Pronto</span></button>
+      <button class="gp-tab on" id="hpt-v2" data-hp="v2" role="tab" aria-selected="true" aria-controls="hp-v2"><span class="gp-tab-name">Conciliador</span><span class="hp-prox">Pronto</span></button>
       <button class="gp-tab" id="hpt-ped" data-hp="ped" role="tab" aria-selected="false" aria-controls="hp-ped"><span class="gp-tab-name">App de Pedidos</span><span class="hp-prox">Pronto</span></button>
+      <button class="gp-tab" id="hpt-fin" data-hp="fin" role="tab" aria-selected="false" aria-controls="hp-fin"><span class="gp-tab-name">App de Finanzas</span><span class="hp-prox">Pronto</span></button>
     </div>
-  <div class="hp-panel on" id="hp-v1" role="tabpanel" aria-labelledby="hpt-v1">
+  <div class="hp-panel on" id="hp-v2" role="tabpanel" aria-labelledby="hpt-v2">
     <div class="prod-cab">
       <div class="prod-cab-txt">
         <div class="prod-eyebrow"><span class="prox-badge">Próximamente</span></div>
-        <h2 class="prod-h1">Conciliador Automático V1</h2>
-        <p class="prod-tagline">Tu conciliación mensual, hecha en segundos dentro de tu propio Google Sheets.</p>
+        <h2 class="prod-h1">Conciliador</h2>
+        <p class="prod-tagline">Tu conciliación en segundos, dentro de tu propio Google Sheets: una hoja sola o el banco contra tu contabilidad, en pares o en grupos.</p>
       </div>
-      <div class="alert-box"><b>¿Qué es conciliar?</b> Confirmar que cada movimiento de tu cartola o libro mayor tenga su contraparte: la factura con su pago, el cargo con su abono.</div>
+      <div class="alert-box"><b>Preciso por diseño:</b> empareja solo lo que no deja dudas. Si una pareja podría ser otra, no adivina: te la deja como sugerencia para que decidas tú.</div>
     </div>
 
     <div class="demo-par">
     <div class="demo-section on" data-d="accion" role="tabpanel">
       <div class="demo-label demo-cambio" role="tablist" aria-label="Demostraciones"><i aria-hidden="true"></i><button type="button" class="on" role="tab" aria-selected="true" data-d="accion">Ver en acción</button><button type="button" role="tab" aria-selected="false" data-d="instala">Cómo se instala</button></div>
-      <div class="al-demo" id="ver-en-accion" aria-label="Conciliador Automático V1 en acción">
-        <div class="al-demo__grid">
-          <div class="al-demo__copy">
-            <p class="al-demo__kicker">El problema que resuelve</p>
-            <h3 class="al-demo__title">Cruzas movimientos a mano. Cada mes.</h3>
-            <p class="al-demo__body">Cada factura debe coincidir con su pago, fila por fila, en planillas de cientos de filas. Hacerlo a mano toma horas, y un solo número mal copiado puede generar un problema después.</p>
-            <div class="al-demo__extra">
-              <ul class="al-demo__stats">
-                <li><strong>200</strong><span>movimientos típicos</span></li>
-                <li><strong>3 h</strong><span>tiempo manual</span></li>
-              </ul>
-            </div>
-          </div>
-          <div class="al-demo__stage"><canvas aria-hidden="true"></canvas></div>
-        </div>
-        <div class="al-demo__controls">
-          <button class="al-demo__btn" type="button" data-act="prev" aria-label="Paso anterior">&#8592;</button>
-          <button class="al-demo__btn al-demo__btn--play" type="button" data-act="play" aria-label="Pausar"><i class="al-pp" aria-hidden="true"></i></button>
-          <button class="al-demo__btn" type="button" data-act="next" aria-label="Paso siguiente">&#8594;</button>
-          <ol class="al-demo__steps"></ol>
-          <span class="al-demo__count">1 de 6</span>
-        </div>
-        <p class="al-demo__note">Demostración ilustrativa con datos de ejemplo. La herramienta funciona dentro de tu Google Sheets.</p>
-        <div class="al-demo__fallback">
-          <p class="al-demo__fbh">La demostración en 6 pasos</p>
-          <ol class="al-demo__fblist">
-            <li>
-              <span class="al-demo__fbk">El problema que resuelve</span>
-              <span class="al-demo__fbt">Cruzas movimientos a mano. Cada mes.</span>
-              <p class="al-demo__fbb">Cada factura debe coincidir con su pago, fila por fila, en planillas de cientos de filas. Hacerlo a mano toma horas, y un solo número mal copiado puede generar un problema después.</p>
-            </li>
-            <li>
-              <span class="al-demo__fbk">Paso 1: conecta tu fuente</span>
-              <span class="al-demo__fbt">Tu banco o ERP exporta a Google Sheets</span>
-              <p class="al-demo__fbb">Importa tu .xlsx o conecta un sheet externo. El sistema detecta los encabezados, te propone qué columna es cada dato (también Cargo y Abono por separado) y te confirma que son las correctas.</p>
-            </li>
-            <li>
-              <span class="al-demo__fbk">Paso 2: ejecuta desde el panel</span>
-              <span class="al-demo__fbt">Abre el panel de control web y ejecuta con un clic</span>
-              <p class="al-demo__fbb">Resultados, gráfico y números clave en una sola vista. El sistema valida los datos antes de procesar.</p>
-            </li>
-            <li>
-              <span class="al-demo__fbk">Algoritmo de matching</span>
-              <span class="al-demo__fbt">Cruza cada movimiento contra todos los demás</span>
-              <p class="al-demo__fbb">El sistema recorre todos los registros y empareja automáticamente cada movimiento con su contraparte, explicando el motivo de cada resultado.</p>
-            </li>
-            <li>
-              <span class="al-demo__fbk">Paso 3: revisa y corrige</span>
-              <span class="al-demo__fbt">Lo que no calzó, lo resuelves tú</span>
-              <p class="al-demo__fbb">Cada pendiente queda a la vista. Si sabes que una transferencia sin referencia corresponde a una factura, la emparejas a mano o deshaces un pareo, y el ajuste queda guardado entre ejecuciones.</p>
-            </li>
-            <li>
-              <span class="al-demo__fbk">Resultado final</span>
-              <span class="al-demo__fbt">Así queda tu conciliación</span>
-              <p class="al-demo__fbb">Cada movimiento con su estado, su contraparte y el detalle del match. Filtra los pendientes y exporta los resultados con un clic, listos para compartir o archivar.</p>
-            </li>
-          </ol>
-          <a class="al-demo__cta al-demo__cta--fb" href="#incluye">Ver qué incluye</a>
-        </div>
-      </div>
-    </div>
-    <div class="demo-section" data-d="instala" role="tabpanel" hidden id="instalacion">
-      <div class="demo-label demo-cambio" role="tablist" aria-label="Demostraciones"><i aria-hidden="true"></i><button type="button" role="tab" aria-selected="false" data-d="accion">Ver en acción</button><button type="button" class="on" role="tab" aria-selected="true" data-d="instala">Cómo se instala</button></div>
-      <div class="al-demo" id="como-se-instala" aria-label="Cómo se instala el Conciliador Automático V1">
-        <div class="al-demo__grid">
-          <div class="al-demo__copy" aria-live="polite">
-            <p class="al-demo__kicker">Paso 1: haz tu copia</p>
-            <h3 class="al-demo__title">Haz tu copia</h3>
-            <p class="al-demo__body">Abre el enlace que te enviamos y elige “Hacer una copia”. Tu copia se abre en tu Drive y trae la herramienta adentro, con su código ya incluido.</p>
-            <div class="al-demo__extra"></div>
-          </div>
-          <div class="al-demo__stage"><canvas aria-hidden="true"></canvas></div>
-        </div>
-        <div class="al-demo__controls">
-          <button class="al-demo__btn" type="button" data-act="prev" aria-label="Paso anterior">&#8592;</button>
-          <button class="al-demo__btn al-demo__btn--play" type="button" data-act="play" aria-label="Pausar"><i class="al-pp" aria-hidden="true"></i></button>
-          <button class="al-demo__btn" type="button" data-act="next" aria-label="Paso siguiente">&#8594;</button>
-          <ol class="al-demo__steps"></ol>
-          <span class="al-demo__count">1 de 6</span>
-        </div>
-        <p class="al-demo__note">Demostración ilustrativa. Los textos y botones pueden variar levemente según tu navegador e idioma de Google.</p>
-        <div class="al-demo__fallback">
-          <p class="al-demo__fbh">La instalación en 6 pasos</p>
-          <ol class="al-demo__fblist">
-            <li>
-              <span class="al-demo__fbk">Paso 1: haz tu copia</span>
-              <span class="al-demo__fbt">Haz tu copia</span>
-              <p class="al-demo__fbb">Abre el enlace que te enviamos y elige “Hacer una copia”. Tu copia se abre en tu Drive y trae la herramienta adentro, con su código ya incluido.</p>
-            </li>
-            <li>
-              <span class="al-demo__fbk">Paso 2: abre “Configurar herramienta”</span>
-              <span class="al-demo__fbt">Abre “Configurar herramienta”</span>
-              <p class="al-demo__fbb">En tu copia, abre el menú de la barra superior y elige “Tu herramienta — Ambilor.Lab”. Se abre un panel llamado “Configurar herramienta”, que te va guiando paso a paso.</p>
-            </li>
-            <li>
-              <span class="al-demo__fbk">Paso 3: autoriza el acceso</span>
-              <span class="al-demo__fbt">Autoriza el acceso</span>
-              <p class="al-demo__fbb">La primera vez, Google te pide permiso para leer tu planilla y mostrar el panel. Aparece en una pantalla de Google, no dentro de la herramienta. Acepta y sigue.</p>
-              <p class="al-demo__tip">El botón puede decir “Continuar” o “Aceptar” según tu navegador.</p>
-            </li>
-            <li>
-              <span class="al-demo__fbk">Paso 4: publica tu panel</span>
-              <span class="al-demo__fbt">Publica tu panel</span>
-              <p class="al-demo__fbb">Desde el editor de Apps Script, publica el panel como aplicación web con acceso “Solo yo”. Así queda privado en tu cuenta: nadie más lo ve.</p>
-              <p class="al-demo__tip">“Solo yo” significa privado. No elijas “Cualquiera”.</p>
-            </li>
-            <li>
-              <span class="al-demo__fbk">Paso 5: ábrelo y empieza</span>
-              <span class="al-demo__fbt">Ábrelo y empieza</span>
-              <p class="al-demo__fbb">Vuelve a tu planilla y abre el panel. La herramienta verifica que la instalación quedó correcta y te deja entrar.</p>
-            </li>
-            <li>
-              <span class="al-demo__fbk">Listo</span>
-              <span class="al-demo__fbt">Ya quedó instalado</span>
-              <p class="al-demo__fbb">No queda nada por instalar ni por pagar. Todo funciona dentro de tu propia cuenta de Google.</p>
-            </li>
-          </ol>
-        </div>
-      </div>
-    </div>
-    </div>
-
-    <!-- Solo en celular: la bajada y "¿Que es conciliar?" van despues de la
-         demo, para que la primera pantalla muestre la demo completa -->
-    <div class="prod-cel">
-      <p class="prod-tagline">Tu conciliación mensual, hecha en segundos dentro de tu propio Google Sheets.</p>
-      <div class="alert-box"><b>¿Qué es conciliar?</b> Confirmar que cada movimiento de tu cartola o libro mayor tenga su contraparte: la factura con su pago, el cargo con su abono.</div>
-    </div>
-
-        <!-- ── INSTALACION 3D (Three.js) ── -->
-    
-
-    <!-- 2026-09-27 (Director): el Conciliador pasa a "Próximamente"; la compra
-         en Gumroad queda desactivada hasta el lanzamiento. -->
-    <span class="buy-btn buy-btn--prox" aria-disabled="true">Próximamente</span>
-    <span class="guarantee-note">Muy pronto disponible. <a href="#" onclick="return show('contact')">Escríbeme</a> y te aviso cuando esté listo.</span>
-    <div class="alert-box">Pensado para cualquier persona que revise pagos, facturas o movimientos de dinero a mano cada mes — seas contador, dueño de una PyME, o la persona encargada de las cuentas en tu empresa.</div>
-    <!-- ═══ Qué incluye / Lo que necesitas saber / Preguntas frecuentes
-         Formato visual (2026-09-27, Director: "que no sea mucho texto y se
-         entienda de manera clara y concisa, usando apoyos visuales"). ═══ -->
-    <div class="pi-bloque">
-      <div class="pi-eyebrow" id="incluye">Qué incluye</div>
-      <div class="pi-grid4">
-        <div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 3v18"/></svg></span><span class="pi-t">La planilla</span><span class="pi-s">lista para usar en Google Sheets</span></div>
-        <div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 16v-4M11 16V9M15 16v-6M19 8H3"/></svg></span><span class="pi-t">Panel de control</span><span class="pi-s">resultados, gráficos y reporte</span></div>
-        <div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M9 7h6M9 11h6"/></svg></span><span class="pi-t">Manual de uso</span><span class="pi-s">en lenguaje simple · PDF</span></div>
-        <div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="2"/><circle cx="6" cy="18" r="2"/><path d="M11 6h9M11 12h9M11 18h9"/><circle cx="6" cy="12" r="2"/></svg></span><span class="pi-t">Guía de instalación</span><span class="pi-s">paso a paso con imágenes · PDF</span></div>
-      </div>
-    </div>
-
-    <div class="pi-bloque">
-      <div class="pi-eyebrow">Lo que necesitas saber</div>
-      <div class="pi-nums">
-        <div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></span><b>1<small>clic</small></b><span>para conciliar desde el panel</span></div>
-        <div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><b>10.000<small></small></b><span>movimientos por ejecución</span></div>
-        <div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><b>~5<small>min</small></b><span>de instalación, sin programar</span></div>
-        <div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></span><b>1<small></small></b><span>cuenta de Google y nada más</span></div>
-      </div>
-      <ul class="pi-caps">
-        <li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v3M12 18v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M3 12h3M18 12h3"/><circle cx="12" cy="12" r="3.5"/></svg></span><span><b>Sugerencias</b> de qué ajustar para conciliar más</span></li>
-        <li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/><path d="M18.5 3.5l2 2"/></svg></span><span><b>Antigüedad de pendientes</b> con alerta desde 30 días</span></li>
-        <li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16M4 12h10M4 19h7"/><circle cx="18" cy="17" r="3"/><path d="M18 15.5V17l1 .8"/></svg></span><span><b>Historial</b> de cada ejecución</span></li>
-        <li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21V8l6-4v17M9 21h12V11l-6-3"/><path d="M12 13h1M12 16h1M16 13h1M16 16h1"/></svg></span><span><b>Perfiles</b> por empresa o periodo, sin volver a configurar</span></li>
-        <li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/><path d="M15.5 15.5l1.5 1.5 3-3"/></svg></span><span><b>Datos de ejemplo</b> para probarlo apenas lo instalas</span></li>
-        <li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 3v18"/></svg></span><span><b>Funciona en Google Sheets,</b> gratis y ya lo conoces</span></li>
-      </ul>
-    </div>
-
-    <div class="pi-bloque">
-      <div class="pi-eyebrow">Preguntas frecuentes</div>
-      <div class="pi-faqs">
-        <details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 3v18"/></svg></span><span class="pi-q">¿Necesito facturas y pagos en planillas separadas?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>No. Todo va en una sola hoja de movimientos: tu cartola, tu libro mayor o lo que exporta tu ERP. Si hoy los tienes en archivos distintos, júntalos en una hoja y el sistema los empareja.</p></details>
-        <details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/><path d="M15.5 15.5l1.5 1.5 3-3"/></svg></span><span class="pi-q">¿Puedo probarlo sin mis datos?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Sí. Viene con datos de ejemplo activos: lo abres y lo ves conciliar al instante. Cuando quieras, conectas tu propia planilla.</p></details>
-        <details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><span class="pi-q">¿Mis datos quedan en algún servidor?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>No. Todo corre dentro de tu propia cuenta de Google: tus datos no salen de tu Drive.</p></details>
-        <details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10l9-6 9 6M5 10v8M9 10v8M15 10v8M19 10v8M3 21h18"/></svg></span><span class="pi-q">¿Sirve con cualquier banco o planilla?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Sí. Sirve con la cartola de cualquier banco, tu libro mayor o lo que exporta tu ERP, incluso si separa Cargo y Abono.</p></details>
-        <details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21V8l6-4v17M9 21h12V11l-6-3"/><path d="M12 13h1M12 16h1M16 13h1M16 16h1"/></svg></span><span class="pi-q">¿Puedo usarlo en más de una empresa?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Sí: con perfiles guardas la configuración de cada empresa o periodo. La licencia cubre una persona u organización; si administras varias, escríbeme.</p></details>
-        <details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><span class="pi-q">¿Y si tengo más de 10.000 registros?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>El rango declarado es de hasta 10.000 movimientos por ejecución, medido en una cuenta de Google real (Google limita cada ejecución a 6 minutos): si tienes más, procésalos por mes.</p></details>
-        <details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6v18h12V7z"/><path d="M14 3v4h4M9 13l6 4M15 13l-6 4"/></svg></span><span class="pi-q">¿Funciona en Excel?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Usa Google Sheets. Sube tu .xlsx a Drive, ábrelo como Google Sheet y úsalo como fuente.</p></details>
-      </div>
-    </div>
-
-    <span class="buy-btn buy-btn--prox" aria-disabled="true">Próximamente</span>
-    <span class="guarantee-note">Muy pronto disponible. <a href="#" onclick="return show('contact')">Escríbeme</a> y te aviso cuando esté listo.</span>
-
-    </div>
-
-  <div class="hp-panel" id="hp-v2" role="tabpanel" aria-labelledby="hpt-v2" hidden>
-    <div class="prod-cab">
-      <div class="prod-cab-txt">
-        <div class="prod-eyebrow"><span class="prox-badge">Próximamente</span></div>
-        <h2 class="prod-h1">Conciliador Semiautomático V2</h2>
-        <p class="prod-tagline">Cruza el banco contra tu contabilidad, en grupos y con avisos automáticos, dentro de tu propio Google Sheets.</p>
-      </div>
-      <div class="alert-box"><b>¿Qué suma al V1?</b> Dos fuentes a la vez (cartola contra libro mayor), grupos de varias partidas, reglas para explicar pendientes, correos automáticos e IA opcional.</div>
-    </div>
-
-    <div class="demo-par">
-    <div class="demo-section on" data-d="accion" role="tabpanel">
-      <div class="demo-label demo-cambio" role="tablist" aria-label="Demostraciones"><i aria-hidden="true"></i><button type="button" class="on" role="tab" aria-selected="true" data-d="accion">Ver en acción</button><button type="button" role="tab" aria-selected="false" data-d="instala">Cómo se instala</button></div>
-      <div class="al-demo al-demo--accion" id="v2-accion" aria-label="Conciliador Semiautomático V2 en acción">
+      <div class="al-demo al-demo--accion" id="v2-accion" aria-label="El Conciliador en acción">
         <div class="al-demo__grid">
           <div class="al-demo__copy" aria-live="polite">
             <p class="al-demo__kicker"></p>
@@ -3146,7 +2947,7 @@ window.AL_NOTAS = {
     </div>
     <div class="demo-section" data-d="instala" role="tabpanel" hidden id="instalacion-v2">
       <div class="demo-label demo-cambio" role="tablist" aria-label="Demostraciones"><i aria-hidden="true"></i><button type="button" role="tab" aria-selected="false" data-d="accion">Ver en acción</button><button type="button" class="on" role="tab" aria-selected="true" data-d="instala">Cómo se instala</button></div>
-      <div class="al-demo al-demo--instala" id="v2-instala" aria-label="Cómo se instala el Conciliador Semiautomático V2">
+      <div class="al-demo al-demo--instala" id="v2-instala" aria-label="Cómo se instala el Conciliador">
         <div class="al-demo__grid">
           <div class="al-demo__copy" aria-live="polite">
             <p class="al-demo__kicker"></p>
@@ -3173,36 +2974,37 @@ window.AL_NOTAS = {
     </div>
 
     <div class="prod-cel">
-      <p class="prod-tagline">Cruza el banco contra tu contabilidad, en grupos y con avisos automáticos, dentro de tu propio Google Sheets.</p>
-      <div class="alert-box"><b>¿Qué suma al V1?</b> Dos fuentes a la vez (cartola contra libro mayor), grupos de varias partidas, reglas para explicar pendientes, correos automáticos e IA opcional.</div>
+      <p class="prod-tagline">Tu conciliación en segundos, dentro de tu propio Google Sheets: una hoja sola o el banco contra tu contabilidad, en pares o en grupos.</p>
+      <div class="alert-box"><b>Preciso por diseño:</b> empareja solo lo que no deja dudas. Si una pareja podría ser otra, no adivina: te la deja como sugerencia para que decidas tú.</div>
     </div>
 
     
 
     <span class="buy-btn buy-btn--prox" aria-disabled="true">Próximamente</span>
     <span class="guarantee-note">Muy pronto disponible. <a href="#" onclick="return show('contact')">Escríbeme</a> y te aviso cuando esté listo.</span>
-    <div class="alert-box">Pensado para equipos contables, tesorerías y PyMEs que cierran el mes cruzando el banco contra la contabilidad, y para quien ya usa el V1 y necesita grupos, reglas y avisos.</div>
+    <div class="alert-box">Pensado para contadores, equipos contables, tesorerías y PyMEs que cierran el mes cuadrando movimientos.</div>
     <div class="pi-bloque">
       <div class="pi-eyebrow" id="incluye-v2">Qué incluye</div>
       <div class="pi-grid4">
-        <div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 3v18"/></svg></span><span class="pi-t">La planilla</span><span class="pi-s">con datos de ejemplo, lista para usar</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 16v-4M11 16V9M15 16v-6M19 8H3"/></svg></span><span class="pi-t">Panel de control</span><span class="pi-s">resultados, sugerencias e historial</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><span class="pi-t">Correos automáticos</span><span class="pi-s">resumen y alertas por responsable</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M9 7h6M9 11h6"/></svg></span><span class="pi-t">Guía y manual</span><span class="pi-s">paso a paso, en lenguaje simple · PDF</span></div>
+        <div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 3v18"/></svg></span><span class="pi-t">La planilla</span><span class="pi-s">con datos de ejemplo, lista para usar</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 16v-4M11 16V9M15 16v-6M19 8H3"/></svg></span><span class="pi-t">Panel de control</span><span class="pi-s">resultados, sugerencias, historial y reporte</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><span class="pi-t">Correos automáticos</span><span class="pi-s">resumen y alertas por responsable</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M9 7h6M9 11h6"/></svg></span><span class="pi-t">Guía y manual</span><span class="pi-s">paso a paso, en lenguaje simple · PDF</span></div>
       </div>
     </div>
 
     <div class="pi-bloque">
       <div class="pi-eyebrow">Lo que necesitas saber</div>
       <div class="pi-nums">
-        <div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="8" height="16" rx="1.5"/><rect x="13" y="4" width="8" height="16" rx="1.5"/><path d="M11 12h2"/></svg></span><b>2<small></small></b><span>fuentes: cartola y libro mayor</span></div><div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.3 11l7.4-3.8M8.3 13l7.4 3.8"/></svg></span><b>8<small></small></b><span>partidas por lado en cada grupo</span></div><div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><b>10.000<small></small></b><span>movimientos por ejecución</span></div><div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c1-3.5 3.5-5 6-5s5 1.5 6 5"/><circle cx="17" cy="9" r="2.6"/><path d="M16 14.2c2.3.2 4 1.8 5 4.8"/></svg></span><b>1 a 3<small></small></b><span>personas usando el panel</span></div>
+        <div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="8" height="16" rx="1.5"/><rect x="13" y="4" width="8" height="16" rx="1.5"/><path d="M11 12h2"/></svg></span><b>1 o 2<small></small></b><span>hojas: una sola, o cartola contra libro mayor</span></div><div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.3 11l7.4-3.8M8.3 13l7.4 3.8"/></svg></span><b>8<small></small></b><span>partidas por lado en cada grupo</span></div><div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><b>10.000<small></small></b><span>movimientos por ejecución</span></div><div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c1-3.5 3.5-5 6-5s5 1.5 6 5"/><circle cx="17" cy="9" r="2.6"/><path d="M16 14.2c2.3.2 4 1.8 5 4.8"/></svg></span><b>1 a 3<small></small></b><span>personas usando el panel</span></div>
       </div>
       <ul class="pi-caps">
-        <li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.3 11l7.4-3.8M8.3 13l7.4 3.8"/></svg></span><span><b>Grupos 1:n y n:1,</b> cada uno con su explicación</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7"/><path d="M16 15l2 2 4-4"/></svg></span><span><b>Reglas para explicar</b> comisiones, impuestos e intereses</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v3M12 18v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M3 12h3M18 12h3"/><circle cx="12" cy="12" r="3.5"/></svg></span><span><b>Sugerencias</b> cuando hay más de una forma de conciliar</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span><b>Envío automático</b> cada día o cada lunes, sin abrir el panel</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg></span><span><b>IA opcional</b> con tu propia clave: solo sugiere, nunca concilia sola</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg></span><span><b>Exporta a CSV</b> o envía cualquier vista por correo, con vista previa</span></li>
+        <li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.3 11l7.4-3.8M8.3 13l7.4 3.8"/></svg></span><span><b>Pares o grupos</b> (un pago contra varias facturas), cada uno con su explicación</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7"/><path d="M16 15l2 2 4-4"/></svg></span><span><b>Reglas para explicar</b> comisiones, impuestos e intereses</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v3M12 18v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M3 12h3M18 12h3"/><circle cx="12" cy="12" r="3.5"/></svg></span><span><b>Sugerencias</b> cuando hay más de una forma de conciliar</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span><b>Envío automático</b> cada día o cada lunes, sin abrir el panel</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg></span><span><b>IA opcional</b> con tu propia clave: solo sugiere, nunca concilia sola</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg></span><span><b>Reporte imprimible o en PDF,</b> CSV y envío por correo con vista previa</span></li>
       </ul>
     </div>
 
     <div class="pi-bloque">
       <div class="pi-eyebrow">Preguntas frecuentes</div>
       <div class="pi-faqs">
-        <details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><span class="pi-q">¿En qué se diferencia del V1?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>El V1 cruza una sola hoja, movimiento a movimiento. El V2 cruza dos fuentes entre sí, arma grupos de varias partidas, explica lo que no tendrá contraparte y avisa por correo a cada responsable.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg></span><span class="pi-q">¿Necesito usar la IA?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>No. Es opcional y usa tu propia clave de Claude o Gemini. Antes de enviar, oculta RUT, correos y números de cuenta, y te muestra el texto exacto. Sus propuestas llegan a Sugerencias: tú decides.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><span class="pi-q">¿Desde dónde salen los correos?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Desde tu propia cuenta de Google, dentro de su cuota diaria de Gmail. Antes de enviar ves la vista previa, el asunto y los destinatarios.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><span class="pi-q">¿Mis datos quedan en algún servidor?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>No. Todo corre dentro de tu cuenta de Google: tus planillas no salen de tu Drive.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c1-3.5 3.5-5 6-5s5 1.5 6 5"/><circle cx="17" cy="9" r="2.6"/><path d="M16 14.2c2.3.2 4 1.8 5 4.8"/></svg></span><span class="pi-q">¿Pueden usarlo varias personas?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Sí. Desde el panel defines hasta 10 correos con acceso; el rango declarado es de 1 a 3 personas usándolo a la vez.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><span class="pi-q">¿Y si tengo más de 10.000 movimientos?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Concilia por período, por ejemplo mes a mes. Google limita cada ejecución a 6 minutos.</p></details>
+        <details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></span><span class="pi-q">¿Cómo sé que no concilia mal?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Antes de cada versión se prueba con planillas cuya respuesta correcta ya se conoce (montos repetidos, fechas juntas, errores de tipeo, dos hojas, grupos): no puede conciliar sola ni una pareja equivocada. Lo que los datos no permiten decidir queda como sugerencia, y cada pareja trae su explicación.</p></details>
+        <details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><span class="pi-q">¿Sirve si solo concilio una hoja, sin grupos?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Sí. Con una sola hoja y los grupos apagados, empareja cada movimiento con su contraparte dentro de tu planilla. Cuando lo necesites, agregas una segunda hoja (por ejemplo, el libro mayor) o activas los grupos.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg></span><span class="pi-q">¿Necesito usar la IA?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>No. Es opcional y usa tu propia clave de Claude o Gemini. Antes de enviar, oculta RUT, correos y números de cuenta, y te muestra el texto exacto. Sus propuestas llegan a Sugerencias: tú decides.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><span class="pi-q">¿Desde dónde salen los correos?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Desde tu propia cuenta de Google, dentro de su cuota diaria de Gmail. Antes de enviar ves la vista previa, el asunto y los destinatarios.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><span class="pi-q">¿Mis datos quedan en algún servidor?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>No. Todo corre dentro de tu cuenta de Google: tus planillas no salen de tu Drive.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c1-3.5 3.5-5 6-5s5 1.5 6 5"/><circle cx="17" cy="9" r="2.6"/><path d="M16 14.2c2.3.2 4 1.8 5 4.8"/></svg></span><span class="pi-q">¿Pueden usarlo varias personas?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Sí. Desde el panel defines hasta 10 correos con acceso; el rango declarado es de 1 a 3 personas usándolo a la vez.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><span class="pi-q">¿Y si tengo más de 10.000 movimientos?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Concilia por período, por ejemplo mes a mes. Google limita cada ejecución a 6 minutos.</p></details>
       </div>
     </div>
 
@@ -3306,6 +3108,108 @@ window.AL_NOTAS = {
       <div class="pi-eyebrow">Preguntas frecuentes</div>
       <div class="pi-faqs">
         <details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg></span><span class="pi-q">¿Mis clientes tienen que instalar algo?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>No. Abren un enlace desde el celular o el computador y piden. Tú lo compartes por WhatsApp, redes sociales o donde quieras.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 9v.01M18 15v.01"/></svg></span><span class="pi-q">¿Cobra comisión por venta?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>No. La app vive en tu propia cuenta de Google: no hay intermediarios ni cobros por pedido.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 9v.01M18 15v.01"/></svg></span><span class="pi-q">¿Cómo me pagan?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Con los medios que tú configures: transferencia, link de pago o efectivo. La app muestra tus datos de pago; no procesa pagos.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg></span><span class="pi-q">¿Los pedidos llegan a mi WhatsApp?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Llegan a tu panel, en vivo, y si quieres también por correo. Desde el panel avisas al cliente por WhatsApp con el mensaje listo.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6v18h12V7z"/><path d="M14 3v4h4M9 13l6 4M15 13l-6 4"/></svg></span><span class="pi-q">¿Puedo cargar mi catálogo desde Excel?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Sí. Copias tus filas desde Excel o Google Sheets y las pegas en Catálogo → Importar.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><span class="pi-q">¿Cuántos pedidos soporta?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Está pensada para decenas de pedidos por hora y hasta unos 12.000 pedidos activos. Un medidor te avisa a tiempo para archivar los antiguos.</p></details>
+      </div>
+    </div>
+
+    <span class="buy-btn buy-btn--prox" aria-disabled="true">Próximamente</span>
+    <span class="guarantee-note">Muy pronto disponible. <a href="#" onclick="return show('contact')">Escríbeme</a> y te aviso cuando esté listo.</span>
+  </div>
+  <div class="hp-panel" id="hp-fin" role="tabpanel" aria-labelledby="hpt-fin" hidden>
+    <div class="prod-cab">
+      <div class="prod-cab-txt">
+        <div class="prod-eyebrow"><span class="prox-badge">Próximamente</span></div>
+        <h2 class="prod-h1">App de Finanzas</h2>
+        <p class="prod-tagline">Tus finanzas personales ordenadas desde el celular: anotas un gasto en dos toques y sabes cuánto te queda para el mes, dentro de tu propio Google Sheets.</p>
+      </div>
+      <div class="alert-box"><b>¿Para quién?</b> Personas y familias que quieren saber en qué se va la plata, tener al día sus tarjetas y deudas y ahorrar para sus metas.</div>
+    </div>
+
+    <div class="demo-par">
+    <div class="demo-section on" data-d="accion" role="tabpanel">
+      <div class="demo-label demo-cambio" role="tablist" aria-label="Demostraciones"><i aria-hidden="true"></i><button type="button" class="on" role="tab" aria-selected="true" data-d="accion">Ver en acción</button><button type="button" role="tab" aria-selected="false" data-d="instala">Cómo se instala</button></div>
+      <div class="al-demo al-demo--accion" id="fin-accion" aria-label="App de Finanzas en acción">
+        <div class="al-demo__grid">
+          <div class="al-demo__copy" aria-live="polite">
+            <p class="al-demo__kicker"></p>
+            <h3 class="al-demo__title"></h3>
+            <p class="al-demo__body"></p>
+            <div class="al-demo__extra"></div>
+          </div>
+          <div class="al-demo__stage"><canvas aria-hidden="true"></canvas></div>
+        </div>
+        <div class="al-demo__controls">
+          <button class="al-demo__btn" type="button" data-act="prev" aria-label="Paso anterior">&#8592;</button>
+          <button class="al-demo__btn al-demo__btn--play" type="button" data-act="play" aria-label="Pausar"><i class="al-pp" aria-hidden="true"></i></button>
+          <button class="al-demo__btn" type="button" data-act="next" aria-label="Paso siguiente">&#8594;</button>
+          <ol class="al-demo__steps"></ol>
+          <span class="al-demo__count">1 de 6</span>
+        </div>
+        <p class="al-demo__note">Demostración ilustrativa con datos de ejemplo. La app funciona con tu Google Sheets y tu cuenta de Google.</p>
+        <div class="al-demo__fallback">
+          <p class="al-demo__fbh">La demostración en 6 pasos</p>
+          <ol class="al-demo__fblist"></ol>
+        </div>
+      </div>
+    </div>
+    <div class="demo-section" data-d="instala" role="tabpanel" hidden id="instalacion-fin">
+      <div class="demo-label demo-cambio" role="tablist" aria-label="Demostraciones"><i aria-hidden="true"></i><button type="button" role="tab" aria-selected="false" data-d="accion">Ver en acción</button><button type="button" class="on" role="tab" aria-selected="true" data-d="instala">Cómo se instala</button></div>
+      <div class="al-demo al-demo--instala" id="fin-instala" aria-label="Cómo se instala la App de Finanzas">
+        <div class="al-demo__grid">
+          <div class="al-demo__copy" aria-live="polite">
+            <p class="al-demo__kicker"></p>
+            <h3 class="al-demo__title"></h3>
+            <p class="al-demo__body"></p>
+            <div class="al-demo__extra"></div>
+          </div>
+          <div class="al-demo__stage"><canvas aria-hidden="true"></canvas></div>
+        </div>
+        <div class="al-demo__controls">
+          <button class="al-demo__btn" type="button" data-act="prev" aria-label="Paso anterior">&#8592;</button>
+          <button class="al-demo__btn al-demo__btn--play" type="button" data-act="play" aria-label="Pausar"><i class="al-pp" aria-hidden="true"></i></button>
+          <button class="al-demo__btn" type="button" data-act="next" aria-label="Paso siguiente">&#8594;</button>
+          <ol class="al-demo__steps"></ol>
+          <span class="al-demo__count">1 de 6</span>
+        </div>
+        <p class="al-demo__note">Demostración ilustrativa. Los textos y botones pueden variar levemente según tu navegador e idioma de Google.</p>
+        <div class="al-demo__fallback">
+          <p class="al-demo__fbh">La instalación en 6 pasos</p>
+          <ol class="al-demo__fblist"></ol>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <div class="prod-cel">
+      <p class="prod-tagline">Tus finanzas personales ordenadas desde el celular: anotas un gasto en dos toques y sabes cuánto te queda para el mes, dentro de tu propio Google Sheets.</p>
+      <div class="alert-box"><b>¿Para quién?</b> Personas y familias que quieren saber en qué se va la plata, tener al día sus tarjetas y deudas y ahorrar para sus metas.</div>
+    </div>
+
+    
+
+    <span class="buy-btn buy-btn--prox" aria-disabled="true">Próximamente</span>
+    <span class="guarantee-note">Muy pronto disponible. <a href="#" onclick="return show('contact')">Escríbeme</a> y te aviso cuando esté listo.</span>
+    <div class="alert-box">Pensado para quien hoy anota sus gastos en una libreta, en las notas del celular o no los anota: sin suscripciones, sin conectar tu banco y con tus datos en tu propio Drive.</div>
+    <div class="pi-bloque">
+      <div class="pi-eyebrow" id="incluye-fin">Qué incluye</div>
+      <div class="pi-grid4">
+        <div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg></span><span class="pi-t">Panel en tu celular</span><span class="pi-s">registro rápido, inicio, metas y más</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 3v18"/></svg></span><span class="pi-t">Tu planilla</span><span class="pi-s">movimientos, presupuesto y deudas: todo tuyo</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><span class="pi-t">Resumen del mes</span><span class="pi-s">por correo, con PDF y recordatorio diario</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M9 7h6M9 11h6"/></svg></span><span class="pi-t">Guía de instalación</span><span class="pi-s">paso a paso con imágenes · PDF</span></div>
+      </div>
+    </div>
+
+    <div class="pi-bloque">
+      <div class="pi-eyebrow">Lo que necesitas saber</div>
+      <div class="pi-nums">
+        <div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V5a2 2 0 0 1 4 0v6"/><path d="M13 9a2 2 0 0 1 4 0v4a7 7 0 0 1-7 7h-.5A5.5 5.5 0 0 1 5 14.5V12a2 2 0 0 1 4 0"/></svg></span><b>2<small></small></b><span>toques para anotar un gasto</span></div><div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><b>10.000<small></small></b><span>movimientos registrados</span></div><div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 16v-4M11 16V9M15 16v-6M19 8H3"/></svg></span><b>6<small></small></b><span>meses en el gráfico</span></div><div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></span><b>1<small></small></b><span>cuenta de Google y nada más</span></div>
+      </div>
+      <ul class="pi-caps">
+        <li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span><b>Presupuesto por categoría,</b> con aviso y cuánto puedes gastar por día</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg></span><span><b>Metas de ahorro</b> con su avance</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/></svg></span><span><b>Tarjetas de crédito</b> con cuotas y fecha de pago</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V10l7-5 7 5v11M10 21v-6h4v6"/></svg></span><span><b>Deudas en pesos o en UF,</b> con el valor del día</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4v6h6"/><path d="M20 20v-6h-6"/><path d="M5.5 15a7 7 0 0 0 12.4 2M18.5 9A7 7 0 0 0 6.1 7"/></svg></span><span><b>Gastos e ingresos fijos</b> que se anotan con un toque</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></span><span><b>Proyección del mes</b> y gráfico de los últimos 6 meses</span></li>
+      </ul>
+    </div>
+
+    <div class="pi-bloque">
+      <div class="pi-eyebrow">Preguntas frecuentes</div>
+      <div class="pi-faqs">
+        <details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V10l7-5 7 5v11M10 21v-6h4v6"/></svg></span><span class="pi-q">¿Tengo que conectar mi banco?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>No. Tú anotas cada movimiento, y toma unos segundos. Así no compartes tus claves con nadie.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span><span class="pi-q">¿Dónde quedan mis datos?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>En una planilla de Google en tu propio Drive. El panel se publica como «Solo yo»: nadie más puede abrirlo, ni siquiera Ambilor.Lab.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8.5a15 15 0 0 1 20 0M5 12a10 10 0 0 1 14 0M8.5 15.5a5 5 0 0 1 7 0"/><path d="M12 19h.01"/></svg></span><span class="pi-q">¿Funciona sin internet?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Sí, con el panel ya abierto: lo que anotas sin señal espera en el teléfono y se sube solo al volver la conexión. Abrir el panel desde cero sí necesita internet.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg></span><span class="pi-q">¿Es una app de la tienda?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>No hace falta descargar nada: se abre desde un enlace con un código QR y la agregas a la pantalla de inicio de tu iPhone o Android, como una app más.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c1-3.5 3.5-5.5 6.5-5.5s5.5 2 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 14.5c1.5.8 2.6 2.6 3 5.5"/></svg></span><span class="pi-q">¿La podemos usar en pareja?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Está pensada para una persona, o para un hogar que comparte una misma cuenta de Google. El panel solo lo abre la cuenta dueña.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><span class="pi-q">¿Cuántos movimientos soporta?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Hasta unos 10.000, cerca de cuatro años registrando unos 200 al mes. Después puedes pasar los años antiguos a otra planilla.</p></details>
       </div>
     </div>
 
@@ -4499,7 +4403,7 @@ function show(id){
   // primera pantalla (como el cubo en Inicio), una vez por visita
   (function(){
     var RECORRIDO={about:'#about .ab2-perfil, #about .ab2-flujo li, #about .ab2-exp',
-      product:'#product .prod-cab .alert-box, #ver-en-accion',
+      product:'#product .prod-cab .alert-box, #v2-accion',
       guias:'#guias.rc-modo-lista #rc-grid .rc-card:not(.rc-oculta), #guias.rc-modo-guia .gp-panel.on .gvw, #guias.rc-modo-guia .gp-panel.on .gp-step.act',
       contact:'#contact .ct-lista, #contact .cf-wrap'};
     clearTimeout(window._marcoT);
@@ -4637,8 +4541,9 @@ var RC_GUIAS=[
   {r:'guia-looker-studio',gp:'ds',min:5,t:'Google Sheets con Looker Studio: reportes que se actualizan solos',d:'Conecta tu planilla y crea un informe gratis que tu equipo puede ver cuando quiera.'}
 ];
 var RC_APPS={
+  finanzapp:{tab:'hpt-fin',ico:'ti-receipt',t:'¿Quieres saber en qué se te va la plata?',d:'FinanzApp ordena tus gastos, tarjetas y deudas desde el celular: anotas en dos toques y ves cuánto te queda para el mes, todo dentro de tu Google Sheets.',b:'Ver FinanzApp en acción'},
   pedidoapp:{tab:'hpt-ped',ico:'ti-shopping-bag',t:'¿Quieres que tus pedidos se ordenen solos?',d:'PedidoApp recibe los pedidos de tus clientes en un formulario, con seguimiento, cupones y avisos por WhatsApp, todo dentro de Google Sheets.',b:'Ver PedidoApp en acción'},
-  conciliador:{tab:'hpt-v2',ico:'ti-arrows-exchange',t:'¿Quieres que la cuadratura se haga sola?',d:'El Conciliador Semiautomático cruza tu banco con tus registros en Google Sheets y te deja solo los pendientes que de verdad hay que mirar.',b:'Ver el Conciliador en acción'}
+  conciliador:{tab:'hpt-v2',ico:'ti-arrows-exchange',t:'¿Quieres que la cuadratura se haga sola?',d:'El Conciliador cruza tu banco con tus registros en Google Sheets y te deja solo los pendientes que de verdad hay que mirar.',b:'Ver el Conciliador en acción'}
 };
 var RC_ABRIENDO=false;
 var RC_BASE={titulo:document.title,desc:(document.querySelector('meta[name="description"]')||{}).content||'',canon:(document.querySelector('link[rel="canonical"]')||{}).href||''};
@@ -5882,7 +5787,7 @@ window.alDemoLinea = function(root, STEPS, o){
 /* ═══ Motor de demos por tarjetas (2026-09-30, Ambilor.Lab) ═══
    Generaliza el demo "Cómo se instala" del Conciliador V1 (una ventana por
    paso que entra, recibe clics del cursor y se va al fondo) para las demos
-   del Conciliador V2, de PedidoApp y la instalación del V1. "Ver en acción"
+   del Conciliador, de PedidoApp y la instalación del V1. "Ver en acción"
    del V1 es una escena 3D propia y no usa este motor.
    alDemoTarjetas(root, cfg): cfg.steps (a, b, short, kicker, title, body y
    opcionales tip, checks, stats, cta, contact), cfg.draw(H) -> [fn(g, lt)],
@@ -6459,8 +6364,8 @@ AL_DEMOS['v2-accion'] = {
         if (q > 0) { g.globalAlpha = q; txt(g, '¿Qué abono pagó qué facturas? ¿Y la comisión?', 600, 860, 32, 600, C.muted, 'center'); g.globalAlpha = 1; }
       },
       (g, lt) => {
-        base(g, 'Conciliador V2');
-        panelBar(g, 'Conciliador V2', TABS, 4);
+        base(g, 'Conciliador');
+        panelBar(g, 'Conciliador', TABS, 4);
         txt(g, '1 · Fuentes de datos', 40, 262, 40, 800, C.ink);
         const url = 'docs.google.com/spreadsheets/d/1Cartola…';
         const n = Math.floor(clamp((lt - 0.4) / 0.9) * url.length);
@@ -6485,8 +6390,8 @@ AL_DEMOS['v2-accion'] = {
         if (b > 0) { g.globalAlpha = b; banner(g, 590, 822, 570, 64, '✓ 2 fuentes listas'); g.globalAlpha = 1; }
       },
       (g, lt) => {
-        base(g, 'Conciliador V2');
-        panelBar(g, 'Conciliador V2', TABS, 1);
+        base(g, 'Conciliador');
+        panelBar(g, 'Conciliador', TABS, 1);
         const tarjeta = (x, y, w, fuente, concepto, monto, a, hl) => {
           g.globalAlpha = a;
           g.fillStyle = hl ? 'rgba(47,138,91,.12)' : '#f6f8fb'; rr(g, x, y, w, 150, 18); g.fill();
@@ -6513,8 +6418,8 @@ AL_DEMOS['v2-accion'] = {
         if (m > 0) { g.globalAlpha = m; txt(g, 'Motivo: suman lo mismo · 17 días de diferencia · «1002» en ambos conceptos', 600, 850, 27, 600, C.muted, 'center', 1080); g.globalAlpha = 1; }
       },
       (g, lt) => {
-        base(g, 'Conciliador V2');
-        panelBar(g, 'Conciliador V2', TABS, 4);
+        base(g, 'Conciliador');
+        panelBar(g, 'Conciliador', TABS, 4);
         txt(g, '3 · Reglas para explicar pendientes', 40, 262, 38, 800, C.ink);
         g.strokeStyle = C.line; g.lineWidth = 3; rr(g, 40, 300, 1120, 300, 18); g.stroke();
         campo(g, 70, 360, 500, 56, 'Nombre', 'Comisiones del banco', false);
@@ -6539,8 +6444,8 @@ AL_DEMOS['v2-accion'] = {
         });
       },
       (g, lt) => {
-        base(g, 'Conciliador V2');
-        panelBar(g, 'Conciliador V2', TABS, 1);
+        base(g, 'Conciliador');
+        panelBar(g, 'Conciliador', TABS, 1);
         for (let r = 0; r < 6; r++) { g.fillStyle = r % 2 ? '#f6f8fb' : '#fff'; g.fillRect(40, 240 + r*70, 1120, 70); g.fillStyle = '#dde5ee'; rr(g, 70, 268 + r*70, 300, 14, 7); g.fill(); rr(g, 900, 268 + r*70, 200, 14, 7); g.fill(); }
         const d = easeOut((lt - 0.25) / 0.35);
         overlay(g, d); g.globalAlpha = d;
@@ -6562,8 +6467,8 @@ AL_DEMOS['v2-accion'] = {
         g.globalAlpha = 1;
       },
       (g, lt) => {
-        base(g, 'Conciliador V2');
-        panelBar(g, 'Conciliador V2', TABS, 0);
+        base(g, 'Conciliador');
+        panelBar(g, 'Conciliador', TABS, 0);
         const p = ease((lt - 0.3) / 1.6);
         const tiles = [[Math.round(lerp(47, 94, p)) + '%', 'conciliación', C.ok], [String(Math.round(lerp(8, 15, p))), 'conciliados', C.ok], [String(Math.round(lerp(0, 3, p))), 'explicados', C.expl], [String(Math.round(lerp(8, 1, p))), 'pendientes', C.warn]];
         const tw = (1120 - 3*20) / 4;
@@ -6588,9 +6493,9 @@ AL_DEMOS['v2-accion'] = {
 AL_DEMOS['v2-instala'] = {
   steps: [
     { a:0, b:5.2, short:'Copia', kicker:'Paso 1: haz tu copia', title:'Haz tu copia',
-      body:'Abre el enlace que te enviamos y elige “Hacer una copia”. Tu copia se abre en tu Drive y trae el Conciliador V2 adentro, con su código ya incluido.' },
+      body:'Abre el enlace que te enviamos y elige “Hacer una copia”. Tu copia se abre en tu Drive y trae el Conciliador adentro, con su código ya incluido.' },
     { a:5.2, b:10.4, short:'Configurar', kicker:'Paso 2: abre el asistente', title:'Abre “Configurar herramienta”',
-      body:'En tu copia, abre el menú “Conciliador V2” de la barra superior. El asistente se abre al costado y te guía paso a paso.' },
+      body:'En tu copia, abre el menú “Conciliador” de la barra superior. El asistente se abre al costado y te guía paso a paso.' },
     { a:10.4, b:15.6, short:'Autorizar', kicker:'Paso 3: autoriza los permisos', title:'Autoriza los permisos',
       body:'Google te pide permiso para leer tus planillas, enviar los correos y ejecutar la conciliación a la hora que programes. Aparece en una pantalla de Google, no dentro de la herramienta.',
       tip:'Marca todas las casillas: sin ellas no funcionan los correos ni el envío automático.' },
@@ -6625,7 +6530,7 @@ AL_DEMOS['v2-instala'] = {
           g.globalAlpha = nIn;
           const hl = 1 - ease((lt - 3.6) / 1.0);
           g.fillStyle = 'rgba(245,200,76,' + (0.55*hl) + ')'; g.fillRect(250, rowY(0) - 32, CW - 280, 64);
-          sheetIcon(g, 272, rowY(0) - 22, 36); txt(g, 'Conciliador V2 (copia)', 330, rowY(0), 35, 800, C.ink);
+          sheetIcon(g, 272, rowY(0) - 22, 36); txt(g, 'Conciliador (copia)', 330, rowY(0), 35, 800, C.ink);
           txt(g, 'ahora', CW - 60, rowY(0), 29, 600, C.soft, 'right');
           g.globalAlpha = 1;
         }
@@ -6638,10 +6543,10 @@ AL_DEMOS['v2-instala'] = {
         if (d > 0) {
           overlay(g, d); g.globalAlpha = d;
           dialog(g, 200, 190, 800, 540);
-          txt(g, 'Copiar “Conciliador V2” en Mi Drive', 240, 260, 44, 800, C.ink, 'left', 720);
+          txt(g, 'Copiar “Conciliador” en Mi Drive', 240, 260, 44, 800, C.ink, 'left', 720);
           txt(g, 'Nombre', 240, 330, 32, 700, C.muted);
           g.strokeStyle = C.brand; g.lineWidth = 3; rr(g, 240, 352, 720, 64, 12); g.stroke();
-          txt(g, 'Conciliador V2 (copia)', 262, 385, 35, 600, C.ink);
+          txt(g, 'Conciliador (copia)', 262, 385, 35, 600, C.ink);
           txt(g, 'Carpeta', 240, 450, 32, 700, C.muted);
           g.strokeStyle = C.line; rr(g, 240, 472, 720, 64, 12); g.stroke();
           txt(g, 'Mi Drive ▾', 262, 505, 35, 600, C.ink);
@@ -6654,13 +6559,13 @@ AL_DEMOS['v2-instala'] = {
       },
       (g, lt) => {
         base(g, 'Google Sheets');
-        sheetIcon(g, 30, 98, 30); txt(g, 'Conciliador V2 (copia)', 76, 118, 38, 700, C.ink);
+        sheetIcon(g, 30, 98, 30); txt(g, 'Conciliador (copia)', 76, 118, 38, 700, C.ink);
         let x = 32;
         ['Archivo','Editar','Ver','Insertar','Datos','Extensiones'].forEach(m => { txt(g, m, x, 168, 26, 600, C.muted); x += g.measureText(m).width + 22; });
         const open = lt > 1.05 && lt < 1.95;
-        g.font = '800 26px ' + FONT; const mw = g.measureText('Conciliador V2').width;
+        g.font = '800 26px ' + FONT; const mw = g.measureText('Conciliador').width;
         if (open || (lt > 0.85 && lt < 1.05)) { g.fillStyle = 'rgba(31,92,153,.12)'; rr(g, 780, 148, mw + 20, 40, 10); g.fill(); }
-        txt(g, 'Conciliador V2', 790, 168, 26, 800, C.brand);
+        txt(g, 'Conciliador', 790, 168, 26, 800, C.brand);
         g.fillStyle = '#f6f8fb'; g.fillRect(0, 196, CW, 38);
         g.strokeStyle = C.line; g.lineWidth = 1.5;
         for (let c = 0; c <= 8; c++) { const cx = 60 + c*150; g.beginPath(); g.moveTo(cx, 196); g.lineTo(cx, CH - 20); g.stroke(); if (c < 8) txt(g, 'ABCDEFGH'[c], cx + 75, 215, 26, 700, C.soft, 'center'); }
@@ -6694,7 +6599,7 @@ AL_DEMOS['v2-instala'] = {
       },
       (g, lt) => {
         base(g, 'Google');
-        wrap(g, 'Conciliador V2 quiere acceder a tu cuenta de Google', 100, 150, 1000, 50, 800, C.ink, 1.2);
+        wrap(g, 'Conciliador quiere acceder a tu cuenta de Google', 100, 150, 1000, 50, 800, C.ink, 1.2);
         ['Leer y editar tus planillas', 'Enviar correos en tu nombre', 'Ejecutarse a la hora que programes', 'Conectarse a la IA que elijas (opcional)'].forEach((s, k) => {
           const y = 300 + k*92, on = lt > 0.6 + k*0.3;
           g.strokeStyle = C.line; g.lineWidth = 2; g.beginPath(); g.moveTo(100, y + 46); g.lineTo(1100, y + 46); g.stroke();
@@ -6755,7 +6660,7 @@ AL_DEMOS['v2-instala'] = {
         }
       },
       (g, lt) => {
-        base(g, 'Conciliador V2');
+        base(g, 'Conciliador');
         const dash = ease((lt - 3.1) / 0.4);
         if (dash < 1) {
           g.globalAlpha = 1 - dash;
@@ -6772,7 +6677,7 @@ AL_DEMOS['v2-instala'] = {
         }
         if (dash > 0) {
           g.globalAlpha = dash;
-          H.panelBar(g, 'Conciliador V2', ['Resumen','Resultados','Sugerencias','Historial','Configuración'], 0);
+          H.panelBar(g, 'Conciliador', ['Resumen','Resultados','Sugerencias','Historial','Configuración'], 0);
           g.fillStyle = '#ebf2fa'; rr(g, 40, 250, 1120, 80, 14); g.fill(); g.fillStyle = C.brand; g.fillRect(40, 250, 6, 80);
           txt(g, 'Datos de ejemplo activos: míralo conciliar y luego conecta los tuyos.', 70, 291, 29, 600, C.ink, 'left', 1060);
           const tw = (1120 - 3*20) / 4;
@@ -7236,52 +7141,455 @@ AL_DEMOS['ped-instala'] = {
 };
 </script>
 <script>
-/* Demo "Cómo se instala" del Conciliador V1. Desde 2026-09-30 usa el motor de
-   tarjetas (alDemoTarjetas), igual que V2 y PedidoApp, y suma su diseño
-   vertical; antes tenía una copia propia del motor. */
+/* Demos de FinanzApp (2026-10-19). Pantallas dibujadas a partir de la app real (panel del celular:
+   Inicio, Registrar, Más → Presupuesto y Tarjetas). "Ver en acción" usa un solo dibujo para los dos
+   formatos: en el apaisado (computador, iPad horizontal) la app va en dos columnas, como en la web;
+   en el vertical, en una columna, como en el celular. Las medidas salen de CW y CH. */
 window.AL_DEMOS = window.AL_DEMOS || {};
-AL_DEMOS['como-se-instala'] = {
+(function(){
+  const money = n => '$' + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  const CAT = {
+    super:['Supermercado','#2e9a5a'], casa:['Casa','#1f5c99'], comida:['Comida fuera','#d4613a'], tv:['Entretención','#14907f'],
+    serv:['Servicios','#d08a1e'], auto:['Transporte','#6b5bd2'], salud:['Salud','#c0395a'], edu:['Educación','#3d8bd9'],
+    otros:['Otros','#6b7a8f'], tarjeta:['Tarjeta','#e8731a'], meta:['Meta','#14907f'], sueldo:['Sueldo','#2e9a5a'], correo:['Correo','#1f5c99']
+  };
+  // la app, dibujada para el tamaño de cada formato (H: ayudantes del motor)
+  function app(H){
+    const { C, CW, CH, FONT, clamp, ease, easeOut, rr, txt, wrap, btn, pill } = H;
+    const ANCHO = CW > 1000, M = 40;
+    const A = ANCHO ? { x: M, w: 540 } : { x: M, w: CW - 2*M }, B = ANCHO ? { x: 620, w: 540 } : A;
+    const navY = CH - (ANCHO ? 126 : 130);
+    function fondo(g){ g.clearRect(0, 0, CW, CH); g.fillStyle = '#eef3f8'; rr(g, 0, 0, CW, CH, 34); g.fill(); }
+    function tarjeta(g, x, y, w, h, color = '#ffffff'){ g.save(); g.shadowColor = 'rgba(18,48,77,.08)'; g.shadowBlur = 16; g.shadowOffsetY = 4; g.fillStyle = color; rr(g, x, y, w, h, 22); g.fill(); g.restore(); }
+    // íconos: cuadrado de color con un trazo blanco simple
+    function ico(g, k, x, y, s){
+      g.fillStyle = CAT[k][1]; rr(g, x, y, s, s, s*0.26); g.fill();
+      g.save(); g.translate(x + s/2, y + s/2); const u = s / 52; g.scale(u, u);
+      g.strokeStyle = '#fff'; g.fillStyle = '#fff'; g.lineWidth = 3.4; g.lineCap = 'round'; g.lineJoin = 'round'; g.beginPath();
+      if (k === 'casa') { g.moveTo(-12, -1); g.lineTo(0, -12); g.lineTo(12, -1); g.moveTo(-9, -3); g.lineTo(-9, 11); g.lineTo(9, 11); g.lineTo(9, -3); }
+      else if (k === 'super') { g.moveTo(-13, -10); g.lineTo(-9, -10); g.lineTo(-6, 5); g.lineTo(10, 5); g.lineTo(12, -5); g.lineTo(-8, -5); g.stroke(); g.beginPath(); g.arc(-4, 10, 2.2, 0, 7); g.arc(8, 10, 2.2, 0, 7); g.fill(); g.beginPath(); }
+      else if (k === 'comida') { g.moveTo(-8, -12); g.lineTo(-8, 12); g.moveTo(-12, -12); g.lineTo(-12, -4); g.lineTo(-4, -4); g.lineTo(-4, -12); g.moveTo(7, 12); g.lineTo(7, -12); g.quadraticCurveTo(13, -6, 7, 0); }
+      else if (k === 'tv') { g.rect(-12, -7, 24, 17); g.moveTo(-5, -13); g.lineTo(0, -7); g.lineTo(5, -13); }
+      else if (k === 'serv') { g.moveTo(3, -13); g.lineTo(-7, 2); g.lineTo(1, 2); g.lineTo(-3, 13); g.lineTo(8, -3); g.lineTo(0, -3); g.closePath(); }
+      else if (k === 'auto') { g.moveTo(-13, 6); g.lineTo(-13, -1); g.lineTo(-8, -9); g.lineTo(8, -9); g.lineTo(13, -1); g.lineTo(13, 6); g.closePath(); g.moveTo(-13, -1); g.lineTo(13, -1); g.stroke(); g.beginPath(); g.arc(-7, 8, 3, 0, 7); g.arc(7, 8, 3, 0, 7); g.fill(); g.beginPath(); }
+      else if (k === 'salud') { g.moveTo(0, 11); g.bezierCurveTo(-16, 0, -11, -14, 0, -6); g.bezierCurveTo(11, -14, 16, 0, 0, 11); }
+      else if (k === 'edu') { g.moveTo(-14, -3); g.lineTo(0, -10); g.lineTo(14, -3); g.lineTo(0, 4); g.closePath(); g.moveTo(-8, 1); g.lineTo(-8, 8); g.quadraticCurveTo(0, 13, 8, 8); g.lineTo(8, 1); }
+      else if (k === 'tarjeta') { g.rect(-13, -9, 26, 18); g.moveTo(-13, -3); g.lineTo(13, -3); g.moveTo(-8, 4); g.lineTo(-2, 4); }
+      else if (k === 'meta') { g.arc(0, 0, 12, 0, 7); g.moveTo(6, 0); g.arc(0, 0, 6, 0, 7); }
+      else if (k === 'correo') { g.rect(-13, -9, 26, 18); g.moveTo(-13, -9); g.lineTo(0, 2); g.lineTo(13, -9); }
+      else if (k === 'sueldo') { g.font = '800 28px ' + FONT; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('$', 0, 1); }
+      else { g.arc(-8, 0, 2.4, 0, 7); g.moveTo(2.4, 0); g.arc(0, 0, 2.4, 0, 7); g.moveTo(10.4, 0); g.arc(8, 0, 2.4, 0, 7); g.fill(); g.beginPath(); }
+      g.stroke(); g.restore();
+    }
+    function cabecera(g, titulo){
+      g.fillStyle = C.brand; rr(g, M, 26, 68, 68, 18); g.fill(); txt(g, 'F.', M + 34, 61, 30, 800, '#fff', 'center');
+      txt(g, 'Hola, Camila', M + 88, 44, 22, 600, C.muted); txt(g, titulo, M + 88, 80, 32, 800, C.ink);
+      const w = ANCHO ? 300 : 290, x = CW - M - w;
+      g.fillStyle = '#fff'; rr(g, x, 26, w, 68, 34); g.fill(); g.strokeStyle = C.line; g.lineWidth = 2; rr(g, x, 26, w, 68, 34); g.stroke();
+      txt(g, '‹', x + 32, 59, 34, 700, C.muted, 'center'); txt(g, 'Octubre 2026', x + w/2, 61, 26, 800, C.ink, 'center', w - 110); txt(g, '›', x + w - 32, 59, 34, 700, C.soft, 'center');
+    }
+    // barra de abajo: Inicio · Movimientos · (+) · Metas · Más
+    function nav(g, activa){
+      const w = ANCHO ? 640 : CW - 2*M, h = 104, x = (CW - w) / 2, y = CH - h - 22, sw = w / 5;
+      g.save(); g.shadowColor = 'rgba(18,48,77,.18)'; g.shadowBlur = 26; g.shadowOffsetY = 6; g.fillStyle = 'rgba(255,255,255,.97)'; rr(g, x, y, w, h, h/2); g.fill(); g.restore();
+      ['Inicio', 'Movimientos', '', 'Metas', 'Más'].forEach((s, k) => {
+        const cx = x + sw*k + sw/2;
+        if (k === 2) { g.save(); g.shadowColor = 'rgba(31,92,153,.4)'; g.shadowBlur = 18; g.shadowOffsetY = 6; g.beginPath(); g.arc(cx, y + h/2 - 6, 50, 0, 7); g.fillStyle = C.brandDark; g.fill(); g.restore(); txt(g, '+', cx, y + h/2 - 4, 54, 600, '#fff', 'center'); return; }
+        const col = k === activa ? C.brand : C.soft;
+        g.save(); g.translate(cx, y + 36); g.strokeStyle = col; g.lineWidth = 3; g.lineJoin = 'round'; g.lineCap = 'round'; g.beginPath();
+        if (k === 0) { g.moveTo(-11, 0); g.lineTo(0, -10); g.lineTo(11, 0); g.moveTo(-8, -2); g.lineTo(-8, 11); g.lineTo(8, 11); g.lineTo(8, -2); }
+        else if (k === 1) { g.rect(-11, -10, 7, 7); g.rect(-11, 3, 7, 7); g.moveTo(1, -7); g.lineTo(12, -7); g.moveTo(1, 6); g.lineTo(12, 6); }
+        else if (k === 3) { g.arc(0, 0, 11, 0, 7); g.moveTo(5, 0); g.arc(0, 0, 5, 0, 7); }
+        else { g.rect(-12, -8, 24, 17); g.moveTo(-12, -2); g.lineTo(12, -2); }
+        g.stroke(); g.restore();
+        txt(g, s, cx, y + 76, 20, k === activa ? 800 : 600, col, 'center', sw - 6);
+      });
+    }
+    function disponible(g, x, y, w, h, k){
+      const gr = g.createLinearGradient(x, y, x + w, y + h); gr.addColorStop(0, '#2a669f'); gr.addColorStop(1, '#163c66');
+      g.save(); g.shadowColor = 'rgba(22,60,102,.3)'; g.shadowBlur = 24; g.shadowOffsetY = 8; g.fillStyle = gr; rr(g, x, y, w, h, 26); g.fill(); g.restore();
+      txt(g, 'Disponible · Octubre 2026', x + 28, y + 42, 22, 600, 'rgba(255,255,255,.85)', 'left', w - 56);
+      txt(g, money(239845 * k), x + 28, y + 108, 66, 800, '#fff', 'left', w - 56);
+      const bw = (w - 56 - 28) / 3, by = y + h - 106, bh = 84;
+      [['Ingresos', 1450000], ['Gastos', 660155], ['Ahorro', 550000]].forEach(([l, v], i) => {
+        const bx = x + 28 + i*(bw + 14), a = easeOut((k - 0.3 - i*0.15) / 0.4);
+        g.fillStyle = 'rgba(255,255,255,.14)'; rr(g, bx, by, bw, bh, 14); g.fill();
+        txt(g, l, bx + 16, by + 26, 20, 600, 'rgba(255,255,255,.85)', 'left', bw - 24);
+        g.globalAlpha *= Math.max(0.15, a); txt(g, money(v), bx + 16, by + 60, 26, 800, '#fff', 'left', bw - 24); g.globalAlpha = 1;
+      });
+    }
+    function presupuesto(g, x, y, w, h, p){
+      tarjeta(g, x, y, w, h);
+      txt(g, 'Presupuesto del mes', x + 24, y + 38, 22, 600, C.muted, 'left', w*0.45);
+      txt(g, 'Te quedan ' + money(1000000 - 651255 * p), x + w - 24, y + 38, 22, 800, C.ink, 'right', w*0.5);
+      g.fillStyle = '#e6edf5'; rr(g, x + 24, y + 70, w - 48, 14, 7); g.fill();
+      g.fillStyle = '#27a05a'; rr(g, x + 24, y + 70, Math.max(14, (w - 48) * 0.65 * p), 14, 7); g.fill();
+      txt(g, 'Puedes gastar $13.413 por día · quedan 26 días', x + 24, y + h - 38, 22, 600, C.ink, 'left', w - 48);
+    }
+    function fila(g, x, y, w, h, k, nombre, sub, monto, color){
+      ico(g, k, x + 18, y + (h - 56)/2, 56);
+      txt(g, nombre, x + 92, y + h/2 - 16, 25, 800, C.ink, 'left', w - 300);
+      txt(g, sub, x + 92, y + h/2 + 18, 21, 600, C.muted, 'left', w - 300);
+      txt(g, monto, x + w - 22, y + h/2, 26, 800, color || C.ink, 'right', 200);
+    }
+    function proximos(g, x, y, w){
+      txt(g, 'Próximos pagos', x + 4, y + 16, 26, 800, C.ink);
+      tarjeta(g, x, y + 40, w, 104); fila(g, x, y + 40, w, 104, 'tarjeta', 'Visa Banco Estado', 'En 4 días · 10/10', 'Pagar');
+    }
+    function fijos(g, x, y, w, n){
+      txt(g, 'Fijos del mes', x + 4, y + 16, 26, 800, C.ink); txt(g, '1 de 4 listos', x + w - 4, y + 16, 22, 800, C.brand, 'right');
+      const filas = [['casa', 'Arriendo', 'Venció el 5/10 · toca para registrar', '$450.000'], ['serv', 'Plan celular', 'El 8/10 · toca para registrar', '$18.990'], ['serv', 'Luz y agua', 'El 12/10 · toca para registrar', '$42.000']].slice(0, n);
+      tarjeta(g, x, y + 40, w, 18 + filas.length*92);
+      filas.forEach((f, k) => fila(g, x, y + 49 + k*92, w, 92, f[0], f[1], f[2], f[3]));
+    }
+    function inicio(g, k){
+      fondo(g); cabecera(g, 'Inicio');
+      if (ANCHO) {
+        disponible(g, A.x, 124, A.w, 252, k); presupuesto(g, A.x, 396, A.w, 150, k);
+        proximos(g, B.x, 124, B.w); fijos(g, B.x, 300, B.w, 3);
+      } else {
+        disponible(g, A.x, 124, A.w, 282, k); presupuesto(g, A.x, 426, A.w, 170, k);
+        proximos(g, A.x, 626, A.w);
+        if (navY > 1010) fijos(g, A.x, 800, A.w, Math.max(0, Math.min(3, Math.floor((navY - 880) / 92))));
+      }
+      nav(g, 0);
+    }
+    // pestañas internas de «Más»
+    function seg(g, x, y, w, h, items, activa){
+      g.fillStyle = '#e1e8f0'; rr(g, x, y, w, h, h/2); g.fill();
+      const sw = (w - 12) / items.length;
+      items.forEach((s, k) => {
+        if (k === activa) { g.save(); g.shadowColor = 'rgba(18,48,77,.14)'; g.shadowBlur = 10; g.fillStyle = '#fff'; rr(g, x + 6 + k*sw, y + 6, sw, h - 12, (h - 12)/2); g.fill(); g.restore(); }
+        txt(g, s, x + 6 + k*sw + sw/2, y + h/2 + 1, 22, k === activa ? 800 : 700, k === activa ? C.ink : C.muted, 'center', sw - 10);
+      });
+    }
+    // un código QR de muestra (no lleva a ningún lado)
+    function qr(g, x, y, s, a){
+      const n = 21, u = s / n; let r = 7;
+      g.fillStyle = '#fff'; g.fillRect(x - u, y - u, s + 2*u, s + 2*u);
+      g.fillStyle = C.ink;
+      for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+        const fin = (i < 7 && j < 7) || (i > 13 && j < 7) || (i < 7 && j > 13);
+        r = (r * 1103515245 + 12345) & 0x7fffffff;
+        if (fin) { const ii = i % 14, jj = j % 14, d = Math.max(Math.abs(ii - 3), Math.abs(jj - 3)); if (d === 3 || d <= 1) g.fillRect(x + i*u, y + j*u, u + 0.5, u + 0.5); }
+        else if ((r >> 8) % 100 < 46 * a) g.fillRect(x + i*u, y + j*u, u + 0.5, u + 0.5);
+      }
+    }
+    return { qr, ANCHO, M, A, B, navY, money, fondo, tarjeta, ico, cabecera, nav, disponible, presupuesto, fila, proximos, fijos, inicio, seg };
+  }
+
+  // ── Ver en acción ──
+  function dibujo(H){
+    const { C, CW, CH, FONT, clamp, ease, easeOut, rr, txt, wrap, press, btn, base, overlay, dialog, banner, pill } = H;
+    const F = app(H), { ANCHO, M, A, B, navY, money } = F;
+    // pantalla Registrar (en el computador, como ventana sobre el Inicio)
+    const R = registro(CW, CH);
+    const NUM = '25900', TOQUES = [0.6, 0.95, 1.3, 1.65, 2.0], tCat = 3.0, tFin = 3.15;
+    function movimientos(g, lt){
+      F.fondo(g); F.cabecera(g, 'Movimientos');
+      const x = M, w = CW - 2*M, h = ANCHO ? 94 : 104, top = 130;
+      const filas = [['super', 'Supermercado', 'Hoy · Débito', '−$25.900'], ['comida', 'Comida fuera', 'Ayer · Visa', '−$12.400'], ['auto', 'Transporte', 'Ayer · Débito', '−$6.400'],
+        ['sueldo', 'Sueldo', '1 oct · Ingreso', '+$1.450.000'], ['casa', 'Arriendo', '5 oct · Fijo', '−$450.000'], ['tv', 'Entretención', '3 oct · Visa', '−$8.900'], ['salud', 'Salud', '2 oct · Débito', '−$32.000']];
+      const n = Math.max(1, Math.min(filas.length, Math.floor((navY - 120 - top) / h)));
+      txt(g, 'Hoy', x + 4, top, 24, 800, C.muted);
+      F.tarjeta(g, x, top + 24, w, n*h + 12);
+      filas.slice(0, n).forEach((f, k) => {
+        const y = top + 30 + k*h;
+        if (!k) { const hl = 1 - ease((lt - tFin - 0.8) / 1.0); g.fillStyle = 'rgba(245,200,76,' + (0.4*hl) + ')'; rr(g, x + 6, y, w - 12, h, 16); g.fill(); }
+        F.fila(g, x, y, w, h, f[0], f[1], f[2], f[3], f[3][0] === '+' ? C.ok : C.ink);
+      });
+      F.nav(g, 1);
+    }
+    return [
+      (g, lt) => {
+        base(g, 'Notificaciones');
+        const avisos = [['BANCO', 'Compra con débito por $12.990 en Supermercado'], ['VISA', 'Compra en 6 cuotas por $89.990'], ['BANCO', 'Transferencia enviada por $25.900'],
+          ['UBER', 'Tu viaje de hoy: $6.400'], ['STREAMING', 'Pago mensual: $10.990'], ['VISA', 'Compra por $18.500 en Farmacia'], ['BANCO', 'Cargo automático: $42.000 Luz y agua'], ['DELIVERY', 'Tu pedido: $14.200']];
+        const x = ANCHO ? 200 : 40, w = ANCHO ? 800 : CW - 80, h = ANCHO ? 84 : 100, paso = ANCHO ? 98 : 114;
+        avisos.forEach(([de, m], k) => {
+          const y = 104 + k*paso; if (y + h > CH - (ANCHO ? 190 : 200)) return;
+          const a = easeOut((lt - 0.2 - k*0.28) / 0.3); if (a <= 0) return;
+          g.globalAlpha = a;
+          g.fillStyle = '#f1f4f8'; rr(g, x, y + (1 - a)*14, w, h, 20); g.fill();
+          txt(g, de + ' · ahora', x + 26, y + (1 - a)*14 + h*0.32, 20, 800, C.soft);
+          txt(g, m, x + 26, y + (1 - a)*14 + h*0.68, 27, 600, C.ink, 'left', w - 52);
+          g.globalAlpha = 1;
+        });
+        const p = easeOut((lt - 2.6) / 0.4);
+        if (p > 0) { g.globalAlpha = p; pill(g, CW/2, CH - (ANCHO ? 150 : 160), '¿En qué se fue la plata este mes?', C.bad, '#fff', 31, 66, 'center'); g.globalAlpha = 1; }
+      },
+      (g, lt) => {
+        if (lt > tFin) {
+          movimientos(g, lt);
+          const b = easeOut((lt - tFin - 0.25) / 0.35);
+          if (b > 0) { g.globalAlpha = b; banner(g, ANCHO ? 300 : 80, navY - 100, ANCHO ? 600 : CW - 160, 72, '✓ Guardado en dos toques'); g.globalAlpha = 1; }
+          return;
+        }
+        const n = TOQUES.filter(t => lt > t + 0.05).length, monto = n ? money(Number(NUM.slice(0, n))) : '$0';
+        if (ANCHO) { F.inicio(g, 1); overlay(g, 1); dialog(g, R.dx, R.dy, R.dw, R.dh); }
+        else { g.clearRect(0, 0, CW, CH); g.fillStyle = '#ffffff'; rr(g, 0, 0, CW, CH, 34); g.fill(); }
+        txt(g, 'Registrar', R.tx, R.ty, 34, 800, C.ink);
+        g.beginPath(); g.arc(R.cx, R.ty, 28, 0, 7); g.fillStyle = '#eef2f7'; g.fill(); txt(g, '×', R.cx, R.ty, 38, 600, C.ink, 'center');
+        F.seg(g, R.sx, R.sy, R.sw, R.sh, ['Gasto', 'Ingreso', 'Ahorro', 'Pago'], 0);
+        txt(g, monto, R.ax, R.ay, R.as, 800, C.ink, 'center');
+        R.teclas.forEach(([s, x, y, w, h], i) => {
+          const pr = TOQUES.reduce((m, t, j) => (s === NUM[j] ? Math.max(m, press(lt, t)) : m), 0);
+          g.fillStyle = pr > 0 ? '#dbe6f2' : '#f1f5f9'; rr(g, x + pr*3, y + pr*3, w - pr*6, h - pr*6, 16); g.fill();
+          if (s === 'borrar') {   // tecla borrar, dibujada (el símbolo no está en la letra recortada del sitio)
+            const cx = x + w/2, cy = y + h/2; g.strokeStyle = C.ink; g.lineWidth = 3; g.lineJoin = 'round'; g.beginPath();
+            g.moveTo(cx - 22, cy); g.lineTo(cx - 10, cy - 13); g.lineTo(cx + 20, cy - 13); g.lineTo(cx + 20, cy + 13); g.lineTo(cx - 10, cy + 13); g.closePath();
+            g.moveTo(cx - 1, cy - 6); g.lineTo(cx + 11, cy + 6); g.moveTo(cx + 11, cy - 6); g.lineTo(cx - 1, cy + 6); g.stroke();
+          } else txt(g, s, x + w/2, y + h/2 + 1, 32, 700, C.ink, 'center');
+        });
+        txt(g, 'TOCA LA CATEGORÍA PARA GUARDAR', R.lx, R.ly, 20, 800, C.muted, 'left', R.lw);
+        R.cats.forEach(([k, x, y, w, h]) => {
+          const pr = k === 'super' ? press(lt, tCat) : 0;
+          g.fillStyle = pr > 0 ? '#dff0e6' : '#f4f7fa'; rr(g, x + pr*3, y + pr*3, w - pr*6, h - pr*6, 18); g.fill();
+          F.ico(g, k, x + w/2 - 27, y + 16, 54);
+          txt(g, CAT[k][0], x + w/2, y + h - 24, 19, 700, C.ink, 'center', w - 10);
+        });
+        if (R.pie) { g.strokeStyle = C.line; g.lineWidth = 2; rr(g, R.pie[0], R.pie[1], R.pie[2], 66, 16); g.stroke(); txt(g, 'Débito · Hoy', R.pie[0] + 24, R.pie[1] + 34, 24, 700, C.ink); txt(g, '▾', R.pie[0] + R.pie[2] - 28, R.pie[1] + 34, 22, 700, C.muted, 'center'); }
+      },
+      (g, lt) => {
+        F.inicio(g, easeOut((lt - 0.2) / 1.1));
+        const p = easeOut((lt - 2.2) / 0.4);
+        if (p > 0) { g.globalAlpha = p; pill(g, ANCHO ? A.x + A.w/2 : CW/2, ANCHO ? 600 : navY - 74, 'Sabes cuánto puedes gastar hoy', C.ink, '#fff', 26, 56, 'center'); g.globalAlpha = 1; }
+      },
+      (g, lt) => {
+        F.fondo(g); F.cabecera(g, 'Más');
+        F.seg(g, M, 120, ANCHO ? 560 : CW - 2*M, 72, ['Tarjetas', 'Fijos', 'Presup.', 'Ajustes'], 2);
+        txt(g, 'Categorías de gasto', M + 4, 236, 26, 800, C.ink); txt(g, '+ Nueva', ANCHO ? 580 : CW - M - 4, 236, 22, 800, C.brand, 'right');
+        const cats = [['super', 100190, 320000], ['casa', 481665, 450000], ['comida', 24900, 80000], ['auto', 12500, 90000], ['salud', 32000, 60000], ['tv', 8900, 0]];
+        const alerta = ANCHO ? 726 : navY - 108, h = ANCHO ? 132 : 116, paso = h + 12;
+        cats.forEach(([k, llevas, tope], i) => {
+          const col = ANCHO ? (i < 3 ? A : B) : A, j = ANCHO ? i % 3 : i, y = 268 + j*paso;
+          if (y + h > alerta - 10) return;
+          F.tarjeta(g, col.x, y, col.w, h);
+          F.ico(g, k, col.x + 20, y + (h - 56)/2, 56);
+          const bx = col.x + 94, bw = col.w - 94 - 200;
+          txt(g, CAT[k][0], bx, y + h*0.27, 25, 800, C.ink, 'left', bw);
+          const f = ease((lt - 0.4 - i*0.15) / 0.8), r = tope ? Math.min(1, llevas / tope) : 0, pasado = tope && llevas > tope && f >= 1;
+          g.fillStyle = '#e6edf5'; rr(g, bx, y + h*0.5 - 6, bw, 12, 6); g.fill();
+          if (r) { g.fillStyle = pasado ? '#d9483b' : '#3d7fd6'; rr(g, bx, y + h*0.5 - 6, Math.max(12, bw*r*f), 12, 6); g.fill(); }
+          txt(g, tope ? 'Llevas ' + money(llevas*f) : 'Sin límite', bx, y + h*0.75, 21, 600, pasado ? '#b42318' : C.muted, 'left', bw);
+          g.strokeStyle = C.line; g.lineWidth = 2; rr(g, col.x + col.w - 184, y + h/2 - 31, 164, 62, 14); g.stroke();
+          txt(g, tope ? '$ ' + money(tope).slice(1) : 'Sin límite', col.x + col.w - 36, y + h/2 + 1, 24, 700, tope ? C.ink : C.soft, 'right', 136);
+        });
+        const a = easeOut((lt - 1.9) / 0.35);
+        if (a > 0) {
+          const sx = Math.sin(lt*40) * 7 * Math.max(0, 1 - (lt - 1.9) / 0.6);
+          g.globalAlpha = a; g.save(); g.translate(sx, 0);
+          g.fillStyle = '#fde8e6'; rr(g, M, alerta, CW - 2*M, 70, 18); g.fill();
+          g.beginPath(); g.arc(M + 40, alerta + 35, 15, 0, 7); g.strokeStyle = '#b42318'; g.lineWidth = 3; g.stroke(); txt(g, '!', M + 40, alerta + 36, 22, 800, '#b42318', 'center');
+          txt(g, 'Casa · te pasaste por $31.665', M + 72, alerta + 36, 26, 800, '#b42318', 'left', CW - 2*M - 100);
+          g.restore(); g.globalAlpha = 1;
+        }
+        F.nav(g, 4);
+      },
+      (g, lt) => {
+        F.fondo(g); F.cabecera(g, 'Más');
+        F.seg(g, M, 120, ANCHO ? 560 : CW - 2*M, 72, ['Tarjetas', 'Fijos', 'Presup.', 'Ajustes'], 0);
+        const T = tarjetas(CW, CH), pagado = lt > 1.15;
+        // la tarjeta, con su cupo y el botón Pagar
+        F.tarjeta(g, A.x, 220, A.w, T.vh);
+        F.ico(g, 'tarjeta', A.x + 24, 246, 56);
+        txt(g, 'Visa Banco Estado', A.x + 98, 262, 27, 800, C.ink, 'left', A.w - 130); txt(g, 'Cierra el 25 · paga el 10', A.x + 98, 298, 21, 600, C.muted, 'left', A.w - 130);
+        const uso = pagado ? 0.34 * (1 - easeOut((lt - 1.15) / 0.6)) : 0.34;
+        g.fillStyle = '#e6edf5'; rr(g, A.x + 24, 336, A.w - 48, 14, 7); g.fill(); g.fillStyle = '#e8731a'; rr(g, A.x + 24, 336, Math.max(14, (A.w - 48) * uso), 14, 7); g.fill();
+        txt(g, 'Usado ' + money(1200000 * uso) + ' de $1.200.000', A.x + 24, 376, 22, 600, C.ink, 'left', A.w - 48);
+        if (!pagado) { pill(g, A.x + 24, T.by + 8, 'Paga en 4 días', '#fdf1e2', C.warn, 21, 44); btn(g, T.bx, T.by, 176, 60, 'Pagar', 'primary', press(lt, 1.0), 26); }
+        else pill(g, A.x + 24, T.by + 8, '✓ Pagada este mes', '#e6f2eb', C.ok, 21, 44);
+        // cuotas
+        F.tarjeta(g, A.x, T.cy, A.w, 232);
+        txt(g, 'Cuotas', A.x + 24, T.cy + 36, 24, 800, C.ink);
+        [['Notebook', '3 de 12', '$38.000'], ['Refrigerador', '7 de 18', '$24.990'], ['Celular', '10 de 12', '$15.500']].forEach(([n, c, v], k) => {
+          const y = T.cy + 86 + k*52;
+          txt(g, n, A.x + 24, y, 23, 700, C.ink, 'left', A.w*0.4); txt(g, c, A.x + A.w*0.55, y, 22, 600, C.muted, 'center'); txt(g, v, A.x + A.w - 24, y, 23, 800, C.ink, 'right');
+        });
+        // deuda en UF y una meta (al lado en el computador; abajo si cabe en el celular)
+        const dy = ANCHO ? 220 : T.cy + 250;
+        if (ANCHO || dy + 186 < navY - 100) {
+          F.tarjeta(g, B.x, dy, B.w, 186);
+          txt(g, 'Crédito de consumo', B.x + 24, dy + 40, 25, 800, C.ink, 'left', B.w - 200); pill(g, B.x + B.w - 24, dy + 18, 'UF $38.800', '#eef2f7', C.muted, 20, 42, 'right');
+          txt(g, 'Cuota 2,15 UF · hoy $83.420', B.x + 24, dy + 82, 22, 600, C.ink, 'left', B.w - 48);
+          g.fillStyle = '#e6edf5'; rr(g, B.x + 24, dy + 116, B.w - 48, 12, 6); g.fill(); g.fillStyle = C.brand; rr(g, B.x + 24, dy + 116, (B.w - 48) * 0.39 * ease((lt - 0.4) / 0.8), 12, 6); g.fill();
+          txt(g, 'Pagadas 14 de 36', B.x + 24, dy + 154, 21, 600, C.muted);
+        }
+        if (ANCHO) {
+          F.tarjeta(g, B.x, 426, B.w, 180);
+          F.ico(g, 'meta', B.x + 24, 450, 56);
+          txt(g, 'Vacaciones en el sur', B.x + 98, 466, 25, 800, C.ink, 'left', B.w - 130); txt(g, '$550.000 de $1.200.000', B.x + 98, 500, 21, 600, C.muted);
+          g.fillStyle = '#e6edf5'; rr(g, B.x + 24, 536, B.w - 48, 12, 6); g.fill(); g.fillStyle = '#14907f'; rr(g, B.x + 24, 536, (B.w - 48) * 0.46 * ease((lt - 0.6) / 0.8), 12, 6); g.fill();
+          txt(g, 'A este ritmo, la logras en marzo', B.x + 24, 576, 21, 700, C.ok, 'left', B.w - 48);
+        }
+        const b = easeOut((lt - 1.3) / 0.35);
+        if (b > 0) { g.globalAlpha = b; banner(g, ANCHO ? 260 : 60, navY - 92, ANCHO ? 680 : CW - 120, 70, '✓ Pago de la Visa registrado'); g.globalAlpha = 1; }
+        F.nav(g, 4);
+      },
+      (g, lt) => {
+        F.fondo(g); F.cabecera(g, 'Inicio');
+        const ch = ANCHO ? { x: A.x, y: 160, w: A.w, h: 330 } : { x: A.x, y: 166, w: A.w, h: 330 };
+        txt(g, 'Últimos 6 meses', ch.x + 4, ch.y - 22, 26, 800, C.ink);
+        F.tarjeta(g, ch.x, ch.y, ch.w, ch.h);
+        txt(g, 'Gastos de cada mes · presupuesto $1 M', ch.x + 24, ch.y + 34, 20, 600, C.muted, 'left', ch.w - 48);
+        const base0 = ch.y + ch.h - 56, alto = ch.h - 130, linea = base0 - alto / 1.1;
+        g.strokeStyle = C.ink; g.lineWidth = 2; g.beginPath(); g.moveTo(ch.x + 24, linea); g.lineTo(ch.x + ch.w - 24, linea); g.stroke();
+        txt(g, '$660 mil', ch.x + ch.w - 28, linea - 18, 20, 800, C.ink, 'right');
+        const sw = (ch.w - 48) / 6;
+        [['May', 0.62], ['Jun', 0.66], ['Jul', 0.7], ['Ago', 0.69], ['Sep', 0.75], ['Oct', 0.66]].forEach(([m, v], k) => {
+          const h = alto * v / 1.1 * ease((lt - 0.3 - k*0.08) / 0.6), x = ch.x + 24 + k*sw + sw/2 - 22;
+          g.fillStyle = k === 5 ? C.brand : '#c7d3e0'; rr(g, x, base0 - h, 44, Math.max(1, h), 6); g.fill();
+          txt(g, m, x + 22, base0 + 26, 20, k === 5 ? 800 : 600, k === 5 ? C.ink : C.muted, 'center');
+        });
+        // proyección del mes
+        const py = ANCHO ? 160 : ch.y + ch.h + 22, P = ANCHO ? B : A, ph = ANCHO ? 250 : 220;
+        const e = easeOut((lt - 1.1) / 0.4);
+        if (e > 0) {
+          g.globalAlpha = e; F.tarjeta(g, P.x, py, P.w, ph);
+          txt(g, 'Si sigues a este ritmo', P.x + 24, py + 40, 22, 700, C.muted);
+          txt(g, 'Terminas octubre con', P.x + 24, py + 84, 26, 600, C.ink);
+          txt(g, money(142300 * easeOut((lt - 1.3) / 1.0)), P.x + 24, py + 144, 56, 800, C.ok);
+          txt(g, 'disponibles · es una estimación con tu ritmo', P.x + 24, py + ph - 34, 20, 600, C.muted, 'left', P.w - 48);
+          g.globalAlpha = 1;
+        }
+        // resumen del mes por correo
+        const cy = ANCHO ? 430 : py + ph + 20, c = easeOut((lt - 2.5) / 0.4);
+        if (c > 0 && cy + 130 < navY - 10) {
+          g.globalAlpha = c; F.tarjeta(g, P.x, cy, P.w, 130);
+          F.ico(g, 'correo', P.x + 24, cy + 37, 56);
+          txt(g, 'Resumen de octubre', P.x + 98, cy + 48, 25, 800, C.ink, 'left', P.w - 220); txt(g, 'Llega a tu correo el 1/11', P.x + 98, cy + 84, 21, 600, C.muted, 'left', P.w - 220);
+          pill(g, P.x + P.w - 24, cy + 43, 'PDF', '#fde8e6', '#b42318', 22, 44, 'right');
+          g.globalAlpha = 1;
+        }
+        F.nav(g, 0);
+      }
+    ];
+  }
+  // posiciones de la pantalla Registrar (las usan el dibujo y el cursor)
+  function registro(CW, CH){
+    if (CW > 1000) {
+      const R = { dx: 100, dy: 50, dw: 1000, dh: 850, tx: 140, ty: 106, cx: 1050, sx: 140, sy: 150, sw: 440, sh: 64, ax: 360, ay: 272, as: 76, lx: 640, ly: 176, lw: 420, teclas: [], cats: [], pie: [640, 620, 420] };
+      ['1','2','3','4','5','6','7','8','9','000','0','borrar'].forEach((s, i) => R.teclas.push([s, 140 + (i % 3)*150, 334 + Math.floor(i / 3)*88, 140, 76]));
+      ['super','casa','comida','tv','serv','auto','salud','edu','otros'].forEach((k, i) => R.cats.push([k, 640 + (i % 3)*144, 200 + Math.floor(i / 3)*134, 132, 122]));
+      return R;
+    }
+    const R = { tx: 40, ty: 70, cx: CW - 70, sx: 40, sy: 118, sw: CW - 80, sh: 72, ax: CW/2, ay: 244, as: 84, lx: 40, ly: 688, lw: CW - 80, teclas: [], cats: [], pie: CH > 1100 ? [40, 990, CW - 80] : null };
+    ['1','2','3','4','5','6','7','8','9','000','0','borrar'].forEach((s, i) => R.teclas.push([s, 40 + (i % 3)*244, 298 + Math.floor(i / 3)*88, 232, 78]));
+    ['super','casa','comida','tv','serv','auto','salud','edu'].forEach((k, i) => R.cats.push([k, 40 + (i % 4)*184, 718 + Math.floor(i / 4)*132, 168, 120]));
+    return R;
+  }
+  function tarjetas(CW, CH){
+    const ancho = CW > 1000, A = ancho ? { x: 40, w: 540 } : { x: 40, w: CW - 80 };
+    return { vh: 262, bx: A.x + A.w - 200, by: 404, cy: 500 };
+  }
+  // cursor de Registrar: cinco teclas (2 5 9 0 0) y la categoría
+  function cursorRegistro(CW, CH, fuera){
+    const R = registro(CW, CH), centro = s => { const t = R.teclas.find(k => k[0] === s); return [t[1] + t[3]/2, t[2] + t[4]/2]; };
+    const c = R.cats[0], cat = [c[1] + c[3]/2, c[2] + c[4]/2], keys = [[0.2, fuera[0], fuera[1]]];
+    ['2','5','9','0','0'].forEach((s, i) => { const t = [0.6, 0.95, 1.3, 1.65, 2.0][i], p = centro(s); keys.push([t - 0.15, p[0], p[1]], [t + 0.05, p[0], p[1]]); });
+    keys.push([2.8, cat[0], cat[1]], [3.1, cat[0], cat[1]], [3.7, fuera[0], fuera[1]]);
+    return { keys, clicks: [0.6, 0.95, 1.3, 1.65, 2.0, 3.0] };
+  }
+  function cursorPagar(CW, CH, fuera){
+    const T = tarjetas(CW, CH), x = T.bx + 88, y = T.by + 30;
+    return { keys: [[0.3, fuera[0], fuera[1]], [0.85, x, y], [1.1, x, y], [1.8, fuera[0], fuera[1]]], clicks: [1.0] };
+  }
+
+  AL_DEMOS['fin-accion'] = {
+    steps: [
+      { a:0, b:4.2, short:'El problema', kicker:'El problema que resuelve',
+        title:'¿En qué se fue la plata este mes?',
+        body:'Pagas con débito, con la tarjeta en cuotas, por transferencia y en efectivo. Cada compra llega en una notificación distinta y a fin de mes cuesta saber cuánto gastaste, en qué y cuánto te queda.',
+        stats:[['30+','compras al mes'],['0','idea de cuánto queda']] },
+      { a:4.2, b:9.6, short:'Registra', kicker:'Paso 1: registra en dos toques',
+        title:'Un gasto, en dos toques',
+        body:'Abres la app desde el celular, escribes el monto y tocas la categoría: queda guardado. Sin formularios largos. También anotas ingresos, ahorro y pagos de tarjeta, y funciona sin señal con el panel abierto.' },
+      { a:9.6, b:14.4, short:'Tu mes', kicker:'Paso 2: tu mes de un vistazo',
+        title:'Cuánto te queda, al abrir la app',
+        body:'El Inicio te muestra lo disponible del mes, tus ingresos, gastos y ahorro, cuánto puedes gastar por día y lo que viene: la tarjeta por pagar y los gastos fijos.' },
+      { a:14.4, b:19.2, short:'Presupuesto', kicker:'Paso 3: tu presupuesto te avisa',
+        title:'Un presupuesto que te avisa a tiempo',
+        body:'Le pones un tope a cada categoría y ves cuánto llevas. Si te pasas, la app te lo dice en el Inicio, para que alcances a corregir antes de que termine el mes.' },
+      { a:19.2, b:24.4, short:'Tarjetas', kicker:'Paso 4: tarjetas y deudas al día',
+        title:'Tarjetas, cuotas y deudas en un solo lugar',
+        body:'Cada tarjeta con su cupo, su fecha de pago y las cuotas que te quedan. Las deudas, en pesos o en UF con el valor del día, y tus metas de ahorro con su avance.' },
+      { a:24.4, b:30.0, short:'Resultado', kicker:'Resultado final',
+        title:'Sabes cómo vas y cómo terminarás el mes',
+        body:'Ves tus últimos 6 meses, una proyección de cómo terminarás este si sigues al mismo ritmo y, si quieres, el resumen de cada mes llega a tu correo con un PDF.',
+        stats:[['2 toques','para anotar un gasto'],['10.000','movimientos']],
+        cta:['Ver qué incluye', 'incluye-fin'] }
+    ],
+    cursor: [null, cursorRegistro(1200, 950, [900, 880]), null, null, cursorPagar(1200, 950, [900, 880]), null],
+    cursorV: [null, cursorRegistro(800, 1000, [650, 980]), null, null, cursorPagar(800, 1000, [650, -200]), null],
+    draw: dibujo, drawV: dibujo
+  };
+  AL_DEMOS['fin-accion'].app = app;
+})();
+
+AL_DEMOS['fin-instala'] = {
   steps: [
-  { a:0, b:5.2, short:'Copia', kicker:'Paso 1: haz tu copia', title:'Haz tu copia',
-    body:'Abre el enlace que te enviamos y elige “Hacer una copia”. Tu copia se abre en tu Drive y trae la herramienta adentro, con su código ya incluido.' },
-  { a:5.2, b:10.4, short:'Configurar', kicker:'Paso 2: abre “Configurar herramienta”', title:'Abre “Configurar herramienta”',
-    body:'En tu copia, abre el menú de la barra superior y elige “Tu herramienta — Ambilor.Lab”. Se abre un panel llamado “Configurar herramienta”, que te va guiando paso a paso.' },
-  { a:10.4, b:14.8, short:'Autorizar', kicker:'Paso 3: autoriza el acceso', title:'Autoriza el acceso',
-    body:'La primera vez, Google te pide permiso para leer tu planilla y mostrar el panel. Aparece en una pantalla de Google, no dentro de la herramienta. Acepta y sigue.',
-    tip:'El botón puede decir “Continuar” o “Aceptar” según tu navegador.' },
-  { a:14.8, b:21.2, short:'Publicar', kicker:'Paso 4: publica tu panel', title:'Publica tu panel',
-    body:'Desde el editor de Apps Script, publica el panel como aplicación web con acceso “Solo yo”. Así queda privado en tu cuenta: nadie más lo ve.',
-    tip:'“Solo yo” significa privado. No elijas “Cualquiera”.' },
-  { a:21.2, b:26.6, short:'Abrir', kicker:'Paso 5: ábrelo y empieza', title:'Ábrelo y empieza',
-    body:'Vuelve a tu planilla y abre el panel. La herramienta verifica que la instalación quedó correcta y te deja entrar.' },
-  { a:26.6, b:31, short:'Listo', kicker:'Listo', title:'Ya quedó instalado',
-    body:'No queda nada por instalar ni por pagar. Todo funciona dentro de tu propia cuenta de Google.',
-    checks:['Es privado: la herramienta vive en tu cuenta de Google, no en un servidor nuestro.', 'Es tuyo: no dependes de una suscripción ni de una cuota de uso.'],
-    contact:'Si algo no coincide con lo que ves, escríbeme antes de continuar.' }
-],
+    { a:0, b:5.2, short:'Copia', kicker:'Paso 1: haz tu copia', title:'Haz tu copia',
+      body:'Abre el enlace que recibiste con tu compra y elige “Hacer una copia”. Queda en tu Google Drive con la app adentro, con su código ya incluido.' },
+    { a:5.2, b:10.4, short:'Instalador', kicker:'Paso 2: abre el instalador', title:'Abre “Instalar o abrir el panel”',
+      body:'En tu copia, espera el menú “FinanzApp” (arriba, al lado de Ayuda) y elige “Instalar o abrir el panel”. El instalador prepara las hojas y te muestra los pasos.' },
+    { a:10.4, b:15.6, short:'Autorizar', kicker:'Paso 3: autoriza los permisos', title:'Autoriza los permisos',
+      body:'La primera vez, Google te pide permiso para editar tu planilla, enviarte el resumen del mes por correo y traer el valor de la UF. Aparece en una pantalla de Google.',
+      tip:'Si dice “Google no verificó esta app”, elige Configuración avanzada → Ir a FinanzApp: es tu propia copia.' },
+    { a:15.6, b:21.8, short:'Publicar', kicker:'Paso 4: publica tu panel', title:'Publica tu panel',
+      body:'En Extensiones → Apps Script → Implementar → Aplicación web, con acceso “Solo yo”. Así nadie más puede abrir tu panel, aunque tenga el enlace.',
+      tip:'“Solo yo” significa privado. No elijas “Cualquiera”.' },
+    { a:21.8, b:27.0, short:'Celular', kicker:'Paso 5: llévalo a tu celular', title:'Escanea el código QR',
+      body:'El instalador revisa que todo quedó listo y te muestra un código QR. Lo escaneas con la cámara del celular y agregas la app a tu pantalla de inicio, como una app más.' },
+    { a:27.0, b:31.4, short:'Listo', kicker:'Listo', title:'Ya quedó instalado',
+      body:'Abre la app desde tu pantalla de inicio y registra tu primer gasto. No queda nada por instalar: todo funciona dentro de tu propia cuenta de Google.',
+      checks:['Es privado: tus datos quedan en tu Google Drive y el panel es “Solo yo”.', 'No se conecta a tu banco: no compartes tus claves con nadie.'],
+      contact:'Si algo no coincide con lo que ves, escríbeme antes de continuar.' }
+  ],
   cursor: [
-  { keys:[[1.4,1100,900],[2.1,860,664],[2.6,860,664],[3.3,1060,860]], clicks:[2.25] },
-  { keys:[[0.2,1100,820],[0.85,880,168],[1.2,880,168],[1.65,920,230],[1.95,920,230],[2.6,640,620]], clicks:[1.05,1.85] },
-  { keys:[[0.3,300,860],[1.15,970,672],[1.6,970,672],[2.3,1080,860]], clicks:[1.35] },
-  { keys:[[0.2,700,700],[0.8,1050,38],[1.05,1050,38],[1.4,1030,107],[1.7,1030,107],[2.7,256,472],[3.05,256,472],[3.7,866,792],[4.15,866,792],[4.8,1100,900]], clicks:[0.95,1.55,2.9,3.9] },
-  { keys:[[0.2,700,820],[0.65,230,273],[0.95,230,273],[2.55,200,673],[3.0,200,673],[3.6,900,880]], clicks:[0.8,2.9] },
-  null
-],
-  draw: H => { const { C, CW, CH, FONT, clamp, ease, easeOut, lerp, rr, txt, wrap, press, btn, base, overlay, dialog, banner, checkDot, sheetIcon } = H;
+    { keys:[[1.4,1100,900],[2.1,860,664],[2.6,860,664],[3.3,1060,860]], clicks:[2.25] },
+    { keys:[[0.2,1100,820],[0.85,850,168],[1.2,850,168],[1.65,920,230],[1.95,920,230],[2.6,640,620]], clicks:[1.05,1.85] },
+    { keys:[[0.3,300,880],[1.8,970,752],[2.1,970,752],[2.8,1080,900]], clicks:[1.95] },
+    { keys:[[0.2,700,700],[0.8,1050,38],[1.05,1050,38],[1.4,1030,107],[1.7,1030,107],[2.7,256,472],[3.05,256,472],[3.7,866,792],[4.15,866,792],[4.8,1100,900]], clicks:[0.95,1.55,2.9,3.9] },
+    { keys:[[0.2,1000,880],[0.65,970,552],[0.95,970,552],[1.6,700,880]], clicks:[0.8] },
+    null
+  ],
+  draw: H => { const { C, CW, CH, FONT, clamp, ease, easeOut, rr, txt, wrap, press, btn, base, overlay, dialog, banner, checkDot, sheetIcon, pill, celular } = H;
+    const hoja = (g, menuOn) => {
+      base(g, 'Google Sheets');
+      sheetIcon(g, 30, 98, 30); txt(g, 'FinanzApp (copia)', 76, 118, 38, 700, C.ink);
+      let x = 32;
+      ['Archivo','Editar','Ver','Insertar','Datos','Extensiones','Ayuda'].forEach(m => { txt(g, m, x, 168, 26, 600, C.muted); x += g.measureText(m).width + 22; });
+      g.font = '800 26px ' + FONT; const mw = g.measureText('FinanzApp').width;
+      if (menuOn) { g.fillStyle = 'rgba(31,92,153,.12)'; rr(g, x - 10, 148, mw + 20, 40, 10); g.fill(); }
+      txt(g, 'FinanzApp', x, 168, 26, 800, C.brand);
+      g.fillStyle = '#f6f8fb'; g.fillRect(0, 196, CW, 38);
+      g.strokeStyle = C.line; g.lineWidth = 1.5;
+      for (let c = 0; c <= 8; c++) { const cx = 60 + c*150; g.beginPath(); g.moveTo(cx, 196); g.lineTo(cx, CH - 20); g.stroke(); if (c < 8) txt(g, 'ABCDEFGH'[c], cx + 75, 215, 26, 700, C.soft, 'center'); }
+      for (let r = 0; r < 18; r++) { const ry = 234 + r*40; g.beginPath(); g.moveTo(0, ry); g.lineTo(CW, ry); g.stroke(); txt(g, String(r + 1), 30, ry + 20, 23, 600, C.soft, 'center'); }
+      [[0, 'Fecha'], [1, 'Tipo'], [2, 'Categoría'], [3, 'Monto']].forEach(([c, s]) => txt(g, s, 72 + c*150, 254, 24, 800, C.ink, 'left', 136));
+      return x;
+    };
+    const F = AL_DEMOS['fin-accion'].app(H), qr = F.qr;
+    const lado = (g, px, titulo) => {
+      g.save(); rr(g, 0, 0, CW, CH, 34); g.clip();
+      g.fillStyle = '#fff'; g.fillRect(px, 196, CW - px, CH - 196);
+      g.fillStyle = C.brand; g.fillRect(px, 196, 5, CH - 196);
+      g.restore();
+      txt(g, titulo, px + 36, 250, 38, 800, C.ink, 'left', CW - px - 60);
+    };
     return [
       (g, lt) => {
         base(g, 'Google Drive');
         txt(g, 'Mi Drive', 36, 130, 35, 800, C.ink); txt(g, 'Recientes', 36, 178, 32, 600, C.muted); txt(g, 'Compartidos', 36, 222, 32, 600, C.muted);
         g.fillStyle = C.line; g.fillRect(230, 96, 2, CH - 130);
         txt(g, 'Nombre', 270, 128, 29, 700, C.soft);
-        const files = ['Presupuesto 2026', 'Informe mensual', 'Cartolas septiembre', 'Proveedores'];
-        const nIn = easeOut((lt - 2.7) / 0.4);
-        const rowY = k => 190 + k*70;
+        const files = ['Cuentas 2025', 'Presupuesto casa', 'Viaje al sur', 'Recetas'];
+        const nIn = easeOut((lt - 2.7) / 0.4), rowY = k => 190 + k*70;
         if (nIn > 0) {
           g.globalAlpha = nIn;
           const hl = 1 - ease((lt - 3.6) / 1.0);
-          g.fillStyle = `rgba(245,200,76,${0.55*hl})`; g.fillRect(250, rowY(0) - 32, CW - 280, 64);
-          sheetIcon(g, 272, rowY(0) - 22, 36); txt(g, 'Mi herramienta (copia)', 330, rowY(0), 35, 800, C.ink);
+          g.fillStyle = 'rgba(245,200,76,' + (0.55*hl) + ')'; g.fillRect(250, rowY(0) - 32, CW - 280, 64);
+          sheetIcon(g, 272, rowY(0) - 22, 36); txt(g, 'FinanzApp (copia)', 330, rowY(0), 35, 800, C.ink);
           txt(g, 'ahora', CW - 60, rowY(0), 29, 600, C.soft, 'right');
           g.globalAlpha = 1;
         }
@@ -7294,14 +7602,13 @@ AL_DEMOS['como-se-instala'] = {
         if (d > 0) {
           overlay(g, d); g.globalAlpha = d;
           dialog(g, 200, 190, 800, 540);
-          txt(g, 'Copiar “Mi herramienta” en Mi Drive', 240, 260, 46, 800, C.ink);
+          txt(g, 'Copiar “FinanzApp” en Mi Drive', 240, 260, 44, 800, C.ink, 'left', 720);
           txt(g, 'Nombre', 240, 330, 32, 700, C.muted);
           g.strokeStyle = C.brand; g.lineWidth = 3; rr(g, 240, 352, 720, 64, 12); g.stroke();
-          txt(g, 'Mi herramienta (copia)', 262, 385, 35, 600, C.ink);
+          txt(g, 'FinanzApp (copia)', 262, 385, 35, 600, C.ink);
           txt(g, 'Carpeta', 240, 450, 32, 700, C.muted);
           g.strokeStyle = C.line; rr(g, 240, 472, 720, 64, 12); g.stroke();
           txt(g, 'Mi Drive ▾', 262, 505, 35, 600, C.ink);
-          txt(g, 'Elige el nombre y la carpeta donde la quieres guardar.', 240, 580, 30, 400, C.muted);
           btn(g, 520, 632, 180, 62, 'Cancelar', 'ghost', 0, 35);
           btn(g, 716, 632, 244, 62, 'Hacer una copia', 'primary', press(lt, 2.25), 35);
           g.globalAlpha = 1;
@@ -7310,70 +7617,52 @@ AL_DEMOS['como-se-instala'] = {
         if (ts > 0) { g.globalAlpha = ts; g.fillStyle = C.ink; rr(g, 330, 850 + (1-ts)*20, 540, 64, 32); g.fill(); txt(g, '✓ Copia creada en Mi Drive', 600, 883 + (1-ts)*20, 35, 700, '#fff', 'center'); g.globalAlpha = 1; }
       },
       (g, lt) => {
-        base(g, 'Google Sheets');
-        sheetIcon(g, 30, 98, 30); txt(g, 'Mi herramienta (copia)', 76, 118, 38, 700, C.ink);
-        let x = 32;
-        ['Archivo','Editar','Ver','Insertar','Datos','Extensiones'].forEach(m => { txt(g, m, x, 168, 26, 600, C.muted); x += g.measureText(m).width + 22; });
         const open = lt > 1.05 && lt < 1.95;
-        g.font = `800 24px ${FONT}`; const mw = g.measureText('Tu herramienta — Ambilor.Lab').width;
-        if (open || (lt > 0.85 && lt < 1.05)) { g.fillStyle = 'rgba(31,92,153,.12)'; rr(g, 770, 148, mw + 20, 40, 10); g.fill(); }
-        txt(g, 'Tu herramienta — Ambilor.Lab', 780, 168, 24, 800, C.brand);
-        g.fillStyle = '#f6f8fb'; g.fillRect(0, 196, CW, 38);
-        g.strokeStyle = C.line; g.lineWidth = 1.5;
-        for (let c = 0; c <= 8; c++) { const cx = 60 + c*150; g.beginPath(); g.moveTo(cx, 196); g.lineTo(cx, CH - 20); g.stroke(); if (c < 8) txt(g, 'ABCDEFGH'[c], cx + 75, 215, 26, 700, C.soft, 'center'); }
-        for (let r = 0; r < 18; r++) { const ry = 234 + r*40; g.beginPath(); g.moveTo(0, ry); g.lineTo(CW, ry); g.stroke(); txt(g, String(r + 1), 30, ry + 20, 23, 600, C.soft, 'center'); }
-        [[0,'FECHA'],[1,'DESCRIPCION'],[2,'IMPORTE']].forEach(([c, s]) => txt(g, s, 72 + c*150, 254, 25, 800, C.ink, 'left', 136));
-        for (let r = 1; r < 8; r++) for (let c = 0; c < 3; c++) { g.fillStyle = '#dde5ee'; rr(g, 72 + c*150, 264 + r*40 - 6, [70, 110, 80][c], 12, 6); g.fill(); }
+        const mx = hoja(g, open || (lt > 0.85 && lt < 1.05));
         if (open) {
-          dialog(g, 770, 192, 380, 76);
-          const hov = lt > 1.65;
-          if (hov) { g.fillStyle = '#eef2f7'; g.fillRect(778, 200, 364, 60); }
-          txt(g, 'Configurar herramienta', 796, 230, 32, 700, C.ink, 'left', 336);
+          dialog(g, mx - 10, 192, 400, 80);
+          if (lt > 1.65) { g.fillStyle = '#eef2f7'; g.fillRect(mx - 2, 200, 384, 64); }
+          txt(g, 'Instalar o abrir el panel', mx + 16, 232, 30, 700, C.ink, 'left', 356);
         }
         const sp = ease((lt - 2.0) / 0.5);
         if (sp > 0) {
           const px = CW - 460*sp;
-          g.save(); rr(g, 0, 0, CW, CH, 34); g.clip();
-          g.fillStyle = '#fff'; g.fillRect(px, 196, 460, CH - 196);
-          g.fillStyle = C.brand; g.fillRect(px, 196, 5, CH - 196);
-          g.restore();
-          txt(g, 'Configurar herramienta', px + 36, 250, 38, 800, C.ink, 'left', 396);
-          txt(g, 'Te guía paso a paso.', px + 36, 290, 29, 600, C.muted);
-          ['Autoriza el acceso', 'Publica tu panel', 'Ábrelo y empieza'].forEach((s, k) => {
+          lado(g, px, 'Instalar FinanzApp');
+          txt(g, 'Las hojas ya quedaron listas.', px + 36, 290, 29, 600, C.muted, 'left', 396);
+          ['Autoriza los permisos', 'Publica tu panel', 'Llévalo a tu celular'].forEach((s, k) => {
             const a = easeOut((lt - 2.5 - k*0.2) / 0.3); if (a <= 0) return;
             g.globalAlpha = a;
             const y = 340 + k*96;
             g.strokeStyle = k === 0 ? C.brand : C.line; g.lineWidth = 3; rr(g, px + 30, y, 400, 76, 16); g.stroke();
             g.beginPath(); g.arc(px + 72, y + 38, 20, 0, Math.PI*2); g.fillStyle = k === 0 ? C.brand : '#eef2f7'; g.fill();
             txt(g, String(k + 1), px + 72, y + 39, 20, 800, k === 0 ? '#fff' : C.muted, 'center');
-            txt(g, s, px + 108, y + 38, 32, 700, C.ink, 'left', 300);
+            txt(g, s, px + 108, y + 38, 30, 700, C.ink, 'left', 300);
             g.globalAlpha = 1;
           });
         }
       },
       (g, lt) => {
         base(g, 'Google');
-        const ok = lt > 1.5;
-        wrap(g, 'La herramienta quiere acceder a tu cuenta de Google', 120, 180, 900, 55, 800, C.ink, 1.2);
-        txt(g, 'La herramienta necesita leer y editar tu planilla.', 120, 300, 36, 400, C.muted);
-        ['Leer y editar tu planilla', 'Mostrar el panel de la herramienta'].forEach((s, k) => {
-          const y = 390 + k*80;
-          g.strokeStyle = C.line; g.lineWidth = 2; g.beginPath(); g.moveTo(120, y + 40); g.lineTo(1080, y + 40); g.stroke();
-          sheetIcon(g, 124, y - 18, 30, k ? C.brand : C.ok); txt(g, s, 180, y, 35, 600, C.ink);
+        wrap(g, 'FinanzApp quiere acceder a tu cuenta de Google', 100, 150, 1000, 50, 800, C.ink, 1.2);
+        ['Ver y editar tus hojas de cálculo', 'Enviar correo en tu nombre (el resumen del mes)', 'Conectarse a un servicio externo (el valor de la UF)', 'Ejecutarse cuando no estés presente'].forEach((s, k) => {
+          const y = 300 + k*92, on = lt > 0.6 + k*0.3;
+          g.strokeStyle = C.line; g.lineWidth = 2; g.beginPath(); g.moveTo(100, y + 46); g.lineTo(1100, y + 46); g.stroke();
+          g.strokeStyle = on ? C.brand : C.soft; g.lineWidth = 3; rr(g, 100, y - 20, 40, 40, 8); g.stroke();
+          if (on) { g.fillStyle = C.brand; rr(g, 100, y - 20, 40, 40, 8); g.fill(); txt(g, '✓', 120, y + 1, 30, 800, '#fff', 'center'); }
+          txt(g, s, 166, y, 34, 600, C.ink, 'left', 900);
         });
-        g.globalAlpha = ok ? 0.35 : 1;
-        btn(g, 640, 640, 200, 64, 'Cancelar', 'ghost', 0, 35);
-        btn(g, 860, 640, 220, 64, 'Continuar', 'primary', press(lt, 1.35), 35);
+        g.globalAlpha = lt > 2.1 ? 0.35 : 1;
+        btn(g, 640, 720, 200, 64, 'Cancelar', 'ghost', 0, 35);
+        btn(g, 860, 720, 220, 64, 'Permitir', 'primary', press(lt, 1.95), 35);
         g.globalAlpha = 1;
-        const b = easeOut((lt - 1.5) / 0.35);
-        if (b > 0) { g.globalAlpha = b; banner(g, 120, 760 + (1-b)*16, 420, 64, '✓ Acceso autorizado'); g.globalAlpha = 1; }
-        txt(g, 'El botón puede decir Continuar o Aceptar según tu navegador.', 120, 880, 29, 400, C.soft);
+        const b = easeOut((lt - 2.1) / 0.35);
+        if (b > 0) { g.globalAlpha = b; banner(g, 100, 820 + (1-b)*16, 480, 64, '✓ Permisos autorizados'); g.globalAlpha = 1; }
       },
       (g, lt) => {
         base(g, 'Google Apps Script');
         btn(g, 900, 12, 270, 52, 'Implementar ▾', 'primary', press(lt, 0.95), 32);
         txt(g, 'Archivos', 34, 124, 29, 700, C.soft);
-        g.fillStyle = 'rgba(31,92,153,.1)'; rr(g, 20, 150, 200, 50, 10); g.fill(); txt(g, 'Código.gs', 38, 175, 32, 700, C.ink);
+        ['FinanzApp.gs', 'Panel.html'].forEach((f, k) => { if (!k) { g.fillStyle = 'rgba(31,92,153,.1)'; rr(g, 20, 150, 200, 50, 10); g.fill(); } txt(g, f, 38, 175 + k*56, 30, k ? 600 : 700, C.ink, 'left', 180); });
         g.fillStyle = C.line; g.fillRect(236, 78, 2, CH - 110);
         [320, 520, 410, 280, 600, 460, 350, 540, 300, 480, 390, 260, 440, 330].forEach((w, k) => {
           const y = 130 + k*52;
@@ -7404,7 +7693,7 @@ AL_DEMOS['como-se-instala'] = {
           if (w > 0) {
             g.globalAlpha = d * w; g.fillStyle = '#fff5e6'; rr(g, 224, 596, 752, 76, 14); g.fill();
             g.fillStyle = C.warn; g.fillRect(224, 596, 6, 76);
-            txt(g, '“Solo yo” significa privado. No elijas “Cualquiera”.', 250, 634, 32, 700, C.ink);
+            txt(g, '“Solo yo” significa privado. No elijas “Cualquiera”.', 250, 634, 32, 700, C.ink, 'left', 700);
             g.globalAlpha = d;
           }
           if (lt < 4.1) btn(g, 756, 760, 220, 64, 'Implementar', 'primary', press(lt, 3.9), 35);
@@ -7414,44 +7703,57 @@ AL_DEMOS['como-se-instala'] = {
         }
       },
       (g, lt) => {
-        base(g, 'Panel de la herramienta');
-        const dash = ease((lt - 3.1) / 0.4);
-        if (dash < 1) {
-          g.globalAlpha = 1 - dash;
-          txt(g, 'Instalación', 64, 150, 49, 800, C.ink);
-          txt(g, 'Comprueba que todo quedó bien antes de empezar.', 64, 198, 32, 400, C.muted);
-          btn(g, 64, 240, 340, 66, 'Verificar instalación', 'ghost', press(lt, 0.8), 35);
-          ['Copia en tu Drive', 'Acceso autorizado', 'Panel publicado (Solo yo)'].forEach((s, k) => {
-            const tc = 1.0 + k*0.5, on = lt > tc, y = 370 + k*80;
-            checkDot(g, 90, y, on, 1 + Math.sin(clamp((lt - tc)/0.25)*Math.PI)*0.25);
-            txt(g, s, 130, y, 36, on ? 700 : 600, on ? C.ink : C.soft);
-          });
-          btn(g, 64, 640, 280, 66, 'Abrir panel', lt > 2.3 ? 'primary' : 'disabled', press(lt, 2.9), 35);
+        hoja(g, false);
+        const px = 740;
+        lado(g, px, 'Instalar FinanzApp');
+        ['Planilla preparada', 'Permisos autorizados', 'Panel publicado'].forEach((s, k) => {
+          const on = k < 2 || lt > 1.0, y = 320 + k*64;
+          checkDot(g, px + 56, y, on, k === 2 ? 1 + Math.sin(clamp((lt - 1.0)/0.25)*Math.PI)*0.25 : 1);
+          txt(g, s, px + 92, y, 30, on ? 700 : 600, on ? C.ink : C.soft, 'left', 330);
+        });
+        if (lt < 1.2) btn(g, px + 30, 520, 400, 64, 'Ya lo publiqué, revisar', 'ghost', press(lt, 0.8), 28);
+        const q = easeOut((lt - 1.2) / 0.4);
+        if (q > 0) {
+          g.globalAlpha = q;
+          txt(g, 'Escanéalo con tu celular', px + 230, 528, 28, 800, C.ink, 'center', 400);
+          qr(g, px + 130, 570, 200, 1);
           g.globalAlpha = 1;
         }
-        if (dash > 0) {
-          g.globalAlpha = dash;
-          const y0 = 100 + (1 - dash)*20;
-          g.fillStyle = C.brand; rr(g, 40, y0, CW - 80, 84, 20); g.fill();
-          txt(g, 'Ambilor.Lab', 72, y0 + 42, 43, 800, '#fff'); txt(g, 'Conciliador V1', CW - 72, y0 + 42, 38, 600, '#fff', 'right');
-          // Pestañas del panel = V1 actual (2026-09-30); subrayado medido con la misma letra
-          let tabX = 60;
-          [['Resumen', true], ['Resultados', false], ['Historial', false], ['Configuración', false]].forEach(([s, on]) => {
-            txt(g, s, tabX, y0 + 130, 30, on ? 800 : 600, on ? C.ink : C.soft);
-            const tw2 = g.measureText(s).width;
-            if (on) { g.fillStyle = C.brand; g.fillRect(tabX, y0 + 148, tw2, 4); }
-            tabX += tw2 + 30;
-          });
-          btn(g, 60, y0 + 180, CW - 120, 80, '▶  Ejecutar conciliación', 'primary', 0, 43);
-          txt(g, 'Listo para ejecutar', 60, y0 + 300, 35, 600, C.soft);
-          const tw = (CW - 120 - 3*20) / 4;
-          [['0%', 'conciliación'], ['0', 'pares'], ['0', 'pendientes'], ['$0', 'conciliado']].forEach(([v, l], i) => {
-            const x = 60 + i*(tw + 20);
-            g.fillStyle = '#eef2f7'; rr(g, x, y0 + 340, tw, 200, 20); g.fill();
-            txt(g, v, x + 22, y0 + 420, 80, 800, C.ink); txt(g, l, x + 22, y0 + 495, 32, 600, C.muted);
-          });
-          g.globalAlpha = 1;
+        // el celular sube, lee el código y abre la app
+        const ph = easeOut((lt - 1.9) / 0.5);
+        if (ph > 0) {
+          g.save(); g.translate(0, (1 - ph) * 700);
+          const a = celular(g, 200, 110, 400, 800);
+          if (lt < 3.0) {
+            g.fillStyle = '#1b2633'; rr(g, a.x - 16, a.y - 50, a.w + 32, a.h + 64, 30); g.fill();
+            const s = 200, cx = a.x + a.w/2 - s/2, cy = a.y + 200;
+            qr(g, cx, cy, s, 1);
+            g.strokeStyle = '#f5c84c'; g.lineWidth = 5; const e = 24 + Math.sin(lt*8)*4;
+            [[cx - e, cy - e, 1, 1], [cx + s + e, cy - e, -1, 1], [cx - e, cy + s + e, 1, -1], [cx + s + e, cy + s + e, -1, -1]].forEach(([x, y, dx, dy]) => { g.beginPath(); g.moveTo(x, y + 30*dy); g.lineTo(x, y); g.lineTo(x + 30*dx, y); g.stroke(); });
+            if (lt > 2.5) pill(g, a.x + a.w/2, cy + s + 70, 'Abrir FinanzApp', '#fff', C.brand, 22, 48, 'center');
+          } else {
+            const o = easeOut((lt - 3.0) / 0.4);
+            g.globalAlpha = o;
+            g.fillStyle = '#eef3f8'; rr(g, a.x - 16, a.y - 50, a.w + 32, a.h + 64, 30); g.fill();
+            g.fillStyle = C.brand; rr(g, a.x, a.y, 44, 44, 12); g.fill(); txt(g, 'F.', a.x + 22, a.y + 23, 20, 800, '#fff', 'center');
+            txt(g, 'Hola, Camila', a.x + 56, a.y + 12, 15, 600, C.muted); txt(g, 'Inicio', a.x + 56, a.y + 34, 21, 800, C.ink);
+            const gr = g.createLinearGradient(a.x, a.y + 66, a.x + a.w, a.y + 236); gr.addColorStop(0, '#2a669f'); gr.addColorStop(1, '#163c66');
+            g.fillStyle = gr; rr(g, a.x, a.y + 66, a.w, 170, 18); g.fill();
+            txt(g, 'Disponible · Octubre', a.x + 18, a.y + 94, 15, 600, 'rgba(255,255,255,.85)'); txt(g, '$239.845', a.x + 18, a.y + 138, 40, 800, '#fff');
+            [['Ingresos','$1,45 M'],['Gastos','$660 mil'],['Ahorro','$550 mil']].forEach(([l, v], i) => { const bw = (a.w - 36 - 16) / 3, bx = a.x + 18 + i*(bw + 8); g.fillStyle = 'rgba(255,255,255,.14)'; rr(g, bx, a.y + 172, bw, 50, 10); g.fill(); txt(g, l, bx + 8, a.y + 187, 12, 600, 'rgba(255,255,255,.85)'); txt(g, v, bx + 8, a.y + 207, 15, 800, '#fff', 'left', bw - 12); });
+            g.fillStyle = '#fff'; rr(g, a.x, a.y + 252, a.w, 104, 16); g.fill();
+            txt(g, 'Presupuesto del mes', a.x + 16, a.y + 276, 15, 600, C.muted);
+            g.fillStyle = '#e6edf5'; rr(g, a.x + 16, a.y + 298, a.w - 32, 10, 5); g.fill(); g.fillStyle = '#27a05a'; rr(g, a.x + 16, a.y + 298, (a.w - 32)*0.65, 10, 5); g.fill();
+            txt(g, 'Puedes gastar $13.413 por día', a.x + 16, a.y + 332, 15, 600, C.ink);
+            g.fillStyle = '#fff'; rr(g, a.x, a.y + 372, a.w, 76, 16); g.fill();
+            g.fillStyle = '#e8731a'; rr(g, a.x + 14, a.y + 386, 46, 46, 12); g.fill(); txt(g, 'Visa Banco Estado', a.x + 72, a.y + 400, 16, 800, C.ink); txt(g, 'En 4 días · 10/10', a.x + 72, a.y + 422, 13, 600, C.muted);
+            g.beginPath(); g.arc(a.x + a.w/2, a.y + a.h - 50, 32, 0, 7); g.fillStyle = C.brandDark; g.fill(); txt(g, '+', a.x + a.w/2, a.y + a.h - 48, 36, 600, '#fff', 'center');
+            g.globalAlpha = 1;
+          }
+          g.restore();
         }
+        const b = easeOut((lt - 3.6) / 0.35);
+        if (b > 0) { g.globalAlpha = b; banner(g, px + 20, 840, 420, 64, '✓ En tu celular'); g.globalAlpha = 1; }
       },
       (g, lt) => {
         g.clearRect(0, 0, CW, CH);
@@ -7460,30 +7762,18 @@ AL_DEMOS['como-se-instala'] = {
         if (p > 0) { g.beginPath(); g.arc(600, 150, 64*p*pop, 0, Math.PI*2); g.fillStyle = C.ok; g.fill(); txt(g, '✓', 600, 154, 70*p, 800, '#fff', 'center'); }
         txt(g, 'Listo. Ya quedó instalado.', 600, 272, 58, 800, C.ink, 'center');
         const c = easeOut((lt - 0.6) / 0.4);
-        if (c > 0) {
-          g.globalAlpha = c;
-          g.setLineDash([14, 10]); g.strokeStyle = C.brand; g.lineWidth = 3; rr(g, 120, 340, 960, 360, 28); g.stroke(); g.setLineDash([]);
-          g.fillStyle = C.brand; rr(g, 150, 372, 26, 22, 5); g.fill();
-          g.beginPath(); g.arc(163, 372, 9, Math.PI, 0); g.strokeStyle = C.brand; g.lineWidth = 4; g.stroke();
-          txt(g, 'Tu cuenta de Google', 190, 384, 26, 800, C.brand);
-          g.globalAlpha = 1;
-        }
-        [['Planilla', 'tus datos', C.ok], ['Panel', 'solo tú lo ves', C.brand], ['Apps Script', 'el código', C.ink]].forEach(([s, sub, color], k) => {
+        if (c > 0) { g.globalAlpha = c; g.setLineDash([14, 10]); g.strokeStyle = C.brand; g.lineWidth = 3; rr(g, 120, 340, 960, 360, 28); g.stroke(); g.setLineDash([]); txt(g, 'Tu cuenta de Google', 150, 384, 26, 800, C.brand); g.globalAlpha = 1; }
+        [['Planilla', 'tus movimientos', C.ok], ['Panel', 'solo tú lo ves', C.brand], ['Correo', 'resumen del mes', C.ink]].forEach(([s, sub, color], k) => {
           const a = easeOut((lt - 0.9 - k*0.2) / 0.35); if (a <= 0) return;
           const x = 170 + k*300, y = 440 + (1 - a)*20;
           g.globalAlpha = a;
           g.fillStyle = '#f6f8fb'; rr(g, x, y, 260, 210, 20); g.fill();
           sheetIcon(g, x + 26, y + 30, 48, color);
-          txt(g, s, x + 26, y + 125, 40, 800, C.ink); txt(g, sub, x + 26, y + 168, 30, 600, C.muted);
+          txt(g, s, x + 26, y + 125, 40, 800, C.ink); txt(g, sub, x + 26, y + 168, 30, 600, C.muted, 'left', 220);
           g.globalAlpha = 1;
         });
         const l = easeOut((lt - 1.7) / 0.4);
-        if (l > 0) {
-          g.globalAlpha = l;
-          txt(g, '✓ Privado: nada sale de tu cuenta.', 150, 780, 36, 700, C.ink);
-          txt(g, '✓ Tuyo: sin suscripción ni cuota de uso.', 150, 836, 36, 700, C.ink);
-          g.globalAlpha = 1;
-        }
+        if (l > 0) { g.globalAlpha = l; txt(g, '✓ Privado: tus datos quedan en tu Drive.', 150, 780, 36, 700, C.ink); txt(g, '✓ Sin conectar tu banco ni compartir claves.', 150, 836, 36, 700, C.ink); g.globalAlpha = 1; }
       }
     ];
   }
@@ -7538,7 +7828,7 @@ AL_DEMOS['como-se-instala'] = {
       };
     },
     // Planilla con el menú de la herramienta; el asistente sube desde abajo
-    menu(H, archivo, menuLabel, opciones, pasos, datos){
+    menu(H, archivo, menuLabel, opciones, pasos, datos, titulo = 'Configurar herramienta', bajada = 'Te guía paso a paso.'){
       const { C, CW, CH, FONT, ease, easeOut, rr, txt, base, dialog, sheetIcon } = H;
       return (g, lt) => {
         base(g, 'Google Sheets');
@@ -7570,8 +7860,8 @@ AL_DEMOS['como-se-instala'] = {
           g.fillStyle = C.brand; g.fillRect(0, top + 26, 5, 640);
           g.fillStyle = C.line; rr(g, 360, top + 14, 80, 8, 4); g.fill();
           g.restore();
-          txt(g, 'Configurar herramienta', 40, top + 72, 40, 800, C.ink, 'left', 720);
-          txt(g, 'Te guía paso a paso.', 40, top + 120, 30, 600, C.muted);
+          txt(g, titulo, 40, top + 72, 40, 800, C.ink, 'left', 720);
+          txt(g, bajada, 40, top + 120, 30, 600, C.muted, 'left', 720);
           pasos.forEach((s, k) => {
             const a = easeOut((lt - 2.5 - k*0.2) / 0.3); if (a <= 0) return;
             g.globalAlpha = a;
@@ -7725,51 +8015,16 @@ AL_DEMOS['como-se-instala'] = {
     verificar: { keys:[[0.2,600,900],[0.65,270,328],[0.95,270,328],[2.55,260,798],[3.0,260,798],[3.6,650,940]], clicks:[0.8,2.9] }
   };
 
-  // ── Conciliador V1 · Cómo se instala ──
-  const v1i = AL_DEMOS['como-se-instala'];
-  if (v1i) {
-    v1i.drawV = H => { const { C, CW, rr, txt, btn } = H;
-      return [
-        I.copia(H, 'Mi herramienta', ['Presupuesto 2026', 'Informe mensual', 'Cartolas septiembre', 'Proveedores']),
-        I.menu(H, 'Mi herramienta', 'Tu herramienta — Ambilor.Lab', ['Configurar herramienta'], ['Autoriza el acceso', 'Publica tu panel', 'Ábrelo y empieza'], true),
-        I.permisos(H, 'La herramienta quiere acceder a tu cuenta de Google', ['Leer y editar tu planilla', 'Mostrar el panel de la herramienta'], 'Continuar', false, 'La herramienta necesita leer y editar tu planilla.'),
-        I.publicar(H, 'Código.gs', false),
-        I.verificar(H, 'Panel de la herramienta', ['Copia en tu Drive', 'Acceso autorizado', 'Panel publicado (Solo yo)'], (g, dash) => {
-          const y0 = 100 + (1 - dash)*20;
-          g.fillStyle = C.brand; rr(g, 40, y0, CW - 80, 84, 20); g.fill();
-          txt(g, 'Ambilor.Lab', 70, y0 + 42, 40, 800, '#fff'); txt(g, 'Conciliador V1', CW - 70, y0 + 42, 32, 600, '#fff', 'right', 300);
-          let tx = 50;
-          ['Resumen', 'Resultados', 'Historial', 'Configuración'].forEach((s, k) => {
-            g.font = (k ? 600 : 800) + ' 28px ' + H.FONT; const w = g.measureText(s).width;
-            if (!k) { g.fillStyle = '#e4eef9'; rr(g, tx - 12, y0 + 106, w + 24, 48, 10); g.fill(); }   // activa: botón relleno suave, como en la app
-            txt(g, s, tx, y0 + 130, 28, k ? 600 : 800, k ? C.soft : C.brand);
-            tx += w + 34;
-          });
-          btn(g, 40, y0 + 180, CW - 80, 84, '▶  Ejecutar conciliación', 'primary', 0, 40);
-          txt(g, 'Listo para ejecutar', 40, y0 + 305, 32, 600, C.soft);
-          [['0%', 'conciliación'], ['0', 'pares'], ['0', 'pendientes'], ['$0', 'conciliado']].forEach(([v, l], i) => {
-            const x = 40 + (i % 2)*370, y = y0 + 345 + (i >> 1)*170;
-            g.fillStyle = '#eef2f7'; rr(g, x, y, 350, 150, 20); g.fill();
-            txt(g, v, x + 24, y + 62, 64, 800, C.ink); txt(g, l, x + 24, y + 118, 30, 600, C.muted);
-          });
-          if (H.CH > 1060) { txt(g, 'Historial', 40, y0 + 730, 34, 800, C.ink); txt(g, 'Aún no hay ejecuciones: la primera aparece aquí.', 40, y0 + 790, 28, 600, C.muted); }   // en el celular, el panel sigue
-        }),
-        I.listo(H, [['Planilla', 'tus datos', C.ok], ['Panel', 'solo tú lo ves', C.brand], ['Apps Script', 'el código', C.ink]], ['✓ Privado: nada sale de tu cuenta.', '✓ Tuyo: sin suscripción ni cuota de uso.'])
-      ];
-    };
-    v1i.cursorV = [K.copia, K.menu(560), K.permisos(false), K.publicar(462), K.verificar, null];
-  }
-
-  // ── Conciliador V2 · Cómo se instala ──
+  // ── Conciliador · Cómo se instala ──
   const v2i = AL_DEMOS['v2-instala'];
   v2i.drawV = H => { const { C, CW, rr, txt, wrap, btn, panelBar } = H;
     return [
-      I.copia(H, 'Conciliador V2', ['Cartolas marzo', 'Libro mayor 2026', 'Presupuesto', 'Proveedores']),
-      I.menu(H, 'Conciliador V2', 'Conciliador V2', ['Configurar herramienta', 'Autorizar permisos'], ['Autoriza los permisos', 'Publica tu panel', 'Conecta tus fuentes'], false),
-      I.permisos(H, 'Conciliador V2 quiere acceder a tu cuenta de Google', ['Leer y editar tus planillas', 'Enviar correos en tu nombre', 'Ejecutarse a la hora que programes', 'Conectarse a la IA que elijas (opcional)'], 'Permitir', true),
+      I.copia(H, 'Conciliador', ['Cartolas marzo', 'Libro mayor 2026', 'Presupuesto', 'Proveedores']),
+      I.menu(H, 'Conciliador', 'Conciliador', ['Configurar herramienta', 'Autorizar permisos'], ['Autoriza los permisos', 'Publica tu panel', 'Conecta tus fuentes'], false),
+      I.permisos(H, 'Conciliador quiere acceder a tu cuenta de Google', ['Leer y editar tus planillas', 'Enviar correos en tu nombre', 'Ejecutarse a la hora que programes', 'Conectarse a la IA que elijas (opcional)'], 'Permitir', true),
       I.publicar(H, 'Motor.gs', false),
-      I.verificar(H, 'Conciliador V2', ['Copia en tu Drive', 'Permisos autorizados', 'Panel publicado (Solo yo)'], g => {
-        panelBar(g, 'Conciliador V2', ['Resumen','Resultados','Sugerencias','Historial','Configuración'], 0);
+      I.verificar(H, 'Conciliador', ['Copia en tu Drive', 'Permisos autorizados', 'Panel publicado (Solo yo)'], g => {
+        panelBar(g, 'Conciliador', ['Resumen','Resultados','Sugerencias','Historial','Configuración'], 0);
         g.fillStyle = '#ebf2fa'; rr(g, 40, 240, 720, 120, 14); g.fill(); g.fillStyle = C.brand; g.fillRect(40, 240, 6, 120);
         wrap(g, 'Datos de ejemplo activos: míralo conciliar y luego conecta los tuyos.', 70, 282, 660, 30, 600, C.ink, 1.3);
         [['47%', 'conciliación'], ['8', 'conciliados'], ['8', 'pendientes'], ['1', 'sugerencia']].forEach(([v, l], i) => {
@@ -7881,7 +8136,47 @@ AL_DEMOS['como-se-instala'] = {
     { keys:[[0.3,650,960],[1.0,570,263],[1.2,570,263],[2.6,400,882],[2.85,400,882],[3.5,650,960]], clicks:[1.1,2.75] }
   ];
 
-  // ── Conciliador V2 · Ver en acción ──
+  // ── FinanzApp · Cómo se instala ──
+  const fi = AL_DEMOS['fin-instala'];
+  fi.drawV = H => { const { C, CW, CH, clamp, easeOut, rr, txt, wrap, press, btn, base, banner, checkDot } = H;
+    const F = AL_DEMOS['fin-accion'].app(H);
+    return [
+      I.copia(H, 'FinanzApp', ['Cuentas 2025', 'Presupuesto casa', 'Viaje al sur', 'Recetas']),
+      I.menu(H, 'FinanzApp', 'FinanzApp', ['Instalar o abrir el panel'], ['Autoriza los permisos', 'Publica tu panel', 'Llévalo a tu celular'], false, 'Instalar FinanzApp', 'Las hojas ya quedaron listas.'),
+      I.permisos(H, 'FinanzApp quiere acceder a tu cuenta de Google', ['Ver y editar tus hojas de cálculo', 'Enviar correo en tu nombre', 'Conectarse a un servicio externo (UF)', 'Ejecutarse cuando no estés presente'], 'Permitir', true),
+      I.publicar(H, 'FinanzApp.gs', false),
+      (g, lt) => {
+        if (lt < 2.7) {   // el instalador revisa y muestra el código QR
+          base(g, 'Google Sheets');
+          txt(g, 'Instalar FinanzApp', 40, 140, 40, 800, C.ink, 'left', 720);
+          ['Planilla preparada', 'Permisos autorizados', 'Panel publicado'].forEach((s, k) => {
+            const on = k < 2 || lt > 1.0, y = 240 + k*84;
+            checkDot(g, 64, y, on, k === 2 ? 1 + Math.sin(clamp((lt - 1.0)/0.25)*Math.PI)*0.25 : 1);
+            txt(g, s, 104, y, 34, on ? 700 : 600, on ? C.ink : C.soft, 'left', 640);
+          });
+          if (lt < 1.2) btn(g, 40, 500, 720, 80, 'Ya lo publiqué, revisar', 'ghost', press(lt, 0.8), 32);
+          const q = easeOut((lt - 1.2) / 0.4);
+          if (q > 0) {
+            g.globalAlpha = q;
+            txt(g, 'Escanéalo con tu celular', 400, 530, 34, 800, C.ink, 'center', 720);
+            F.qr(g, 280, 590, 240, 1);
+            wrap(g, 'Ábrelo y agrégalo a tu pantalla de inicio.', 70, 880, 660, 30, 600, C.muted);
+            g.globalAlpha = 1;
+          }
+          return;
+        }
+        F.inicio(g, 1);   // la app ya abierta en el celular
+        const ap = easeOut((lt - 2.7) / 0.4);
+        if (ap < 1) { g.fillStyle = 'rgba(255,255,255,' + (1 - ap) + ')'; rr(g, 0, 0, CW, CH, 34); g.fill(); }
+        const b = easeOut((lt - 3.3) / 0.35);
+        if (b > 0) { g.globalAlpha = b; banner(g, 60, F.navY - 100, CW - 120, 72, '✓ En tu pantalla de inicio'); g.globalAlpha = 1; }
+      },
+      I.listo(H, [['Planilla', 'tus movimientos', C.ok], ['Panel', 'solo tú lo ves', C.brand], ['Correo', 'resumen del mes', C.ink]], ['✓ Privado: tus datos quedan en tu Drive.', '✓ Sin conectar tu banco ni compartir claves.'])
+    ];
+  };
+  fi.cursorV = [K.copia, K.menu(450), K.permisos(true), K.publicar(462), { keys:[[0.2,650,-120],[0.65,400,540],[0.95,400,540],[1.6,650,-120]], clicks:[0.8] }, null];
+
+  // ── Conciliador · Ver en acción ──
   const v2a = AL_DEMOS['v2-accion'];
   v2a.drawV = H => { const { C, CW, CH, clamp, ease, easeOut, lerp, rr, txt, wrap, press, btn, base, overlay, dialog, banner, pill, campo, panelBar } = H;
     const TABS = ['Resumen','Resultados','Sugerencias','Historial','Configuración'];
@@ -7922,8 +8217,8 @@ AL_DEMOS['como-se-instala'] = {
         if (p > 0) { g.globalAlpha = p; pill(g, 400, CH - 108 + (1-p)*14, 'No cuadra: faltan $645.390', C.bad, '#fff', 34, 68, 'center'); g.globalAlpha = 1; }
       },
       (g, lt) => {
-        base(g, 'Conciliador V2');
-        panelBar(g, 'Conciliador V2', TABS, 4);
+        base(g, 'Conciliador');
+        panelBar(g, 'Conciliador', TABS, 4);
         txt(g, '1 · Fuentes de datos', 40, 262, 38, 800, C.ink);
         const url = 'docs.google.com/spreadsheets/d/1Cartola…';
         const n = Math.floor(clamp((lt - 0.4) / 0.9) * url.length);
@@ -7954,8 +8249,8 @@ AL_DEMOS['como-se-instala'] = {
         }
       },
       (g, lt) => {
-        base(g, 'Conciliador V2');
-        panelBar(g, 'Conciliador V2', TABS, 1);
+        base(g, 'Conciliador');
+        panelBar(g, 'Conciliador', TABS, 1);
         const ok = lt > 2.6;
         tarjeta(g, 40, 250, 720, 'CARTOLA · 03/03', 'Abono Comercial Sur', '$2.000.000', easeOut(lt / 0.4), ok);
         tarjeta(g, 40, 520, 350, 'MAYOR · 02/03', 'Factura 1002', '$1.200.000', easeOut((lt - 0.4) / 0.4), ok);
@@ -7980,8 +8275,8 @@ AL_DEMOS['como-se-instala'] = {
         });
       },
       (g, lt) => {
-        base(g, 'Conciliador V2');
-        panelBar(g, 'Conciliador V2', TABS, 4);
+        base(g, 'Conciliador');
+        panelBar(g, 'Conciliador', TABS, 4);
         txt(g, '3 · Reglas para explicar pendientes', 40, 262, 34, 800, C.ink, 'left', 720);
         g.strokeStyle = C.line; g.lineWidth = 3; rr(g, 40, 296, 720, 376, 18); g.stroke();
         campo(g, 70, 350, 660, 56, 'Nombre', 'Comisiones del banco', false);
@@ -8006,8 +8301,8 @@ AL_DEMOS['como-se-instala'] = {
         });
       },
       (g, lt) => {
-        base(g, 'Conciliador V2');
-        panelBar(g, 'Conciliador V2', TABS, 1);
+        base(g, 'Conciliador');
+        panelBar(g, 'Conciliador', TABS, 1);
         for (let r = 0; 240 + r*80 < CH; r++) { g.fillStyle = r % 2 ? '#f6f8fb' : '#fff'; g.fillRect(40, 240 + r*80, 720, 80); g.fillStyle = '#dde5ee'; rr(g, 70, 272 + r*80, 280, 14, 7); g.fill(); rr(g, 560, 272 + r*80, 170, 14, 7); g.fill(); }
         const d = easeOut((lt - 0.25) / 0.35);
         overlay(g, d); g.globalAlpha = d;
@@ -8029,8 +8324,8 @@ AL_DEMOS['como-se-instala'] = {
         g.globalAlpha = 1;
       },
       (g, lt) => {
-        base(g, 'Conciliador V2');
-        panelBar(g, 'Conciliador V2', TABS, 0);
+        base(g, 'Conciliador');
+        panelBar(g, 'Conciliador', TABS, 0);
         const p = ease((lt - 0.3) / 1.6);
         const tiles = [[Math.round(lerp(47, 94, p)) + '%', 'conciliación', C.ok], [String(Math.round(lerp(8, 15, p))), 'conciliados', C.ok], [String(Math.round(lerp(0, 3, p))), 'explicados', C.expl], [String(Math.round(lerp(8, 1, p))), 'pendientes', C.warn]];
         tiles.forEach(([v, l, c], i) => {
@@ -8259,274 +8554,8 @@ AL_DEMOS['como-se-instala'] = {
     { keys:[[0.3,650,960],[2.4,311,259],[2.65,311,259],[3.3,650,980]], clicks:[2.55] }
   ];
 
-  // el V1 es la sub-pestaña visible al cargar: su demo de instalación parte ya
-/* "Ver en acción" del Conciliador V1 (2026-10-07), como grabación de pantalla: pantallas planas (motor de
-   tarjetas, igual que V2 y PedidoApp) en vez de la escena 3D con partidas flotando. Cada paso se ve como se
-   usa de verdad: la hoja de Google Sheets, el panel del complemento y el cursor haciendo cada acción.
-   Mismos textos, tiempos y datos de ejemplo que la escena 3D. Un solo dibujo sirve a los dos formatos
-   (horizontal 1200×950 y vertical 800×1000): las medidas salen de CW y CH. */
-AL_DEMOS['ver-en-accion'] = (function(){
-  const DATA = [
-    ['03/09','Factura F-101','+500.000'], ['04/09','Pago F-101','-500.000'],
-    ['05/09','Honorario B-22','+120.000'], ['06/09','Comisión mantención','-6.200'],
-    ['08/09','Factura F-102','+245.000'], ['09/09','Factura F-103','+89.700'],
-    ['10/09','Pago F-103','-89.700'], ['11/09','Factura F-104','+410.500'],
-    ['12/09','Pago F-102','-245.000'], ['15/09','Honorario B-23','+64.000'],
-    ['16/09','Pago F-104','-410.500'], ['17/09','Transf. sin referencia','-64.000']
-  ];
-  // el resto del mes, que en el celular se ve bajo la planilla (no entra en el ejemplo)
-  const MAS = [['18/09','Factura F-105','+132.000'], ['19/09','Pago F-105','-132.000'], ['22/09','Comisión transferencia','-490'], ['23/09','Honorario B-24','+88.000'], ['24/09','Factura F-106','+57.300'], ['25/09','Pago F-106','-57.300']];
-  const PAIRS = [[0,1],[4,8],[5,6],[7,10]], MANUAL = [9, 11], PEND = [2, 3, 9, 11];
-  const PAR = {}; PAIRS.forEach((p, k) => { PAR[p[0]] = PAR[p[1]] = k; });
-  const TABS = ['Resumen','Resultados','Historial','Configuración'];   // las pestañas del panel real del V1
-  const M = 40;
-  // medidas de cada formato (las comparten el dibujo y el recorrido del cursor)
-  function L(CW, CH){
-    const V = CH > CW, W = CW - 2*M;
-    return { V, W, CW, CH,
-      hojaY: V ? 212 : 196, fila: V ? 55 : 50,                                  // hoja: primera fila y alto de fila
-      col: V ? { n: M + 22, f: M + 64, d: M + 168, dW: 300, m: CW - M - 18, e: 0 }
-             : { n: M + 22, f: M + 70, d: M + 200, dW: 360, m: M + 740, e: M + 790 },
-      imp: V ? { x: M, y: 342, w: W } : { x: M + W - 300, y: 262, w: 300 },   // Conecta: botón Guardar fuente
-      ext: V ? { x: M, y: 262, w: W } : { x: M, y: 262, w: W - 320 },          // y el enlace del Google Sheet
-      arch: V ? 438 : 362, mapY: V ? 540 : 460, mapH: V ? 86 : 74,
-      conf: V ? { x: M, y: 832, w: W } : { x: M, y: 742, w: 460 },
-      bannerConf: V ? { x: M, y: 914, w: W } : { x: M + 490, y: 742, w: W - 490 },
-      ejec: { x: M, y: 250, w: W },                                             // Ejecuta
-      revY: V ? 318 : 312, revH: V ? 104 : 90,                                  // Revisa: filas de pendientes
-      empa: V ? { x: M, y: 770, w: W } : { x: M, y: 700, w: 420 },
-      expo: V ? { x: M, y: 870, w: W } : { x: CW - M - 420, y: 820, w: 420 }
-    };
-  }
-  const centro = r => [r.x + r.w/2, r.y + 32];
-  function recorrido(l){
-    const y = i => l.hojaY + 52 + i*l.fila, xm = l.col.d + 120;
-    const [ix, iy] = centro(l.imp), [cx, cy] = centro(l.conf), [ex, ey] = [l.CW/2, l.ejec.y + 36];
-    const rv = k => l.revY + k*l.revH + l.revH/2 - 8, [px, py] = centro(l.empa), [ox, oy] = centro(l.expo);
-    const reposo = [l.CW * 0.8, l.CH * 0.92];
-    return [
-      { keys:[[0.3, xm, y(0)], [1.0, xm, y(5)], [1.25, xm, y(5)], [1.9, xm, y(6)], [2.15, xm, y(6)], [3.0, reposo[0], reposo[1]]], clicks:[1.12, 2.02] },
-      { keys:[[0.2, reposo[0], reposo[1]], [0.75, ix, iy], [1.0, ix, iy], [3.0, cx, cy], [3.3, cx, cy], [4.0, reposo[0], reposo[1]]], clicks:[0.88, 3.15] },
-      { keys:[[0.1, reposo[0], reposo[1]], [0.75, ex, ey], [1.0, ex, ey], [1.8, reposo[0], reposo[1]]], clicks:[0.88] },
-      null,
-      { keys:[[0.3, reposo[0], reposo[1]], [1.0, M + 34, rv(2)], [1.25, M + 34, rv(2)], [1.8, M + 34, rv(3)], [2.05, M + 34, rv(3)], [2.7, px, py], [2.95, px, py], [3.7, reposo[0], reposo[1]]], clicks:[1.12, 1.92, 2.82] },
-      { keys:[[2.6, reposo[0], reposo[1]], [3.3, ox, oy], [3.6, ox, oy], [4.4, reposo[0], reposo[1]]], clicks:[3.45] }
-    ];
-  }
-  function dibujo(H){
-    const { C, CW, CH, clamp, ease, easeOut, lerp, rr, txt, press, btn, base, banner, pill, campo, panelBar, checkDot } = H;
-    const l = L(CW, CH), V = l.V, W = l.W;
-    const SHEET = '#188038';
-    const tinte = (g, y, color, a) => { if (a <= 0) return; g.globalAlpha = a; g.fillStyle = color; g.fillRect(M, y - l.fila/2 + 2, W, l.fila - 4); g.globalAlpha = 1; };
-    // hoja de cálculo: barra de fórmulas, letras de columna, encabezados y filas
-    function hoja(g, titulo, celda, filas, extra){
-      base(g, titulo);
-      g.fillStyle = '#f1f4f8'; g.fillRect(4, 78, CW - 8, 52);
-      txt(g, celda, M + 8, 104, 24, 700, C.muted); g.fillStyle = C.line; g.fillRect(M + 84, 88, 2, 32);
-      txt(g, 'fx', M + 104, 104, 24, 700, C.soft, 'left');
-      const y0 = l.hojaY, c = l.col;
-      g.fillStyle = '#f6f8fb'; g.fillRect(M, y0 - 52, W, 36);
-      ['A','B','C','D'].slice(0, V ? 3 : 4).forEach((k, i) => txt(g, k, [c.f + 30, c.d + 120, c.m - 60, c.e + 90][i], y0 - 34, 20, 700, C.soft, 'center'));
-      txt(g, 'Fecha', c.f, y0, 25, 800, C.ink); txt(g, 'Descripción', c.d, y0, 25, 800, C.ink); txt(g, 'Monto', c.m, y0, 25, 800, C.ink, 'right');
-      if (!V) txt(g, 'Estado', c.e, y0, 25, 800, C.ink);
-      g.fillStyle = C.line; g.fillRect(M, y0 + 24, W, 2);
-      filas.forEach((r, i) => {
-        const y = y0 + 52 + i*l.fila;
-        if (extra) extra(g, i, y);
-        txt(g, String(i + 2), c.n, y, 20, 600, C.soft, 'center');
-        txt(g, r[0], c.f, y, V ? 24 : 25, 600, C.muted);
-        txt(g, r[1], c.d, y, V ? 25 : 26, 600, C.ink, 'left', c.dW);
-        txt(g, r[2], c.m, y, V ? 25 : 26, 800, r[2][0] === '-' ? C.muted : C.ink, 'right');
-        g.fillStyle = '#e3e9f0'; g.fillRect(M, y + l.fila/2 - 1, W, 1);
-      });
-      if (V) MAS.forEach((r, k) => {   // en el celular, la planilla sigue (el resto del mes) hasta el aviso de abajo
-        const i = filas.length + k, y = y0 + 52 + i*l.fila; if (y + l.fila/2 > CH - 112) return;
-        txt(g, String(i + 2), c.n, y, 20, 600, C.soft, 'center');
-        txt(g, r[0], c.f, y, 24, 600, C.muted); txt(g, r[1], c.d, y, 25, 600, C.ink, 'left', c.dW);
-        txt(g, r[2], c.m, y, 25, 800, r[2][0] === '-' ? C.muted : C.ink, 'right');
-        g.fillStyle = '#e3e9f0'; g.fillRect(M, y + l.fila/2 - 1, W, 1);
-      });
-    }
-    const estado = (g, y, label, fill, ink) => { if (V) { g.fillStyle = ink; g.beginPath(); g.arc(M + 6, y, 9, 0, 7); g.fill(); txt(g, '✓', M + 6, y + 1, 13, 800, '#fff', 'center'); } else pill(g, l.col.e, y - 20, label, fill, ink, 21, 38); };
-    return [
-      // 0 · El problema: la hoja, revisada a mano fila por fila
-      (g, lt) => {
-        const marca = i => (i === 5 || i === 6) ? easeOut((lt - 1.1 - (i - 5)*0.9) / 0.25) : 0;
-        hoja(g, 'Movimientos septiembre', 'B' + (lt < 1.5 ? 7 : 8), DATA, (g, i, y) => {
-          const busca = clamp((lt - 0.3) / 0.7) * 5;
-          if (Math.abs(i - busca) < 0.6 && lt < 1.3) tinte(g, y, '#dbe8f7', 1);
-          tinte(g, y, 'rgba(245,200,76,.45)', marca(i));
-        });
-        const q = easeOut((lt - 2.2) / 0.3);
-        if (q > 0 && !V) { g.globalAlpha = q; const y = l.hojaY + 52 + 6*l.fila; pill(g, l.col.e, y - 22, '¿calza con F-103?', '#fdf1e2', C.warn, 22, 42); g.globalAlpha = 1; }
-        const r = easeOut((lt - 2.6) / 0.35);
-        if (r > 0) { g.globalAlpha = r; pill(g, CW/2, CH - (V ? 80 : 70), '2 h 40 min revisando… y quedan 188 filas', C.bad, '#fff', V ? 24 : 28, V ? 50 : 56, 'center'); g.globalAlpha = 1; }
-      },
-      // 1 · Conecta: pega el enlace del Google Sheet, detecta las columnas y las confirma (como Configuración → Fuente de datos)
-      (g, lt) => {
-        base(g, 'Conciliador V1'); panelBar(g, 'Conciliador V1', TABS, 3);
-        const url = 'docs.google.com/spreadsheets/d/1Cartola…', n = Math.round(clamp(lt / 0.7) * url.length);
-        campo(g, l.ext.x, l.ext.y, l.ext.w, 64, '', url.slice(0, n) || 'Enlace o ID del Sheet', lt < 0.8);
-        btn(g, l.imp.x, l.imp.y, l.imp.w, 64, 'Guardar fuente', 'primary', press(lt, 0.88), 32);
-        const f = easeOut((lt - 1.1) / 0.35);
-        if (f > 0) { g.globalAlpha = f; pill(g, M, l.arch, 'Cartola banco › Movimientos septiembre', '#e6f2eb', SHEET, V ? 24 : 26, 50); g.globalAlpha = 1; }
-        const t = easeOut((lt - 1.5) / 0.3);
-        if (t > 0) { g.globalAlpha = t; txt(g, 'Encabezados detectados', M, l.mapY - 30, 30, 800, C.ink); g.globalAlpha = 1; }
-        [['Fecha','FECHA'],['Concepto','DESCRIPCION'],['Monto','IMPORTE']].forEach((m, k) => {
-          const a = easeOut((lt - 1.7 - k*0.35) / 0.3); if (a <= 0) return;
-          const y = l.mapY + k*l.mapH, w = V ? 300 : 340;
-          g.globalAlpha = a;
-          g.fillStyle = '#f6f8fb'; rr(g, M, y, w, 58, 12); g.fill(); txt(g, m[0], M + 20, y + 30, 28, 700, C.ink);
-          txt(g, '→', M + w + 34, y + 30, 32, 800, C.soft, 'center');
-          campo(g, M + w + 70, y, V ? W - w - 150 : 380, 58, '', m[1] + ' ▾', false);
-          checkDot(g, V ? CW - M - 24 : M + w + 500, y + 29, lt > 1.95 + k*0.35, 1);
-          g.globalAlpha = 1;
-        });
-        btn(g, l.conf.x, l.conf.y, l.conf.w, 64, 'Confirmar columnas', 'primary', press(lt, 3.15), 32);
-        const b = easeOut((lt - 3.4) / 0.3);
-        if (b > 0) { g.globalAlpha = b; banner(g, l.bannerConf.x, l.bannerConf.y, l.bannerConf.w, 64, '✓ 12 movimientos listos'); g.globalAlpha = 1; }
-        if (V && CH > 1060) {   // en el celular, la configuración sigue: vista previa de la fuente
-          g.fillStyle = C.line; g.fillRect(M, 1008, W, 2);
-          txt(g, 'Vista previa', M, 1052, 28, 800, C.ink);
-          DATA.slice(0, 4).forEach((r, k) => { const y = 1104 + k*52; if (y + 24 > CH) return;
-            txt(g, r[0], M, y, 24, 600, C.muted); txt(g, r[1], M + 110, y, 25, 600, C.ink, 'left', 360); txt(g, r[2], CW - M, y, 25, 800, r[2][0] === '-' ? C.muted : C.ink, 'right');
-            g.fillStyle = '#e3e9f0'; g.fillRect(M, y + 25, W, 1); });
-        }
-      },
-      // 2 · Ejecuta: un clic en el panel; valida los datos antes de procesar
-      (g, lt) => {
-        base(g, 'Conciliador V1'); panelBar(g, 'Conciliador V1', TABS, 0);
-        btn(g, l.ejec.x, l.ejec.y, l.ejec.w, 72, '▶ Ejecutar conciliación', 'primary', press(lt, 0.88), 36);
-        const v = lt > 1.0;
-        txt(g, !v ? 'Listo para ejecutar' : (lt < 2.0 ? 'Validando datos…' : '✓ Datos validados'), M, l.ejec.y + 120, 30, 700, lt < 2.0 ? C.soft : C.ok);
-        if (v && lt < 2.0) { g.fillStyle = '#e3e9f0'; rr(g, M, l.ejec.y + 150, W, 10, 5); g.fill(); g.fillStyle = C.brand; rr(g, M, l.ejec.y + 150, W * clamp((lt - 1.0) / 1.0), 10, 5); g.fill(); }
-        const tiles = [['0%','conciliación', C.ok], ['0','pares', C.ink], ['12','pendientes', C.warn], ['$0','conciliado', C.ink]];
-        const tw = V ? (W - 20) / 2 : (W - 60) / 4, th = V ? 150 : 170, ty = l.ejec.y + 190;
-        tiles.forEach(([n, s, c], i) => {
-          const x = M + (V ? (i % 2) : i) * (tw + 20), y = ty + (V ? Math.floor(i / 2) * (th + 20) : 0);
-          g.fillStyle = '#f6f8fb'; rr(g, x, y, tw, th, 20); g.fill();
-          txt(g, n, x + 28, y + th*0.42, V ? 56 : 62, 800, c); txt(g, s, x + 28, y + th*0.78, 26, 700, C.muted);
-        });
-        const y2 = ty + (V ? 2*th + 50 : th + 50);
-        txt(g, 'Historial', M, y2, 28, 800, C.ink);
-        for (let k = 0; y2 + 36 + k*44 + 14 < CH - 20 && k < 8; k++) { g.fillStyle = '#e3e9f0'; rr(g, M, y2 + 36 + k*44, W * [0.7, 0.55, 0.62, 0.5, 0.66][k % 5], 14, 7); g.fill(); }
-      },
-      // 3 · Matching: recorre la hoja y empareja cada movimiento con su contraparte
-      (g, lt) => {
-        const run = clamp((lt - 0.2) / 3.0);
-        hoja(g, 'Movimientos septiembre', 'D2', DATA, (g, i, y) => {
-          const k = PAR[i];
-          if (k !== undefined) { const a = easeOut((lt - 0.5 - k*0.55) / 0.3); tinte(g, y, 'rgba(47,138,91,.13)', a); if (a > 0) { g.globalAlpha = a; estado(g, y, '✓ Par ' + (k + 1), '#e6f2eb', C.ok); g.globalAlpha = 1; } }
-          const barre = (lt - 0.2) / 0.5 % 1 * 12;
-          if (lt < 3.2 && Math.abs(i - barre) < 0.5) tinte(g, y, 'rgba(31,92,153,.12)', 1);
-        });
-        // franja del motor con el contador
-        const n = Math.round(3000 * run).toLocaleString('es-CL');
-        pill(g, CW/2, CH - (V ? 76 : 66), (run >= 1 ? '✓ ' : '') + n + ' movimientos · ' + (3.0 * run).toFixed(1).replace('.', ',') + ' s', run >= 1 ? C.ok : C.brand, '#fff', V ? 24 : 28, V ? 50 : 56, 'center');
-        const k = Math.min(3, Math.floor((lt - 0.5) / 0.55));
-        if (k >= 0 && lt < 3.4 && !V) { const p = PAIRS[k]; g.globalAlpha = 0.95; pill(g, CW/2, CH - 128, DATA[p[0]][1] + ' ↔ ' + DATA[p[1]][1] + ' · mismo monto', C.ok, '#fff', 23, 44, 'center'); g.globalAlpha = 1; }
-      },
-      // 4 · Revisa: lo que no calzó; empareja a mano y el ajuste queda guardado
-      (g, lt) => {
-        base(g, 'Conciliador V1'); panelBar(g, 'Conciliador V1', TABS, 1);
-        let x = M; [['Todos (12)', false], ['Pendientes (4)', true], ['Conciliados (8)', false]].forEach(([s, on]) => { x += pill(g, x, 236, s, on ? C.brand : '#eef2f7', on ? '#fff' : C.muted, V ? 21 : 24, 46) + 12; });
-        const sel = [lt > 1.12, lt > 1.92], hecho = lt > 3.0;
-        PEND.forEach((i, k) => {
-          const y = l.revY + k*l.revH, r = DATA[i], man = MANUAL.indexOf(i), h = l.revH - 16;
-          const on = man >= 0 && sel[man];
-          g.fillStyle = on ? (hecho ? 'rgba(47,138,91,.1)' : '#e8f0fa') : '#f6f8fb'; rr(g, M, y, W, h, 16); g.fill();
-          if (on && !hecho) { g.strokeStyle = C.brand; g.lineWidth = 3; rr(g, M, y, W, h, 16); g.stroke(); }
-          g.strokeStyle = on ? C.brand : C.line; g.lineWidth = 3; rr(g, M + 22, y + h/2 - 15, 30, 30, 7); g.stroke();
-          if (on) { g.fillStyle = C.brand; rr(g, M + 22, y + h/2 - 15, 30, 30, 7); g.fill(); txt(g, '✓', M + 37, y + h/2 + 1, 22, 800, '#fff', 'center'); }
-          if (V) { txt(g, r[1], M + 74, y + h*0.34, 27, 700, C.ink, 'left', 380); txt(g, r[0], M + 74, y + h*0.72, 22, 600, C.soft); }
-          else { txt(g, r[0], M + 74, y + h/2, 25, 600, C.soft); txt(g, r[1], M + 170, y + h/2, 28, 700, C.ink, 'left', 420); }
-          txt(g, r[2], V ? CW - M - 22 : M + 760, V ? y + h*0.34 : y + h/2, 28, 800, C.ink, 'right');
-          const ok = man >= 0 && hecho, pop = ok ? 1 + Math.sin(clamp((lt - 3.0) / 0.3) * Math.PI) * 0.1 : 1;
-          g.save(); g.translate(V ? CW - M - 22 : CW - M - 24, V ? y + h*0.72 : y + h/2); g.scale(pop, pop);
-          pill(g, 0, -19, ok ? '✓ Par manual' : 'Sin par', ok ? C.ok : '#fdf1e2', ok ? '#fff' : C.warn, 21, 38, 'right');
-          g.restore();
-        });
-        btn(g, l.empa.x, l.empa.y, l.empa.w, 64, 'Emparejar a mano', sel[1] ? 'primary' : 'disabled', press(lt, 2.82), 32);
-        const b = easeOut((lt - 3.3) / 0.35);
-        if (b > 0) { g.globalAlpha = b; const y = l.empa.y + (V ? 90 : 0), x0 = V ? M : M + 450; banner(g, x0, y, V ? W : W - 450, 64, '✓ Guardado para la próxima ejecución'); g.globalAlpha = 1; }
-        if (V && CH > 1060) {   // en el celular, la lista sigue: los ya conciliados
-          txt(g, 'Conciliados (8)', M, 1010, 28, 800, C.ink);
-          PAIRS.forEach((pr, k) => { const y = 1062 + k*56; if (y + 24 > CH) return;
-            txt(g, DATA[pr[0]][1] + ' ↔ ' + DATA[pr[1]][1], M, y, 25, 600, C.ink, 'left', 470); pill(g, CW - M, y - 18, 'Par ' + (k + 1), '#e6f2eb', C.ok, 20, 36, 'right');
-            g.fillStyle = '#e3e9f0'; g.fillRect(M, y + 26, W, 1); });
-        }
-      },
-      // 5 · Resultado: indicadores, estado de cada movimiento y exportación
-      (g, lt) => {
-        base(g, 'Conciliador V1'); panelBar(g, 'Conciliador V1', TABS, 0);
-        const p = ease((lt - 0.2) / 1.4);
-        const tiles = [[Math.round(lerp(0, 83, p)) + '%','conciliación', C.ok], [String(Math.round(lerp(0, 5, p))),'pares', C.ok], [String(Math.round(lerp(12, 2, p))),'pendientes', C.warn], ['$' + Math.round(lerp(0, 1309200, p)).toLocaleString('es-CL'),'conciliado', C.ink]];
-        const tw = V ? (W - 20) / 2 : (W - 60) / 4, th = V ? 140 : 160, ty = 240;
-        tiles.forEach(([n, s, c], i) => {
-          const x = M + (V ? (i % 2) : i) * (tw + 20), y = ty + (V ? Math.floor(i / 2) * (th + 20) : 0);
-          g.fillStyle = '#f6f8fb'; rr(g, x, y, tw, th, 20); g.fill();
-          txt(g, n, x + 26, y + th*0.42, i === 3 ? (V ? 40 : 44) : (V ? 54 : 60), 800, c, 'left', tw - 40); txt(g, s, x + 26, y + th*0.78, 25, 700, C.muted);
-        });
-        // estado de los movimientos: barra apilada
-        const by = ty + (V ? 2*th + 60 : th + 60), q = ease((lt - 1.0) / 0.9);
-        txt(g, 'Estado de los 12 movimientos', M, by, 28, 800, C.ink);
-        const partes = [[8, C.ok, 'Conciliados'], [2, '#6fbf8f', 'Manual'], [2, C.warn, 'Pendientes']]; let x = M;
-        partes.forEach(([n, c, s]) => { const w = (W * n / 12) * q; g.fillStyle = c; rr(g, x, by + 30, Math.max(0, w - 6), 34, 8); g.fill(); x += w; });
-        if (q > 0.9) { let lx = M; partes.forEach(([n, c, s]) => { g.fillStyle = c; rr(g, lx, by + 88, 18, 18, 4); g.fill(); txt(g, s + ' ' + n, lx + 28, by + 98, 22, 700, C.muted); lx += V ? 220 : 260; }); }
-        // filas del detalle
-        const dy = by + 150;
-        [[0, 'Par 1'], [9, 'Par manual'], [3, 'Pendiente']].slice(0, V ? 2 : 3).forEach(([i, s], k) => {
-          const a = easeOut((lt - 1.6 - k*0.2) / 0.35); if (a <= 0) return; const y = dy + k*56, r = DATA[i];
-          g.globalAlpha = a; txt(g, r[1], M, y, 26, 600, C.ink, 'left', V ? 340 : 420); txt(g, r[2], V ? M + 520 : M + 640, y, 26, 800, C.ink, 'right');
-          pill(g, CW - M, y - 18, s, s === 'Pendiente' ? '#fdf1e2' : '#e6f2eb', s === 'Pendiente' ? C.warn : C.ok, 20, 36, 'right');
-          g.fillStyle = '#e3e9f0'; g.fillRect(M, y + 26, W, 1); g.globalAlpha = 1;
-        });
-        if (!V || lt < 3.7) btn(g, l.expo.x, l.expo.y, l.expo.w, 64, 'Reporte', 'primary', press(lt, 3.45), 32);
-        const b = easeOut((lt - 3.7) / 0.35);
-        if (b > 0) { g.globalAlpha = b; banner(g, M, l.expo.y, V ? W : W - 450, 64, '✓ Reporte listo: imprimir o guardar en PDF', SHEET); g.globalAlpha = 1; }
-        if (V && CH > 1060) [[3, 'Pendiente'], [4, 'Par 2'], [5, 'Par 3'], [7, 'Par 4']].forEach(([i, s], k) => {   // en el celular, el detalle sigue
-          const y = 1000 + k*56, r = DATA[i]; if (y + 24 > CH) return;
-          txt(g, r[1], M, y, 26, 600, C.ink, 'left', 340); txt(g, r[2], M + 520, y, 26, 800, C.ink, 'right');
-          pill(g, CW - M, y - 18, s, s === 'Pendiente' ? '#fdf1e2' : '#e6f2eb', s === 'Pendiente' ? C.warn : C.ok, 20, 36, 'right');
-          g.fillStyle = '#e3e9f0'; g.fillRect(M, y + 26, W, 1);
-        });
-      }
-    ];
-  }
-  return {
-    steps: [
-      { a:0, b:3.6, short:'El problema', kicker:'El problema que resuelve',
-        title:'Cruzas movimientos a mano. Cada mes.',
-        body:'Cada factura debe coincidir con su pago, fila por fila, en planillas de cientos de filas. Hacerlo a mano toma horas, y un solo número mal copiado puede generar un problema después.',
-        stats:[['200','movimientos típicos'],['3 h','tiempo manual']] },
-      { a:3.6, b:8.0, short:'Conecta', kicker:'Paso 1: conecta tu fuente',
-        title:'Tu cartola, desde Google Sheets',
-        body:'Pegas el enlace del Google Sheet con tus movimientos (la cartola o lo que exporta tu banco o ERP; un .xlsx se sube a Drive y se abre como Google Sheet). El sistema lee los encabezados, te propone qué columna es cada dato (también Cargo y Abono por separado) y tú las confirmas.' },
-      { a:8.0, b:10.9, short:'Ejecuta', kicker:'Paso 2: ejecuta desde el panel',
-        title:'Abre el panel de control web y ejecuta con un clic',
-        body:'Resultados, gráfico y números clave en una sola vista. El sistema valida los datos antes de procesar.' },
-      { a:10.9, b:15.3, short:'Matching', kicker:'Algoritmo de matching',
-        title:'Cruza cada movimiento contra todos los demás',
-        body:'El sistema compara cada movimiento con los demás y lo empareja con su contraparte de monto opuesto (1 a 1), con el motivo de cada resultado: diferencia de monto, días de distancia y parecido del concepto.',
-        stats:[['3.000','movimientos por ejecución'],['1:1','cada par con su motivo']] },
-      { a:15.3, b:21.0, short:'Revisa', kicker:'Paso 3: revisa y corrige',
-        title:'Lo que no calzó, lo resuelves tú',
-        body:'Cada pendiente queda a la vista. Si sabes que una transferencia sin referencia corresponde a una factura, la emparejas a mano o deshaces un pareo, y el ajuste queda guardado entre ejecuciones.' },
-      { a:21.0, b:28.8, short:'Resultado', kicker:'Resultado final',
-        title:'Así queda tu conciliación',
-        body:'Cada movimiento con su estado, su contraparte y el detalle del match. Filtras los pendientes, descargas un CSV o imprimes el reporte (o lo guardas en PDF), listo para compartir o archivar.',
-        stats:[['1 clic','para conciliar'],['5 min','instalación']],
-        cta:['Ver qué incluye', 'incluye'] }
-    ],
-    cursor: recorrido(L(1200, 950)), cursorV: recorrido(L(800, 1000)),
-    draw: dibujo, drawV: dibujo
-  };
-})();
-
-  const r0 = document.getElementById('ver-en-accion');
-  if (r0 && window.alDemoTarjetas) alDemoTarjetas(r0, AL_DEMOS['ver-en-accion']);
-  const r1 = document.getElementById('como-se-instala');
-  if (r1 && v1i && window.alDemoTarjetas) alDemoTarjetas(r1, v1i);
+  // la sub-pestaña visible al cargar (el Conciliador) inicia sus demos ya; las demás, al abrirla (showHP)
+  if (window.alDemoTarjetas) document.querySelectorAll('#product .hp-panel.on .al-demo[id]').forEach(d => { if (AL_DEMOS[d.id]) alDemoTarjetas(d, AL_DEMOS[d.id]); });
 })();
 </script>
 <script>
