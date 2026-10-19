@@ -15,7 +15,7 @@ window.__errores=[];window.addEventListener("error",function(e){window.__errores
 try{if("scrollRestoration" in history)history.scrollRestoration="manual";if(location.hash)history.replaceState(null,"",location.pathname+location.search);}catch(e){}</script>
 <meta name="theme-color" content="#06080C" />
 <title>Ambilor Lab (Ambilor.Lab) · Automatización contable y financiera</title>
-<meta name="description" content="Ambilor Lab: herramientas de automatización contable y financiera para contadores, equipos financieros y PyMEs, dentro de Google Sheets. Cuadra (conciliación bancaria), Pide (pedidos por WhatsApp) y Lucas (finanzas personales)." />
+<meta name="description" content="Ambilor Lab: herramientas de automatización contable y financiera para contadores, equipos financieros y PyMEs, dentro de Google Sheets. Conciliador Semiautomático, conciliación bancaria y app de pedidos." />
 <link rel="canonical" href="https://ambilor.github.io/ambilorlab/" />
 
 <!-- Preconnect -->
@@ -34,12 +34,12 @@ try{if("scrollRestoration" in history)history.scrollRestoration="manual";if(loca
 <meta property="og:site_name" content="Ambilor.Lab" />
 <meta property="og:title" content="Ambilor Lab (Ambilor.Lab) · Automatización contable y financiera" />
 <meta property="og:locale" content="es_CL" />
-<meta property="og:description" content="Ambilor Lab: herramientas de automatización contable y financiera para contadores, equipos financieros y PyMEs, dentro de Google Sheets. Cuadra (conciliación bancaria), Pide (pedidos por WhatsApp) y Lucas (finanzas personales)." />
+<meta property="og:description" content="Ambilor Lab: herramientas de automatización contable y financiera para contadores, equipos financieros y PyMEs, dentro de Google Sheets. Conciliador Semiautomático, conciliación bancaria y app de pedidos." />
 <meta property="og:url" content="https://ambilor.github.io/ambilorlab/" />
 <meta property="og:image" content="https://ambilor.github.io/ambilorlab/og-image.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Ambilor Lab (Ambilor.Lab) · Automatización contable y financiera" />
-<meta name="twitter:description" content="Ambilor Lab: herramientas de automatización contable y financiera para contadores, equipos financieros y PyMEs, dentro de Google Sheets. Cuadra (conciliación bancaria), Pide (pedidos por WhatsApp) y Lucas (finanzas personales)." />
+<meta name="twitter:description" content="Ambilor Lab: herramientas de automatización contable y financiera para contadores, equipos financieros y PyMEs, dentro de Google Sheets. Conciliador Semiautomático, conciliación bancaria y app de pedidos." />
 
 <!-- JSON-LD (2026-09-30): el sitio, la marca y su autor. "alternateName"
      cubre cómo se busca la marca ("Ambilor Lab", sin punto) y "sameAs" une el
@@ -949,7 +949,7 @@ footer{color:#6B7280}
 .hx-cubo-zona{display:none;position:absolute;z-index:1;border-radius:50%;touch-action:none}
 @media (pointer:coarse){.hx-cubo-zona{display:block}}   /* con el dedo solo se juega sobre el cubo */
 
-/* Cuadra en "Próximamente" (2026-09-27) */
+/* Conciliador en "Próximamente" (2026-09-27) */
 .prox-badge{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:100px;background:rgba(240,166,58,.12);color:#F0A63A;border:1px solid rgba(240,166,58,.35)}
 .prox-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:#F0A63A}
 [data-theme="light"] .prox-badge{background:#FEF3E2;color:#B45309;border-color:#F5D3A1}
@@ -2862,7 +2862,7 @@ window.AL_NOTAS = {
         <li><span class="ab2-fn"><span class="pi-ico pi-ico--s"><i class="ti ti-code" aria-hidden="true"></i></span>02</span><b>La convierto en un programa</b><span>Con herramientas que tu equipo ya usa, como Google Sheets.</span></li>
         <li><span class="ab2-fn"><span class="pi-ico pi-ico--s"><i class="ti ti-circle-check" aria-hidden="true"></i></span>03</span><b>Se hace sola</b><span>En minutos y sin errores de copia, cada vez que la necesitas.</span></li>
       </ol>
-      <p class="ab2-nota"><i class="ti ti-bulb" aria-hidden="true"></i>Cada herramienta nació de un problema real: Cuadra, de meses revisando pagos y facturas a mano.</p>
+      <p class="ab2-nota"><i class="ti ti-bulb" aria-hidden="true"></i>Cada herramienta nació de un problema real: el Conciliador, de meses revisando pagos y facturas a mano.</p>
 
       <div class="pi-eyebrow">Experiencia</div>
       <div class="ab2-exp">
@@ -2904,15 +2904,15 @@ window.AL_NOTAS = {
          formato en las tres: cabecera, "Ver en acción", "Cómo se instala", qué incluye,
          lo que necesitas saber y preguntas frecuentes. -->
     <div class="gp-tabs hp-tabs" role="tablist" aria-label="Herramientas">
-      <button class="gp-tab on" id="hpt-v2" data-hp="v2" role="tab" aria-selected="true" aria-controls="hp-v2"><span class="gp-tab-name">Cuadra.</span><span class="hp-prox">Pronto</span></button>
-      <button class="gp-tab" id="hpt-ped" data-hp="ped" role="tab" aria-selected="false" aria-controls="hp-ped"><span class="gp-tab-name">Pide.</span><span class="hp-prox">Pronto</span></button>
-      <button class="gp-tab" id="hpt-fin" data-hp="fin" role="tab" aria-selected="false" aria-controls="hp-fin"><span class="gp-tab-name">Lucas.</span><span class="hp-prox">Pronto</span></button>
+      <button class="gp-tab on" id="hpt-v2" data-hp="v2" role="tab" aria-selected="true" aria-controls="hp-v2"><span class="gp-tab-name">Conciliador</span><span class="hp-prox">Pronto</span></button>
+      <button class="gp-tab" id="hpt-ped" data-hp="ped" role="tab" aria-selected="false" aria-controls="hp-ped"><span class="gp-tab-name">App de Pedidos</span><span class="hp-prox">Pronto</span></button>
+      <button class="gp-tab" id="hpt-fin" data-hp="fin" role="tab" aria-selected="false" aria-controls="hp-fin"><span class="gp-tab-name">App de Finanzas</span><span class="hp-prox">Pronto</span></button>
     </div>
   <div class="hp-panel on" id="hp-v2" role="tabpanel" aria-labelledby="hpt-v2">
     <div class="prod-cab">
       <div class="prod-cab-txt">
         <div class="prod-eyebrow"><span class="prox-badge">Próximamente</span></div>
-        <h2 class="prod-h1">Cuadra.</h2>
+        <h2 class="prod-h1">Conciliador</h2>
         <p class="prod-tagline">Tu conciliación en segundos, dentro de tu propio Google Sheets: una hoja sola o el banco contra tu contabilidad, en pares o en grupos.</p>
       </div>
       <div class="alert-box"><b>Preciso por diseño:</b> empareja solo lo que no deja dudas. Si una pareja podría ser otra, no adivina: te la deja como sugerencia para que decidas tú.</div>
@@ -2921,7 +2921,7 @@ window.AL_NOTAS = {
     <div class="demo-par">
     <div class="demo-section on" data-d="accion" role="tabpanel">
       <div class="demo-label demo-cambio" role="tablist" aria-label="Demostraciones"><i aria-hidden="true"></i><button type="button" class="on" role="tab" aria-selected="true" data-d="accion">Ver en acción</button><button type="button" role="tab" aria-selected="false" data-d="instala">Cómo se instala</button></div>
-      <div class="al-demo al-demo--accion" id="v2-accion" aria-label="Cuadra en acción">
+      <div class="al-demo al-demo--accion" id="v2-accion" aria-label="El Conciliador en acción">
         <div class="al-demo__grid">
           <div class="al-demo__copy" aria-live="polite">
             <p class="al-demo__kicker"></p>
@@ -2947,7 +2947,7 @@ window.AL_NOTAS = {
     </div>
     <div class="demo-section" data-d="instala" role="tabpanel" hidden id="instalacion-v2">
       <div class="demo-label demo-cambio" role="tablist" aria-label="Demostraciones"><i aria-hidden="true"></i><button type="button" role="tab" aria-selected="false" data-d="accion">Ver en acción</button><button type="button" class="on" role="tab" aria-selected="true" data-d="instala">Cómo se instala</button></div>
-      <div class="al-demo al-demo--instala" id="v2-instala" aria-label="Cómo se instala Cuadra">
+      <div class="al-demo al-demo--instala" id="v2-instala" aria-label="Cómo se instala el Conciliador">
         <div class="al-demo__grid">
           <div class="al-demo__copy" aria-live="polite">
             <p class="al-demo__kicker"></p>
@@ -3016,7 +3016,7 @@ window.AL_NOTAS = {
     <div class="prod-cab">
       <div class="prod-cab-txt">
         <div class="prod-eyebrow"><span class="prox-badge">Próximamente</span></div>
-        <h2 class="prod-h1">Pide.</h2>
+        <h2 class="prod-h1">App de Pedidos</h2>
         <p class="prod-tagline">Tus clientes piden desde el celular y tú lo gestionas todo desde un panel, sin comisiones por venta.</p>
       </div>
       <div class="alert-box"><b>¿Para quién?</b> Negocios que hoy reciben pedidos por WhatsApp: almacenes, panaderías, pastelerías, distribuidoras y emprendimientos.</div>
@@ -3025,7 +3025,7 @@ window.AL_NOTAS = {
     <div class="demo-par">
     <div class="demo-section on" data-d="accion" role="tabpanel">
       <div class="demo-label demo-cambio" role="tablist" aria-label="Demostraciones"><i aria-hidden="true"></i><button type="button" class="on" role="tab" aria-selected="true" data-d="accion">Ver en acción</button><button type="button" role="tab" aria-selected="false" data-d="instala">Cómo se instala</button></div>
-      <div class="al-demo al-demo--accion" id="ped-accion" aria-label="Pide en acción">
+      <div class="al-demo al-demo--accion" id="ped-accion" aria-label="App de Pedidos en acción">
         <div class="al-demo__grid">
           <div class="al-demo__copy" aria-live="polite">
             <p class="al-demo__kicker"></p>
@@ -3051,7 +3051,7 @@ window.AL_NOTAS = {
     </div>
     <div class="demo-section" data-d="instala" role="tabpanel" hidden id="instalacion-ped">
       <div class="demo-label demo-cambio" role="tablist" aria-label="Demostraciones"><i aria-hidden="true"></i><button type="button" role="tab" aria-selected="false" data-d="accion">Ver en acción</button><button type="button" class="on" role="tab" aria-selected="true" data-d="instala">Cómo se instala</button></div>
-      <div class="al-demo al-demo--instala" id="ped-instala" aria-label="Cómo se instala Pide">
+      <div class="al-demo al-demo--instala" id="ped-instala" aria-label="Cómo se instala la App de Pedidos">
         <div class="al-demo__grid">
           <div class="al-demo__copy" aria-live="polite">
             <p class="al-demo__kicker"></p>
@@ -3118,7 +3118,7 @@ window.AL_NOTAS = {
     <div class="prod-cab">
       <div class="prod-cab-txt">
         <div class="prod-eyebrow"><span class="prox-badge">Próximamente</span></div>
-        <h2 class="prod-h1">Lucas.</h2>
+        <h2 class="prod-h1">App de Finanzas</h2>
         <p class="prod-tagline">Tus finanzas personales ordenadas desde el celular: anotas un gasto en dos toques y sabes cuánto te queda para el mes, dentro de tu propio Google Sheets.</p>
       </div>
       <div class="alert-box"><b>¿Para quién?</b> Personas y familias que quieren saber en qué se va la plata, tener al día sus tarjetas y deudas y ahorrar para sus metas.</div>
@@ -3127,7 +3127,7 @@ window.AL_NOTAS = {
     <div class="demo-par">
     <div class="demo-section on" data-d="accion" role="tabpanel">
       <div class="demo-label demo-cambio" role="tablist" aria-label="Demostraciones"><i aria-hidden="true"></i><button type="button" class="on" role="tab" aria-selected="true" data-d="accion">Ver en acción</button><button type="button" role="tab" aria-selected="false" data-d="instala">Cómo se instala</button></div>
-      <div class="al-demo al-demo--accion" id="fin-accion" aria-label="Lucas en acción">
+      <div class="al-demo al-demo--accion" id="fin-accion" aria-label="App de Finanzas en acción">
         <div class="al-demo__grid">
           <div class="al-demo__copy" aria-live="polite">
             <p class="al-demo__kicker"></p>
@@ -3153,7 +3153,7 @@ window.AL_NOTAS = {
     </div>
     <div class="demo-section" data-d="instala" role="tabpanel" hidden id="instalacion-fin">
       <div class="demo-label demo-cambio" role="tablist" aria-label="Demostraciones"><i aria-hidden="true"></i><button type="button" role="tab" aria-selected="false" data-d="accion">Ver en acción</button><button type="button" class="on" role="tab" aria-selected="true" data-d="instala">Cómo se instala</button></div>
-      <div class="al-demo al-demo--instala" id="fin-instala" aria-label="Cómo se instala Lucas">
+      <div class="al-demo al-demo--instala" id="fin-instala" aria-label="Cómo se instala la App de Finanzas">
         <div class="al-demo__grid">
           <div class="al-demo__copy" aria-live="polite">
             <p class="al-demo__kicker"></p>
@@ -4541,9 +4541,9 @@ var RC_GUIAS=[
   {r:'guia-looker-studio',gp:'ds',min:5,t:'Google Sheets con Looker Studio: reportes que se actualizan solos',d:'Conecta tu planilla y crea un informe gratis que tu equipo puede ver cuando quiera.'}
 ];
 var RC_APPS={
-  finanzapp:{tab:'hpt-fin',ico:'ti-receipt',t:'¿Quieres saber en qué se te va la plata?',d:'Lucas ordena tus gastos, tarjetas y deudas desde el celular: anotas en dos toques y ves cuánto te queda para el mes, todo dentro de tu Google Sheets.',b:'Ver Lucas en acción'},
-  pedidoapp:{tab:'hpt-ped',ico:'ti-shopping-bag',t:'¿Quieres que tus pedidos se ordenen solos?',d:'Pide recibe los pedidos de tus clientes en un formulario, con seguimiento, cupones y avisos por WhatsApp, todo dentro de Google Sheets.',b:'Ver Pide en acción'},
-  conciliador:{tab:'hpt-v2',ico:'ti-arrows-exchange',t:'¿Quieres que la cuadratura se haga sola?',d:'Cuadra cruza tu banco con tus registros en Google Sheets y te deja solo los pendientes que de verdad hay que mirar.',b:'Ver Cuadra en acción'}
+  finanzapp:{tab:'hpt-fin',ico:'ti-receipt',t:'¿Quieres saber en qué se te va la plata?',d:'FinanzApp ordena tus gastos, tarjetas y deudas desde el celular: anotas en dos toques y ves cuánto te queda para el mes, todo dentro de tu Google Sheets.',b:'Ver FinanzApp en acción'},
+  pedidoapp:{tab:'hpt-ped',ico:'ti-shopping-bag',t:'¿Quieres que tus pedidos se ordenen solos?',d:'PedidoApp recibe los pedidos de tus clientes en un formulario, con seguimiento, cupones y avisos por WhatsApp, todo dentro de Google Sheets.',b:'Ver PedidoApp en acción'},
+  conciliador:{tab:'hpt-v2',ico:'ti-arrows-exchange',t:'¿Quieres que la cuadratura se haga sola?',d:'El Conciliador cruza tu banco con tus registros en Google Sheets y te deja solo los pendientes que de verdad hay que mirar.',b:'Ver el Conciliador en acción'}
 };
 var RC_ABRIENDO=false;
 var RC_BASE={titulo:document.title,desc:(document.querySelector('meta[name="description"]')||{}).content||'',canon:(document.querySelector('link[rel="canonical"]')||{}).href||''};
@@ -5787,7 +5787,7 @@ window.alDemoLinea = function(root, STEPS, o){
 /* ═══ Motor de demos por tarjetas (2026-09-30, Ambilor.Lab) ═══
    Generaliza el demo "Cómo se instala" del Conciliador V1 (una ventana por
    paso que entra, recibe clics del cursor y se va al fondo) para las demos
-   de Cuadra, de Pide y la instalación del V1. "Ver en acción"
+   del Conciliador, de PedidoApp y la instalación del V1. "Ver en acción"
    del V1 es una escena 3D propia y no usa este motor.
    alDemoTarjetas(root, cfg): cfg.steps (a, b, short, kicker, title, body y
    opcionales tip, checks, stats, cta, contact), cfg.draw(H) -> [fn(g, lt)],
@@ -5891,7 +5891,7 @@ window.alDemoTarjetas = function(root, cfg){
     g.save(); g.globalAlpha = a * (1 - p) * 0.9; g.strokeStyle = '#3d7fd6'; g.lineWidth = 5;
     g.beginPath(); g.arc(k0[1], abajo(k0[2]), r, 0, Math.PI * 2); g.stroke(); g.restore();
   }
-  // barra de pestañas abajo en el celular: solo la tiene el panel real de Pide (en ese orden); el V1 y el V2
+  // barra de pestañas abajo en el celular: solo la tiene el panel real de PedidoApp (en ese orden); el V1 y el V2
   // llevan sus pestañas arriba, y en los de instalación se ven Drive y Apps Script
   const MENU = /^ped-accion/.test(root.id) ? ['Pedidos','Catálogo','Clientes','Reportes','Ajustes'] : null;
   function aparato(vert, PW, PH){ return alFoto.crear(THREE, scene, { vert, ventana: { w: PW, h: PH }, menu: MENU, anis: ANISO, listo: () => { needsRender = true; } }); }
@@ -6364,8 +6364,8 @@ AL_DEMOS['v2-accion'] = {
         if (q > 0) { g.globalAlpha = q; txt(g, '¿Qué abono pagó qué facturas? ¿Y la comisión?', 600, 860, 32, 600, C.muted, 'center'); g.globalAlpha = 1; }
       },
       (g, lt) => {
-        base(g, 'Cuadra');
-        panelBar(g, 'Cuadra', TABS, 4);
+        base(g, 'Conciliador');
+        panelBar(g, 'Conciliador', TABS, 4);
         txt(g, '1 · Fuentes de datos', 40, 262, 40, 800, C.ink);
         const url = 'docs.google.com/spreadsheets/d/1Cartola…';
         const n = Math.floor(clamp((lt - 0.4) / 0.9) * url.length);
@@ -6390,8 +6390,8 @@ AL_DEMOS['v2-accion'] = {
         if (b > 0) { g.globalAlpha = b; banner(g, 590, 822, 570, 64, '✓ 2 fuentes listas'); g.globalAlpha = 1; }
       },
       (g, lt) => {
-        base(g, 'Cuadra');
-        panelBar(g, 'Cuadra', TABS, 1);
+        base(g, 'Conciliador');
+        panelBar(g, 'Conciliador', TABS, 1);
         const tarjeta = (x, y, w, fuente, concepto, monto, a, hl) => {
           g.globalAlpha = a;
           g.fillStyle = hl ? 'rgba(47,138,91,.12)' : '#f6f8fb'; rr(g, x, y, w, 150, 18); g.fill();
@@ -6418,8 +6418,8 @@ AL_DEMOS['v2-accion'] = {
         if (m > 0) { g.globalAlpha = m; txt(g, 'Motivo: suman lo mismo · 17 días de diferencia · «1002» en ambos conceptos', 600, 850, 27, 600, C.muted, 'center', 1080); g.globalAlpha = 1; }
       },
       (g, lt) => {
-        base(g, 'Cuadra');
-        panelBar(g, 'Cuadra', TABS, 4);
+        base(g, 'Conciliador');
+        panelBar(g, 'Conciliador', TABS, 4);
         txt(g, '3 · Reglas para explicar pendientes', 40, 262, 38, 800, C.ink);
         g.strokeStyle = C.line; g.lineWidth = 3; rr(g, 40, 300, 1120, 300, 18); g.stroke();
         campo(g, 70, 360, 500, 56, 'Nombre', 'Comisiones del banco', false);
@@ -6444,8 +6444,8 @@ AL_DEMOS['v2-accion'] = {
         });
       },
       (g, lt) => {
-        base(g, 'Cuadra');
-        panelBar(g, 'Cuadra', TABS, 1);
+        base(g, 'Conciliador');
+        panelBar(g, 'Conciliador', TABS, 1);
         for (let r = 0; r < 6; r++) { g.fillStyle = r % 2 ? '#f6f8fb' : '#fff'; g.fillRect(40, 240 + r*70, 1120, 70); g.fillStyle = '#dde5ee'; rr(g, 70, 268 + r*70, 300, 14, 7); g.fill(); rr(g, 900, 268 + r*70, 200, 14, 7); g.fill(); }
         const d = easeOut((lt - 0.25) / 0.35);
         overlay(g, d); g.globalAlpha = d;
@@ -6467,8 +6467,8 @@ AL_DEMOS['v2-accion'] = {
         g.globalAlpha = 1;
       },
       (g, lt) => {
-        base(g, 'Cuadra');
-        panelBar(g, 'Cuadra', TABS, 0);
+        base(g, 'Conciliador');
+        panelBar(g, 'Conciliador', TABS, 0);
         const p = ease((lt - 0.3) / 1.6);
         const tiles = [[Math.round(lerp(47, 94, p)) + '%', 'conciliación', C.ok], [String(Math.round(lerp(8, 15, p))), 'conciliados', C.ok], [String(Math.round(lerp(0, 3, p))), 'explicados', C.expl], [String(Math.round(lerp(8, 1, p))), 'pendientes', C.warn]];
         const tw = (1120 - 3*20) / 4;
@@ -6493,9 +6493,9 @@ AL_DEMOS['v2-accion'] = {
 AL_DEMOS['v2-instala'] = {
   steps: [
     { a:0, b:5.2, short:'Copia', kicker:'Paso 1: haz tu copia', title:'Haz tu copia',
-      body:'Abre el enlace que te enviamos y elige “Hacer una copia”. Tu copia se abre en tu Drive y trae Cuadra adentro, con su código ya incluido.' },
+      body:'Abre el enlace que te enviamos y elige “Hacer una copia”. Tu copia se abre en tu Drive y trae el Conciliador adentro, con su código ya incluido.' },
     { a:5.2, b:10.4, short:'Configurar', kicker:'Paso 2: abre el asistente', title:'Abre “Configurar herramienta”',
-      body:'En tu copia, abre el menú “Cuadra” de la barra superior. El asistente se abre al costado y te guía paso a paso.' },
+      body:'En tu copia, abre el menú “Conciliador” de la barra superior. El asistente se abre al costado y te guía paso a paso.' },
     { a:10.4, b:15.6, short:'Autorizar', kicker:'Paso 3: autoriza los permisos', title:'Autoriza los permisos',
       body:'Google te pide permiso para leer tus planillas, enviar los correos y ejecutar la conciliación a la hora que programes. Aparece en una pantalla de Google, no dentro de la herramienta.',
       tip:'Marca todas las casillas: sin ellas no funcionan los correos ni el envío automático.' },
@@ -6530,7 +6530,7 @@ AL_DEMOS['v2-instala'] = {
           g.globalAlpha = nIn;
           const hl = 1 - ease((lt - 3.6) / 1.0);
           g.fillStyle = 'rgba(245,200,76,' + (0.55*hl) + ')'; g.fillRect(250, rowY(0) - 32, CW - 280, 64);
-          sheetIcon(g, 272, rowY(0) - 22, 36); txt(g, 'Cuadra (copia)', 330, rowY(0), 35, 800, C.ink);
+          sheetIcon(g, 272, rowY(0) - 22, 36); txt(g, 'Conciliador (copia)', 330, rowY(0), 35, 800, C.ink);
           txt(g, 'ahora', CW - 60, rowY(0), 29, 600, C.soft, 'right');
           g.globalAlpha = 1;
         }
@@ -6543,10 +6543,10 @@ AL_DEMOS['v2-instala'] = {
         if (d > 0) {
           overlay(g, d); g.globalAlpha = d;
           dialog(g, 200, 190, 800, 540);
-          txt(g, 'Copiar “Cuadra” en Mi Drive', 240, 260, 44, 800, C.ink, 'left', 720);
+          txt(g, 'Copiar “Conciliador” en Mi Drive', 240, 260, 44, 800, C.ink, 'left', 720);
           txt(g, 'Nombre', 240, 330, 32, 700, C.muted);
           g.strokeStyle = C.brand; g.lineWidth = 3; rr(g, 240, 352, 720, 64, 12); g.stroke();
-          txt(g, 'Cuadra (copia)', 262, 385, 35, 600, C.ink);
+          txt(g, 'Conciliador (copia)', 262, 385, 35, 600, C.ink);
           txt(g, 'Carpeta', 240, 450, 32, 700, C.muted);
           g.strokeStyle = C.line; rr(g, 240, 472, 720, 64, 12); g.stroke();
           txt(g, 'Mi Drive ▾', 262, 505, 35, 600, C.ink);
@@ -6559,13 +6559,13 @@ AL_DEMOS['v2-instala'] = {
       },
       (g, lt) => {
         base(g, 'Google Sheets');
-        sheetIcon(g, 30, 98, 30); txt(g, 'Cuadra (copia)', 76, 118, 38, 700, C.ink);
+        sheetIcon(g, 30, 98, 30); txt(g, 'Conciliador (copia)', 76, 118, 38, 700, C.ink);
         let x = 32;
         ['Archivo','Editar','Ver','Insertar','Datos','Extensiones'].forEach(m => { txt(g, m, x, 168, 26, 600, C.muted); x += g.measureText(m).width + 22; });
         const open = lt > 1.05 && lt < 1.95;
-        g.font = '800 26px ' + FONT; const mw = g.measureText('Cuadra').width;
+        g.font = '800 26px ' + FONT; const mw = g.measureText('Conciliador').width;
         if (open || (lt > 0.85 && lt < 1.05)) { g.fillStyle = 'rgba(31,92,153,.12)'; rr(g, 780, 148, mw + 20, 40, 10); g.fill(); }
-        txt(g, 'Cuadra', 790, 168, 26, 800, C.brand);
+        txt(g, 'Conciliador', 790, 168, 26, 800, C.brand);
         g.fillStyle = '#f6f8fb'; g.fillRect(0, 196, CW, 38);
         g.strokeStyle = C.line; g.lineWidth = 1.5;
         for (let c = 0; c <= 8; c++) { const cx = 60 + c*150; g.beginPath(); g.moveTo(cx, 196); g.lineTo(cx, CH - 20); g.stroke(); if (c < 8) txt(g, 'ABCDEFGH'[c], cx + 75, 215, 26, 700, C.soft, 'center'); }
@@ -6599,7 +6599,7 @@ AL_DEMOS['v2-instala'] = {
       },
       (g, lt) => {
         base(g, 'Google');
-        wrap(g, 'Cuadra quiere acceder a tu cuenta de Google', 100, 150, 1000, 50, 800, C.ink, 1.2);
+        wrap(g, 'Conciliador quiere acceder a tu cuenta de Google', 100, 150, 1000, 50, 800, C.ink, 1.2);
         ['Leer y editar tus planillas', 'Enviar correos en tu nombre', 'Ejecutarse a la hora que programes', 'Conectarse a la IA que elijas (opcional)'].forEach((s, k) => {
           const y = 300 + k*92, on = lt > 0.6 + k*0.3;
           g.strokeStyle = C.line; g.lineWidth = 2; g.beginPath(); g.moveTo(100, y + 46); g.lineTo(1100, y + 46); g.stroke();
@@ -6660,7 +6660,7 @@ AL_DEMOS['v2-instala'] = {
         }
       },
       (g, lt) => {
-        base(g, 'Cuadra');
+        base(g, 'Conciliador');
         const dash = ease((lt - 3.1) / 0.4);
         if (dash < 1) {
           g.globalAlpha = 1 - dash;
@@ -6677,7 +6677,7 @@ AL_DEMOS['v2-instala'] = {
         }
         if (dash > 0) {
           g.globalAlpha = dash;
-          H.panelBar(g, 'Cuadra', ['Resumen','Resultados','Sugerencias','Historial','Configuración'], 0);
+          H.panelBar(g, 'Conciliador', ['Resumen','Resultados','Sugerencias','Historial','Configuración'], 0);
           g.fillStyle = '#ebf2fa'; rr(g, 40, 250, 1120, 80, 14); g.fill(); g.fillStyle = C.brand; g.fillRect(40, 250, 6, 80);
           txt(g, 'Datos de ejemplo activos: míralo conciliar y luego conecta los tuyos.', 70, 291, 29, 600, C.ink, 'left', 1060);
           const tw = (1120 - 3*20) / 4;
@@ -6715,7 +6715,7 @@ AL_DEMOS['v2-instala'] = {
 };
 </script>
 <script>
-/* Demos de Pide (2026-09-30). Pantallas dibujadas a partir de la app
+/* Demos de PedidoApp (2026-09-30). Pantallas dibujadas a partir de la app
    real: formulario del cliente (celular) y panel del negocio (Pedidos ·
    Catálogo · Reportes · Ajustes). */
 window.AL_DEMOS = window.AL_DEMOS || {};
@@ -6939,7 +6939,7 @@ AL_DEMOS['ped-instala'] = {
     { a:11.0, b:15.6, short:'Autorizar', kicker:'Paso 3: autoriza el acceso', title:'Autoriza el acceso',
       body:'La primera vez, Google te pide permiso para guardar los pedidos en tu planilla y enviarte los avisos por correo. Acepta y sigue.' },
     { a:15.6, b:20.8, short:'Panel', kicker:'Paso 4: entra a tu panel', title:'Entra con tu clave',
-      body:'En la planilla aparece el menú “Pide → Abrir panel de pedidos”, con el enlace de tu panel y tu clave. Entras y cambias la clave cuando quieras.' },
+      body:'En la planilla aparece el menú “PedidoApp → Abrir panel de pedidos”, con el enlace de tu panel y tu clave. Entras y cambias la clave cuando quieras.' },
     { a:20.8, b:26.0, short:'Ajustes', kicker:'Paso 5: configura tu negocio', title:'Tu negocio y tu catálogo',
       body:'En Ajustes pones el nombre, tu WhatsApp, los medios de pago y el despacho por comuna. En Catálogo importas tus productos desde Excel o Google Sheets.' },
     { a:26.0, b:31.0, short:'Compartir', kicker:'Listo', title:'Comparte tu formulario',
@@ -6969,7 +6969,7 @@ AL_DEMOS['ped-instala'] = {
           g.globalAlpha = nIn;
           const hl = 1 - ease((lt - 3.6) / 1.0);
           g.fillStyle = 'rgba(245,200,76,' + (0.55*hl) + ')'; g.fillRect(250, rowY(0) - 32, CW - 280, 64);
-          sheetIcon(g, 272, rowY(0) - 22, 36); txt(g, 'Pide (copia)', 330, rowY(0), 35, 800, C.ink);
+          sheetIcon(g, 272, rowY(0) - 22, 36); txt(g, 'PedidoApp (copia)', 330, rowY(0), 35, 800, C.ink);
           txt(g, 'ahora', CW - 60, rowY(0), 29, 600, C.soft, 'right');
           g.globalAlpha = 1;
         }
@@ -6982,10 +6982,10 @@ AL_DEMOS['ped-instala'] = {
         if (d > 0) {
           overlay(g, d); g.globalAlpha = d;
           dialog(g, 200, 190, 800, 540);
-          txt(g, 'Copiar “Pide” en Mi Drive', 240, 260, 44, 800, C.ink, 'left', 720);
+          txt(g, 'Copiar “PedidoApp” en Mi Drive', 240, 260, 44, 800, C.ink, 'left', 720);
           txt(g, 'Nombre', 240, 330, 32, 700, C.muted);
           g.strokeStyle = C.brand; g.lineWidth = 3; rr(g, 240, 352, 720, 64, 12); g.stroke();
-          txt(g, 'Pide (copia)', 262, 385, 35, 600, C.ink);
+          txt(g, 'PedidoApp (copia)', 262, 385, 35, 600, C.ink);
           txt(g, 'Carpeta', 240, 450, 32, 700, C.muted);
           g.strokeStyle = C.line; rr(g, 240, 472, 720, 64, 12); g.stroke();
           txt(g, 'Mi Drive ▾', 262, 505, 35, 600, C.ink);
@@ -7000,7 +7000,7 @@ AL_DEMOS['ped-instala'] = {
         base(g, 'Google Apps Script');
         btn(g, 900, 12, 270, 52, 'Implementar ▾', 'primary', press(lt, 0.95), 32);
         txt(g, 'Archivos', 34, 124, 29, 700, C.soft);
-        g.fillStyle = 'rgba(31,92,153,.1)'; rr(g, 20, 150, 200, 50, 10); g.fill(); txt(g, 'Pide.gs', 38, 175, 30, 700, C.ink);
+        g.fillStyle = 'rgba(31,92,153,.1)'; rr(g, 20, 150, 200, 50, 10); g.fill(); txt(g, 'PedidoApp.gs', 38, 175, 30, 700, C.ink);
         g.fillStyle = C.line; g.fillRect(236, 78, 2, CH - 110);
         [320, 520, 410, 280, 600, 460, 350, 540, 300, 480, 390, 260, 440, 330].forEach((w, k) => {
           const y = 130 + k*52;
@@ -7044,7 +7044,7 @@ AL_DEMOS['ped-instala'] = {
       },
       (g, lt) => {
         base(g, 'Google');
-        wrap(g, 'Pide quiere acceder a tu cuenta de Google', 120, 180, 900, 52, 800, C.ink, 1.2);
+        wrap(g, 'PedidoApp quiere acceder a tu cuenta de Google', 120, 180, 900, 52, 800, C.ink, 1.2);
         ['Guardar los pedidos en tu planilla', 'Enviarte avisos por correo', 'Mostrar el formulario y el panel'].forEach((s, k) => {
           const y = 360 + k*80;
           g.strokeStyle = C.line; g.lineWidth = 2; g.beginPath(); g.moveTo(120, y + 40); g.lineTo(1080, y + 40); g.stroke();
@@ -7063,10 +7063,10 @@ AL_DEMOS['ped-instala'] = {
         if (login < 1) {
           base(g, 'Google Sheets');
           g.globalAlpha = 1;
-          sheetIcon(g, 30, 98, 30); txt(g, 'Pide (copia)', 76, 118, 38, 700, C.ink);
+          sheetIcon(g, 30, 98, 30); txt(g, 'PedidoApp (copia)', 76, 118, 38, 700, C.ink);
           let x = 32;
           ['Archivo','Editar','Ver','Insertar','Datos'].forEach(m => { txt(g, m, x, 168, 26, 600, C.muted); x += g.measureText(m).width + 22; });
-          txt(g, 'Pide', 700, 168, 26, 800, C.brand);
+          txt(g, 'PedidoApp', 700, 168, 26, 800, C.brand);
           g.strokeStyle = C.line; g.lineWidth = 1.5;
           for (let r = 0; r < 18; r++) { const ry = 234 + r*40; g.beginPath(); g.moveTo(0, ry); g.lineTo(CW, ry); g.stroke(); }
           if (lt > 0.75 && lt < 1.35) { dialog(g, 690, 192, 420, 76); if (lt > 1.15) { g.fillStyle = '#eef2f7'; g.fillRect(698, 200, 404, 60); } txt(g, 'Abrir panel de pedidos', 716, 230, 30, 700, C.ink); }
@@ -7074,7 +7074,7 @@ AL_DEMOS['ped-instala'] = {
           if (d > 0) {
             overlay(g, d * (1 - login)); g.globalAlpha = d * (1 - login);
             dialog(g, 200, 260, 800, 420);
-            txt(g, 'Pide · Ambilor.Lab', 240, 320, 34, 800, C.ink);
+            txt(g, 'PedidoApp · Ambilor.Lab', 240, 320, 34, 800, C.ink);
             txt(g, 'Panel:', 240, 390, 28, 700, C.muted); txt(g, 'script.google.com/…/exec?admin', 360, 390, 28, 600, C.brand);
             txt(g, 'Clave del panel:', 240, 470, 28, 700, C.muted);
             g.fillStyle = '#f1f5f9'; rr(g, 240, 500, 420, 64, 10); g.fill(); txt(g, 'k7Q2-mX9p-4Hrt', 262, 533, 32, 800, C.ink);
@@ -7141,7 +7141,7 @@ AL_DEMOS['ped-instala'] = {
 };
 </script>
 <script>
-/* Demos de Lucas (2026-10-19). Pantallas dibujadas a partir de la app real (panel del celular:
+/* Demos de FinanzApp (2026-10-19). Pantallas dibujadas a partir de la app real (panel del celular:
    Inicio, Registrar, Más → Presupuesto y Tarjetas). "Ver en acción" usa un solo dibujo para los dos
    formatos: en el apaisado (computador, iPad horizontal) la app va en dos columnas, como en la web;
    en el vertical, en una columna, como en el celular. Las medidas salen de CW y CH. */
@@ -7182,7 +7182,7 @@ window.AL_DEMOS = window.AL_DEMOS || {};
       g.stroke(); g.restore();
     }
     function cabecera(g, titulo){
-      g.fillStyle = C.brand; rr(g, M, 26, 68, 68, 18); g.fill(); txt(g, 'L.', M + 34, 61, 30, 800, '#fff', 'center');
+      g.fillStyle = C.brand; rr(g, M, 26, 68, 68, 18); g.fill(); txt(g, 'F.', M + 34, 61, 30, 800, '#fff', 'center');
       txt(g, 'Hola, Camila', M + 88, 44, 22, 600, C.muted); txt(g, titulo, M + 88, 80, 32, 800, C.ink);
       const w = ANCHO ? 300 : 290, x = CW - M - w;
       g.fillStyle = '#fff'; rr(g, x, 26, w, 68, 34); g.fill(); g.strokeStyle = C.line; g.lineWidth = 2; rr(g, x, 26, w, 68, 34); g.stroke();
@@ -7531,10 +7531,10 @@ AL_DEMOS['fin-instala'] = {
     { a:0, b:5.2, short:'Copia', kicker:'Paso 1: haz tu copia', title:'Haz tu copia',
       body:'Abre el enlace que recibiste con tu compra y elige “Hacer una copia”. Queda en tu Google Drive con la app adentro, con su código ya incluido.' },
     { a:5.2, b:10.4, short:'Instalador', kicker:'Paso 2: abre el instalador', title:'Abre “Instalar o abrir el panel”',
-      body:'En tu copia, espera el menú “Lucas” (arriba, al lado de Ayuda) y elige “Instalar o abrir el panel”. El instalador prepara las hojas y te muestra los pasos.' },
+      body:'En tu copia, espera el menú “FinanzApp” (arriba, al lado de Ayuda) y elige “Instalar o abrir el panel”. El instalador prepara las hojas y te muestra los pasos.' },
     { a:10.4, b:15.6, short:'Autorizar', kicker:'Paso 3: autoriza los permisos', title:'Autoriza los permisos',
       body:'La primera vez, Google te pide permiso para editar tu planilla, enviarte el resumen del mes por correo y traer el valor de la UF. Aparece en una pantalla de Google.',
-      tip:'Si dice “Google no verificó esta app”, elige Configuración avanzada → Ir a Lucas: es tu propia copia.' },
+      tip:'Si dice “Google no verificó esta app”, elige Configuración avanzada → Ir a FinanzApp: es tu propia copia.' },
     { a:15.6, b:21.8, short:'Publicar', kicker:'Paso 4: publica tu panel', title:'Publica tu panel',
       body:'En Extensiones → Apps Script → Implementar → Aplicación web, con acceso “Solo yo”. Así nadie más puede abrir tu panel, aunque tenga el enlace.',
       tip:'“Solo yo” significa privado. No elijas “Cualquiera”.' },
@@ -7556,12 +7556,12 @@ AL_DEMOS['fin-instala'] = {
   draw: H => { const { C, CW, CH, FONT, clamp, ease, easeOut, rr, txt, wrap, press, btn, base, overlay, dialog, banner, checkDot, sheetIcon, pill, celular } = H;
     const hoja = (g, menuOn) => {
       base(g, 'Google Sheets');
-      sheetIcon(g, 30, 98, 30); txt(g, 'Lucas (copia)', 76, 118, 38, 700, C.ink);
+      sheetIcon(g, 30, 98, 30); txt(g, 'FinanzApp (copia)', 76, 118, 38, 700, C.ink);
       let x = 32;
       ['Archivo','Editar','Ver','Insertar','Datos','Extensiones','Ayuda'].forEach(m => { txt(g, m, x, 168, 26, 600, C.muted); x += g.measureText(m).width + 22; });
-      g.font = '800 26px ' + FONT; const mw = g.measureText('Lucas').width;
+      g.font = '800 26px ' + FONT; const mw = g.measureText('FinanzApp').width;
       if (menuOn) { g.fillStyle = 'rgba(31,92,153,.12)'; rr(g, x - 10, 148, mw + 20, 40, 10); g.fill(); }
-      txt(g, 'Lucas', x, 168, 26, 800, C.brand);
+      txt(g, 'FinanzApp', x, 168, 26, 800, C.brand);
       g.fillStyle = '#f6f8fb'; g.fillRect(0, 196, CW, 38);
       g.strokeStyle = C.line; g.lineWidth = 1.5;
       for (let c = 0; c <= 8; c++) { const cx = 60 + c*150; g.beginPath(); g.moveTo(cx, 196); g.lineTo(cx, CH - 20); g.stroke(); if (c < 8) txt(g, 'ABCDEFGH'[c], cx + 75, 215, 26, 700, C.soft, 'center'); }
@@ -7589,7 +7589,7 @@ AL_DEMOS['fin-instala'] = {
           g.globalAlpha = nIn;
           const hl = 1 - ease((lt - 3.6) / 1.0);
           g.fillStyle = 'rgba(245,200,76,' + (0.55*hl) + ')'; g.fillRect(250, rowY(0) - 32, CW - 280, 64);
-          sheetIcon(g, 272, rowY(0) - 22, 36); txt(g, 'Lucas (copia)', 330, rowY(0), 35, 800, C.ink);
+          sheetIcon(g, 272, rowY(0) - 22, 36); txt(g, 'FinanzApp (copia)', 330, rowY(0), 35, 800, C.ink);
           txt(g, 'ahora', CW - 60, rowY(0), 29, 600, C.soft, 'right');
           g.globalAlpha = 1;
         }
@@ -7602,10 +7602,10 @@ AL_DEMOS['fin-instala'] = {
         if (d > 0) {
           overlay(g, d); g.globalAlpha = d;
           dialog(g, 200, 190, 800, 540);
-          txt(g, 'Copiar “Lucas” en Mi Drive', 240, 260, 44, 800, C.ink, 'left', 720);
+          txt(g, 'Copiar “FinanzApp” en Mi Drive', 240, 260, 44, 800, C.ink, 'left', 720);
           txt(g, 'Nombre', 240, 330, 32, 700, C.muted);
           g.strokeStyle = C.brand; g.lineWidth = 3; rr(g, 240, 352, 720, 64, 12); g.stroke();
-          txt(g, 'Lucas (copia)', 262, 385, 35, 600, C.ink);
+          txt(g, 'FinanzApp (copia)', 262, 385, 35, 600, C.ink);
           txt(g, 'Carpeta', 240, 450, 32, 700, C.muted);
           g.strokeStyle = C.line; rr(g, 240, 472, 720, 64, 12); g.stroke();
           txt(g, 'Mi Drive ▾', 262, 505, 35, 600, C.ink);
@@ -7627,7 +7627,7 @@ AL_DEMOS['fin-instala'] = {
         const sp = ease((lt - 2.0) / 0.5);
         if (sp > 0) {
           const px = CW - 460*sp;
-          lado(g, px, 'Instalar Lucas');
+          lado(g, px, 'Instalar FinanzApp');
           txt(g, 'Las hojas ya quedaron listas.', px + 36, 290, 29, 600, C.muted, 'left', 396);
           ['Autoriza los permisos', 'Publica tu panel', 'Llévalo a tu celular'].forEach((s, k) => {
             const a = easeOut((lt - 2.5 - k*0.2) / 0.3); if (a <= 0) return;
@@ -7643,7 +7643,7 @@ AL_DEMOS['fin-instala'] = {
       },
       (g, lt) => {
         base(g, 'Google');
-        wrap(g, 'Lucas quiere acceder a tu cuenta de Google', 100, 150, 1000, 50, 800, C.ink, 1.2);
+        wrap(g, 'FinanzApp quiere acceder a tu cuenta de Google', 100, 150, 1000, 50, 800, C.ink, 1.2);
         ['Ver y editar tus hojas de cálculo', 'Enviar correo en tu nombre (el resumen del mes)', 'Conectarse a un servicio externo (el valor de la UF)', 'Ejecutarse cuando no estés presente'].forEach((s, k) => {
           const y = 300 + k*92, on = lt > 0.6 + k*0.3;
           g.strokeStyle = C.line; g.lineWidth = 2; g.beginPath(); g.moveTo(100, y + 46); g.lineTo(1100, y + 46); g.stroke();
@@ -7662,7 +7662,7 @@ AL_DEMOS['fin-instala'] = {
         base(g, 'Google Apps Script');
         btn(g, 900, 12, 270, 52, 'Implementar ▾', 'primary', press(lt, 0.95), 32);
         txt(g, 'Archivos', 34, 124, 29, 700, C.soft);
-        ['Lucas.gs', 'Panel.html'].forEach((f, k) => { if (!k) { g.fillStyle = 'rgba(31,92,153,.1)'; rr(g, 20, 150, 200, 50, 10); g.fill(); } txt(g, f, 38, 175 + k*56, 30, k ? 600 : 700, C.ink, 'left', 180); });
+        ['FinanzApp.gs', 'Panel.html'].forEach((f, k) => { if (!k) { g.fillStyle = 'rgba(31,92,153,.1)'; rr(g, 20, 150, 200, 50, 10); g.fill(); } txt(g, f, 38, 175 + k*56, 30, k ? 600 : 700, C.ink, 'left', 180); });
         g.fillStyle = C.line; g.fillRect(236, 78, 2, CH - 110);
         [320, 520, 410, 280, 600, 460, 350, 540, 300, 480, 390, 260, 440, 330].forEach((w, k) => {
           const y = 130 + k*52;
@@ -7705,7 +7705,7 @@ AL_DEMOS['fin-instala'] = {
       (g, lt) => {
         hoja(g, false);
         const px = 740;
-        lado(g, px, 'Instalar Lucas');
+        lado(g, px, 'Instalar FinanzApp');
         ['Planilla preparada', 'Permisos autorizados', 'Panel publicado'].forEach((s, k) => {
           const on = k < 2 || lt > 1.0, y = 320 + k*64;
           checkDot(g, px + 56, y, on, k === 2 ? 1 + Math.sin(clamp((lt - 1.0)/0.25)*Math.PI)*0.25 : 1);
@@ -7730,12 +7730,12 @@ AL_DEMOS['fin-instala'] = {
             qr(g, cx, cy, s, 1);
             g.strokeStyle = '#f5c84c'; g.lineWidth = 5; const e = 24 + Math.sin(lt*8)*4;
             [[cx - e, cy - e, 1, 1], [cx + s + e, cy - e, -1, 1], [cx - e, cy + s + e, 1, -1], [cx + s + e, cy + s + e, -1, -1]].forEach(([x, y, dx, dy]) => { g.beginPath(); g.moveTo(x, y + 30*dy); g.lineTo(x, y); g.lineTo(x + 30*dx, y); g.stroke(); });
-            if (lt > 2.5) pill(g, a.x + a.w/2, cy + s + 70, 'Abrir Lucas', '#fff', C.brand, 22, 48, 'center');
+            if (lt > 2.5) pill(g, a.x + a.w/2, cy + s + 70, 'Abrir FinanzApp', '#fff', C.brand, 22, 48, 'center');
           } else {
             const o = easeOut((lt - 3.0) / 0.4);
             g.globalAlpha = o;
             g.fillStyle = '#eef3f8'; rr(g, a.x - 16, a.y - 50, a.w + 32, a.h + 64, 30); g.fill();
-            g.fillStyle = C.brand; rr(g, a.x, a.y, 44, 44, 12); g.fill(); txt(g, 'L.', a.x + 22, a.y + 23, 20, 800, '#fff', 'center');
+            g.fillStyle = C.brand; rr(g, a.x, a.y, 44, 44, 12); g.fill(); txt(g, 'F.', a.x + 22, a.y + 23, 20, 800, '#fff', 'center');
             txt(g, 'Hola, Camila', a.x + 56, a.y + 12, 15, 600, C.muted); txt(g, 'Inicio', a.x + 56, a.y + 34, 21, 800, C.ink);
             const gr = g.createLinearGradient(a.x, a.y + 66, a.x + a.w, a.y + 236); gr.addColorStop(0, '#2a669f'); gr.addColorStop(1, '#163c66');
             g.fillStyle = gr; rr(g, a.x, a.y + 66, a.w, 170, 18); g.fill();
@@ -8015,16 +8015,16 @@ AL_DEMOS['fin-instala'] = {
     verificar: { keys:[[0.2,600,900],[0.65,270,328],[0.95,270,328],[2.55,260,798],[3.0,260,798],[3.6,650,940]], clicks:[0.8,2.9] }
   };
 
-  // ── Cuadra · Cómo se instala ──
+  // ── Conciliador · Cómo se instala ──
   const v2i = AL_DEMOS['v2-instala'];
   v2i.drawV = H => { const { C, CW, rr, txt, wrap, btn, panelBar } = H;
     return [
-      I.copia(H, 'Cuadra', ['Cartolas marzo', 'Libro mayor 2026', 'Presupuesto', 'Proveedores']),
-      I.menu(H, 'Cuadra', 'Cuadra', ['Configurar herramienta', 'Autorizar permisos'], ['Autoriza los permisos', 'Publica tu panel', 'Conecta tus fuentes'], false),
-      I.permisos(H, 'Cuadra quiere acceder a tu cuenta de Google', ['Leer y editar tus planillas', 'Enviar correos en tu nombre', 'Ejecutarse a la hora que programes', 'Conectarse a la IA que elijas (opcional)'], 'Permitir', true),
+      I.copia(H, 'Conciliador', ['Cartolas marzo', 'Libro mayor 2026', 'Presupuesto', 'Proveedores']),
+      I.menu(H, 'Conciliador', 'Conciliador', ['Configurar herramienta', 'Autorizar permisos'], ['Autoriza los permisos', 'Publica tu panel', 'Conecta tus fuentes'], false),
+      I.permisos(H, 'Conciliador quiere acceder a tu cuenta de Google', ['Leer y editar tus planillas', 'Enviar correos en tu nombre', 'Ejecutarse a la hora que programes', 'Conectarse a la IA que elijas (opcional)'], 'Permitir', true),
       I.publicar(H, 'Motor.gs', false),
-      I.verificar(H, 'Cuadra', ['Copia en tu Drive', 'Permisos autorizados', 'Panel publicado (Solo yo)'], g => {
-        panelBar(g, 'Cuadra', ['Resumen','Resultados','Sugerencias','Historial','Configuración'], 0);
+      I.verificar(H, 'Conciliador', ['Copia en tu Drive', 'Permisos autorizados', 'Panel publicado (Solo yo)'], g => {
+        panelBar(g, 'Conciliador', ['Resumen','Resultados','Sugerencias','Historial','Configuración'], 0);
         g.fillStyle = '#ebf2fa'; rr(g, 40, 240, 720, 120, 14); g.fill(); g.fillStyle = C.brand; g.fillRect(40, 240, 6, 120);
         wrap(g, 'Datos de ejemplo activos: míralo conciliar y luego conecta los tuyos.', 70, 282, 660, 30, 600, C.ink, 1.3);
         [['47%', 'conciliación'], ['8', 'conciliados'], ['8', 'pendientes'], ['1', 'sugerencia']].forEach(([v, l], i) => {
@@ -8040,21 +8040,21 @@ AL_DEMOS['fin-instala'] = {
   };
   v2i.cursorV = [K.copia, K.menu(480), { keys:[[0.3,200,960],[1.8,530,838],[2.1,530,838],[2.8,700,960]], clicks:[1.95] }, K.publicar(462), K.verificar, null];
 
-  // ── Pide · Cómo se instala ──
+  // ── PedidoApp · Cómo se instala ──
   const pi = AL_DEMOS['ped-instala'];
   pi.drawV = H => { const { C, CW, CH, clamp, ease, easeOut, rr, txt, wrap, press, btn, base, overlay, dialog, banner, sheetIcon, pill, campo, panelBar } = H;
     const TABS = ['Pedidos','Catálogo','Clientes','Reportes','Ajustes'];   // las pestañas del panel real
     return [
-      I.copia(H, 'Pide', ['Lista de precios', 'Proveedores', 'Clientes', 'Inventario']),
-      I.publicar(H, 'Pide.gs', true),
-      I.permisos(H, 'Pide quiere acceder a tu cuenta de Google', ['Guardar los pedidos en tu planilla', 'Enviarte avisos por correo', 'Mostrar el formulario y el panel'], 'Permitir', false),
+      I.copia(H, 'PedidoApp', ['Lista de precios', 'Proveedores', 'Clientes', 'Inventario']),
+      I.publicar(H, 'PedidoApp.gs', true),
+      I.permisos(H, 'PedidoApp quiere acceder a tu cuenta de Google', ['Guardar los pedidos en tu planilla', 'Enviarte avisos por correo', 'Mostrar el formulario y el panel'], 'Permitir', false),
       (g, lt) => {
         const login = ease((lt - 2.2) / 0.4);
         if (login < 1) {
           base(g, 'Google Sheets');
-          sheetIcon(g, 34, 98, 30); txt(g, 'Pide (copia)', 80, 118, 36, 700, C.ink);
+          sheetIcon(g, 34, 98, 30); txt(g, 'PedidoApp (copia)', 80, 118, 36, 700, C.ink);
           [['Archivo', 34], ['Editar', 160], ['Ver', 262]].forEach(([m, x]) => txt(g, m, x, 172, 27, 600, C.muted));
-          txt(g, 'Pide', 380, 172, 27, 800, C.brand);
+          txt(g, 'PedidoApp', 380, 172, 27, 800, C.brand);
           g.strokeStyle = C.line; g.lineWidth = 1.5;
           for (let r = 0; 238 + r*42 < CH - 20; r++) { const ry = 238 + r*42; g.beginPath(); g.moveTo(4, ry); g.lineTo(CW - 4, ry); g.stroke(); }
           if (lt > 0.75 && lt < 1.35) { dialog(g, 320, 200, 440, 76); if (lt > 1.15) { g.fillStyle = '#eef2f7'; g.fillRect(328, 208, 424, 60); } txt(g, 'Abrir panel de pedidos', 342, 238, 30, 700, C.ink, 'left', 400); }
@@ -8062,7 +8062,7 @@ AL_DEMOS['fin-instala'] = {
           if (d > 0) {
             overlay(g, d * (1 - login)); g.globalAlpha = d * (1 - login);
             dialog(g, 40, 250, 720, 560);
-            txt(g, 'Pide · Ambilor.Lab', 80, 315, 36, 800, C.ink);
+            txt(g, 'PedidoApp · Ambilor.Lab', 80, 315, 36, 800, C.ink);
             txt(g, 'Panel:', 80, 385, 28, 700, C.muted);
             txt(g, 'script.google.com/…/exec?admin', 80, 428, 31, 600, C.brand, 'left', 640);
             txt(g, 'Clave del panel:', 80, 505, 28, 700, C.muted);
@@ -8136,19 +8136,19 @@ AL_DEMOS['fin-instala'] = {
     { keys:[[0.3,650,960],[1.0,570,263],[1.2,570,263],[2.6,400,882],[2.85,400,882],[3.5,650,960]], clicks:[1.1,2.75] }
   ];
 
-  // ── Lucas · Cómo se instala ──
+  // ── FinanzApp · Cómo se instala ──
   const fi = AL_DEMOS['fin-instala'];
   fi.drawV = H => { const { C, CW, CH, clamp, easeOut, rr, txt, wrap, press, btn, base, banner, checkDot } = H;
     const F = AL_DEMOS['fin-accion'].app(H);
     return [
-      I.copia(H, 'Lucas', ['Cuentas 2025', 'Presupuesto casa', 'Viaje al sur', 'Recetas']),
-      I.menu(H, 'Lucas', 'Lucas', ['Instalar o abrir el panel'], ['Autoriza los permisos', 'Publica tu panel', 'Llévalo a tu celular'], false, 'Instalar Lucas', 'Las hojas ya quedaron listas.'),
-      I.permisos(H, 'Lucas quiere acceder a tu cuenta de Google', ['Ver y editar tus hojas de cálculo', 'Enviar correo en tu nombre', 'Conectarse a un servicio externo (UF)', 'Ejecutarse cuando no estés presente'], 'Permitir', true),
-      I.publicar(H, 'Lucas.gs', false),
+      I.copia(H, 'FinanzApp', ['Cuentas 2025', 'Presupuesto casa', 'Viaje al sur', 'Recetas']),
+      I.menu(H, 'FinanzApp', 'FinanzApp', ['Instalar o abrir el panel'], ['Autoriza los permisos', 'Publica tu panel', 'Llévalo a tu celular'], false, 'Instalar FinanzApp', 'Las hojas ya quedaron listas.'),
+      I.permisos(H, 'FinanzApp quiere acceder a tu cuenta de Google', ['Ver y editar tus hojas de cálculo', 'Enviar correo en tu nombre', 'Conectarse a un servicio externo (UF)', 'Ejecutarse cuando no estés presente'], 'Permitir', true),
+      I.publicar(H, 'FinanzApp.gs', false),
       (g, lt) => {
         if (lt < 2.7) {   // el instalador revisa y muestra el código QR
           base(g, 'Google Sheets');
-          txt(g, 'Instalar Lucas', 40, 140, 40, 800, C.ink, 'left', 720);
+          txt(g, 'Instalar FinanzApp', 40, 140, 40, 800, C.ink, 'left', 720);
           ['Planilla preparada', 'Permisos autorizados', 'Panel publicado'].forEach((s, k) => {
             const on = k < 2 || lt > 1.0, y = 240 + k*84;
             checkDot(g, 64, y, on, k === 2 ? 1 + Math.sin(clamp((lt - 1.0)/0.25)*Math.PI)*0.25 : 1);
@@ -8176,7 +8176,7 @@ AL_DEMOS['fin-instala'] = {
   };
   fi.cursorV = [K.copia, K.menu(450), K.permisos(true), K.publicar(462), { keys:[[0.2,650,-120],[0.65,400,540],[0.95,400,540],[1.6,650,-120]], clicks:[0.8] }, null];
 
-  // ── Cuadra · Ver en acción ──
+  // ── Conciliador · Ver en acción ──
   const v2a = AL_DEMOS['v2-accion'];
   v2a.drawV = H => { const { C, CW, CH, clamp, ease, easeOut, lerp, rr, txt, wrap, press, btn, base, overlay, dialog, banner, pill, campo, panelBar } = H;
     const TABS = ['Resumen','Resultados','Sugerencias','Historial','Configuración'];
@@ -8217,8 +8217,8 @@ AL_DEMOS['fin-instala'] = {
         if (p > 0) { g.globalAlpha = p; pill(g, 400, CH - 108 + (1-p)*14, 'No cuadra: faltan $645.390', C.bad, '#fff', 34, 68, 'center'); g.globalAlpha = 1; }
       },
       (g, lt) => {
-        base(g, 'Cuadra');
-        panelBar(g, 'Cuadra', TABS, 4);
+        base(g, 'Conciliador');
+        panelBar(g, 'Conciliador', TABS, 4);
         txt(g, '1 · Fuentes de datos', 40, 262, 38, 800, C.ink);
         const url = 'docs.google.com/spreadsheets/d/1Cartola…';
         const n = Math.floor(clamp((lt - 0.4) / 0.9) * url.length);
@@ -8249,8 +8249,8 @@ AL_DEMOS['fin-instala'] = {
         }
       },
       (g, lt) => {
-        base(g, 'Cuadra');
-        panelBar(g, 'Cuadra', TABS, 1);
+        base(g, 'Conciliador');
+        panelBar(g, 'Conciliador', TABS, 1);
         const ok = lt > 2.6;
         tarjeta(g, 40, 250, 720, 'CARTOLA · 03/03', 'Abono Comercial Sur', '$2.000.000', easeOut(lt / 0.4), ok);
         tarjeta(g, 40, 520, 350, 'MAYOR · 02/03', 'Factura 1002', '$1.200.000', easeOut((lt - 0.4) / 0.4), ok);
@@ -8275,8 +8275,8 @@ AL_DEMOS['fin-instala'] = {
         });
       },
       (g, lt) => {
-        base(g, 'Cuadra');
-        panelBar(g, 'Cuadra', TABS, 4);
+        base(g, 'Conciliador');
+        panelBar(g, 'Conciliador', TABS, 4);
         txt(g, '3 · Reglas para explicar pendientes', 40, 262, 34, 800, C.ink, 'left', 720);
         g.strokeStyle = C.line; g.lineWidth = 3; rr(g, 40, 296, 720, 376, 18); g.stroke();
         campo(g, 70, 350, 660, 56, 'Nombre', 'Comisiones del banco', false);
@@ -8301,8 +8301,8 @@ AL_DEMOS['fin-instala'] = {
         });
       },
       (g, lt) => {
-        base(g, 'Cuadra');
-        panelBar(g, 'Cuadra', TABS, 1);
+        base(g, 'Conciliador');
+        panelBar(g, 'Conciliador', TABS, 1);
         for (let r = 0; 240 + r*80 < CH; r++) { g.fillStyle = r % 2 ? '#f6f8fb' : '#fff'; g.fillRect(40, 240 + r*80, 720, 80); g.fillStyle = '#dde5ee'; rr(g, 70, 272 + r*80, 280, 14, 7); g.fill(); rr(g, 560, 272 + r*80, 170, 14, 7); g.fill(); }
         const d = easeOut((lt - 0.25) / 0.35);
         overlay(g, d); g.globalAlpha = d;
@@ -8324,8 +8324,8 @@ AL_DEMOS['fin-instala'] = {
         g.globalAlpha = 1;
       },
       (g, lt) => {
-        base(g, 'Cuadra');
-        panelBar(g, 'Cuadra', TABS, 0);
+        base(g, 'Conciliador');
+        panelBar(g, 'Conciliador', TABS, 0);
         const p = ease((lt - 0.3) / 1.6);
         const tiles = [[Math.round(lerp(47, 94, p)) + '%', 'conciliación', C.ok], [String(Math.round(lerp(8, 15, p))), 'conciliados', C.ok], [String(Math.round(lerp(0, 3, p))), 'explicados', C.expl], [String(Math.round(lerp(8, 1, p))), 'pendientes', C.warn]];
         tiles.forEach(([v, l, c], i) => {
@@ -8360,7 +8360,7 @@ AL_DEMOS['fin-instala'] = {
     null
   ];
 
-  // ── Pide · Ver en acción ──
+  // ── PedidoApp · Ver en acción ──
   const pa = AL_DEMOS['ped-accion'];
   pa.drawV = H => { const { C, CW, CH, FONT, clamp, ease, easeOut, rr, txt, wrap, press, btn, base, overlay, dialog, banner, pill, panelBar, celular } = H;
     const TABS = ['Pedidos','Catálogo','Clientes','Reportes','Ajustes'];   // las pestañas del panel real
@@ -8554,12 +8554,12 @@ AL_DEMOS['fin-instala'] = {
     { keys:[[0.3,650,960],[2.4,311,259],[2.65,311,259],[3.3,650,980]], clicks:[2.55] }
   ];
 
-  // la sub-pestaña visible al cargar (Cuadra) inicia sus demos ya; las demás, al abrirla (showHP)
+  // la sub-pestaña visible al cargar (el Conciliador) inicia sus demos ya; las demás, al abrirla (showHP)
   if (window.alDemoTarjetas) document.querySelectorAll('#product .hp-panel.on .al-demo[id]').forEach(d => { if (AL_DEMOS[d.id]) alDemoTarjetas(d, AL_DEMOS[d.id]); });
 })();
 </script>
 <script>
-/* Herramientas → sub-pestañas. Los demos 3D de V2 y Pide se inician la
+/* Herramientas → sub-pestañas. Los demos 3D de V2 y PedidoApp se inician la
    primera vez que se abre su sub-pestaña (no suman contextos 3D al cargar). */
 function showHP(id){
   var panel = document.getElementById('hp-' + id); if (!panel) return;
