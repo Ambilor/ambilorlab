@@ -193,7 +193,7 @@ section.visible{display:block}
 .prod-h1{font-size:22px;font-weight:600;letter-spacing:-.3px;margin-bottom:.5rem;line-height:1.3}
 .prod-tagline{font-size:14px;color:var(--gris-1);margin-bottom:2rem;line-height:1.65;max-width:500px}
 
-.buy-btn{display:inline-block;background:var(--azul);color:var(--blanco);font-size:14px;font-weight:500;padding:11px 28px;border-radius:5px;text-decoration:none;transition:background .15s;margin-bottom:.6rem}
+.buy-btn{display:inline-block;background:var(--azul);color:var(--blanco);font-size:14px;font-weight:500;padding:13px 28px;border-radius:5px;text-decoration:none;transition:background .15s;margin-bottom:.6rem}
 .buy-btn:hover{background:var(--azul-dark)}
 .guarantee-note{font-size:12px;color:var(--gris-2);display:block;margin-bottom:2.5rem}
 
@@ -1692,6 +1692,8 @@ html.i3-encaje{scroll-snap-type:y mandatory}
 .hx-art-ok text{fill:var(--ok-n)}
 .hx-art-manual text{opacity:var(--o,1)}
 .i3-tt{font-size:clamp(16px,1.4vw,19px);font-weight:600;letter-spacing:-.02em;margin-bottom:.4rem}
+.i3-tres .i3-tarjeta{position:relative}.i3-ir{color:inherit;text-decoration:none}.i3-ir::after{content:"";position:absolute;inset:0;border-radius:inherit}
+.i3-ir:focus-visible{outline:none}.i3-tres .i3-tarjeta:has(.i3-ir:focus-visible){outline:2px solid var(--glow);outline-offset:2px}
 .i3-td{font-size:14px;line-height:1.6;color:var(--gris-1)}
 .i3-cuatro{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;text-align:left}
 .i3-cuatro .i3-tarjeta{padding:clamp(.9rem,2.2vh,1.4rem) clamp(1rem,2vw,1.5rem)}
@@ -2774,7 +2776,7 @@ window.AL_NOTAS = {
     <h2 class="i3-h2">Tres herramientas. <span>Un problema resuelto cada una.</span></h2>
     <div class="i3-tres">
       <article class="i3-tarjeta"><div class="i3-top"><span>Concilia.</span><span>01 / 03</span></div><svg class="i3-arte" viewBox="0 0 320 170" aria-hidden="true"><g class="hx-art-rows"><g><rect x="18" y="12" width="196" height="20" rx="4"/><text x="28" y="26">Factura 1001</text><text x="206" y="26" text-anchor="end">+500.000</text></g><g><rect x="18" y="38" width="196" height="20" rx="4"/><text x="28" y="52">Pago fact. 1001</text><text x="206" y="52" text-anchor="end">−500.000</text></g><g><rect x="18" y="64" width="196" height="20" rx="4"/><text x="28" y="78">Factura 1002</text><text x="206" y="78" text-anchor="end">+250.000</text></g><g class="off"><rect x="18" y="90" width="196" height="20" rx="4"/><text x="28" y="104">Depósito s/ref.</text><text x="206" y="104" text-anchor="end">+80.000</text></g><g><rect x="18" y="116" width="196" height="20" rx="4"/><text x="28" y="130">Pago fact. 1002</text><text x="206" y="130" text-anchor="end">−250.000</text></g></g><g class="hx-art-links"><path d="M214 22 C244 22 244 48 214 48"/><path d="M214 74 C262 74 262 126 214 126"/><path class="off" d="M214 100 L236 100"/></g><text class="hx-art-sinpar" x="242" y="104">sin par</text><text class="hx-art-cap" x="160" y="158">2 pares · 1 pendiente</text></svg>
-        <h3 class="i3-tt">Concilia · cuadra tu banco sin revisar fila por fila</h3><p class="i3-td">Compara los movimientos del banco con tus registros, encuentra el par de cada uno y te deja a la vista solo lo que no cuadra. Para contadores y empresas.</p></article>
+        <h3 class="i3-tt"><a class="i3-ir" href="?p=product&amp;h=v2" data-ir-herramienta="v2">Concilia · cuadra tu banco sin revisar fila por fila</a></h3><p class="i3-td">Compara los movimientos del banco con tus registros, encuentra el par de cada uno y te deja a la vista solo lo que no cuadra. Para contadores y empresas.</p></article>
       <article class="i3-tarjeta"><div class="i3-top"><span>Pedidos.</span><span>02 / 03</span></div><svg class="i3-arte" viewBox="0 0 320 170" aria-hidden="true">
           <g class="hx-art-manual">
             <text x="18" y="34">“¿2 kg de pan?”</text>
@@ -2787,7 +2789,7 @@ window.AL_NOTAS = {
           <g class="hx-art-ok"><text x="212" y="84">Pedido ✓</text><text x="212" y="106">Pagado ✓</text><text x="212" y="128">En camino ✓</text></g>
           <text class="hx-art-cap" x="160" y="158">todo en un lugar</text>
         </svg>
-        <h3 class="i3-tt">Pedidos · pedidos ordenados, no chats sueltos</h3><p class="i3-td">Tus clientes eligen y piden desde un enlace en su celular. A ti te llegan completos, con el total y el pago, listos para confirmar. Para negocios que venden por WhatsApp.</p></article>
+        <h3 class="i3-tt"><a class="i3-ir" href="?p=product&amp;h=ped" data-ir-herramienta="ped">Pedidos · pedidos ordenados, no chats sueltos</a></h3><p class="i3-td">Tus clientes eligen y piden desde un enlace en su celular. A ti te llegan completos, con el total y el pago, listos para confirmar. Para negocios que venden por WhatsApp.</p></article>
       <article class="i3-tarjeta"><div class="i3-top"><span>Mis Finanzas.</span><span>03 / 03</span></div><svg class="i3-arte" viewBox="0 0 320 170" aria-hidden="true">
           <g class="hx-art-grid">
             <text x="18" y="30">$13K</text><text x="72" y="30">$45K</text>
@@ -2802,7 +2804,7 @@ window.AL_NOTAS = {
           <path class="hx-art-trend" pathLength="1" d="M197 92 L223 66 L249 78 L275 40"/>
           <text class="hx-art-cap" x="160" y="158">en qué se va</text>
         </svg>
-        <h3 class="i3-tt">Mis Finanzas · sabes en qué se va tu plata</h3><p class="i3-td">Anotas un gasto en dos toques desde el celular y ves cuánto te queda para el mes, tus tarjetas y tus metas de ahorro. Para personas y familias.</p></article>
+        <h3 class="i3-tt"><a class="i3-ir" href="?p=product&amp;h=fin" data-ir-herramienta="fin">Mis Finanzas · sabes en qué se va tu plata</a></h3><p class="i3-td">Anotas un gasto en dos toques desde el celular y ves cuánto te queda para el mes, tus tarjetas y tus metas de ahorro. Para personas y familias.</p></article>
     </div>
   </div>
 
@@ -2980,8 +2982,8 @@ window.AL_NOTAS = {
 
     
 
-    <span class="buy-btn buy-btn--prox" aria-disabled="true">Próximamente</span>
-    <span class="guarantee-note">Muy pronto disponible. <a href="#" onclick="return show('contact')">Escríbeme</a> y te aviso cuando esté listo.</span>
+    <a class="buy-btn" href="?p=contact" data-avisame="Concilia">Avísame cuando esté listo</a>
+    <span class="guarantee-note">Muy pronto disponible: déjame tu correo y te aviso el día que salga.</span>
     <div class="alert-box">Pensado para contadores, equipos contables, tesorerías y PyMEs que cierran el mes cuadrando movimientos.</div>
     <div class="pi-bloque">
       <div class="pi-eyebrow" id="incluye-v2">Qué incluye</div>
@@ -3008,8 +3010,8 @@ window.AL_NOTAS = {
       </div>
     </div>
 
-    <span class="buy-btn buy-btn--prox" aria-disabled="true">Próximamente</span>
-    <span class="guarantee-note">Muy pronto disponible. <a href="#" onclick="return show('contact')">Escríbeme</a> y te aviso cuando esté listo.</span>
+    <a class="buy-btn" href="?p=contact" data-avisame="Concilia">Avísame cuando esté listo</a>
+    <span class="guarantee-note">Muy pronto disponible: déjame tu correo y te aviso el día que salga.</span>
   </div>
 
   <div class="hp-panel" id="hp-ped" role="tabpanel" aria-labelledby="hpt-ped" hidden>
@@ -3084,8 +3086,8 @@ window.AL_NOTAS = {
 
     
 
-    <span class="buy-btn buy-btn--prox" aria-disabled="true">Próximamente</span>
-    <span class="guarantee-note">Muy pronto disponible. <a href="#" onclick="return show('contact')">Escríbeme</a> y te aviso cuando esté listo.</span>
+    <a class="buy-btn" href="?p=contact" data-avisame="Pedidos">Avísame cuando esté listo</a>
+    <span class="guarantee-note">Muy pronto disponible: déjame tu correo y te aviso el día que salga.</span>
     <div class="alert-box">Pensado para quien vende por WhatsApp y hoy anota los pedidos a mano: sin páginas web caras, sin apps que cobran por venta y sin cambiar cómo te compran tus clientes.</div>
     <div class="pi-bloque">
       <div class="pi-eyebrow" id="incluye-ped">Qué incluye</div>
@@ -3111,8 +3113,8 @@ window.AL_NOTAS = {
       </div>
     </div>
 
-    <span class="buy-btn buy-btn--prox" aria-disabled="true">Próximamente</span>
-    <span class="guarantee-note">Muy pronto disponible. <a href="#" onclick="return show('contact')">Escríbeme</a> y te aviso cuando esté listo.</span>
+    <a class="buy-btn" href="?p=contact" data-avisame="Pedidos">Avísame cuando esté listo</a>
+    <span class="guarantee-note">Muy pronto disponible: déjame tu correo y te aviso el día que salga.</span>
   </div>
   <div class="hp-panel" id="hp-fin" role="tabpanel" aria-labelledby="hpt-fin" hidden>
     <div class="prod-cab">
@@ -3186,8 +3188,8 @@ window.AL_NOTAS = {
 
     
 
-    <span class="buy-btn buy-btn--prox" aria-disabled="true">Próximamente</span>
-    <span class="guarantee-note">Muy pronto disponible. <a href="#" onclick="return show('contact')">Escríbeme</a> y te aviso cuando esté listo.</span>
+    <a class="buy-btn" href="?p=contact" data-avisame="Mis Finanzas">Avísame cuando esté listo</a>
+    <span class="guarantee-note">Muy pronto disponible: déjame tu correo y te aviso el día que salga.</span>
     <div class="alert-box">Pensado para quien hoy anota sus gastos en una libreta, en las notas del celular o no los anota: sin suscripciones, sin conectar tu banco y con tus datos guardados en tu propia cuenta.</div>
     <div class="pi-bloque">
       <div class="pi-eyebrow" id="incluye-fin">Qué incluye</div>
@@ -3213,8 +3215,8 @@ window.AL_NOTAS = {
       </div>
     </div>
 
-    <span class="buy-btn buy-btn--prox" aria-disabled="true">Próximamente</span>
-    <span class="guarantee-note">Muy pronto disponible. <a href="#" onclick="return show('contact')">Escríbeme</a> y te aviso cuando esté listo.</span>
+    <a class="buy-btn" href="?p=contact" data-avisame="Mis Finanzas">Avísame cuando esté listo</a>
+    <span class="guarantee-note">Muy pronto disponible: déjame tu correo y te aviso el día que salga.</span>
   </div>
   </div>
 </section>
@@ -4178,6 +4180,12 @@ No afirmes que creaste algo que no creaste. No afirmes que 2026 está completo.<
         <input class="cf-field" type="text" name="nombre" placeholder="Tu nombre" required>
         <input class="cf-field" type="email" name="email" placeholder="Tu correo" required>
       </div>
+      <select class="cf-field" name="interes" aria-label="¿Qué te interesa?">
+        <option value="Una herramienta a medida">Quiero una herramienta a medida</option>
+        <option value="Concilia">Avísame cuando salga Concilia</option>
+        <option value="Pedidos">Avísame cuando salga Pedidos</option>
+        <option value="Mis Finanzas">Avísame cuando salga Mis Finanzas</option>
+      </select>
       <textarea class="cf-field cf-area" name="mensaje" placeholder="Cuentame que proceso quieres automatizar o en que puedo ayudarte..." required></textarea>
       <button type="submit" class="cta-home" style="margin-top:4px">Enviar mensaje</button>
     </form>
@@ -4329,15 +4337,22 @@ function animH1(){
 }
 
 // ── feedback formulario ──
+/* Medición (2026-10-20): eventos de Google Analytics para saber qué funciona. Si el visitante bloquea
+   Analytics, no pasa nada. Lista de eventos en CLAUDE.md. */
+function alEvento(nombre,datos){ try{ if(window.gtag) gtag('event',nombre,datos||{}); }catch(e){} }
+var AL_NOMBRE_HP={v2:'Concilia',ped:'Pedidos',fin:'Mis Finanzas'};
 function cfSubmit(e){
   e.preventDefault();
   var nombre=document.querySelector('#cfForm [name="nombre"]').value.trim();
   var email=document.querySelector('#cfForm [name="email"]').value.trim();
   var mensaje=document.querySelector('#cfForm [name="mensaje"]').value.trim();
+  var interes=(document.querySelector('#cfForm [name="interes"]')||{}).value||'';
   var btn=document.querySelector('#cfForm button[type="submit"]');
   if(btn){cambiarTexto(btn,'Abriendo tu correo…');btn.disabled=true;}
-  var asunto=encodeURIComponent('Contacto Ambilor.Lab — '+nombre);
-  var cuerpo=encodeURIComponent('Nombre: '+nombre+'\nEmail: '+email+'\n\n'+mensaje);
+  var aviso=interes&&interes!=='Una herramienta a medida';
+  var asunto=encodeURIComponent((aviso?'Lista de espera '+interes:'Contacto Ambilor.Lab')+' — '+nombre);
+  var cuerpo=encodeURIComponent('Nombre: '+nombre+'\nEmail: '+email+'\nInterés: '+interes+'\n\n'+mensaje);
+  alEvento(aviso?'lista_espera_enviar':'contacto_enviar',{herramienta:aviso?interes:'a medida'});
   window.location.href='mailto:zejordanja17@gmail.com?subject='+asunto+'&body='+cuerpo;
   setTimeout(function(){if(btn){cambiarTexto(btn,'Enviar mensaje');btn.disabled=false;}},2000);
 }
@@ -8591,6 +8606,54 @@ function showHP(id){
 document.querySelectorAll('#product .hp-tabs .gp-tab').forEach(function(b){
   b.addEventListener('click', function(){ showHP(b.getAttribute('data-hp')); var t = document.querySelector('#product .hp-tabs'); if (t && t.getBoundingClientRect().top < 0) t.scrollIntoView({ block:'start' }); });
 });
+
+/* Lista de espera, enlaces de Inicio a cada herramienta y medición (2026-10-20) */
+(function(){
+  // «Avísame cuando esté listo»: lleva a Contacto con la herramienta ya elegida
+  document.addEventListener('click',function(e){
+    var b=e.target.closest&&e.target.closest('[data-avisame]'); if(!b) return;
+    e.preventDefault();
+    var nom=b.getAttribute('data-avisame'), f=document.getElementById('cfForm');
+    if(f){ var sel=f.querySelector('[name="interes"]'), msg=f.querySelector('[name="mensaje"]');
+      if(sel) sel.value=nom;
+      if(msg&&!msg.value.trim()) msg.value='Quiero que me avisen cuando '+nom+' esté disponible.'; }
+    alEvento('avisame_clic',{herramienta:nom});
+    show('contact');
+    setTimeout(function(){ var n=f&&f.querySelector('[name="nombre"]'); if(n) try{ n.focus({preventScroll:true}); }catch(x){ n.focus(); } },80);
+  });
+  // Inicio → cada herramienta
+  document.addEventListener('click',function(e){
+    var a=e.target.closest&&e.target.closest('[data-ir-herramienta]'); if(!a) return;
+    e.preventDefault();
+    var h=a.getAttribute('data-ir-herramienta');
+    alEvento('inicio_a_herramienta',{herramienta:AL_NOMBRE_HP[h]||h});
+    show('product'); showHP(h);
+  });
+  // qué herramienta se mira (al abrir su pestaña o al llegar con ?h=)
+  var orig=window.showHP;
+  if(orig) window.showHP=showHP=function(id){ var r=orig.apply(this,arguments); if(document.getElementById('hp-'+id)) alEvento('ver_herramienta',{herramienta:AL_NOMBRE_HP[id]||id}); return r; };
+  // demos: alguien llegó al último paso, o abrió «Cómo se instala»
+  document.querySelectorAll('#product .al-demo[id]').forEach(function(d){
+    var c=d.querySelector('.al-demo__count'), hecho=false; if(!c||!window.MutationObserver) return;
+    new MutationObserver(function(){ if(!hecho&&/^(\d+) de \1$/.test(c.textContent.trim())){ hecho=true; alEvento('demo_completo',{demo:d.id}); } }).observe(c,{childList:true,characterData:true,subtree:true});
+  });
+  document.addEventListener('click',function(e){
+    var b=e.target.closest&&e.target.closest('#product .demo-cambio button[data-d="instala"]'); if(!b) return;
+    var pn=b.closest('.hp-panel'); alEvento('demo_instalacion',{herramienta:pn?AL_NOMBRE_HP[pn.id.replace('hp-','')]:''});
+  });
+  // preguntas frecuentes que se abren
+  document.querySelectorAll('#product .pi-faq').forEach(function(d){
+    d.addEventListener('toggle',function(){ if(!d.open) return; var pn=d.closest('.hp-panel'), q=d.querySelector('.pi-q');
+      alEvento('faq_abrir',{herramienta:pn?AL_NOMBRE_HP[pn.id.replace('hp-','')]:'',pregunta:q?q.textContent.trim():''}); });
+  });
+  // salidas a Instagram, LinkedIn o la tienda
+  document.addEventListener('click',function(e){
+    var a=e.target.closest&&e.target.closest('a[target="_blank"]'); if(!a||!a.hostname||a.hostname===location.hostname) return;
+    alEvento('salida',{destino:a.hostname.replace(/^www\./,'')});
+  });
+  // llegada desde la página propia de una herramienta (?origen=…)
+  var o=new URLSearchParams(location.search).get('origen'); if(o) alEvento('llegada_enlace',{origen:o});
+})();
 // ?p=product&h=v2 (o ped) abre esa herramienta
 window.addEventListener('load', function(){ var h = new URLSearchParams(location.search).get('h'); if (h && document.getElementById('hp-' + h)) showHP(h); });
 </script>
