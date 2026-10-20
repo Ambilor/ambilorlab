@@ -1,0 +1,44 @@
+/* ═══ Ambilor.Lab · Motion System (2026-10-20): tokens y capa HTML ═══
+   Lo que se mueve dentro de las demos se dibuja en canvas (motion/al-motion.js). Aquí va lo que es HTML:
+   los tokens de movimiento, la entrada escalonada del resumen final de cada demo y el componente de video
+   (motion/al-video.js). La disposición de las demos sigue viviendo solo en el bloque «HERRAMIENTAS: CUATRO
+   FORMATOS» de index.html: este archivo no cambia tamaños ni posiciones. */
+:root{
+  --mo-azul:#1F5C99;            /* azul corporativo */
+  --mo-luz:#3D7FD6;             /* azul secundario (luz) */
+  --mo-suave:#eef3fa;           /* fondo ligeramente azulado */
+  --mo-entra:cubic-bezier(.22,1,.36,1);   /* entradas */
+  --mo-mueve:cubic-bezier(.25,1,.5,1);    /* desplazamientos */
+  --mo-rapido:180ms;
+  --mo-medio:320ms;
+  --mo-escalon:70ms;            /* separación entre elementos que entran en cadena */
+}
+
+/* Resumen al terminar un demo: el resultado, la frase y los botones entran uno tras otro (en vez de todos juntos) */
+.al-resumen--logro>*{opacity:0;transform:translateY(10px);transition:opacity var(--mo-medio) var(--mo-entra),transform var(--mo-medio) var(--mo-entra)}
+.al-demo--fin .al-resumen--logro>*{opacity:1;transform:none}
+.al-demo--fin .al-resumen--logro>:nth-child(2){transition-delay:calc(var(--mo-escalon) * 2)}
+.al-demo--fin .al-resumen--logro>:nth-child(3){transition-delay:calc(var(--mo-escalon) * 3)}
+.al-demo--fin .al-resumen--logro>:nth-child(4){transition-delay:calc(var(--mo-escalon) * 5)}
+.al-resumen__logro>*{transition:opacity var(--mo-medio) var(--mo-entra),transform var(--mo-medio) var(--mo-entra)}
+.al-resumen--logro .al-resumen__que{opacity:0}
+.al-demo--fin .al-resumen--logro .al-resumen__que{opacity:1;transition-delay:var(--mo-escalon)}
+
+/* Componente de video (motion/al-video.js): póster liviano hasta que se pide reproducir; el video se descarga
+   recién entonces. Si no se puede reproducir, queda el póster con su texto. */
+.al-video{position:relative;margin:0;border-radius:14px;overflow:hidden;background:var(--mo-suave);aspect-ratio:var(--al-video-forma,16/10)}
+.al-video__poster,.al-video video{display:block;width:100%;height:100%;object-fit:cover}
+.al-video video{position:absolute;inset:0}
+.al-video__play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);min-width:44px;min-height:44px;padding:0 18px;border:0;border-radius:999px;
+  background:var(--mo-azul);color:#fff;font:600 14px/1 var(--sans,system-ui);cursor:pointer;touch-action:manipulation;box-shadow:0 8px 24px rgba(18,48,77,.25);
+  transition:transform var(--mo-rapido) var(--mo-entra),background-color var(--mo-rapido) ease}
+.al-video__play:active{transform:translate(-50%,-50%) scale(.97)}
+.al-video__play:focus-visible{outline:2px solid var(--mo-luz);outline-offset:3px}
+@media (hover:hover) and (pointer:fine){ .al-video__play:hover{background:var(--mo-luz)} }
+.al-video__aviso{position:absolute;left:12px;right:12px;bottom:12px;margin:0;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,.92);color:#12304d;font:500 13px/1.4 var(--sans,system-ui)}
+.al-video[data-estado="video"] .al-video__play,.al-video[data-estado="video"] .al-video__poster{visibility:hidden}
+
+@media (prefers-reduced-motion:reduce){
+  .al-resumen--logro>*,.al-resumen__logro>*,.al-video__play{transition:none}
+  .al-resumen--logro>*,.al-resumen--logro .al-resumen__que{transform:none}
+}

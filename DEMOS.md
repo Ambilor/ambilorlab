@@ -95,3 +95,7 @@ Ayudantes de dibujo (`H`), en coordenadas de la tarjeta:
 - Los contadores del panel (`kpis`) son opcionales: si la escena ya muestra las cifras, no se repiten. En celular caben hasta 4.
 - Una demo nueva no copia el motor ni el controlador: solo agrega su `AL_DEMOS[...]`.
 - En pantallas táctiles todo control de la demo mide al menos 44 px (botones de la barra 44×44, selector de demo 40 px con 48 de toque). La barra va en una sola fila (← ▮▮ →, la línea de avance y ↻), y en dos filas solo en pantallas de menos de 360 px. Esto lo da el CSS común; no se configura por demo.
+
+## Motion System (2026-10-20)
+
+Efectos para las escenas (barrido de luz, línea de escaneo, pulso, trazo), la cortina entre pantallas distintas, el resumen final en cadena y el componente de video: ver `motion/LEEME.md`. En una escena se usan como `H.mo.barrido(...)`, `H.mo.escaneo(...)`, etc.

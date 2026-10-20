@@ -2737,6 +2737,8 @@ window.AL_NOTAS = {
   #product :is(.pi-grid4>*,.pi-nums,.pi-faq){animation:none}
 }
 </style>
+<link rel="stylesheet" href="motion/al-motion.css">
+<script src="motion/al-video.js" defer></script>
 </head>
 
 <body>
@@ -5815,6 +5817,7 @@ window.alDemoLinea = function(root, STEPS, o){
   return L;
 };
 </script>
+<script src="motion/al-motion.js"></script>
 <script>
 /* ═══ Motor de demos por tarjetas (2026-09-30, Ambilor.Lab) ═══
    Generaliza el primer demo "Cómo se instala" (una ventana por
@@ -6064,6 +6067,10 @@ window.alDemoTarjetas = function(root, cfg){
   // 2026-10-20: montos que cuentan hasta su valor (clp(n) da «$1.234.567»; cuenta(v, lt, t0, dur) sube de 0 a v)
   const clp = n => (n < 0 ? '-' : '') + '$' + String(Math.round(Math.abs(n))).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   const cuenta = (v, lt, t0, dur = 0.7) => clp(v * easeOut((lt - t0) / dur));
+  // 2026-10-20: Motion System (motion/al-motion.js): barrido de luz, línea de escaneo, pulso y trazo para las escenas,
+  // como H.mo.*. Si el archivo no cargó, son funciones vacías y la escena se ve igual que antes.
+  const AM = window.AL_MOTION, nada = () => -1;
+  const MO = AM ? { barrido: AM.barrido, escaneo: AM.escaneo, pulso: AM.pulso, trazo: AM.trazo, tramo: AM.tramo } : { barrido: nada, escaneo: nada, pulso: nada, trazo: nada, tramo: (lt, t0, d) => clamp((lt - t0) / d) };
   // 2026-10-20: foco en lo importante del paso. Desde t0 (y hasta t1, si se da) el resto de la pantalla se atenúa y
   // las zonas [x, y, w, h] quedan nítidas con un borde suave. Se llama al final de la escena, sobre lo ya dibujado.
   function foco(g, lt, t0, t1, zonas){
@@ -6074,7 +6081,7 @@ window.alDemoTarjetas = function(root, cfg){
     g.strokeStyle = 'rgba(61,127,214,' + (0.45 * a) + ')'; g.lineWidth = 3; g.beginPath(); zonas.forEach(z => hueco(z[0], z[1], z[2], z[3], 18)); g.stroke();
     g.restore();
   }
-  return { C, CW, CH, FONT, clamp, ease, easeOut, lerp, rr, txt, wrap, press, btn, base, overlay, dialog, banner, checkDot, sheetIcon, pill, campo, panelBar, celular, clp, cuenta, foco, vertical: CH > CW };
+  return { C, CW, CH, FONT, clamp, ease, easeOut, lerp, rr, txt, wrap, press, btn, base, overlay, dialog, banner, checkDot, sheetIcon, pill, campo, panelBar, celular, clp, cuenta, foco, mo: MO, vertical: CH > CW };
   }
 
   // Un juego de tarjetas por diseño; el vertical se arma recién cuando se usa
@@ -6167,15 +6174,20 @@ window.alDemoTarjetas = function(root, cfg){
       c.m.visible = vis; c.sh.visible = false;
       if (!vis) { soltarLienzo(c); return; }
       tomarLienzo(c);
-      J.DRAW[i](c.g, LT(t - s.a)); if (dist === 0) notaPaso(c.g, i, LT(t - s.a)); c.tx.needsUpdate = true;
       // 2026-10-20: continuidad. Si el paso sigue en la misma app (cfg.continuo), la pantalla anterior queda quieta y
       // entera mientras la nueva aparece encima: la barra y las pestañas, iguales en ambas, no se mueven; solo cambia el contenido
       const sigue = cfg.continuo && cfg.continuo[dist === 0 ? i : cur];
-      const e = ease(ein), sx = sigue ? 0 : dist === 0 ? (1 - e) * 0.35 : -ease(sale) * 0.35;
+      // 2026-10-20: Motion System. Entre pantallas distintas (otra app u otro equipo), la nueva entra con una cortina:
+      // un borde de luz azul la revela sobre la anterior, que queda quieta debajo (sin el archivo, el deslizamiento de antes)
+      const cortina = !sigue && !!window.AL_MOTION && (dist === 0 ? i : cur) > 0;
+      J.DRAW[i](c.g, LT(t - s.a)); if (dist === 0) notaPaso(c.g, i, LT(t - s.a));
+      if (dist === 0 && cortina && ein < 1) AL_MOTION.cortina(c.g, J.CW, J.CH, ein);
+      c.tx.needsUpdate = true;
+      const e = ease(ein), sx = (sigue || cortina) ? 0 : dist === 0 ? (1 - e) * 0.35 : -ease(sale) * 0.35;
       c.m.position.set(sx * (J.disp.userData.marco ? 0 : J.disp.userData.pleno ? 0.25 : 1) + (J.disp.userData.ventanaX || 0), J.disp.userData.ventanaY || 0, dist === 0 ? 0.004 : 0.002);
-      if (dist === 0 && J.disp.userData.marco && J.tonoPaso !== i && t - s.a > 0.2) { J.tonoPaso = i; J.disp.userData.marco.tono(c.g, root.id === 'ped-accion' && i === 0); }   // barra de estado según la app (una vez por paso: leer píxeles es caro en Safari)
+      if (dist === 0 && J.disp.userData.marco && J.tonoPaso !== i && t - s.a > 0.4) { J.tonoPaso = i; J.disp.userData.marco.tono(c.g, root.id === 'ped-accion' && i === 0); }   // barra de estado según la app (una vez por paso: leer píxeles es caro en Safari)
       c.m.rotation.set(0, 0, 0);
-      c.m.material.opacity = dist === 0 ? e : sigue ? 1 : 1 - ease(sale);
+      c.m.material.opacity = dist === 0 ? (cortina ? 1 : e) : (sigue || cortina) ? 1 : 1 - ease(sale);
       if (dist === 0) J.disp.userData.sombraVentana.material.opacity = 0.9 * e;
       c.m.updateMatrixWorld();
     });
@@ -6433,6 +6445,7 @@ AL_DEMOS['v2-accion'] = {
         if (p > 0) { g.globalAlpha = p; pill(g, 600, 740 + (1-p)*14, 'No cuadra: faltan ' + H.cuenta(645390, lt, 2.8, 0.8), C.bad, '#fff', 34, 66, 'center'); g.globalAlpha = 1; }
         const q = easeOut((lt - 3.2) / 0.4);
         if (q > 0) { g.globalAlpha = q; txt(g, '¿Qué abono pagó qué facturas? ¿Y la comisión?', 600, 860, 32, 600, C.muted, 'center'); g.globalAlpha = 1; }
+        H.mo.barrido(g, lt, 3.0, 330, 740, 540, 66, { radio: 33 });   // la luz cruza «No cuadra»
         H.foco(g, lt, 2.8, 0, [[220, 718, 760, 186]]);
       },
       (g, lt) => {
@@ -6460,6 +6473,8 @@ AL_DEMOS['v2-accion'] = {
         btn(g, 40, 822, 520, 64, 'Guardar fuentes', 'primary', press(lt, 3.05), 34);
         const b = easeOut((lt - 3.3) / 0.35);
         if (b > 0) { g.globalAlpha = b; banner(g, 590, 822, 570, 64, '✓ 2 fuentes listas'); g.globalAlpha = 1; }
+        H.mo.barrido(g, lt, 2.55, 40, 596, 760, 116, { radio: 24 });   // las columnas reconocidas
+        H.mo.barrido(g, lt, 3.6, 590, 822, 570, 64, { radio: 32 });
         H.foco(g, lt, 2.0, 0, [[24, 572, 1152, 330]]);   // reconoce sola cada columna
       },
       (g, lt) => {
@@ -6490,6 +6505,8 @@ AL_DEMOS['v2-accion'] = {
         if (b > 0) { g.globalAlpha = b; pill(g, 600, 730, 'Grupo 1:2 · Conciliado', C.ok, '#fff', 32, 60, 'center'); g.globalAlpha = 1; }
         const m = easeOut((lt - 3.1) / 0.4);
         if (m > 0) { g.globalAlpha = m; txt(g, 'Motivo: suman lo mismo · 17 días de diferencia · «1002» en ambos conceptos', 600, 850, 27, 600, C.muted, 'center', 1080); g.globalAlpha = 1; }
+        H.mo.escaneo(g, lt, 0.7, 0.9, 30, 236, 1140, 374);   // busca qué facturas suman lo mismo que el abono
+        [[40, 330, 440, 150], [720, 250, 440, 150], [720, 440, 440, 150]].forEach(r => H.mo.barrido(g, lt, 2.65, r[0], r[1], r[2], r[3], { radio: 18, color: '47,138,91' }));   // coinciden: luz verde
       },
       (g, lt) => {
         base(g, 'Concilia');
@@ -6516,6 +6533,7 @@ AL_DEMOS['v2-accion'] = {
           pill(g, 0, -22, on ? 'Explicado' : 'Pendiente', on ? '#ece9fb' : '#fdf1e2', on ? C.expl : C.warn, 24, 44, 'center');
           g.restore();
         });
+        H.mo.escaneo(g, lt, 2.2, 1.2, 40, 648, 1120, 288);   // la línea pasa por cada comisión justo cuando cambia a Explicado (720 + 72k, en 2,5 + 0,3k)
         H.foco(g, lt, 2.4, 0, [[24, 682, 1152, 240]]);   // las comisiones pasan a Explicado
       },
       (g, lt) => {
@@ -6560,6 +6578,7 @@ AL_DEMOS['v2-accion'] = {
         });
         const s = easeOut((lt - 2.6) / 0.4);
         if (s > 0) { g.globalAlpha = s; pill(g, 1160, 800, 'IA opcional: 1 propuesta en Sugerencias', '#eef2f7', C.brand, 26, 52, 'right'); g.globalAlpha = 1; }
+        H.mo.barrido(g, lt, 2.0, 40, 250, 1120, 180, { radio: 20 });   // los indicadores, ya contados
         H.foco(g, lt, 0.25, 2.3, [[28, 238, 1144, 204]]);   // los indicadores
       }
     ];
@@ -7002,6 +7021,7 @@ AL_DEMOS['ped-accion'] = {
         fila(base0, 340, 'Benjamín Fuentes', '$104.300', 'En camino', false);
         g.globalAlpha = 1 - n; fila(base0 + 124, 339, 'Ignacio Castro', '$53.990', 'Entregado', false); g.globalAlpha = 1;
         if (n > 0) { g.globalAlpha = n; fila(410, 341, 'Josefa Morales', '$20.460', 'Nuevo', true); g.globalAlpha = 1; }
+        H.mo.barrido(g, lt, 1.3, 40, 410, 1120, 104, { radio: 14 });   // el pedido nuevo
         H.foco(g, lt, 1.0, 2.7, [[34, 404, 1132, 116]]);   // el pedido que acaba de llegar
         const t = easeOut((lt - 1.3) / 0.35);
         if (t > 0) {   // el aviso del panel: queda hasta que lo ves, con campanita
@@ -7049,6 +7069,7 @@ AL_DEMOS['ped-accion'] = {
           if (b > 0) { g.globalAlpha = d * b; banner(g, 260, 700, 680, 64, '✓ Mensaje listo: solo presionas enviar', '#1da851'); }
           g.globalAlpha = 1;
         }
+        H.mo.barrido(g, lt, 1.15, 40, 250, 1120, 110, { radio: 14, color: '47,138,91' });   // confirmado y pagado
       },
       (g, lt) => {
         base(g, 'Panel de pedidos');
@@ -7073,6 +7094,7 @@ AL_DEMOS['ped-accion'] = {
         });
         const r = easeOut((lt - 2.8) / 0.4);
         if (r > 0) { g.globalAlpha = r; pill(g, 600, 820, '📊 Resumen de hoy: 19 pedidos · $412.300', C.ink, '#fff', 28, 62, 'center'); g.globalAlpha = 1; }
+        H.mo.trazo(g, Array.from({ length: 14 }, (_, k) => [67 + k*48, 760 - (60 + 170 * Math.abs(Math.sin(k*1.7 + 0.4))) - 14]), H.mo.tramo(lt, 1.3, 1.1), { color: 'rgba(31,92,153,.85)', grosor: 4 });   // la tendencia de las ventas se traza
         H.foco(g, lt, 2.8, 0, [[270, 806, 660, 90]]);
       }
     ];
@@ -7474,6 +7496,7 @@ window.AL_DEMOS = window.AL_DEMOS || {};
           movimientos(g, lt);
           const b = easeOut((lt - tFin - 0.25) / 0.35);
           if (b > 0) { g.globalAlpha = b; banner(g, ANCHO ? 300 : 80, navY - 100, ANCHO ? 600 : CW - 160, 72, '✓ Guardado en dos toques'); g.globalAlpha = 1; }
+          H.mo.barrido(g, lt, tFin + 0.2, M, 154, CW - 2*M, ANCHO ? 100 : 110, { radio: 16 });   // el gasto recién guardado
           return;
         }
         const n = TOQUES.filter(t => lt > t + 0.05).length, monto = n ? money(Number(NUM.slice(0, n))) : '$0';
@@ -7505,6 +7528,7 @@ window.AL_DEMOS = window.AL_DEMOS || {};
         F.inicio(g, easeOut((lt - 0.2) / 1.1));
         const p = easeOut((lt - 2.2) / 0.4);
         if (p > 0) { g.globalAlpha = p; pill(g, ANCHO ? A.x + A.w/2 : CW/2, ANCHO ? 600 : navY - 74, 'Sabes cuánto puedes gastar hoy', C.ink, '#fff', 26, 56, 'center'); g.globalAlpha = 1; }
+        H.mo.barrido(g, lt, 1.35, A.x, 124, A.w, ANCHO ? 252 : 282, { radio: 26 });   // lo disponible, ya contado
         H.foco(g, lt, 2.2, 0, ANCHO ? [[A.x - 8, 388, A.w + 16, 276]] : [[A.x - 8, 418, A.w + 16, 186], [CW/2 - 300, navY - 82, 600, 72]]);   // cuánto puedes gastar por día
       },
       (g, lt) => {
@@ -7616,6 +7640,8 @@ window.AL_DEMOS = window.AL_DEMOS || {};
           g.globalAlpha = 1;
         }
         F.nav(g, 0);
+        H.mo.trazo(g, [['May', 0.62], ['Jun', 0.66], ['Jul', 0.7], ['Ago', 0.69], ['Sep', 0.75], ['Oct', 0.66]].map(([m, v], k) => [ch.x + 24 + k*sw + sw/2, base0 - alto * v / 1.1 - 14]), H.mo.tramo(lt, 0.9, 0.9), { color: 'rgba(61,127,214,.9)', grosor: 3 });   // la línea de los 6 meses
+        H.mo.barrido(g, lt, 2.4, P.x, py, P.w, ph, { radio: 20, color: '47,138,91' });   // cómo terminas el mes
         H.foco(g, lt, 1.2, 2.4, [[P.x - 6, py - 6, P.w + 12, ph + 12]]);   // cómo terminas el mes
       }
     ];
@@ -8372,6 +8398,7 @@ AL_DEMOS['fin-instala'] = {
         tabla(g, 40, 516, 720, 'Libro mayor', der, mr, lt - 0.5);
         const p = easeOut((lt - 2.8) / 0.4);
         if (p > 0) { g.globalAlpha = p; pill(g, 400, CH - 108 + (1-p)*14, 'No cuadra: faltan ' + H.cuenta(645390, lt, 2.8, 0.8), C.bad, '#fff', 34, 68, 'center'); g.globalAlpha = 1; }
+        H.mo.barrido(g, lt, 3.0, 100, CH - 108, 600, 68, { radio: 34 });
         H.foco(g, lt, 2.8, 0, [[70, CH - 124, 660, 100]]);
       },
       (g, lt) => {
@@ -8399,6 +8426,8 @@ AL_DEMOS['fin-instala'] = {
         const b = easeOut((lt - 3.3) / 0.35);
         if (b < 1) btn(g, 40, 870, 720, 72, 'Guardar fuentes', 'primary', press(lt, 3.05), 34);
         if (b > 0) { g.globalAlpha = b; banner(g, 40, 870, 720, 72, '✓ 2 fuentes listas'); g.globalAlpha = 1; }
+        H.mo.barrido(g, lt, 2.55, 40, 686, 720, 120, { radio: 24 });
+        H.mo.barrido(g, lt, 3.6, 40, 870, 720, 72, { radio: 36 });
         H.foco(g, lt, 2.0, 0, [[24, 662, 752, 294]]);
         if (CH > 1060) {   // en el celular, la página sigue: la tarjeta de reglas
           g.fillStyle = C.line; g.fillRect(40, 984, 720, 2);
@@ -8427,6 +8456,8 @@ AL_DEMOS['fin-instala'] = {
         if (b > 0) { g.globalAlpha = b; pill(g, 400, 772, 'Grupo 1:2 · Conciliado', C.ok, '#fff', 32, 62, 'center'); g.globalAlpha = 1; }
         const m = easeOut((lt - 3.1) / 0.4);
         if (m > 0) { g.globalAlpha = m; wrap(g, 'Motivo: suman lo mismo · 17 días de diferencia · «1002» en ambos conceptos', 60, 890, 680, 28, 600, C.muted, 1.3); g.globalAlpha = 1; }
+        H.mo.escaneo(g, lt, 0.7, 0.9, 30, 236, 740, 450);
+        [[40, 250, 720, 150], [40, 520, 350, 150], [410, 520, 350, 150]].forEach(r => H.mo.barrido(g, lt, 2.65, r[0], r[1], r[2], r[3], { radio: 18, color: '47,138,91' }));
         // en el celular, la lista de Resultados sigue con los demás grupos
         [['Grupo 2 · 1:1', 'Pago fact. 1001', '-$1.190.000'], ['Grupo 3 · 2:1', 'Pago fact. 1003-1004', '-$780.000'], ['Grupo 4 · 1:1', 'Depósito cliente', '$45.000']].forEach((r, k) => {
           const y = 1000 + k*72; if (y + 30 > CH) return;
@@ -8459,6 +8490,7 @@ AL_DEMOS['fin-instala'] = {
           pill(g, 0, -21, on ? 'Explicado' : 'Pendiente', on ? '#ece9fb' : '#fdf1e2', on ? C.expl : C.warn, 24, 42, 'center');
           g.restore();
         });
+        { const fin = Math.min(CH - 20, 808 + 6*64); H.mo.escaneo(g, lt, 2.375, (fin - 776) / 256, 40, 776, 720, fin - 776); }   // pasa por cada fila (808 + 64k) cuando cambia (2,5 + 0,25k)
         H.foco(g, lt, 2.4, 0, [[28, 772, 744, Math.min(CH - 790, 394)]]);
       },
       (g, lt) => {
@@ -8501,6 +8533,7 @@ AL_DEMOS['fin-instala'] = {
         });
         const s = easeOut((lt - 2.6) / 0.4);
         if (s > 0) { g.globalAlpha = s; pill(g, 400, 900, 'IA opcional: 1 propuesta en Sugerencias', '#eef2f7', C.brand, 26, 56, 'center'); g.globalAlpha = 1; }
+        H.mo.barrido(g, lt, 2.0, 40, 244, 720, 336, { radio: 20 });
         H.foco(g, lt, 0.25, 2.3, [[28, 232, 744, 360]]);
         if (CH > 1060) {   // en el celular, el Resumen sigue: las últimas ejecuciones
           txt(g, 'Últimas ejecuciones', 40, 1000, 30, 800, C.ink);
@@ -8625,6 +8658,7 @@ AL_DEMOS['fin-instala'] = {
           g.globalAlpha = y + 110 > CH - 250 && k ? 1 - n : 1; fila(y, f[0], f[1], f[2], f[3], false); g.globalAlpha = 1;   // las filas bajo el aviso se van
         });
         if (n > 0) { g.globalAlpha = n; fila(500, 341, 'Josefa Morales', '$20.460', 'Nuevo', true); g.globalAlpha = 1; }
+        H.mo.barrido(g, lt, 1.3, 40, 500, 720, 110, { radio: 14 });
         H.foco(g, lt, 1.0, 2.7, [[34, 494, 732, 122]]);
         const t = easeOut((lt - 1.3) / 0.35);
         if (t > 0) {   // el aviso del panel: queda hasta que lo ves, con campanita
@@ -8674,6 +8708,7 @@ AL_DEMOS['fin-instala'] = {
           if (b > 0) { g.globalAlpha = d * b; banner(g, 80, 770, 640, 76, '✓ Mensaje listo: solo presionas enviar', '#1da851'); }
           g.globalAlpha = 1;
         }
+        H.mo.barrido(g, lt, 1.15, 40, 250, 720, 170, { radio: 14, color: '47,138,91' });
       },
       (g, lt) => {
         base(g, 'Panel de pedidos');
@@ -8706,6 +8741,7 @@ AL_DEMOS['fin-instala'] = {
         }
         const r = easeOut((lt - 2.8) / 0.4);
         if (r > 0) { g.globalAlpha = r; pill(g, 400, CH - 72, '📊 Resumen de hoy: 19 pedidos · $412.300', C.ink, '#fff', 26, 58, 'center'); g.globalAlpha = 1; }
+        H.mo.trazo(g, Array.from({ length: 14 }, (_, k) => [64 + k*50, 746 - (40 + 100 * Math.abs(Math.sin(k*1.7 + 0.4))) - 12]), H.mo.tramo(lt, 1.3, 1.1), { color: 'rgba(31,92,153,.85)', grosor: 4 });
         H.foco(g, lt, 2.8, 0, [[30, CH - 86, 740, 86]]);
       }
     ];
