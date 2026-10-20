@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Concilia · demo cinematográfico · vista previa</title>
+<style>
+@font-face{font-family:"Inter";font-weight:500;src:url("../fuentes/inter-500.woff2") format("woff2")}
+@font-face{font-family:"Inter";font-weight:600;src:url("../fuentes/inter-600.woff2") format("woff2")}
+@font-face{font-family:"Inter";font-weight:700;src:url("../fuentes/inter-700.woff2") format("woff2")}
+html,body{margin:0;height:100%;background:#0b1d33}
+canvas{display:block;width:100vw;height:100vh}
+</style>
+</head>
+<body>
+<!-- Vista previa interna (sin controles): la misma escena del demo de Concilia, para renderizarla a video con
+     motion/cine/renderizar.js. En el sitio, el demo la maneja con sus controles. -->
+<canvas id="c"></canvas>
+<script src="../vendor/three-r128.min.js"></script>
+<script src="../motion/cine/concilia-demo.js"></script>
+<script>
+(function(){
+  var cv = document.getElementById('c'), esc = AlCine.conciliaDemo({ canvas: cv, cont: document.body }), T = 0, jugando = true, ult = performance.now();
+  addEventListener('resize', function(){ esc.medir(); esc.render(T); });
+  (function cuadro(ahora){ if (jugando) { T = Math.min(esc.duracion, T + (ahora - ult) / 1000); esc.render(T); } ult = ahora; requestAnimationFrame(cuadro); })(ult);
+  window.__cine = { duracion: esc.duracion, pause: function(){ jugando = false; }, seek: function(t){ T = t; esc.render(T); } };
+})();
+</script>
+</body>
+</html>
