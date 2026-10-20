@@ -374,9 +374,9 @@ section.visible{animation:sec-in .4s cubic-bezier(.16,1,.3,1) both}
 :is(.cta-home,.buy-btn,.i3-btn,.al-demo__btn,.gp-tab,.btn-top,.rc-copiar,.nav-dark-btn):active{scale:.97;transition-duration:0s}
 /* 2026-10-08 (criterio shadcn/ui y TailGrids): los demás botones de la página con la misma respuesta al tocar
    y el mismo anillo de foco con teclado */
-:is(.demo-cambio button,.al-equipo button,.al-resumen ol button,.al-resumen__otra,.al-resumen__cta,.al-resumen__avisa,.rc-f,.rc-boton,.rc-ver,.rc-volver,.gp-ctrl button){touch-action:manipulation}
-:is(.demo-cambio button,.al-equipo button,.al-resumen ol button,.al-resumen__otra,.al-resumen__cta,.al-resumen__avisa,.rc-f,.rc-boton,.rc-ver,.rc-volver,.gp-ctrl button):active{scale:.97}
-:is(.cta-home,.buy-btn,.i3-btn,.gp-tab,.btn-top,.rc-copiar,.nav-dark-btn,.al-equipo button,.al-resumen ol button,.al-resumen__otra,.al-resumen__cta,.al-resumen__avisa,.rc-f,.rc-boton,.rc-ver,.rc-volver,.gp-ctrl button):focus-visible{outline:2px solid var(--azul);outline-offset:2px}
+:is(.demo-cambio button,.al-equipo button,.al-resumen ol button,.al-resumen__otra,.al-resumen__cta,.rc-f,.rc-boton,.rc-ver,.rc-volver,.gp-ctrl button){touch-action:manipulation}
+:is(.demo-cambio button,.al-equipo button,.al-resumen ol button,.al-resumen__otra,.al-resumen__cta,.rc-f,.rc-boton,.rc-ver,.rc-volver,.gp-ctrl button):active{scale:.97}
+:is(.cta-home,.buy-btn,.i3-btn,.gp-tab,.btn-top,.rc-copiar,.nav-dark-btn,.al-equipo button,.al-resumen ol button,.al-resumen__otra,.al-resumen__cta,.rc-f,.rc-boton,.rc-ver,.rc-volver,.gp-ctrl button):focus-visible{outline:2px solid var(--azul);outline-offset:2px}
 @keyframes shimmer-btn{from{transform:translateX(-150%) skewX(-22deg)}to{transform:translateX(450%) skewX(-22deg)}}
 .gvw-tc{transition:transform .2s,filter .2s}
 .gvw-tc:hover{transform:translateY(-4px)!important;filter:brightness(1.04)}
@@ -2058,13 +2058,6 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
 .al-resumen__otra,.al-resumen__cta{min-height:44px;padding:0 18px;border-radius:999px;display:inline-flex;align-items:center;font:600 13px/1 var(--sans);text-decoration:none;cursor:pointer}
 .al-resumen__otra{border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff}
 .al-resumen__cta{background:#3d7fd6;color:#fff;border:0}
-/* 2026-10-20: resumen con el resultado arriba y «Avísame cuando esté listo» como acción principal */
-.al-resumen__logro{display:flex;flex-direction:column;align-items:center;gap:6px;max-width:460px;margin:0 0 14px;text-align:center}
-.al-resumen__cifra{font:800 clamp(30px,3.6vw,44px)/1 var(--sans);letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums}
-.al-resumen__que{font:500 14px/1.4 var(--sans);color:#c9d6e6}
-.al-resumen__avisa{min-height:44px;padding:0 20px;border-radius:999px;display:inline-flex;align-items:center;font:700 13.5px/1 var(--sans);text-decoration:none;cursor:pointer;background:#3d7fd6;color:#fff}
-.al-resumen--logro .al-resumen__cta{background:transparent;border:1px solid rgba(255,255,255,.25)}
-@media (hover:hover) and (pointer:fine){ .al-resumen__avisa:hover{background:#4a8be0} }
 .al-pista{position:absolute;left:50%;bottom:calc(var(--al-barra) + 14px);transform:translateX(-50%);z-index:7;pointer-events:none;white-space:nowrap;padding:7px 14px;border-radius:999px;
   background:rgba(10,18,30,.82);color:#fff;font:600 12.5px/1 var(--sans);animation:al-pista 1.6s ease-in-out infinite;transition:opacity .5s ease}
 .al-pista span{display:inline-block;opacity:.7;margin:0 .25em}
@@ -2081,7 +2074,6 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
   .al-demo__checks li{line-height:1.38}
   .al-resumen ol button{min-height:32px;font-size:12.5px}
   .al-resumen{padding:12px}
-  .al-resumen--logro :is(.al-resumen__k,ol){display:none}   /* con el resultado arriba no caben los 6 pasos: siguen a un toque en la barra */
 }
 /* menos de 300 px (celular con el zoom de Safari al 150 %): los nombres de las
    herramientas en dos líneas, el selector a todo el ancho y los botones de la
@@ -2107,9 +2099,6 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
   .al-demo__cta{margin-top:.8rem}
   .al-demo__tip{margin-top:.45rem;padding:.4rem .7rem;font-size:12px;line-height:1.4}
   .al-demo__checks{margin-top:.45rem;gap:.2rem;font-size:12px}
-  .al-resumen--logro :is(.al-resumen__k,ol){display:none}
-  .al-resumen__logro{margin-bottom:8px}
-  .al-resumen__cifra{font-size:28px}
 }
 /* C · TABLET VERTICAL y D · TABLET HORIZONTAL Y COMPUTADOR: lo común basta, más el selector de equipo */
 /* 2026-10-08: en computador, la barra del demo ofrece ver la app como en tablet (iPad horizontal) o celular
@@ -6058,10 +6047,7 @@ window.alDemoTarjetas = function(root, cfg){
     g.fillStyle = '#12304d'; rr(g, x + w/2 - 60, y + 24, 120, 22, 11); g.fill();
     return { x: x + 30, y: y + 64, w: w - 60, h: h - 92 };
   }
-  // 2026-10-20: montos que cuentan hasta su valor (clp(n) da «$1.234.567»; cuenta(v, lt, t0, dur) sube de 0 a v)
-  const clp = n => (n < 0 ? '-' : '') + '$' + String(Math.round(Math.abs(n))).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  const cuenta = (v, lt, t0, dur = 0.7) => clp(v * easeOut((lt - t0) / dur));
-  return { C, CW, CH, FONT, clamp, ease, easeOut, lerp, rr, txt, wrap, press, btn, base, overlay, dialog, banner, checkDot, sheetIcon, pill, campo, panelBar, celular, clp, cuenta, vertical: CH > CW };
+  return { C, CW, CH, FONT, clamp, ease, easeOut, lerp, rr, txt, wrap, press, btn, base, overlay, dialog, banner, checkDot, sheetIcon, pill, campo, panelBar, celular, vertical: CH > CW };
   }
 
   // Un juego de tarjetas por diseño; el vertical se arma recién cuando se usa
@@ -6281,29 +6267,10 @@ window.alDemoTarjetas = function(root, cfg){
     // resumen al terminar
     var fb = d.querySelectorAll('.al-demo__fblist > li');
     if (fb.length) {
-      // 2026-10-20: el resultado arriba (su cifra cuenta hasta el valor) y «Avísame cuando esté listo» como acción principal
-      var FIN = window.AL_DEMOS && AL_DEMOS[d.id] && AL_DEMOS[d.id].final;
-      var r = document.createElement('div'), h = (FIN ? '<div class="al-resumen__logro"><b class="al-resumen__cifra"></b><span class="al-resumen__que"></span></div>' : '') + '<p class="al-resumen__k">Así funciona</p><ol>';
+      var r = document.createElement('div'), h = '<p class="al-resumen__k">Así funciona</p><ol>';
       r.className = 'al-resumen';
       fb.forEach(function(li, i){ var t = li.querySelector('.al-demo__fbt'); h += '<li><button type="button" data-i="' + i + '"></button></li>'; });
-      r.innerHTML = h + '</ol><div class="al-resumen__acc">' + (FIN ? '<a class="al-resumen__avisa" href="?p=contact" data-origen="demo"></a>' : '') + '<button type="button" class="al-resumen__otra">↻ Ver de nuevo</button></div>';
-      if (FIN) {
-        r.classList.add('al-resumen--logro');
-        var cifra = r.querySelector('.al-resumen__cifra'), av = r.querySelector('.al-resumen__avisa');
-        cifra.textContent = FIN.cifra; r.querySelector('.al-resumen__que').textContent = FIN.texto;
-        av.textContent = 'Avísame cuando esté listo'; av.setAttribute('data-avisame', FIN.herramienta);
-        // la cifra sube desde 0 cada vez que aparece el resumen (con «reducir movimiento», queda fija)
-        var lento = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches, contando = 0;
-        var contar = function(){
-          var m = /^(\D*)([\d.]+)(.*)$/.exec(FIN.cifra); if (!m || lento) { cifra.textContent = FIN.cifra; return; }
-          var v = +m[2].replace(/\./g, ''), t0 = performance.now(), id = ++contando;
-          var paso = function(now){ if (id !== contando) return; var p = Math.min(1, (now - t0) / 900), e = 1 - Math.pow(1 - p, 3);
-            cifra.textContent = m[1] + String(Math.round(v * e)).replace(/\B(?=(\d{3})+(?!\d))/g, '.') + m[3]; if (p < 1) requestAnimationFrame(paso); };
-          requestAnimationFrame(paso);
-        };
-        var estaba = false;
-        new MutationObserver(function(){ var fin = d.classList.contains('al-demo--fin'); if (fin && !estaba) contar(); estaba = fin; }).observe(d, { attributes: true, attributeFilter: ['class'] });
-      }
+      r.innerHTML = h + '</ol><div class="al-resumen__acc"><button type="button" class="al-resumen__otra">↻ Ver de nuevo</button></div>';
       fb.forEach(function(li, i){ var t = li.querySelector('.al-demo__fbt'); r.querySelectorAll('ol button')[i].textContent = t ? t.textContent : ''; });
       st.appendChild(r);
       var acc = r.querySelector('.al-resumen__acc');
@@ -6377,7 +6344,6 @@ AL_DEMOS['v2-accion'] = {
       stats:[['10.000','movimientos en cada revisión'],['1 a 3','personas en el panel']],
       cta:['Ver qué incluye', 'incluye-v2'] }
   ],
-  final: { cifra:'94 %', texto:'del cierre de marzo quedó conciliado solo. Tú revisas lo que falta: 1 pendiente.', herramienta:'Concilia' },
   cursor: [
     null,
     { keys:[[0.3,1100,860],[2.9,300,853],[3.2,300,853],[3.9,900,900]], clicks:[3.05] },
@@ -6413,7 +6379,7 @@ AL_DEMOS['v2-accion'] = {
         tablaMini(g, 36, 110, 548, 'Cartola banco', izq, ml, lt - 0.2);
         tablaMini(g, 616, 110, 548, 'Libro mayor', der, mr, lt - 0.5);
         const p = easeOut((lt - 2.8) / 0.4);
-        if (p > 0) { g.globalAlpha = p; pill(g, 600, 740 + (1-p)*14, 'No cuadra: faltan ' + H.cuenta(645390, lt, 2.8, 0.8), C.bad, '#fff', 34, 66, 'center'); g.globalAlpha = 1; }
+        if (p > 0) { g.globalAlpha = p; pill(g, 600, 740 + (1-p)*14, 'No cuadra: faltan $645.390', C.bad, '#fff', 34, 66, 'center'); g.globalAlpha = 1; }
         const q = easeOut((lt - 3.2) / 0.4);
         if (q > 0) { g.globalAlpha = q; txt(g, '¿Qué abono pagó qué facturas? ¿Y la comisión?', 600, 860, 32, 600, C.muted, 'center'); g.globalAlpha = 1; }
       },
@@ -6455,10 +6421,9 @@ AL_DEMOS['v2-accion'] = {
           g.globalAlpha = 1;
         };
         const ok = lt > 2.6;
-        const e0 = easeOut(lt / 0.45), e1 = easeOut((lt - 0.4) / 0.45), e2 = easeOut((lt - 0.55) / 0.45);   // entran deslizándose: el abono desde la cartola, las facturas desde el mayor
-        tarjeta(40 - (1 - e0)*90, 330, 440, 'CARTOLA · 03/03', 'Abono Comercial Sur', '$2.000.000', e0, ok);
-        tarjeta(720 + (1 - e1)*90, 250, 440, 'MAYOR · 02/03', 'Factura 1002', '$1.200.000', e1, ok);
-        tarjeta(720 + (1 - e2)*90, 440, 440, 'MAYOR · 19/03', 'Factura 1002 saldo', '$800.000', e2, ok);
+        tarjeta(40, 330, 440, 'CARTOLA · 03/03', 'Abono Comercial Sur', '$2.000.000', easeOut(lt / 0.4), ok);
+        tarjeta(720, 250, 440, 'MAYOR · 02/03', 'Factura 1002', '$1.200.000', easeOut((lt - 0.4) / 0.4), ok);
+        tarjeta(720, 440, 440, 'MAYOR · 19/03', 'Factura 1002 saldo', '$800.000', easeOut((lt - 0.55) / 0.4), ok);
         [[325, 405, 0.9], [515, 405, 1.2]].forEach(([y2, y1, t0]) => {
           const p = ease((lt - t0) / 0.6); if (p <= 0) return;
           g.strokeStyle = ok ? C.ok : C.brand; g.lineWidth = 5; g.beginPath(); g.moveTo(480, y1);
@@ -6466,7 +6431,7 @@ AL_DEMOS['v2-accion'] = {
           g.bezierCurveTo(lerp(480, 600, p), y1, lerp(480, 600, p), y, x2, y); g.stroke();
         });
         const s = easeOut((lt - 1.9) / 0.4);
-        if (s > 0) { g.globalAlpha = s; txt(g, '$1.200.000 + $800.000 = ' + H.cuenta(2000000, lt, 1.9, 0.6) + (lt > 2.5 ? ' ✓' : ''), 600, 680, 36, 800, C.ink, 'center'); g.globalAlpha = 1; }
+        if (s > 0) { g.globalAlpha = s; txt(g, '$1.200.000 + $800.000 = $2.000.000 ✓', 600, 680, 36, 800, C.ink, 'center'); g.globalAlpha = 1; }
         const b = easeOut((lt - 2.6) / 0.35);
         if (b > 0) { g.globalAlpha = b; pill(g, 600, 730, 'Grupo 1:2 · Conciliado', C.ok, '#fff', 32, 60, 'center'); g.globalAlpha = 1; }
         const m = easeOut((lt - 3.1) / 0.4);
@@ -6798,7 +6763,6 @@ AL_DEMOS['ped-accion'] = {
       stats:[['3.000','productos en el catálogo'],['$0','comisión por venta']],
       cta:['Ver qué incluye', 'incluye-ped'] }
   ],
-  final: { cifra:'19 pedidos', texto:'hoy, todos en un solo panel y sin pagar comisión por venta.', herramienta:'Pedidos' },
   cursor: [
     null,
     null,
@@ -6817,71 +6781,6 @@ AL_DEMOS['ped-accion'] = {
       txt(g, 'Te faltan $2.540 para 5 % de descuento', x + 16, y + h*0.4, size, 700, C.ink, 'left', w - 32);
       g.fillStyle = C.line; rr(g, x + 16, y + h - 14, w - 32, 6, 3); g.fill(); g.fillStyle = C.ok; rr(g, x + 16, y + h - 14, (w - 32) * 0.87 * e, 6, 3); g.fill();
       g.globalAlpha = 1;
-    }
-    // costados del celular en el notebook (2026-10-20): lo que pasa fuera de la pantalla del cliente
-    function tarjetaLado(g, x, y, w, h, titulo){
-      g.save(); g.shadowColor = 'rgba(18,48,77,.10)'; g.shadowBlur = 20; g.shadowOffsetY = 6; g.fillStyle = '#fff'; rr(g, x, y, w, h, 20); g.fill(); g.restore();
-      g.strokeStyle = C.line; g.lineWidth = 2; rr(g, x, y, w, h, 20); g.stroke();
-      txt(g, titulo, x + 22, y + 36, 21, 800, C.muted);
-    }
-    const AGREGA = [[2.0, 0, '2× Pan amasado', 4980], [2.45, 1, '1× Queso', 6990], [2.9, 2, '1× Café 500 g', 5490]];
-    function costadosCatalogo(g, lt, a){
-      // izquierda: el enlace que compartes por WhatsApp
-      const e = easeOut((lt - 0.2) / 0.4);
-      if (e > 0) {
-        g.globalAlpha = e; tarjetaLado(g, 40, 150 + (1 - e)*16, 310, 300, 'TÚ COMPARTES');
-        const msg = 'Hola! Ya puedes pedir aquí: ambilor.lab/donpepe', n = Math.floor(clamp((lt - 0.5) / 0.9) * msg.length);
-        g.fillStyle = '#dcf8c6'; rr(g, 62, 210 + (1 - e)*16, 266, 130, 16); g.fill();
-        wrap(g, msg.slice(0, n), 80, 246 + (1 - e)*16, 232, 23, 600, C.ink, 1.35);
-        const v = easeOut((lt - 1.5) / 0.35);
-        if (v > 0) { g.globalAlpha = e * v; txt(g, 'Por WhatsApp, Instagram o QR', 62, 374, 21, 700, C.ok, 'left', 266); txt(g, 'Sin instalar nada', 62, 414, 22, 800, C.ink); }
-        g.globalAlpha = 1;
-      }
-      // derecha: el carrito del cliente se llena con cada «+»
-      const c = easeOut((lt - 1.6) / 0.4);
-      if (c > 0) {
-        g.globalAlpha = c; tarjetaLado(g, 850, 150 + (1 - c)*16, 310, 360, 'SU CARRITO');
-        let tot = 0;
-        AGREGA.forEach(([t0, k, n, v], i) => {
-          const q = easeOut((lt - t0) / 0.3); if (q <= 0) return;
-          tot += v * q; g.globalAlpha = c * q;
-          const y = 216 + i*62 + (1 - q)*12;
-          txt(g, n, 872, y, 22, 700, C.ink, 'left', 170); txt(g, H.clp(v), 1138, y, 22, 800, C.ink, 'right');
-          g.fillStyle = C.line; g.fillRect(872, y + 26, 266, 2);
-        });
-        g.globalAlpha = c;
-        txt(g, 'Total', 872, 430, 22, 800, C.ink); txt(g, H.clp(tot), 1138, 430, 26, 800, C.ink, 'right');
-        txt(g, 'Precio por cantidad', 872, 476, 21, 700, C.ok, 'left', 266);
-        g.globalAlpha = 1;
-      }
-      // el «+» que se toca en el celular late al agregar
-      AGREGA.forEach(([t0, k]) => {
-        const r = clamp((lt - t0 + 0.1) / 0.45); if (r <= 0 || r >= 1) return;
-        const y = a.y + 172 + k*146 + 90;
-        g.save(); g.globalAlpha = (1 - r) * 0.8; g.strokeStyle = C.brand; g.lineWidth = 4; g.beginPath(); g.arc(a.x + a.w - 36, y, 22 + r*26, 0, Math.PI*2); g.stroke(); g.restore();
-      });
-    }
-    function costadosPedido(g, lt){
-      // izquierda: los pasos del cliente se marcan solos
-      tarjetaLado(g, 40, 150, 310, 360, 'SU PEDIDO');
-      [['Productos', 0], ['Entrega', 0.8], ['Pago', 1.4], ['Enviado', 2.9]].forEach(([n, t0], i) => {
-        const on = lt > t0, pop = 1 + Math.sin(clamp((lt - t0) / 0.3) * Math.PI) * 0.18, y = 222 + i*70;
-        H.checkDot(g, 82, y, on, pop); txt(g, n, 116, y, 22, on ? 800 : 600, on ? C.ink : C.soft);
-      });
-      // derecha: tu panel lo recibe en vivo
-      tarjetaLado(g, 850, 150, 310, 360, 'TU PANEL');
-      const r = easeOut((lt - 3.1) / 0.45);
-      txt(g, 'Pedidos de hoy', 872, 236, 22, 700, C.ink); txt(g, r > 0.5 ? '19' : '18', 1138, 236, 34, 800, C.ink, 'right');
-      g.fillStyle = C.line; g.fillRect(872, 266, 266, 2);
-      [['#340 · Benjamín', '$104.300'], ['#339 · Ignacio', '$53.990']].forEach(([n, v], i) => {
-        const y = 312 + i*66 + r*72; if (y > 480) return;
-        g.globalAlpha = i && r ? 1 - r : 1; txt(g, n, 872, y, 22, 600, C.ink, 'left', 160); txt(g, v, 1138, y, 22, 800, C.ink, 'right'); g.globalAlpha = 1;
-      });
-      if (r > 0) {
-        g.globalAlpha = r; g.fillStyle = 'rgba(245,200,76,.28)'; rr(g, 862, 282 - (1 - r)*20, 286, 62, 12); g.fill();
-        txt(g, '🔔 #341 · Josefa', 876, 313 - (1 - r)*20, 22, 800, C.ink, 'left', 160); txt(g, '$20.460', 1136, 313 - (1 - r)*20, 22, 800, C.ink, 'right');
-        g.globalAlpha = 1;
-      }
     }
     function tienda(g, a, x, y, w, h){
       g.fillStyle = C.brand; rr(g, a.x, a.y, a.w, 96, 18); g.fill();
@@ -6921,17 +6820,14 @@ AL_DEMOS['ped-accion'] = {
           g.fillStyle = C.brand; g.beginPath(); g.arc(a.x + a.w - 36, y + 90, 22, 0, Math.PI*2); g.fill(); txt(g, '+', a.x + a.w - 36, y + 91, 30, 800, '#fff', 'center');
           g.globalAlpha = 1;
         });
-        if (window.alFoto && alFoto.tactil()) {
-          const l = easeOut((lt - 1.8) / 0.4);
-          if (l > 0) { g.globalAlpha = l; pill(g, 90, 200, '🔗 Un enlace', '#fff', C.brand, 28, 56); pill(g, 90, 280, 'Sin instalar nada', '#fff', C.ink, 26, 52); pill(g, 1110, 520, 'Precios por cantidad', '#fff', C.ok, 26, 52, 'right'); g.globalAlpha = 1; }
-        } else costadosCatalogo(g, lt, a);   // 2026-10-20: en el notebook, a los lados del celular: cómo llega el cliente y su carrito
+        const l = easeOut((lt - 1.8) / 0.4);
+        if (l > 0) { g.globalAlpha = l; pill(g, 90, 200, '🔗 Un enlace', '#fff', C.brand, 28, 56); pill(g, 90, 280, 'Sin instalar nada', '#fff', C.ink, 26, 52); pill(g, 1110, 520, 'Precios por cantidad', '#fff', C.ok, 26, 52, 'right'); g.globalAlpha = 1; }
       },
       (g, lt) => {
         g.clearRect(0, 0, CW, CH);
         const a = (window.alFoto && alFoto.tactil()) ? (g.fillStyle = '#ffffff', g.fillRect(0, 0, CW, CH), { x: 330, y: 94, w: 540, h: 830 })   // en la tablet, página centrada
           : (g.fillStyle = '#f4f7fb', rr(g, 0, 0, CW, CH, 34), g.fill(), celular(g, 380, 30, 440, 890));
         const env = lt > 2.9;
-        if (!(window.alFoto && alFoto.tactil())) costadosPedido(g, lt);   // 2026-10-20: en el notebook, sus pasos y el panel que lo recibe
         if (!env) {
           txt(g, 'Tu pedido', a.x, a.y + 30, 32, 800, C.ink);
           [['2× Pan amasado (kg)','$4.980'],['1× Queso mantecoso','$6.990'],['1× Café molido 500 g','$5.490']].forEach(([n, p], k) => {
@@ -6946,7 +6842,7 @@ AL_DEMOS['ped-accion'] = {
             txt(g, v, a.x + 16, y + 48, 21, 700, C.ink, 'left', a.w - 30);
           });
           g.fillStyle = C.line; g.fillRect(a.x, a.y + 560, a.w, 2);
-          txt(g, 'Total', a.x, a.y + 600, 26, 800, C.ink); txt(g, H.clp(17460 + 3000 * easeOut((lt - 0.8) / 0.5)), a.x + a.w, a.y + 600, 32, 800, C.ink, 'right');   // sube al elegir el despacho
+          txt(g, 'Total', a.x, a.y + 600, 26, 800, C.ink); txt(g, '$20.460', a.x + a.w, a.y + 600, 32, 800, C.ink, 'right');
           btn(g, a.x, a.y + 700, a.w, 70, 'Enviar pedido', 'primary', press(lt, 2.75), 28);
         } else {
           const p = easeOut((lt - 2.9) / 0.4), pop = 1 + Math.sin(clamp((lt - 2.9)/0.4)*Math.PI)*0.15;
@@ -7031,7 +6927,7 @@ AL_DEMOS['ped-accion'] = {
         btn(g, 780, 220, 200, 52, 'CSV', 'ghost', 0, 24);
         btn(g, 990, 220, 170, 52, 'Hoy', 'ghost', press(lt, 2.55), 24);
         const tw = (1120 - 2*20) / 3;
-        [['Ventas', H.cuenta(16839800, lt, 0.2, 1.1)], ['Pedidos', String(Math.round(340 * easeOut((lt - 0.2) / 1.1)))], ['Ticket promedio', H.cuenta(49529, lt, 0.2, 1.1)]].forEach(([l, v], i) => {
+        [['Ventas', '$16.839.800'], ['Pedidos', '340'], ['Ticket promedio', '$49.529']].forEach(([l, v], i) => {
           const x = 40 + i*(tw + 20);
           g.fillStyle = '#f6f8fb'; rr(g, x, 300, tw, 130, 16); g.fill();
           txt(g, l.toUpperCase(), x + 24, 340, 20, 700, C.muted); txt(g, v, x + 24, 390, 38, 800, C.ink, 'left', tw - 40);
@@ -7645,8 +7541,7 @@ window.AL_DEMOS = window.AL_DEMOS || {};
     ],
     cursor: [null, cursorRegistro(1200, 950, [900, 880]), null, null, cursorPagar(1200, 950, [900, 880]), null],
     cursorV: [null, cursorRegistro(800, 1000, [650, 980]), null, null, cursorPagar(800, 1000, [650, -200]), null],
-    draw: dibujo, drawV: dibujo,
-    final: { cifra:'$142.300', texto:'es lo que te quedará a fin de octubre si sigues a este ritmo. Lo sabes hoy, no el 31.', herramienta:'Mis Finanzas' }
+    draw: dibujo, drawV: dibujo
   };
   AL_DEMOS['fin-accion'].app = app;
 })();
@@ -8339,7 +8234,7 @@ AL_DEMOS['fin-instala'] = {
         tabla(g, 40, 96, 720, 'Cartola banco', izq, ml, lt - 0.2);
         tabla(g, 40, 516, 720, 'Libro mayor', der, mr, lt - 0.5);
         const p = easeOut((lt - 2.8) / 0.4);
-        if (p > 0) { g.globalAlpha = p; pill(g, 400, CH - 108 + (1-p)*14, 'No cuadra: faltan ' + H.cuenta(645390, lt, 2.8, 0.8), C.bad, '#fff', 34, 68, 'center'); g.globalAlpha = 1; }
+        if (p > 0) { g.globalAlpha = p; pill(g, 400, CH - 108 + (1-p)*14, 'No cuadra: faltan $645.390', C.bad, '#fff', 34, 68, 'center'); g.globalAlpha = 1; }
       },
       (g, lt) => {
         base(g, 'Concilia');
@@ -8377,10 +8272,9 @@ AL_DEMOS['fin-instala'] = {
         base(g, 'Concilia');
         panelBar(g, 'Concilia', TABS, 1);
         const ok = lt > 2.6;
-        const e0 = easeOut(lt / 0.45), e1 = easeOut((lt - 0.4) / 0.45), e2 = easeOut((lt - 0.55) / 0.45);   // entran deslizándose: el abono desde arriba, las facturas desde abajo
-        tarjeta(g, 40, 250 - (1 - e0)*70, 720, 'CARTOLA · 03/03', 'Abono Comercial Sur', '$2.000.000', e0, ok);
-        tarjeta(g, 40, 520 + (1 - e1)*70, 350, 'MAYOR · 02/03', 'Factura 1002', '$1.200.000', e1, ok);
-        tarjeta(g, 410, 520 + (1 - e2)*70, 350, 'MAYOR · 19/03', 'Factura 1002 saldo', '$800.000', e2, ok);
+        tarjeta(g, 40, 250, 720, 'CARTOLA · 03/03', 'Abono Comercial Sur', '$2.000.000', easeOut(lt / 0.4), ok);
+        tarjeta(g, 40, 520, 350, 'MAYOR · 02/03', 'Factura 1002', '$1.200.000', easeOut((lt - 0.4) / 0.4), ok);
+        tarjeta(g, 410, 520, 350, 'MAYOR · 19/03', 'Factura 1002 saldo', '$800.000', easeOut((lt - 0.55) / 0.4), ok);
         [[215, 0.9], [585, 1.2]].forEach(([x2, t0]) => {
           const p = ease((lt - t0) / 0.6); if (p <= 0) return;
           g.strokeStyle = ok ? C.ok : C.brand; g.lineWidth = 5; g.beginPath(); g.moveTo(400, 400);
@@ -8388,7 +8282,7 @@ AL_DEMOS['fin-instala'] = {
           g.bezierCurveTo(400, cy, x, cy, x, y); g.stroke();
         });
         const s = easeOut((lt - 1.9) / 0.4);
-        if (s > 0) { g.globalAlpha = s; txt(g, '$1.200.000 + $800.000 = ' + H.cuenta(2000000, lt, 1.9, 0.6) + (lt > 2.5 ? ' ✓' : ''), 400, 730, 34, 800, C.ink, 'center', 720); g.globalAlpha = 1; }
+        if (s > 0) { g.globalAlpha = s; txt(g, '$1.200.000 + $800.000 = $2.000.000 ✓', 400, 730, 34, 800, C.ink, 'center', 720); g.globalAlpha = 1; }
         const b = easeOut((lt - 2.6) / 0.35);
         if (b > 0) { g.globalAlpha = b; pill(g, 400, 772, 'Grupo 1:2 · Conciliado', C.ok, '#fff', 32, 62, 'center'); g.globalAlpha = 1; }
         const m = easeOut((lt - 3.1) / 0.4);
@@ -8555,7 +8449,7 @@ AL_DEMOS['fin-instala'] = {
           });
           const pie = CH - 1000;   // en el celular, el total y el botón quedan abajo, al alcance del pulgar
           g.fillStyle = C.line; g.fillRect(a.x, a.y + 560 + pie, a.w, 2);
-          txt(g, 'Total', a.x, a.y + 602 + pie, 28, 800, C.ink); txt(g, H.clp(17460 + 3000 * easeOut((lt - 0.8) / 0.5)), a.x + a.w, a.y + 602 + pie, 34, 800, C.ink, 'right');   // sube al elegir el despacho
+          txt(g, 'Total', a.x, a.y + 602 + pie, 28, 800, C.ink); txt(g, '$20.460', a.x + a.w, a.y + 602 + pie, 34, 800, C.ink, 'right');
           btn(g, a.x, a.y + 690 + pie, a.w, 76, 'Enviar pedido', 'primary', press(lt, 2.75), 30);
         } else {
           const p = easeOut((lt - 2.9) / 0.4), pop = 1 + Math.sin(clamp((lt - 2.9)/0.4)*Math.PI)*0.15, cy = a.y + (CH - 1000) / 2 + 60;   // centrada en la pantalla
@@ -8643,8 +8537,8 @@ AL_DEMOS['fin-instala'] = {
         btn(g, 40, 232, 170, 54, 'CSV', 'ghost', 0, 24);
         btn(g, 226, 232, 170, 54, 'Hoy', 'ghost', press(lt, 2.55), 24);
         g.fillStyle = '#f6f8fb'; rr(g, 40, 304, 720, 104, 16); g.fill();
-        txt(g, 'VENTAS', 64, 336, 21, 700, C.muted); txt(g, H.cuenta(16839800, lt, 0.2, 1.1), 64, 380, 40, 800, C.ink);
-        [['Pedidos', String(Math.round(340 * easeOut((lt - 0.2) / 1.1)))], ['Ticket promedio', H.cuenta(49529, lt, 0.2, 1.1)]].forEach(([l, v], i) => {
+        txt(g, 'VENTAS', 64, 336, 21, 700, C.muted); txt(g, '$16.839.800', 64, 380, 40, 800, C.ink);
+        [['Pedidos', '340'], ['Ticket promedio', '$49.529']].forEach(([l, v], i) => {
           const x = 40 + i*370;
           g.fillStyle = '#f6f8fb'; rr(g, x, 424, 350, 104, 16); g.fill();
           txt(g, l.toUpperCase(), x + 24, 456, 21, 700, C.muted); txt(g, v, x + 24, 500, 36, 800, C.ink, 'left', 300);
@@ -8729,7 +8623,7 @@ document.querySelectorAll('#product .hp-tabs .gp-tab').forEach(function(b){
     if(f){ var sel=f.querySelector('[name="interes"]'), msg=f.querySelector('[name="mensaje"]');
       if(sel) sel.value=nom;
       if(msg&&!msg.value.trim()) msg.value='Quiero que me avisen cuando '+nom+' esté disponible.'; }
-    alEvento('avisame_clic',{herramienta:nom,origen:b.getAttribute('data-origen')||'panel'});
+    alEvento('avisame_clic',{herramienta:nom});
     show('contact');
     setTimeout(function(){ var n=f&&f.querySelector('[name="nombre"]'); if(n) try{ n.focus({preventScroll:true}); }catch(x){ n.focus(); } },80);
   });
