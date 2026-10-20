@@ -69,6 +69,8 @@
     var lento = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
     var canvas = document.createElement('canvas'); canvas.className = 'al-cine__lienzo'; canvas.setAttribute('aria-hidden', 'true');
     cont.appendChild(canvas);
+    // si el navegador quita el contexto 3D (iOS en segundo plano), la secuencia avisa para que la página siga sin ella
+    canvas.addEventListener('webglcontextlost', function(e){ e.preventDefault(); if (opciones.alPerder) opciones.alPerder(); });
     var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: false, preserveDrawingBuffer: !!opciones.captura });
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.setClearColor(FONDO, 1);
@@ -391,7 +393,10 @@
       seek: function(t){ T = cl(t, 0, DUR); avisar(render(T)); },
       render: function(t){ return render(t); },
       get tiempo(){ return T; }, get jugando(){ return jugando; },
-      destroy: function(){ api.pause(); if (ro) ro.disconnect(); if (io) io.disconnect(); limpiar.forEach(function(o){ o.dispose(); }); renderer.dispose(); canvas.remove(); }
+      // suelta todo: texturas (y sus lienzos, que Safari cuenta en su límite de memoria), geometrías, materiales y el contexto 3D
+      destroy: function(){ api.pause(); if (ro) ro.disconnect(); if (io) io.disconnect();
+        limpiar.forEach(function(o){ if (o.image && o.image.getContext) { o.image.width = o.image.height = 0; } o.dispose(); });
+        renderer.dispose(); if (renderer.forceContextLoss) renderer.forceContextLoss(); canvas.width = canvas.height = 0; canvas.remove(); }
     };
     medir();
     // con «reducir movimiento»: el cierre quieto, sin recorrido de cámara
