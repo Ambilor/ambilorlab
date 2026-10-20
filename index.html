@@ -2027,6 +2027,7 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
 .al-demo__note{text-align:center;opacity:.55;margin-top:.6rem}
 /* mientras corre, la frase del paso acompaña al demo; el título y la bajada quedan para el modo manual */
 .al-demo:not(.al-demo--manual) :is(.al-demo__title,.al-demo__body,.al-demo__extra){display:none}
+.al-demo.al-demo--apertura :is(.al-demo__title,.al-demo__body,.al-demo__extra){display:none}   /* durante la apertura el demo está en pausa, pero con la disposición del automático: nada cambia de alto */
 /* con mouse: el notebook se acerca al cursor; los bordes del lienzo se desvanecen para que no quede un corte recto */
 @media (pointer:fine){
   .al-demo__stage canvas{
@@ -6415,12 +6416,17 @@ window.alDemoTarjetas = function(root, cfg){
     }
     function terminar(como, seguir){
       if (!activa) return; activa = false; marcar();
+      if (!seguir) {   // anterior, siguiente o un paso: el demo vuelve a automático (como antes de la apertura) y ese clic hace lo suyo
+        if (btnPlay && btnPlay.getAttribute('aria-label') === 'Reproducir') btnPlay.click();
+        d.classList.remove('al-demo--apertura');
+      }
       if (vigia) { vigia.disconnect(); vigia = null; }
       if (window.alEvento) alEvento('apertura_concilia', { fin: como });
       var o = ov, c = cine; ov = cine = null;
       if (o) { o.classList.add('fuera'); setTimeout(function(){ if (c) c.destroy(); o.remove(); }, 480); } else if (c) c.destroy();
       devolverTextos();
       if (seguir && btnRst) btnRst.click();   // los 6 pasos desde el comienzo, en automático
+      d.classList.remove('al-demo--apertura');
     }
     function iniciar(){
       if (activa || lento || d.classList.contains('al-demo--no3d') || !(window.alHayWebGL && alHayWebGL())) return false;
@@ -6430,8 +6436,8 @@ window.alDemoTarjetas = function(root, cfg){
       ov.appendChild(sal); st.appendChild(ov);
       try {
         cine = AlCine.concilia(ov, { alCambiarPlano: function(i, p){ textos(p); }, alTerminar: function(){ terminar('completa', true); }, alPerder: function(){ terminar('perdida', true); } });
-      } catch (e) { ov.remove(); ov = null; return false; }
-      pausarDemo(); activa = true; textos(cine.planos[0]);   // pausar antes de marcarla activa: si no, ese clic lo tomaría la apertura
+      } catch (e) { ov.remove(); ov = null; d.classList.remove('al-demo--apertura'); return false; }
+      d.classList.add('al-demo--apertura'); pausarDemo(); activa = true; textos(cine.planos[0]);   // pausar antes de marcarla activa: si no, ese clic lo tomaría la apertura
       // empieza cuando el demo está a la vista (y se pausa sola si sale de pantalla)
       vigia = new IntersectionObserver(function(es){ var e = es[es.length - 1]; if (e.isIntersecting && cine && !cine.jugando && cine.tiempo < cine.duracion) cine.play(); }, { threshold: 0.5 });
       vigia.observe(st);
