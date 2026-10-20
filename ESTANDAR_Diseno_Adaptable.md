@@ -1,6 +1,6 @@
 # Estándar Ambilor.Lab · Diseño adaptable (obligatorio)
 
-> Aplica a **todas** las apps y páginas web de Ambilor.Lab (sitio ambilorlab, PedidoApp y las que vengan).
+> Aplica a **todas** las apps y páginas web de Ambilor.Lab (sitio ambilorlab, Concilia, Pedidos, Mis Finanzas y las que vengan).
 > Copia idéntica en cada repositorio: `ESTANDAR_Diseno_Adaptable.md`.
 > Ningún cambio de interfaz se da por terminado sin cumplir este estándar y sin revisar la matriz de pantallas.
 
@@ -66,7 +66,7 @@ Cada pantalla (en el sitio: cada sección y el menú; en las apps: cada vista y 
   - Se revisan las cinco pestañas (Inicio, Sobre mí, Herramientas, Recursos, Contacto; en Recursos, la lista, cada artículo y las guías) y el resultado debe quedar **en verde** en todas.
 - **Sitio ambilorlab, revisión completa**: `node pruebas/revision_completa.js` (8 min; `--completo` suma tamaños). Además de `revisar.html`, prueba lo que el encuadre no ve: errores de JavaScript, estabilidad cuadro a cuadro (reproducir y cambiar de demo), que la página no se desplace al tocar, controles de 44 px, memoria para Safari, sin 3D, reducir movimiento girar el teléfono, la primera pantalla con la barra flotante de iOS 26, escenas que vuelven, letra legible en ambos temas y letra agrandada. Debe terminar en "Todo en orden".
 - **Sitio ambilorlab, limpiezas de CSS**: `node pruebas/comparar_estilos.js <copia anterior>` compara cada elemento de las 5 pestañas en 8 tamaños y ambos temas. Un reordenamiento o una limpieza debe dar 0 diferencias; un cambio de diseño muestra exactamente qué cambió.
-- **PedidoApp**: `node simulacion/navegador/auditoria_adaptable.js` recorre la matriz completa (formulario, seguimiento y panel) y deja una captura por pantalla.
+- **Pedidos**: `node simulacion/navegador/auditoria_adaptable.js` recorre la matriz completa (formulario, seguimiento y panel) y deja una captura por pantalla.
 - Siempre se miran a ojo, como mínimo, celular horizontal, iPad ⅓ y web a media pantalla, que son los casos más exigentes.
 - Cada PR con cambios de interfaz indica en su descripción que se revisó la matriz.
 

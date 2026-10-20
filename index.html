@@ -524,7 +524,7 @@ nav.scrolled .nav-links a{font-size:12px}
 #instalacion{margin-top:2.5rem}
 
 /* ================================================================
-   DEMO 3D "VER EN ACCION" (three.js) - Conciliador Automático V1
+   DEMO 3D "VER EN ACCION" (three.js) - escena original de las demos
    Adaptado desde ver-en-accion-conciliador.html al ancho real del
    sitio (--max:900px) y al dark mode.
    NOTA de diseno: el canvas 3D se mantiene en tema claro a
@@ -5640,7 +5640,7 @@ window.AL3D = (function(){
 });</script>
 <script>
 /* ═══ Línea de tiempo de las demos (2026-09-30, Ambilor.Lab) ═══
-   Un solo controlador para todas las demos (la escena 3D del V1 y el motor
+   Un solo controlador para todas las demos (la escena 3D original y el motor
    de tarjetas): modo automático y manual, Anterior / Siguiente / Reiniciar,
    teclado y la barra de pasos. Opcionalmente arma un panel de simulación
    sobre la escena (cfg.sim): fase actual, barra de progreso, avisos de lo que
@@ -5785,10 +5785,9 @@ window.alDemoLinea = function(root, STEPS, o){
 </script>
 <script>
 /* ═══ Motor de demos por tarjetas (2026-09-30, Ambilor.Lab) ═══
-   Generaliza el demo "Cómo se instala" del Conciliador V1 (una ventana por
+   Generaliza el primer demo "Cómo se instala" (una ventana por
    paso que entra, recibe clics del cursor y se va al fondo) para las demos
-   de Concilia, de Pedidos y la instalación del V1. "Ver en acción"
-   del V1 es una escena 3D propia y no usa este motor.
+   de Concilia, Pedidos y Mis Finanzas.
    alDemoTarjetas(root, cfg): cfg.steps (a, b, short, kicker, title, body y
    opcionales tip, checks, stats, cta, contact), cfg.draw(H) -> [fn(g, lt)],
    cfg.cursor[] ({ keys:[[t,x,y]...], clicks:[t...] } o null) y cfg.titulo
@@ -5891,7 +5890,7 @@ window.alDemoTarjetas = function(root, cfg){
     g.save(); g.globalAlpha = a * (1 - p) * 0.9; g.strokeStyle = '#3d7fd6'; g.lineWidth = 5;
     g.beginPath(); g.arc(k0[1], abajo(k0[2]), r, 0, Math.PI * 2); g.stroke(); g.restore();
   }
-  // barra de pestañas abajo en el celular: solo la tiene el panel real de Pedidos (en ese orden); el V1 y el V2
+  // barra de pestañas abajo en el celular: solo la tiene el panel real de Pedidos (en ese orden); Concilia y Mis Finanzas
   // llevan sus pestañas arriba, y en los de instalación se ven Drive y Apps Script
   const MENU = /^ped-accion/.test(root.id) ? ['Pedidos','Catálogo','Clientes','Reportes','Ajustes'] : null;
   function aparato(vert, PW, PH){ return alFoto.crear(THREE, scene, { vert, ventana: { w: PW, h: PH }, menu: MENU, anis: ANISO, listo: () => { needsRender = true; } }); }
@@ -6296,8 +6295,8 @@ window.alDemoTarjetas = function(root, cfg){
 })();
 </script>
 <script>
-/* Demos del Conciliador Semiautomático V2 (2026-09-30). Pantallas dibujadas a
-   partir del panel real del V2: Resumen · Resultados · Sugerencias ·
+/* Demos de Concilia (2026-09-30). Pantallas dibujadas a
+   partir del panel real de Concilia: Resumen · Resultados · Sugerencias ·
    Historial · Configuración. */
 window.AL_DEMOS = window.AL_DEMOS || {};
 AL_DEMOS['v2-accion'] = {
@@ -7875,7 +7874,7 @@ AL_DEMOS['fin-instala'] = {
         }
       };
     },
-    // Pantalla de permisos de Google (casillas: el V2 pide marcar cada una)
+    // Pantalla de permisos de Google (casillas: Concilia pide marcar cada una)
     permisos(H, titulo, items, boton, casillas, sub){
       const { C, CW, CH, easeOut, rr, txt, wrap, press, btn, base, banner, sheetIcon } = H;
       const tOk = casillas ? 2.1 : 1.5, tClic = casillas ? 1.95 : 1.35;
@@ -8559,7 +8558,7 @@ AL_DEMOS['fin-instala'] = {
 })();
 </script>
 <script>
-/* Herramientas → sub-pestañas. Los demos 3D de V2 y Pedidos se inician la
+/* Herramientas → sub-pestañas. Los demos de cada herramienta se inician la
    primera vez que se abre su sub-pestaña (no suman contextos 3D al cargar). */
 function showHP(id){
   var panel = document.getElementById('hp-' + id); if (!panel) return;
