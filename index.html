@@ -2653,7 +2653,7 @@ window.alFoto = (function(){
 window.AL_NOTAS = {
   'v2-accion': ['Tu banco y tu contabilidad no cuadran', 'Conecta tus dos planillas', 'Encuentra la pareja de cada pago',
                 'Una regla explica la comisión', 'Lo pendiente llega por correo', 'Revisas solo lo que falta'],
-  'v2-instala': ['Haz una copia en tu Drive', 'Abre «Configurar herramienta» en el menú', 'Autoriza los permisos una sola vez',
+  'v2-instala': ['Haz una copia en tu Drive', 'Abre «Configurar aplicativo» en el menú', 'Autoriza los permisos una sola vez',
                  'Publica tu panel con «Implementar»', 'Ábrelo y conecta tus fuentes', 'Listo: tu panel quedó instalado'],
   'ped-accion': ['Pedidos repartidos entre chats y notas', 'Tu catálogo en un enlace para compartir', 'Tu cliente elige y envía en un minuto',
                  'Llega con aviso y campanita a tu panel', 'Un toque: confirmado y pagado', 'Ventas y lo más pedido, a la vista'],
@@ -5931,14 +5931,28 @@ window.alDemoTarjetas = function(root, cfg){
   // posición del puntero: una y negativa se cuenta desde abajo de la pantalla (botones anclados abajo,
   // que en el celular quedan al final de su alto real)
   const abajo = y => y < 0 ? J.CH + y : y;
+  // 2026-10-20: en los demos de instalación (rotulos en AL_DEMOS) cada clic se marca, con el anillo y un rótulo
+  // corto de lo que hay que pulsar («Clic en Hacer una copia»), para que se pueda seguir sin saber de Google
   function notaPaso(g, i, lt){
     const cf = J.CURSOR[i]; if (!cf || !cf.clicks || !cf.clicks.length) return;
-    const ck = cf.clicks[0]; let k0 = cf.keys[0];
-    cf.keys.forEach(k => { if (Math.abs(k[0] - ck) < Math.abs(k0[0] - ck)) k0 = k; });
-    const a = clamp((lt - (ck - 1.1)) / 0.3) * (1 - clamp((lt - ck) / 0.25)); if (a <= 0) return;
-    const p = (lt * 1.6) % 1, r = (J.vert ? 34 : 30) * (1 + p * 0.8);
-    g.save(); g.globalAlpha = a * (1 - p) * 0.9; g.strokeStyle = '#3d7fd6'; g.lineWidth = 5;
-    g.beginPath(); g.arc(k0[1], abajo(k0[2]), r, 0, Math.PI * 2); g.stroke(); g.restore();
+    const rot = cfg.rotulos && cfg.rotulos[i];
+    (rot ? cf.clicks : cf.clicks.slice(0, 1)).forEach((ck, n) => {
+      let k0 = cf.keys[0];
+      cf.keys.forEach(k => { if (Math.abs(k[0] - ck) < Math.abs(k0[0] - ck)) k0 = k; });
+      const desde = n ? Math.max(ck - 1.1, cf.clicks[n - 1] + 0.3) : ck - 1.1;
+      const a = clamp((lt - desde) / 0.3) * (1 - clamp((lt - ck) / 0.25)); if (a <= 0) return;
+      const x = k0[1], y = abajo(k0[2]), p = (lt * 1.6) % 1, r = (J.vert ? 34 : 30) * (1 + p * 0.8);
+      g.save(); g.globalAlpha = a * (1 - p) * 0.9; g.strokeStyle = '#3d7fd6'; g.lineWidth = 5;
+      g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.stroke(); g.restore();
+      const s = rot && rot[n]; if (!s) return;
+      const W = J.vert ? 800 : 1200, H = J.vert ? 1000 : 950, tam = J.vert ? 32 : 36, alto = tam * 1.8;
+      g.save(); g.font = '800 ' + tam + 'px ' + FONT; const w = g.measureText(s).width + alto;
+      const cx = Math.max(20 + w / 2, Math.min(W - 20 - w / 2, x)), cy = y > 190 ? y - 58 - alto / 2 : y + 64 + alto / 2;
+      g.globalAlpha = a; g.shadowColor = 'rgba(18,48,77,.3)'; g.shadowBlur = 16; g.shadowOffsetY = 4;
+      g.fillStyle = '#12304d'; g.beginPath(); g.roundRect(cx - w / 2, cy - alto / 2 + (1 - a) * 8, w, alto, alto / 2); g.fill();
+      g.shadowColor = 'transparent'; g.fillStyle = '#fff'; g.textAlign = 'center'; g.textBaseline = 'middle';
+      g.fillText(s, cx, cy + 1 + (1 - a) * 8); g.restore();
+    });
   }
   // barra de pestañas abajo en el celular: solo la tiene el panel real de Pedidos (en ese orden); Concilia y Mis Finanzas
   // llevan sus pestañas arriba, y en los de instalación se ven Drive y Apps Script
@@ -6622,22 +6636,31 @@ AL_DEMOS['v2-accion'] = {
 
 AL_DEMOS['v2-instala'] = {
   steps: [
-    { a:0, b:5.2, short:'Copia', kicker:'Paso 1: haz tu copia', title:'Haz tu copia',
-      body:'Abre el enlace que te enviamos y elige “Hacer una copia”. Tu copia se abre en tu Drive y trae Concilia adentro, con su código ya incluido.' },
-    { a:5.2, b:10.4, short:'Configurar', kicker:'Paso 2: abre el asistente', title:'Abre “Configurar herramienta”',
-      body:'En tu copia, abre el menú “Concilia” de la barra superior. El asistente se abre al costado y te guía paso a paso.' },
-    { a:10.4, b:15.6, short:'Autorizar', kicker:'Paso 3: autoriza los permisos', title:'Autoriza los permisos',
-      body:'Google te pide permiso para leer tus planillas, enviar los correos y ejecutar la conciliación a la hora que programes. Aparece en una pantalla de Google, no dentro de la herramienta.',
+    { a:0, b:5.2, short:'Copia', kicker:'Paso 1 de 5 · 1 clic', title:'Haz tu copia',
+      body:'Abre el enlace que te enviamos y pulsa «Hacer una copia». Concilia queda en tu Google Drive, con todo adentro.' },
+    { a:5.2, b:10.4, short:'Asistente', kicker:'Paso 2 de 5 · 2 clics', title:'Abre el asistente',
+      body:'En tu copia, abre el menú «Concilia» y elige «Configurar aplicativo». Se abre al costado y te guía paso a paso.' },
+    { a:10.4, b:15.6, short:'Permisos', kicker:'Paso 3 de 5 · 1 clic', title:'Da los permisos',
+      body:'Google te pregunta si Concilia puede usar tus planillas y tu correo. Marcas todo y pulsas «Permitir». Se hace una sola vez.',
       tip:'Marca todas las casillas: sin ellas no funcionan los correos ni el envío automático.' },
-    { a:15.6, b:21.8, short:'Publicar', kicker:'Paso 4: publica tu panel', title:'Publica tu panel',
-      body:'Desde el editor de Apps Script, publica el panel como aplicación web con acceso “Solo yo”. Así queda privado en tu cuenta.',
+    { a:15.6, b:21.8, short:'Publicar', kicker:'Paso 4 de 5 · 4 clics', title:'Publica tu panel',
+      body:'Son cuatro clics: «Implementar», «Nueva implementación», «Solo yo» y otra vez «Implementar». Así el panel queda privado, solo para ti.',
       tip:'“Solo yo” significa privado. No elijas “Cualquiera”.' },
-    { a:21.8, b:27.0, short:'Abrir', kicker:'Paso 5: ábrelo y empieza', title:'Ábrelo y conecta tus fuentes',
-      body:'Abre el panel: viene con datos de ejemplo para que lo veas conciliar al instante. Cuando quieras, pegas tus propias planillas en Configuración.' },
+    { a:21.8, b:27.0, short:'Abrir', kicker:'Paso 5 de 5 · 2 clics', title:'Ábrelo',
+      body:'Pulsa «Verificar instalación» y luego «Abrir panel». Trae datos de ejemplo para que lo veas funcionar; después conectas tus planillas.' },
     { a:27.0, b:31.4, short:'Listo', kicker:'Listo', title:'Ya quedó instalado',
       body:'No queda nada por instalar. Todo funciona dentro de tu propia cuenta de Google; la IA es opcional y usa tu propia clave.',
       checks:['Es privado: la herramienta vive en tu cuenta de Google, no en un servidor nuestro.', 'Es tuyo: tus datos quedan en tus planillas.'],
       contact:'Si algo no coincide con lo que ves, escríbeme antes de continuar.' }
+  ],
+  // lo que se pulsa en cada clic (mismo orden que clicks en cursor y cursorV): se marca en la pantalla
+  rotulos: [
+    ['Clic en «Hacer una copia»'],
+    ['Clic en el menú «Concilia»', 'Clic en «Configurar aplicativo»'],
+    ['Clic en «Permitir»'],
+    ['Clic en «Implementar»', 'Clic en «Nueva implementación»', 'Elige «Solo yo»', 'Clic en «Implementar»'],
+    ['Clic en «Verificar instalación»', 'Clic en «Abrir panel»'],
+    null
   ],
   cursor: [
     { keys:[[1.4,1100,900],[2.1,860,664],[2.6,860,664],[3.3,1060,860]], clicks:[2.25] },
@@ -6703,7 +6726,7 @@ AL_DEMOS['v2-instala'] = {
         if (open) {
           dialog(g, 780, 192, 380, 150);
           if (lt > 1.65) { g.fillStyle = '#eef2f7'; g.fillRect(788, 200, 364, 60); }
-          txt(g, 'Configurar herramienta', 806, 230, 30, 700, C.ink, 'left', 336);
+          txt(g, 'Configurar aplicativo', 806, 230, 30, 700, C.ink, 'left', 336);
           txt(g, 'Autorizar permisos', 806, 300, 30, 600, C.muted, 'left', 336);
         }
         const sp = ease((lt - 2.0) / 0.5);
@@ -6713,7 +6736,7 @@ AL_DEMOS['v2-instala'] = {
           g.fillStyle = '#fff'; g.fillRect(px, 196, 460, CH - 196);
           g.fillStyle = C.brand; g.fillRect(px, 196, 5, CH - 196);
           g.restore();
-          txt(g, 'Configurar herramienta', px + 36, 250, 38, 800, C.ink, 'left', 396);
+          txt(g, 'Configurar aplicativo', px + 36, 250, 38, 800, C.ink, 'left', 396);
           txt(g, 'Te guía paso a paso.', px + 36, 290, 29, 600, C.muted);
           ['Autoriza los permisos', 'Publica tu panel', 'Conecta tus fuentes'].forEach((s, k) => {
             const a = easeOut((lt - 2.5 - k*0.2) / 0.3); if (a <= 0) return;
@@ -8238,7 +8261,7 @@ AL_DEMOS['fin-instala'] = {
   v2i.drawV = H => { const { C, CW, rr, txt, wrap, btn, panelBar } = H;
     return [
       I.copia(H, 'Concilia', ['Cartolas marzo', 'Libro mayor 2026', 'Presupuesto', 'Proveedores']),
-      I.menu(H, 'Concilia', 'Concilia', ['Configurar herramienta', 'Autorizar permisos'], ['Autoriza los permisos', 'Publica tu panel', 'Conecta tus fuentes'], false),
+      I.menu(H, 'Concilia', 'Concilia', ['Configurar aplicativo', 'Autorizar permisos'], ['Autoriza los permisos', 'Publica tu panel', 'Conecta tus fuentes'], false, 'Configurar aplicativo'),
       I.permisos(H, 'Concilia quiere acceder a tu cuenta de Google', ['Leer y editar tus planillas', 'Enviar correos en tu nombre', 'Ejecutarse a la hora que programes', 'Conectarse a la IA que elijas (opcional)'], 'Permitir', true),
       I.publicar(H, 'Motor.gs', false),
       I.verificar(H, 'Concilia', ['Copia en tu Drive', 'Permisos autorizados', 'Panel publicado (Solo yo)'], g => {
