@@ -1119,7 +1119,12 @@ nav{background:rgba(255,255,255,.95)!important}
 
 /* 2026-09-28: Contacto compacto; desde tablet, canales y formulario lado a lado */
 .ct-grid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1fr);gap:16px;align-items:start;margin-bottom:2rem}
-.ct-grid .cf-wrap{margin:0}
+.ct-grid .cf-wrap{margin:0;border:1px solid var(--borde);border-radius:12px;padding:16px;background:rgba(255,255,255,.72);-webkit-backdrop-filter:blur(10px) saturate(130%);backdrop-filter:blur(10px) saturate(130%)}
+[data-theme="dark"] .ct-grid .cf-wrap{background:rgba(10,14,20,.72);border-color:rgba(143,193,255,.14)}
+.cf-cab{margin-bottom:12px}.cf-cab b{display:block;font-size:15px;font-weight:600;color:var(--negro);letter-spacing:-.01em}.cf-cab span{display:block;font-size:12.5px;color:var(--gris-2);margin-top:2px}
+[data-theme="dark"] .cf-cab b{color:#E8EDF5}
+.cf-wrap select.cf-field{margin-bottom:10px;padding-right:36px;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7A8F' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center}
+[data-theme="dark"] .cf-wrap select.cf-field{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238FC1FF' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")!important;background-repeat:no-repeat!important;background-position:right 13px center!important}
 .ct-lista{display:flex;flex-direction:column;border:1px solid var(--borde);border-radius:12px;overflow:hidden}
 .ct-fila{display:flex;align-items:center;gap:.8rem;padding:.7rem .85rem;text-decoration:none;color:inherit;border-top:1px solid var(--borde);transition:background .2s}
 .ct-fila:first-child{border-top:none}
@@ -4176,6 +4181,7 @@ No afirmes que creaste algo que no creaste. No afirmes que 2026 está completo.<
       <form class="cf-wrap" id="cfForm"
       action="#"
       onsubmit="cfSubmit(event)">
+      <div class="cf-cab"><b>Escríbeme</b><span>Cuéntame qué necesitas y te respondo a tu correo.</span></div>
       <div class="cf-row">
         <input class="cf-field" type="text" name="nombre" placeholder="Tu nombre" required>
         <input class="cf-field" type="email" name="email" placeholder="Tu correo" required>
@@ -4186,7 +4192,7 @@ No afirmes que creaste algo que no creaste. No afirmes que 2026 está completo.<
         <option value="Pedidos">Avísame cuando salga Pedidos</option>
         <option value="Mis Finanzas">Avísame cuando salga Mis Finanzas</option>
       </select>
-      <textarea class="cf-field cf-area" name="mensaje" placeholder="Cuentame que proceso quieres automatizar o en que puedo ayudarte..." required></textarea>
+      <textarea class="cf-field cf-area" name="mensaje" placeholder="Cuéntame qué proceso quieres automatizar o en qué puedo ayudarte…" required></textarea>
       <button type="submit" class="cta-home" style="margin-top:4px">Enviar mensaje</button>
     </form>
     </div>
