@@ -2027,6 +2027,7 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
 .al-demo__note{text-align:center;opacity:.55;margin-top:.6rem}
 /* mientras corre, la frase del paso acompaña al demo; el título y la bajada quedan para el modo manual */
 .al-demo:not(.al-demo--manual) :is(.al-demo__title,.al-demo__body,.al-demo__extra){display:none}
+.al-demo.al-demo--apertura :is(.al-demo__title,.al-demo__body,.al-demo__extra){display:none}   /* durante la apertura el demo está en pausa, pero con la disposición del automático: nada cambia de alto */
 /* con mouse: el notebook se acerca al cursor; los bordes del lienzo se desvanecen para que no quede un corte recto */
 @media (pointer:fine){
   .al-demo__stage canvas{
@@ -2065,6 +2066,12 @@ body:not(.i3-inicio) .i3-vineta{background:radial-gradient(ellipse 58% 70% at 50
 .al-resumen__avisa{min-height:44px;padding:0 20px;border-radius:999px;display:inline-flex;align-items:center;font:700 13.5px/1 var(--sans);text-decoration:none;cursor:pointer;background:#3d7fd6;color:#fff}
 .al-resumen--logro .al-resumen__cta{background:transparent;border:1px solid rgba(255,255,255,.25)}
 @media (hover:hover) and (pointer:fine){ .al-resumen__avisa:hover{background:#4a8be0} }
+.al-apertura{position:absolute;left:0;right:0;top:0;bottom:var(--al-barra,0px);z-index:5;overflow:hidden;border-radius:inherit;background:#0b1d33;transition:opacity .45s ease}   /* 2026-10-20: apertura cinematográfica (motion/cine), sobre la escena del demo */
+.al-apertura.fuera{opacity:0;pointer-events:none}
+.al-apertura .al-cine__lienzo{position:absolute;inset:0;width:100%;height:100%;display:block}
+.al-apertura__saltar{position:absolute;top:10px;right:10px;z-index:1;min-height:44px;padding:0 16px;border:0;border-radius:999px;background:rgba(255,255,255,.9);color:#12304d;font:600 13px/1 var(--sans);cursor:pointer;touch-action:manipulation;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.al-apertura__saltar:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
+.al-resumen__apertura{min-height:44px;padding:0 18px;border-radius:999px;display:inline-flex;align-items:center;font:600 13px/1 var(--sans);cursor:pointer;border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff;touch-action:manipulation}
 .al-pista{position:absolute;left:50%;bottom:calc(var(--al-barra) + 14px);transform:translateX(-50%);z-index:7;pointer-events:none;white-space:nowrap;padding:7px 14px;border-radius:999px;
   background:rgba(10,18,30,.82);color:#fff;font:600 12.5px/1 var(--sans);animation:al-pista 1.6s ease-in-out infinite;transition:opacity .5s ease}
 .al-pista span{display:inline-block;opacity:.7;margin:0 .25em}
@@ -5818,6 +5825,7 @@ window.alDemoLinea = function(root, STEPS, o){
 };
 </script>
 <script src="motion/al-motion.js"></script>
+<script src="motion/cine/concilia.js"></script>
 <script>
 /* ═══ Motor de demos por tarjetas (2026-09-30, Ambilor.Lab) ═══
    Generaliza el primer demo "Cómo se instala" (una ventana por
@@ -6374,6 +6382,91 @@ window.alDemoTarjetas = function(root, cfg){
       st.appendChild(p); setTimeout(function(){ p.classList.add('fuera'); setTimeout(function(){ p.remove(); }, 600); }, 4200); }
   }
   window.alDemoTarjetas = function(root, cfg){ var r = orig.apply(this, arguments); if (root && root._alDemo) extras(root); return r; };
+})();
+</script>
+<script>
+/* Apertura cinematográfica de Concilia (2026-10-20). La secuencia de motion/cine/concilia.js (13 s, three.js) se ve
+   sobre la escena del demo «Ver en acción» la primera vez por visita que el demo queda a la vista; al terminar (o al
+   tocar «Saltar apertura») se desvanece y parten los 6 pasos interactivos, que mientras tanto quedan en pausa.
+   · La barra del demo sigue funcionando: pausa/reproducir controla la apertura; anterior, siguiente, un paso de la
+     barra o de la guía, las flechas o deslizar la terminan y hacen lo suyo; reiniciar la vuelve a ver.
+   · Su contexto 3D se crea solo al verla y se suelta al terminar (Safari limita contextos y memoria).
+   · Con «reducir movimiento», sin 3D o si el navegador quita el contexto, no se muestra: el demo es el de siempre.
+   · La frase bajo el demo dice qué pasa en cada plano (aria-live); al resumen se suma «Ver la apertura». */
+(function(){
+  var orig = window.alDemoTarjetas; if (!orig) return;
+  var CLAVE = 'al-apertura-concilia';
+  var lento = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function visto(){ try { return sessionStorage.getItem(CLAVE) === '1'; } catch (e) { return false; } }
+  function marcar(){ try { sessionStorage.setItem(CLAVE, '1'); } catch (e) {} }
+  function preparar(d){
+    if (d._alApertura) return; d._alApertura = true;
+    var st = d.querySelector('.al-demo__stage'); if (!st || !window.AlCine || !AlCine.concilia) return;
+    var btnPlay = d.querySelector('[data-act="play"]'), btnRst = d.querySelector('[data-act="restart"]');
+    var et = st.querySelector('.al-paso'), fr = d.querySelector('.al-frase');
+    var ov = null, cine = null, activa = false, vigia = null;
+    function pausarDemo(){ if (btnPlay && btnPlay.getAttribute('aria-label') === 'Pausar') btnPlay.click(); }
+    function textos(plano){
+      if (et) et.textContent = 'Apertura';
+      if (fr && plano) fr.textContent = plano.t;
+    }
+    function devolverTextos(){
+      var k = d.querySelector('.al-demo__kicker'); if (et && k) et.textContent = k.textContent.trim();
+      if (fr && window.AL_NOTAS && AL_NOTAS[d.id]) fr.textContent = AL_NOTAS[d.id][0] || '';
+    }
+    function terminar(como, seguir){
+      if (!activa) return; activa = false; marcar();
+      if (!seguir) {   // anterior, siguiente o un paso: el demo vuelve a automático (como antes de la apertura) y ese clic hace lo suyo
+        if (btnPlay && btnPlay.getAttribute('aria-label') === 'Reproducir') btnPlay.click();
+        d.classList.remove('al-demo--apertura');
+      }
+      if (vigia) { vigia.disconnect(); vigia = null; }
+      if (window.alEvento) alEvento('apertura_concilia', { fin: como });
+      var o = ov, c = cine; ov = cine = null;
+      if (o) { o.classList.add('fuera'); setTimeout(function(){ if (c) c.destroy(); o.remove(); }, 480); } else if (c) c.destroy();
+      devolverTextos();
+      if (seguir && btnRst) btnRst.click();   // los 6 pasos desde el comienzo, en automático
+      d.classList.remove('al-demo--apertura');
+    }
+    function iniciar(){
+      if (activa || lento || d.classList.contains('al-demo--no3d') || !(window.alHayWebGL && alHayWebGL())) return false;
+      ov = document.createElement('div'); ov.className = 'al-apertura';
+      var sal = document.createElement('button'); sal.type = 'button'; sal.className = 'al-apertura__saltar'; sal.textContent = 'Saltar apertura';
+      sal.addEventListener('click', function(){ terminar('saltada', true); });
+      ov.appendChild(sal); st.appendChild(ov);
+      try {
+        cine = AlCine.concilia(ov, { alCambiarPlano: function(i, p){ textos(p); }, alTerminar: function(){ terminar('completa', true); }, alPerder: function(){ terminar('perdida', true); } });
+      } catch (e) { ov.remove(); ov = null; d.classList.remove('al-demo--apertura'); return false; }
+      d.classList.add('al-demo--apertura'); pausarDemo(); activa = true; textos(cine.planos[0]);   // pausar antes de marcarla activa: si no, ese clic lo tomaría la apertura
+      // empieza cuando el demo está a la vista (y se pausa sola si sale de pantalla)
+      vigia = new IntersectionObserver(function(es){ var e = es[es.length - 1]; if (e.isIntersecting && cine && !cine.jugando && cine.tiempo < cine.duracion) cine.play(); }, { threshold: 0.5 });
+      vigia.observe(st);
+      return true;
+    }
+    // la barra del demo, mientras corre la apertura
+    d.addEventListener('click', function(e){
+      if (!activa) return;
+      var b = e.target.closest && e.target.closest('[data-act], .al-demo__step, .al-guia button'); if (!b) return;
+      var act = b.getAttribute('data-act');
+      if (act === 'play') { e.stopPropagation(); e.preventDefault(); if (cine.jugando) cine.pause(); else cine.play(); return; }
+      if (act === 'restart') { e.stopPropagation(); e.preventDefault(); cine.seek(0); cine.play(); return; }
+      terminar('saltada', false);   // anterior, siguiente o un paso: la apertura se va y el demo hace lo suyo
+    }, true);
+    d.addEventListener('keydown', function(e){ if (activa && /^(ArrowLeft|ArrowRight|Home)$/.test(e.key)) terminar('saltada', false); }, true);
+    // «Ver la apertura» en el resumen final
+    var acc = d.querySelector('.al-resumen__acc');
+    if (acc && !lento) {
+      var ver = document.createElement('button'); ver.type = 'button'; ver.className = 'al-resumen__apertura'; ver.textContent = 'Ver la apertura';
+      ver.addEventListener('click', function(){ if (iniciar()) { d.classList.remove('al-demo--fin'); } });
+      acc.appendChild(ver);
+    }
+    // la primera vez por visita, cuando el demo aparece
+    if (!visto()) {
+      var ojo = new IntersectionObserver(function(es){ if (es[es.length - 1].isIntersecting) { ojo.disconnect(); window.alConTHREE ? alConTHREE(function(){ setTimeout(iniciar, 0); }) : iniciar(); } }, { threshold: 0.35 });
+      ojo.observe(st);
+    }
+  }
+  window.alDemoTarjetas = function(root, cfg){ var r = orig.apply(this, arguments); if (root && root.id === 'v2-accion' && root._alDemo) preparar(root); return r; };
 })();
 </script>
 <script>

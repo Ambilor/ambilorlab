@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Concilia · prototipo cinematográfico · Ambilor.Lab</title>
+<style>
+@font-face{font-family:"Inter";font-weight:500;font-display:swap;src:url("../fuentes/inter-500.woff2") format("woff2")}
+@font-face{font-family:"Inter";font-weight:600;font-display:swap;src:url("../fuentes/inter-600.woff2") format("woff2")}
+@font-face{font-family:"Inter";font-weight:700;font-display:swap;src:url("../fuentes/inter-700.woff2") format("woff2")}
+:root{--azul:#1F5C99;--luz:#3D7FD6;--tinta:#12304d;--suave:#6b819a;--fondo:#f3f7fc;--entra:cubic-bezier(.22,1,.36,1)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fondo);color:var(--tinta);font:500 15px/1.5 "Inter",-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:1180px;margin:0 auto;padding:24px 16px 40px}
+.cab{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.cab h1{margin:0;font:700 22px/1.2 "Inter",sans-serif;color:var(--azul)}
+.cab h1 span{color:var(--luz)}
+.cab p{margin:0;color:var(--suave);font-size:13px}
+.al-cine{position:relative;border-radius:18px;overflow:hidden;background:var(--fondo);box-shadow:0 20px 60px rgba(18,48,77,.16),0 0 0 1px rgba(31,92,153,.10);aspect-ratio:16/9}
+.al-cine__lienzo{position:absolute;inset:0;width:100%;height:100%;display:block}
+.al-cine__estatico{position:absolute;inset:0;display:none;padding:24px;background:#fff}
+.al-cine--estatico{aspect-ratio:auto}
+.al-cine--estatico .al-cine__estatico{display:block;position:static}
+.al-cine--estatico .al-cine__lienzo{display:none}
+.al-cine__estatico h2{margin:0 0 8px;font:700 20px/1.2 "Inter",sans-serif;color:var(--azul)}
+.al-cine__estatico ol{margin:0;padding-left:1.2em}
+.al-cine__estatico li{margin:.3em 0}
+.al-cine__sub{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);max-width:calc(100% - 32px);margin:0;padding:8px 16px;border-radius:999px;background:rgba(255,255,255,.88);
+  backdrop-filter:blur(8px);color:var(--tinta);font:600 14px/1.3 "Inter",sans-serif;text-align:center;box-shadow:0 6px 20px rgba(18,48,77,.12);transition:opacity .3s ease,transform .3s var(--entra)}
+.al-cine__sub.cambia{opacity:0;transform:translate(-50%,6px)}
+.al-cine--estatico .al-cine__sub{display:none}
+.ctrl{display:flex;align-items:center;gap:10px;margin-top:14px;flex-wrap:wrap}
+.ctrl button{min-width:44px;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid rgba(31,92,153,.25);background:#fff;color:var(--azul);font:600 14px/1 "Inter",sans-serif;cursor:pointer;touch-action:manipulation}
+.ctrl button.prim{background:var(--azul);border-color:var(--azul);color:#fff}
+.ctrl button:active{transform:scale(.97)}
+.ctrl button:focus-visible{outline:2px solid var(--luz);outline-offset:2px}
+.planos{display:flex;gap:6px;flex:1;min-width:220px}
+.planos button{flex:1;min-width:0;min-height:44px;padding:0;border:0;background:none;cursor:pointer;display:flex;align-items:center}
+.planos button i{display:block;width:100%;height:4px;border-radius:2px;background:rgba(31,92,153,.18);overflow:hidden}
+.planos button i b{display:block;height:100%;width:0;background:var(--azul)}
+.nota{margin:14px 0 0;color:var(--suave);font-size:13px}
+@media (max-width:640px){ .al-cine{aspect-ratio:4/5} .al-cine__sub{font-size:13px;bottom:12px} }
+@media (prefers-reduced-motion:reduce){ .al-cine__sub{transition:none} }
+</style>
+<link rel="stylesheet" href="../motion/al-motion.css">
+<script src="../motion/al-video.js" defer></script>
+</head>
+<body>
+<main>
+  <div class="cab">
+    <h1>Concilia<span>.</span> · prototipo cinematográfico</h1>
+    <p>Datos de ejemplo · 13 s · three.js en tiempo real</p>
+  </div>
+  <figure class="al-cine" id="cine" aria-label="Demostración de Concilia: cómo cruza la cartola del banco con el libro mayor">
+    <p class="al-cine__sub" id="sub" aria-live="polite"></p>
+    <div class="al-cine__estatico">
+      <figure class="al-video" data-al-video data-webm="../motion/media/concilia-cine.webm" data-mp4="../motion/media/concilia-cine.mp4" style="--al-video-forma:16/9;margin-bottom:16px">
+        <img class="al-video__poster" src="../motion/media/concilia-cine.webp" alt="Cierre de la secuencia de Concilia: 4 grupos conciliados y 2 movimientos por revisar, con datos de ejemplo" width="1280" height="720" loading="lazy">
+      </figure>
+      <h2>Cómo concilia Concilia (datos de ejemplo)</h2>
+      <ol>
+        <li>Llegan la cartola del banco (6 movimientos) y el libro mayor (5 registros).</li>
+        <li>Concilia busca la pareja de cada movimiento: el abono de $2.000.000 se agrupa con la Factura 1002 ($1.200.000) y su saldo ($800.000); la transferencia, el pago a proveedores y el depósito tienen su pareja 1:1.</li>
+        <li>La comisión de mantención (−$12.990) y los intereses ($1.250) no tienen contraparte en el libro mayor: no se dan por conciliados, quedan por revisar o se explican con una regla.</li>
+        <li>Resultado: 4 grupos conciliados y 2 movimientos por revisar, en la pantalla de Resultados.</li>
+      </ol>
+    </div>
+  </figure>
+  <div class="ctrl">
+    <button type="button" class="prim" id="play" aria-label="Pausar">Pausar</button>
+    <button type="button" id="otra" aria-label="Ver de nuevo desde el comienzo">Ver de nuevo</button>
+    <div class="planos" id="planos" role="group" aria-label="Planos de la secuencia"></div>
+  </div>
+  <p class="nota">Prototipo: la secuencia se dibuja en vivo con three.js (sin video). Con «reducir movimiento» se muestra el cierre quieto; sin 3D, la explicación en texto.</p>
+</main>
+<script src="../vendor/three-r128.min.js"></script>
+<script src="../motion/cine/concilia.js"></script>
+<script>
+(function(){
+  var fig = document.getElementById('cine'), sub = document.getElementById('sub'), btn = document.getElementById('play'), otra = document.getElementById('otra'), cont = document.getElementById('planos');
+  function estatico(){ fig.classList.add('al-cine--estatico'); btn.disabled = otra.disabled = true; }
+  var hay3D = (function(){ try { var c = document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl'))); } catch (e) { return false; } })();
+  if (!window.AlCine || !window.THREE || !hay3D) { estatico(); return; }
+  var barras = [];
+  var c;
+  try {
+    c = AlCine.concilia(fig, {
+      alCambiarPlano: function(i, p){ sub.classList.add('cambia'); setTimeout(function(){ sub.textContent = p.t; sub.classList.remove('cambia'); }, 160); },
+      alTerminar: function(){ btn.textContent = 'Reproducir'; btn.setAttribute('aria-label', 'Reproducir'); }
+    });
+  } catch (e) { estatico(); return; }
+  c.planos.forEach(function(p, i){
+    var b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', 'Ir al plano ' + (i + 1) + ': ' + p.t); b.innerHTML = '<i><b></b></i>';
+    b.addEventListener('click', function(){ c.seek(p.a + 0.01); });
+    cont.appendChild(b); barras.push(b.querySelector('b'));
+  });
+  function marcar(){
+    var t = c.tiempo;
+    c.planos.forEach(function(p, i){ var fin = i + 1 < c.planos.length ? c.planos[i + 1].a : c.duracion; barras[i].style.width = (Math.max(0, Math.min(1, (t - p.a) / (fin - p.a))) * 100) + '%'; });
+    requestAnimationFrame(marcar);
+  }
+  requestAnimationFrame(marcar);
+  function ponerBoton(){ btn.textContent = c.jugando ? 'Pausar' : 'Reproducir'; btn.setAttribute('aria-label', btn.textContent); }
+  btn.addEventListener('click', function(){ if (c.jugando) c.pause(); else c.play(); ponerBoton(); });
+  otra.addEventListener('click', function(){ c.seek(0); c.play(); ponerBoton(); });
+  document.addEventListener('keydown', function(e){ if (e.target === document.body && e.key === ' ') { e.preventDefault(); btn.click(); } });
+  if (!c.reducido) { c.play(); } else { sub.textContent = c.planos[c.planos.length - 1].t; }
+  ponerBoton();
+  window.__cine = c;   // para renderizar cuadro a cuadro (pruebas y video)
+})();
+</script>
+</body>
+</html>
