@@ -2570,6 +2570,15 @@ window.alFoto = (function(){
       var r = c.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 2); r.addColorStop(0, 'rgba(0,6,16,.55)'); r.addColorStop(0.6, 'rgba(0,6,16,.18)'); r.addColorStop(1, 'rgba(0,6,16,0)');
       c.setTransform(1, 0, 0, h / w, 0, 0); c.fillStyle = r; c.fillRect(0, 0, w, w); }) }));
     piso.position.set(u.caja.x, b[1] + u.caja.h * 0.01, -0.03); piso.renderOrder = -2; g.add(piso);
+    // 2026-10-20: ambiente de estudio, sin mover nada: un halo de luz azul de la marca detrás del equipo y su reflejo
+    // en la mesa, que se desvanece hacia abajo (como una foto de producto)
+    var halo = new T.Mesh(new T.PlaneGeometry(u.caja.w * 1.7, u.caja.h * 1.5), new MB({ transparent: true, depthWrite: false, toneMapped: false, blending: T.AdditiveBlending, opacity: 0.55, map: lienzo(T, 256, 256, function(c, w, h){
+      var r = c.createRadialGradient(w / 2, h * 0.46, 0, w / 2, h * 0.46, w / 2); r.addColorStop(0, 'rgba(61,127,214,.55)'); r.addColorStop(0.45, 'rgba(31,92,153,.22)'); r.addColorStop(1, 'rgba(31,92,153,0)');
+      c.fillStyle = r; c.fillRect(0, 0, w, h); }) }));
+    halo.position.set(u.caja.x, u.caja.y + u.caja.h * 0.06, -0.06); halo.renderOrder = -4; g.add(halo);
+    var desvanece = lienzo(T, 4, 128, function(c, w, h){ var l = c.createLinearGradient(0, 0, 0, h); l.addColorStop(0, '#000'); l.addColorStop(0.72, '#000'); l.addColorStop(1, '#fff'); c.fillStyle = l; c.fillRect(0, 0, w, h); });
+    var reflejo = new T.Mesh(foto.geometry, new MB({ map: tex, alphaMap: desvanece, transparent: true, opacity: 0.16, depthWrite: false, toneMapped: false }));
+    reflejo.scale.y = -1; reflejo.position.set(foto.position.x, 2 * b[1] - foto.position.y, -0.025); reflejo.renderOrder = -3; g.add(reflejo);
     g.userData = u; g.visible = false; return g;
   }
   // Cámara estilo grabación de pantalla (Screen Studio), de frente a la foto. Tres encuadres, con resortes suaves:
@@ -2600,7 +2609,10 @@ window.alFoto = (function(){
     var aparatoD = Math.max(cj.h * (v ? 1.2 : 1.38) / 2 / tg, cj.w * (v ? 1.06 : 1.22) / 2 / (tg * as));
     var fh = u.plano ? 1.04 : (v ? 1.1 : 1.24), fw = u.plano ? 1.03 : (v ? 1.06 : 1.1);   // sin aparato: la app de borde a borde
     var ventanaD = Math.max(o.vent.h * fh / 2 / tg, o.vent.w * fw / 2 / (tg * as)), cerca = ventanaD * 0.84;   // acercamiento suave: el foco acompaña sin hacer perder el hilo
-    var z = 0, a = ease(st.a), px = o.px || { x: 0, y: 0 };   // 2026-10-08: quieta en computador (acercarse y seguir al cursor cortaba la app y el notebook); el puntero y el círculo ya muestran dónde mirar
+    // 2026-10-08: quieta en computador (acercarse y seguir al cursor cortaba la app y el notebook); el puntero y el círculo ya
+    // muestran dónde mirar. 2026-10-20: se probó una cámara de video de producto (acercarse a cada acción) y se descartó: el
+    // movimiento le quitaba la atención a lo que la app hace
+    var z = 0, a = ease(st.a), px = o.px || { x: 0, y: 0 };
     var mx = lerp(lerp(0, st.x, z), cj.x, a) + px.x * 0.12, my = lerp(lerp(-o.vent.h * (v || u.plano ? 0 : 0.06), st.y, z), cj.y - cj.h * 0.07, a) + px.y * 0.08;
     cam.position.set(mx, my, lerp(lerp(ventanaD, cerca, z), aparatoD, a) * (1 - Math.sin(o.T * 0.3) * 0.008));
     cam.lookAt(mx, my, 0);
@@ -2639,9 +2651,9 @@ window.alFoto = (function(){
 /* Demos: notas de cada paso (2026-10-07): una frase corta por paso, en una burbuja junto a lo que se toca
    (o arriba, si el paso no tiene toque). Las dibuja el motor de tarjetas sobre la pantalla del demo. */
 window.AL_NOTAS = {
-  'v2-accion': ['Un abono paga dos facturas: ¿cuáles?', 'Elige el banco y tu contabilidad', 'El grupo 1:2 se arma solo',
-                'Una regla y las comisiones quedan explicadas', 'Envía la vista a quien la necesita', 'Indicadores que llevan al detalle'],
-  'v2-instala': ['Haz una copia en tu Drive', 'Abre «Configurar herramienta» en el menú', 'Autoriza los permisos una sola vez',
+  'v2-accion': ['Tu banco y tu contabilidad no cuadran', 'Conecta tus dos planillas', 'Encuentra la pareja de cada pago',
+                'Una regla explica la comisión', 'Lo pendiente llega por correo', 'Revisas solo lo que falta'],
+  'v2-instala': ['Haz una copia en tu Drive', 'Abre «Configurar aplicativo» en el menú', 'Autoriza los permisos una sola vez',
                  'Publica tu panel con «Implementar»', 'Ábrelo y conecta tus fuentes', 'Listo: tu panel quedó instalado'],
   'ped-accion': ['Pedidos repartidos entre chats y notas', 'Tu catálogo en un enlace para compartir', 'Tu cliente elige y envía en un minuto',
                  'Llega con aviso y campanita a tu panel', 'Un toque: confirmado y pagado', 'Ventas y lo más pedido, a la vista'],
@@ -5919,14 +5931,28 @@ window.alDemoTarjetas = function(root, cfg){
   // posición del puntero: una y negativa se cuenta desde abajo de la pantalla (botones anclados abajo,
   // que en el celular quedan al final de su alto real)
   const abajo = y => y < 0 ? J.CH + y : y;
+  // 2026-10-20: en los demos de instalación (rotulos en AL_DEMOS) cada clic se marca, con el anillo y un rótulo
+  // corto de lo que hay que pulsar («Clic en Hacer una copia»), para que se pueda seguir sin saber de Google
   function notaPaso(g, i, lt){
     const cf = J.CURSOR[i]; if (!cf || !cf.clicks || !cf.clicks.length) return;
-    const ck = cf.clicks[0]; let k0 = cf.keys[0];
-    cf.keys.forEach(k => { if (Math.abs(k[0] - ck) < Math.abs(k0[0] - ck)) k0 = k; });
-    const a = clamp((lt - (ck - 1.1)) / 0.3) * (1 - clamp((lt - ck) / 0.25)); if (a <= 0) return;
-    const p = (lt * 1.6) % 1, r = (J.vert ? 34 : 30) * (1 + p * 0.8);
-    g.save(); g.globalAlpha = a * (1 - p) * 0.9; g.strokeStyle = '#3d7fd6'; g.lineWidth = 5;
-    g.beginPath(); g.arc(k0[1], abajo(k0[2]), r, 0, Math.PI * 2); g.stroke(); g.restore();
+    const rot = cfg.rotulos && cfg.rotulos[i];
+    (rot ? cf.clicks : cf.clicks.slice(0, 1)).forEach((ck, n) => {
+      let k0 = cf.keys[0];
+      cf.keys.forEach(k => { if (Math.abs(k[0] - ck) < Math.abs(k0[0] - ck)) k0 = k; });
+      const desde = n ? Math.max(ck - 1.1, cf.clicks[n - 1] + 0.3) : ck - 1.1;
+      const a = clamp((lt - desde) / 0.3) * (1 - clamp((lt - ck) / 0.25)); if (a <= 0) return;
+      const x = k0[1], y = abajo(k0[2]), p = (lt * 1.6) % 1, r = (J.vert ? 34 : 30) * (1 + p * 0.8);
+      g.save(); g.globalAlpha = a * (1 - p) * 0.9; g.strokeStyle = '#3d7fd6'; g.lineWidth = 5;
+      g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.stroke(); g.restore();
+      const s = rot && rot[n]; if (!s) return;
+      const W = J.vert ? 800 : 1200, H = J.vert ? 1000 : 950, tam = J.vert ? 32 : 36, alto = tam * 1.8;
+      g.save(); g.font = '800 ' + tam + 'px ' + FONT; const w = g.measureText(s).width + alto;
+      const cx = Math.max(20 + w / 2, Math.min(W - 20 - w / 2, x)), cy = y > 190 ? y - 58 - alto / 2 : y + 64 + alto / 2;
+      g.globalAlpha = a; g.shadowColor = 'rgba(18,48,77,.3)'; g.shadowBlur = 16; g.shadowOffsetY = 4;
+      g.fillStyle = '#12304d'; g.beginPath(); g.roundRect(cx - w / 2, cy - alto / 2 + (1 - a) * 8, w, alto, alto / 2); g.fill();
+      g.shadowColor = 'transparent'; g.fillStyle = '#fff'; g.textAlign = 'center'; g.textBaseline = 'middle';
+      g.fillText(s, cx, cy + 1 + (1 - a) * 8); g.restore();
+    });
   }
   // barra de pestañas abajo en el celular: solo la tiene el panel real de Pedidos (en ese orden); Concilia y Mis Finanzas
   // llevan sus pestañas arriba, y en los de instalación se ven Drive y Apps Script
@@ -6182,6 +6208,7 @@ window.alDemoTarjetas = function(root, cfg){
       const cortina = !sigue && !!window.AL_MOTION && (dist === 0 ? i : cur) > 0;
       J.DRAW[i](c.g, LT(t - s.a)); if (dist === 0) notaPaso(c.g, i, LT(t - s.a));
       if (dist === 0 && cortina && ein < 1) AL_MOTION.cortina(c.g, J.CW, J.CH, ein);
+      if (dist === 0 && window.AL_MOTION && !reduce) AL_MOTION.barrido(c.g, LT(t - s.a), 0.25, 0, 0, J.CW, J.CH, { radio: 0, color: '255,255,255', dur: 1.2, fuerza: 0.4 });   // 2026-10-20: brillo que cruza el vidrio al empezar el paso
       c.tx.needsUpdate = true;
       const e = ease(ein), sx = (sigue || cortina) ? 0 : dist === 0 ? (1 - e) * 0.35 : -ease(sale) * 0.35;
       c.m.position.set(sx * (J.disp.userData.marco ? 0 : J.disp.userData.pleno ? 0.25 : 1) + (J.disp.userData.ventanaX || 0), J.disp.userData.ventanaY || 0, dist === 0 ? 0.004 : 0.002);
@@ -6245,7 +6272,9 @@ window.alDemoTarjetas = function(root, cfg){
 
   let last = performance.now();
   function frame(now){
-    const dt = Math.min(0.12, (now - last) / 1000); last = now;
+    let dt = Math.min(0.12, (now - last) / 1000); last = now;
+    // grabación a video (solo pruebas, motion/LEEME.md): con window.__alGrabar = { n, id }, el demo id avanza 1/30 s por cuadro pedido
+    if (window.__alGrabar && (!__alGrabar.id || __alGrabar.id === root.id)) { if (!__alGrabar.n) { requestAnimationFrame(frame); return; } __alGrabar.n--; dt = 1 / 30; }   // id: solo ese demo
     if (PX.update(dt)) needsRender = true;
     const mueve = L.tick(dt, visible);
     if (visible && (mueve || needsRender) && !renderer.getContext().isContextLost()) {   // sin contexto 3D no se dibuja
@@ -6381,205 +6410,225 @@ window.alDemoTarjetas = function(root, cfg){
    partir del panel real de Concilia: Resumen · Resultados · Sugerencias ·
    Historial · Configuración. */
 window.AL_DEMOS = window.AL_DEMOS || {};
+// 2026-10-20: el problema de Concilia contado en simple, con cifras que cuadran: lo que dice el banco y lo que dice tu
+// contabilidad, cada uno con su total, y la diferencia ($11.740 = la comisión menos los intereses, que nadie anotó)
+function problemaSimple(g, lt, H, vert){
+  const { C, CW, CH, easeOut, rr, txt, pill } = H;
+  const lados = [
+    ['Lo que dice tu banco', [['Pago de un cliente', 2000000], ['Pago a proveedores', -780000], ['Comisión del banco', -12990], ['Intereses', 1250]], 1208260],
+    ['Lo que dice tu contabilidad', [['Factura 1002', 1200000], ['Factura 1002 (saldo)', 800000], ['Pago a proveedores', -780000]], 1220000]
+  ];
+  const fila = vert ? 54 : 70, tam = 30, cab = vert ? 84 : 100;
+  const alto = filas => vert ? cab + filas * fila + 58 : 470;
+  lados.forEach(([titulo, filas, total], n) => {
+    const x = vert ? 40 : 40 + n * 580, y = vert ? (n ? 100 + alto(4) + 16 : 100) : 112, w = vert ? 720 : 540, h = alto(filas.length);
+    const a = easeOut((lt - 0.15 - n * 0.25) / 0.4); if (a <= 0) return;
+    g.globalAlpha = a;
+    g.fillStyle = '#f6f8fb'; rr(g, x, y, w, h, 20); g.fill();
+    txt(g, titulo, x + 28, y + (vert ? 40 : 44), 30, 800, C.ink, 'left', w - 56);
+    filas.forEach(([nom, m], k) => {
+      const b = easeOut((lt - 0.4 - n * 0.25 - k * 0.12) / 0.3); if (b <= 0) return;
+      const yy = y + cab + k * fila + (1 - b) * 10;
+      g.globalAlpha = a * b;
+      txt(g, nom, x + 28, yy, tam, 600, C.ink, 'left', w - 260); txt(g, H.clp(m), x + w - 28, yy, tam, 800, m < 0 ? C.muted : C.ink, 'right');
+      g.fillStyle = C.line; g.fillRect(x + 28, yy + fila / 2 - 2, w - 56, 2);
+    });
+    const t = easeOut((lt - 1.3 - n * 0.2) / 0.4);
+    if (t > 0) { g.globalAlpha = a * t; const yt = y + h - (vert ? 32 : 50); txt(g, 'Total', x + 28, yt, 32, 800, C.ink); txt(g, H.cuenta(total, lt, 1.3 + n * 0.2, 0.6), x + w - 28, yt, 36, 800, C.ink, 'right'); }
+    g.globalAlpha = 1;
+  });
+  const p = easeOut((lt - 2.3) / 0.4);
+  if (p > 0) {
+    const y = vert ? Math.max(100 + alto(4) + 16 + alto(3) + 40, CH - 250) : 640;
+    g.globalAlpha = p; pill(g, CW / 2, y + (1 - p) * 12, 'No cuadran: hay $11.740 de diferencia', C.bad, '#fff', 34, 70, 'center');
+    const q = easeOut((lt - 2.8) / 0.4); if (q > 0) { g.globalAlpha = q; txt(g, '¿Qué movimiento falta? Buscarlo a mano toma horas.', CW / 2, y + 120, 30, 600, C.muted, 'center', CW - 80); }
+    g.globalAlpha = 1;
+    H.mo.barrido(g, lt, 2.6, CW / 2 - 330, y, 660, 70, { radio: 35 });
+  }
+}
 AL_DEMOS['v2-accion'] = {
   steps: [
     { a:0, b:4.2, short:'El problema', kicker:'El problema que resuelve',
-      title:'El banco y la contabilidad no cuadran',
-      body:'Un abono paga varias facturas, hay comisiones que nadie registró y dos planillas distintas que revisar línea por línea. El cierre se atrasa todos los meses.',
-      stats:[['2','planillas por cruzar'],['1:n','pagos que cubren varias facturas']] },
-    { a:4.2, b:9.0, short:'Fuentes', kicker:'Paso 1: conecta tus dos fuentes',
-      title:'Cartola y libro mayor, en una sola tarjeta',
-      body:'Eliges tus dos fuentes: la cartola del banco y tu libro mayor. Concilia reconoce sola cada columna (también Cargo y Abono, o Debe y Haber) y las deja listas para cruzarse.' },
-    { a:9.0, b:13.6, short:'Grupos', kicker:'Paso 2: concilia en grupos',
-      title:'Un abono contra varias facturas',
-      body:'Busca qué facturas suman lo mismo que un pago (hasta 8 por lado) y explica cada grupo: montos, fechas y conceptos en común.' },
-    { a:13.6, b:18.6, short:'Reglas', kicker:'Paso 3: explica lo que no tendrá contraparte',
-      title:'Comisiones e intereses, explicados solos',
-      body:'Con reglas simples ("el concepto contiene comisión, es cargo y hasta $20.000"), esos movimientos quedan como Explicados con su categoría. Puedes crear la regla desde el mismo movimiento.' },
-    { a:18.6, b:23.8, short:'Avisos', kicker:'Paso 4: avisa a quien corresponde',
-      title:'Cada uno recibe lo suyo por correo',
-      body:'Envía cualquier vista de Resultados con vista previa, asunto y destinatarios editables. El resumen y las alertas de pendientes antiguos pueden salir solos, cada día o cada lunes.' },
-    { a:23.8, b:29.6, short:'Resultado', kicker:'Resultado final',
-      title:'Revisas solo lo que importa',
-      body:'Indicadores que llevan al detalle, sugerencias para decidir los casos dudosos, IA opcional con tu propia clave y el historial de cada ejecución.',
+      title:'Tu banco y tu contabilidad no cuadran',
+      body:'Al cerrar el mes, lo que dice el banco no coincide con lo que anotaste. Encontrar qué falta, movimiento por movimiento, toma horas.',
+      stats:[['$11.740','de diferencia sin explicar'],['7','movimientos por revisar']] },
+    { a:4.2, b:9.0, short:'Planillas', kicker:'Paso 1: conecta tus planillas',
+      title:'La del banco y la de tu contabilidad',
+      body:'Pegas el enlace de cada planilla de Google Sheets. Concilia reconoce sola dónde está la fecha, el detalle y el monto.' },
+    { a:9.0, b:13.6, short:'Parejas', kicker:'Paso 2: encuentra las parejas',
+      title:'Cada pago con lo que paga',
+      body:'Busca la pareja de cada movimiento, aunque un pago cubra varias facturas, y te dice por qué los juntó.' },
+    { a:13.6, b:18.6, short:'Reglas', kicker:'Paso 3: explica lo que no tiene pareja',
+      title:'Una regla y queda explicado',
+      body:'Las comisiones del banco no tienen factura. Con una regla simple quedan explicadas como gasto bancario, este mes y los siguientes.' },
+    { a:18.6, b:23.8, short:'Avisos', kicker:'Paso 4: avisa lo pendiente',
+      title:'Lo que falta llega por correo',
+      body:'Lo que queda por revisar se envía a quien corresponde, con un clic o solo, cada día.' },
+    { a:23.8, b:29.6, short:'Resultado', kicker:'Resultado',
+      title:'Revisas solo lo que falta',
+      body:'De 7 movimientos, 6 quedaron listos solos. Tú revisas uno: los intereses.',
       stats:[['10.000','movimientos en cada revisión'],['1 a 3','personas en el panel']],
       cta:['Ver qué incluye', 'incluye-v2'] }
   ],
   continuo: [false, false, true, true, true, true],   // del paso 2 en adelante, el mismo panel de Concilia
-  final: { cifra:'94 %', texto:'del cierre de marzo quedó conciliado solo. Tú revisas lo que falta: 1 pendiente.', herramienta:'Concilia' },
+  final: { cifra:'6 de 7', texto:'movimientos quedaron listos solos: 2 grupos conciliados y la comisión explicada por una regla. Tú revisas 1: los intereses.', herramienta:'Concilia' },
   cursor: [
     null,
     { keys:[[0.3,1100,860],[2.9,300,853],[3.2,300,853],[3.9,900,900]], clicks:[3.05] },
     null,
-    { keys:[[0.3,1000,880],[2.0,230,655],[2.25,230,655],[2.9,1000,900]], clicks:[2.15] },
-    { keys:[[0.3,1000,880],[1.25,590,520],[1.5,590,520],[2.9,870,808],[3.2,870,808],[3.9,1100,900]], clicks:[1.4,3.05] },
+    { keys:[[0.3,1000,880],[2.0,230,589],[2.25,230,589],[2.9,1000,900]], clicks:[2.15] },
+    { keys:[[0.3,1000,880],[2.9,870,808],[3.2,870,808],[3.9,1100,900]], clicks:[3.05] },
     null
   ],
+  // 2026-10-20: los seis pasos en lenguaje simple, con los mismos 7 movimientos de principio a fin (los de problemaSimple):
+  // el pago del cliente con sus 2 facturas, el pago a proveedores, la comisión (una regla) y los intereses (por revisar)
   draw: H => { const { C, CW, CH, clamp, ease, easeOut, lerp, rr, txt, wrap, press, btn, base, overlay, dialog, banner, pill, campo, panelBar } = H;
     const TABS = ['Resumen','Resultados','Sugerencias','Historial','Configuración'];
-    function tablaMini(g, x, y, w, titulo, filas, marca, a){
-      g.fillStyle = '#f6f8fb'; rr(g, x, y, w, 70, 14); g.fill();
-      txt(g, titulo, x + 22, y + 36, 32, 800, C.ink);
-      filas.forEach((f, k) => {
-        const ap = easeOut((a - k*0.12) / 0.35); if (ap <= 0) return;
-        const yy = y + 100 + k*78;
-        g.globalAlpha = ap;
-        const m = marca ? marca(k) : 0;
-        if (m > 0) { g.fillStyle = 'rgba(224,138,44,' + (0.22*m) + ')'; rr(g, x, yy - 30, w, 64, 12); g.fill(); }
-        txt(g, f[0], x + 22, yy, 27, 600, C.ink, 'left', w - 230);
-        txt(g, f[1], x + w - 22, yy, 28, 800, f[1][0] === '-' ? C.muted : C.ink, 'right');
-        g.strokeStyle = C.line; g.lineWidth = 2; g.beginPath(); g.moveTo(x, yy + 38); g.lineTo(x + w, yy + 38); g.stroke();
-        g.globalAlpha = 1;
-      });
-    }
+    const tarjeta = (g, x, y, w, fuente, concepto, monto, a, hl) => {
+      g.globalAlpha = a;
+      g.fillStyle = hl ? 'rgba(47,138,91,.12)' : '#f6f8fb'; rr(g, x, y, w, 150, 18); g.fill();
+      g.strokeStyle = hl ? C.ok : C.line; g.lineWidth = 3; rr(g, x, y, w, 150, 18); g.stroke();
+      txt(g, fuente, x + 24, y + 36, 24, 700, C.soft); txt(g, concepto, x + 24, y + 78, 32, 700, C.ink, 'left', w - 48);
+      txt(g, monto, x + 24, y + 120, 36, 800, C.ink);
+      g.globalAlpha = 1;
+    };
+    const estado = (g, x, y, t0, lt, on, off, colOn, fondoOn) => {   // etiqueta que cambia con un pequeño salto
+      const si = lt > t0, pop = 1 + Math.sin(clamp((lt - t0) / 0.3) * Math.PI) * 0.12;
+      g.save(); g.translate(x, y); g.scale(pop, pop);
+      pill(g, 0, -24, si ? on : off, si ? fondoOn : '#fdf1e2', si ? colOn : C.warn, 27, 48, 'center');
+      g.restore();
+    };
     return [
-      (g, lt) => {
+      (g, lt) => {   // el problema en lenguaje simple (para quien no es contador): dos totales que no cuadran
         base(g, 'Cierre de marzo');
-        const izq = [['03/03 Abono cliente','$2.000.000'],['04/03 Transferencia','-$1.190.000'],['12/03 Comisión mantención','-$12.990'],['15/03 Pago proveedores','-$780.000'],['20/03 Intereses','$1.250'],['22/03 Depósito','$45.000']];
-        const der = [['Factura 1002','$1.200.000'],['Factura 1002 saldo','$800.000'],['Pago fact. 1001','-$1.190.000'],['Pago fact. 1003-1004','-$780.000'],['Depósito cliente','$45.000']];
-        const ml = k => (k === 0 || k === 2 || k === 4) ? easeOut((lt - 1.8 - k*0.15) / 0.4) : 0;
-        const mr = k => (k <= 1) ? easeOut((lt - 1.9) / 0.4) : 0;
-        tablaMini(g, 36, 110, 548, 'Cartola banco', izq, ml, lt - 0.2);
-        tablaMini(g, 616, 110, 548, 'Libro mayor', der, mr, lt - 0.5);
-        const p = easeOut((lt - 2.8) / 0.4);
-        if (p > 0) { g.globalAlpha = p; pill(g, 600, 740 + (1-p)*14, 'No cuadra: faltan ' + H.cuenta(645390, lt, 2.8, 0.8), C.bad, '#fff', 34, 66, 'center'); g.globalAlpha = 1; }
-        const q = easeOut((lt - 3.2) / 0.4);
-        if (q > 0) { g.globalAlpha = q; txt(g, '¿Qué abono pagó qué facturas? ¿Y la comisión?', 600, 860, 32, 600, C.muted, 'center'); g.globalAlpha = 1; }
-        H.mo.barrido(g, lt, 3.0, 330, 740, 540, 66, { radio: 33 });   // la luz cruza «No cuadra»
-        H.foco(g, lt, 2.8, 0, [[220, 718, 760, 186]]);
+        problemaSimple(g, lt, H, false);
       },
-      (g, lt) => {
+      (g, lt) => {   // paso 1: dos planillas conectadas, columnas reconocidas
         base(g, 'Concilia');
         panelBar(g, 'Concilia', TABS, 4);
-        txt(g, '1 · Fuentes de datos', 40, 262, 40, 800, C.ink);
-        const url = 'docs.google.com/spreadsheets/d/1Cartola…';
-        const n = Math.floor(clamp((lt - 0.4) / 0.9) * url.length);
-        campo(g, 40, 350, 760, 62, 'Fuente 1 · enlace o ID del Sheet', url.slice(0, n), lt > 0.4 && lt < 1.4);
-        campo(g, 820, 350, 340, 62, 'Hoja', lt > 1.3 ? 'Movimientos ▾' : '', false);
-        const f2 = easeOut((lt - 1.4) / 0.45);
-        if (f2 > 0) {
-          g.globalAlpha = f2;
-          campo(g, 40, 488, 760, 62, 'Fuente 2 · enlace o ID del Sheet', 'el mismo Sheet', false);
-          campo(g, 820, 488, 340, 62, 'Hoja', 'Mayor banco ▾', false);
+        txt(g, 'Conecta tus dos planillas', 40, 262, 40, 800, C.ink);
+        [['Tu banco', 'Cartola de marzo'], ['Tu contabilidad', 'Libro mayor de marzo']].forEach(([t, s], n) => {
+          const a = easeOut((lt - 0.2 - n*0.5) / 0.45); if (a <= 0) return;
+          const x = 40 + n*580, y = 310 + (1 - a)*16;
+          g.globalAlpha = a;
+          g.fillStyle = '#f6f8fb'; rr(g, x, y, 540, 230, 20); g.fill();
+          H.sheetIcon(g, x + 32, y + 34, 56);
+          txt(g, t, x + 116, y + 60, 38, 800, C.ink, 'left', 400);
+          txt(g, s + ' · Google Sheets', x + 116, y + 106, 26, 600, C.muted, 'left', 400);
+          const c = easeOut((lt - 0.9 - n*0.5) / 0.35);
+          if (c > 0) { g.globalAlpha = a*c; pill(g, x + 32, y + 156, '✓ Conectada', '#e6f2eb', C.ok, 28, 50); }
           g.globalAlpha = 1;
-        }
-        [['Fecha','Glosa','Cargo / Abono'],['Fecha','Descripción','Debe / Haber']].forEach((cs, fi) => {
-          let x = 40;
-          cs.forEach((c, k) => {
-            const a = easeOut((lt - 2.0 - fi*0.35 - k*0.12) / 0.3); if (a <= 0) return;
-            g.globalAlpha = a; x += pill(g, x, 600 + fi*64, '✓ ' + c, '#e6f2eb', C.ok, 26, 48) + 12; g.globalAlpha = 1;
-          });
         });
-        btn(g, 40, 822, 520, 64, 'Guardar fuentes', 'primary', press(lt, 3.05), 34);
+        const r = easeOut((lt - 1.5) / 0.3);
+        if (r > 0) { g.globalAlpha = r; txt(g, 'Concilia reconoce sola sus columnas:', 40, 614, 32, 700, C.ink); g.globalAlpha = 1; }
+        let x = 40;
+        ['Fecha', 'Detalle', 'Monto'].forEach((c, k) => {
+          const a = easeOut((lt - 1.6 - k*0.2) / 0.3); if (a <= 0) return;
+          g.globalAlpha = a; x += pill(g, x, 654, '✓ ' + c, '#e6f2eb', C.ok, 32, 62) + 16; g.globalAlpha = 1;
+        });
+        const h = easeOut((lt - 2.3) / 0.4);
+        if (h > 0) { g.globalAlpha = h; txt(g, 'También sirve una sola planilla, con dos hojas.', 40, 768, 28, 600, C.muted); g.globalAlpha = 1; }
+        btn(g, 40, 822, 520, 64, 'Guardar', 'primary', press(lt, 3.05), 34);
         const b = easeOut((lt - 3.3) / 0.35);
-        if (b > 0) { g.globalAlpha = b; banner(g, 590, 822, 570, 64, '✓ 2 fuentes listas'); g.globalAlpha = 1; }
-        H.mo.barrido(g, lt, 2.55, 40, 596, 760, 116, { radio: 24 });   // las columnas reconocidas
+        if (b > 0) { g.globalAlpha = b; banner(g, 590, 822, 570, 64, '✓ Listo: 2 planillas conectadas'); g.globalAlpha = 1; }
+        H.mo.barrido(g, lt, 2.2, 40, 650, 640, 70, { radio: 31 });   // las columnas reconocidas
         H.mo.barrido(g, lt, 3.6, 590, 822, 570, 64, { radio: 32 });
-        H.foco(g, lt, 2.0, 0, [[24, 572, 1152, 330]]);   // reconoce sola cada columna
+        H.foco(g, lt, 1.6, 0, [[24, 580, 1152, 330]]);
       },
-      (g, lt) => {
+      (g, lt) => {   // paso 2: un pago con sus dos facturas
         base(g, 'Concilia');
         panelBar(g, 'Concilia', TABS, 1);
-        const tarjeta = (x, y, w, fuente, concepto, monto, a, hl) => {
-          g.globalAlpha = a;
-          g.fillStyle = hl ? 'rgba(47,138,91,.12)' : '#f6f8fb'; rr(g, x, y, w, 150, 18); g.fill();
-          g.strokeStyle = hl ? C.ok : C.line; g.lineWidth = 3; rr(g, x, y, w, 150, 18); g.stroke();
-          txt(g, fuente, x + 24, y + 36, 24, 700, C.soft); txt(g, concepto, x + 24, y + 78, 30, 700, C.ink, 'left', w - 48);
-          txt(g, monto, x + 24, y + 120, 36, 800, C.ink);
-          g.globalAlpha = 1;
-        };
+        txt(g, 'Encontró la pareja de cada pago', 40, 262, 40, 800, C.ink);
         const ok = lt > 2.6;
-        const e0 = easeOut(lt / 0.45), e1 = easeOut((lt - 0.4) / 0.45), e2 = easeOut((lt - 0.55) / 0.45);   // entran deslizándose: el abono desde la cartola, las facturas desde el mayor
-        tarjeta(40 - (1 - e0)*90, 330, 440, 'CARTOLA · 03/03', 'Abono Comercial Sur', '$2.000.000', e0, ok);
-        tarjeta(720 + (1 - e1)*90, 250, 440, 'MAYOR · 02/03', 'Factura 1002', '$1.200.000', e1, ok);
-        tarjeta(720 + (1 - e2)*90, 440, 440, 'MAYOR · 19/03', 'Factura 1002 saldo', '$800.000', e2, ok);
-        [[325, 405, 0.9], [515, 405, 1.2]].forEach(([y2, y1, t0]) => {
+        const e0 = easeOut(lt / 0.45), e1 = easeOut((lt - 0.4) / 0.45), e2 = easeOut((lt - 0.55) / 0.45);   // entran deslizándose: el pago desde el banco, las facturas desde la contabilidad
+        tarjeta(g, 40 - (1 - e0)*90, 380, 440, 'TU BANCO · 03/03', 'Pago de un cliente', '$2.000.000', e0, ok);
+        tarjeta(g, 720 + (1 - e1)*90, 310, 440, 'TU CONTABILIDAD · 02/03', 'Factura 1002', '$1.200.000', e1, ok);
+        tarjeta(g, 720 + (1 - e2)*90, 500, 440, 'TU CONTABILIDAD · 19/03', 'Factura 1002 (saldo)', '$800.000', e2, ok);
+        [[385, 0.9], [575, 1.2]].forEach(([y2, t0]) => {
           const p = ease((lt - t0) / 0.6); if (p <= 0) return;
+          const y1 = 455;
           g.strokeStyle = ok ? C.ok : C.brand; g.lineWidth = 5; g.beginPath(); g.moveTo(480, y1);
           const x2 = lerp(480, 720, p), y = lerp(y1, y2, p);
           g.bezierCurveTo(lerp(480, 600, p), y1, lerp(480, 600, p), y, x2, y); g.stroke();
         });
         const s = easeOut((lt - 1.9) / 0.4);
-        if (s > 0) { g.globalAlpha = s; txt(g, '$1.200.000 + $800.000 = ' + H.cuenta(2000000, lt, 1.9, 0.6) + (lt > 2.5 ? ' ✓' : ''), 600, 680, 36, 800, C.ink, 'center'); g.globalAlpha = 1; }
+        if (s > 0) { g.globalAlpha = s; txt(g, '$1.200.000 + $800.000 = ' + H.cuenta(2000000, lt, 1.9, 0.6) + (lt > 2.5 ? ' ✓' : ''), 600, 712, 36, 800, C.ink, 'center'); g.globalAlpha = 1; }
         const b = easeOut((lt - 2.6) / 0.35);
-        if (b > 0) { g.globalAlpha = b; pill(g, 600, 730, 'Grupo 1:2 · Conciliado', C.ok, '#fff', 32, 60, 'center'); g.globalAlpha = 1; }
+        if (b > 0) { g.globalAlpha = b; pill(g, 600, 750, 'Conciliado: 1 pago = 2 facturas', C.ok, '#fff', 32, 62, 'center'); g.globalAlpha = 1; }
         const m = easeOut((lt - 3.1) / 0.4);
-        if (m > 0) { g.globalAlpha = m; txt(g, 'Motivo: suman lo mismo · 17 días de diferencia · «1002» en ambos conceptos', 600, 850, 27, 600, C.muted, 'center', 1080); g.globalAlpha = 1; }
-        H.mo.escaneo(g, lt, 0.7, 0.9, 30, 236, 1140, 374);   // busca qué facturas suman lo mismo que el abono
-        [[40, 330, 440, 150], [720, 250, 440, 150], [720, 440, 440, 150]].forEach(r => H.mo.barrido(g, lt, 2.65, r[0], r[1], r[2], r[3], { radio: 18, color: '47,138,91' }));   // coinciden: luz verde
+        if (m > 0) { g.globalAlpha = m; txt(g, 'Por qué: suman lo mismo y las dos dicen «1002».', 600, 862, 30, 600, C.muted, 'center', 1080); g.globalAlpha = 1; }
+        const o = easeOut((lt - 3.6) / 0.4);
+        if (o > 0) { g.globalAlpha = o; txt(g, 'Y el pago a proveedores, con su pareja ✓', 600, 910, 26, 700, C.ok, 'center', 1080); g.globalAlpha = 1; }
+        H.mo.escaneo(g, lt, 0.7, 0.9, 30, 296, 1140, 374);   // busca qué facturas suman lo mismo que el pago
+        [[40, 380, 440, 150], [720, 310, 440, 150], [720, 500, 440, 150]].forEach(r => H.mo.barrido(g, lt, 2.65, r[0], r[1], r[2], r[3], { radio: 18, color: '47,138,91' }));   // coinciden: luz verde
       },
-      (g, lt) => {
+      (g, lt) => {   // paso 3: una regla explica la comisión; los intereses quedan por revisar
         base(g, 'Concilia');
         panelBar(g, 'Concilia', TABS, 4);
-        txt(g, '3 · Reglas para explicar pendientes', 40, 262, 38, 800, C.ink);
-        g.strokeStyle = C.line; g.lineWidth = 3; rr(g, 40, 300, 1120, 300, 18); g.stroke();
-        campo(g, 70, 360, 500, 56, 'Nombre', 'Comisiones del banco', false);
-        campo(g, 600, 360, 530, 56, 'Queda explicado como', lt > 0.5 ? 'Gasto bancario' : '', lt > 0.3 && lt < 0.9);
-        [['si','Concepto','contiene','comisión'],['y','Tipo','es cargo',''],['y','Monto','hasta','$20.000']].forEach((c, k) => {
-          const a = easeOut((lt - 0.7 - k*0.3) / 0.3); if (a <= 0) return;
-          const y = 452 + k*48;
-          g.globalAlpha = a;
-          txt(g, c[0], 80, y, 27, 700, C.muted);
-          txt(g, c[1], 130, y, 30, 700, C.ink); txt(g, c[2], 330, y, 30, 600, C.muted);
-          if (c[3]) pill(g, 540, y - 21, c[3], '#eef2f7', C.ink, 27, 42);
-          g.globalAlpha = 1;
+        txt(g, 'Una regla para lo que no tiene pareja', 40, 262, 40, 800, C.ink);
+        g.fillStyle = '#f6f8fb'; rr(g, 40, 300, 1120, 230, 20); g.fill();
+        const a1 = easeOut((lt - 0.3) / 0.35), a2 = easeOut((lt - 0.9) / 0.35);
+        if (a1 > 0) { g.globalAlpha = a1; txt(g, 'Si el detalle dice', 80, 372, 36, 700, C.ink); pill(g, 420, 342, '«comisión»', '#eef2f7', C.ink, 32, 60); g.globalAlpha = 1; }
+        if (a2 > 0) { g.globalAlpha = a2; txt(g, 'queda explicado como', 80, 464, 36, 700, C.ink); pill(g, 480, 434, 'Gasto bancario', '#ece9fb', C.expl, 32, 60); g.globalAlpha = 1; }
+        btn(g, 40, 560, 380, 58, 'Guardar regla', 'primary', press(lt, 2.15), 32);
+        [['Comisión del banco', '-$12.990', 'Explicado', C.expl, '#ece9fb', 2.5], ['Intereses', '$1.250', 'Por revisar', C.warn, '#fdf1e2', 2.9]].forEach(([n, m, e, col, fondo, t0], k) => {
+          const y = 690 + k*84;
+          g.fillStyle = C.line; g.fillRect(40, y + 40, 1120, 2);
+          txt(g, n, 60, y, 32, 700, C.ink, 'left', 480); txt(g, m, 760, y, 32, 800, C.ink, 'right');
+          estado(g, 990, y, t0, lt, e, 'Sin pareja', col, fondo);
         });
-        btn(g, 40, 626, 380, 58, 'Guardar estas reglas', 'primary', press(lt, 2.15), 30);
-        [['12/03','Comisión mantención cuenta','-$12.990'],['14/03','Comisión transferencia','-$490'],['28/03','Comisión por giro','-$1.200']].forEach((r, k) => {
-          const y = 720 + k*72, t0 = 2.5 + k*0.3, on = lt > t0;
-          txt(g, r[0], 50, y, 26, 600, C.soft); txt(g, r[1], 150, y, 29, 600, C.ink, 'left', 480); txt(g, r[2], 820, y, 29, 800, C.ink, 'right');
-          const pop = 1 + Math.sin(clamp((lt - t0) / 0.3) * Math.PI) * 0.12;
-          g.save(); g.translate(1000, y); g.scale(pop, pop);
-          pill(g, 0, -22, on ? 'Explicado' : 'Pendiente', on ? '#ece9fb' : '#fdf1e2', on ? C.expl : C.warn, 24, 44, 'center');
-          g.restore();
-        });
-        H.mo.escaneo(g, lt, 2.2, 1.2, 40, 648, 1120, 288);   // la línea pasa por cada comisión justo cuando cambia a Explicado (720 + 72k, en 2,5 + 0,3k)
-        H.foco(g, lt, 2.4, 0, [[24, 682, 1152, 240]]);   // las comisiones pasan a Explicado
+        const f = easeOut((lt - 3.3) / 0.4);
+        if (f > 0) { g.globalAlpha = f; txt(g, 'La regla queda guardada: sirve este mes y los siguientes.', 40, 880, 28, 600, C.muted, 'left', 1120); g.globalAlpha = 1; }
+        H.mo.escaneo(g, lt, 2.2, 0.9, 40, 646, 1120, 180);
+        H.foco(g, lt, 2.4, 0, [[24, 640, 1152, 270]]);
       },
-      (g, lt) => {
+      (g, lt) => {   // paso 4: lo pendiente, por correo
         base(g, 'Concilia');
         panelBar(g, 'Concilia', TABS, 1);
         for (let r = 0; r < 6; r++) { g.fillStyle = r % 2 ? '#f6f8fb' : '#fff'; g.fillRect(40, 240 + r*70, 1120, 70); g.fillStyle = '#dde5ee'; rr(g, 70, 268 + r*70, 300, 14, 7); g.fill(); rr(g, 900, 268 + r*70, 200, 14, 7); g.fill(); }
         const d = easeOut((lt - 0.25) / 0.35);
         overlay(g, d); g.globalAlpha = d;
         dialog(g, 110, 250, 980, 640);
-        txt(g, 'Enviar por correo', 150, 305, 40, 800, C.ink);
-        pill(g, 550, 283, 'Movimientos de esta vista', C.brand, '#fff', 24, 44);
-        const para = 'contabilidad@empresa.cl' + (lt > 1.45 ? ', ana@empresa.cl' : '');
-        campo(g, 150, 430, 900, 58, 'Para', para, lt < 1.6);
-        if (lt < 1.5) pill(g, 460, 372 + 128, '+ ana@empresa.cl', '#eef2f7', C.brand, 24, 40);
-        campo(g, 150, 570, 900, 58, 'Asunto', 'Pendientes de marzo · 8 movimientos', false);
-        g.fillStyle = '#f6f8fb'; rr(g, 150, 650, 900, 110, 14); g.fill();
-        txt(g, 'Vista previa', 176, 680, 22, 700, C.soft);
-        for (let k = 0; k < 3; k++) { g.fillStyle = '#dde5ee'; rr(g, 176, 706 + k*16, [620, 520, 700][k], 9, 4); g.fill(); }
-        if (lt < 3.3) btn(g, 690, 778, 360, 60, 'Enviar a 2 destinatarios', 'primary', press(lt, 3.05), 30);
+        txt(g, 'Enviar lo pendiente por correo', 150, 305, 40, 800, C.ink, 'left', 900);
+        const para = 'contabilidad@empresa.cl', n = Math.floor(clamp((lt - 0.7) / 0.8) * para.length);
+        campo(g, 150, 400, 900, 60, 'Para', para.slice(0, n), lt > 0.6 && lt < 1.6);
+        campo(g, 150, 520, 900, 60, 'Asunto', lt > 1.6 ? 'Pendientes de marzo · 1 movimiento' : '', false);
+        g.fillStyle = '#f6f8fb'; rr(g, 150, 610, 900, 140, 14); g.fill();
+        txt(g, 'Lo que va en el correo', 176, 644, 24, 700, C.soft);
+        const v = easeOut((lt - 1.9) / 0.4);
+        if (v > 0) { g.globalAlpha = d * v; txt(g, 'Intereses · 20/03 · $1.250', 176, 700, 32, 700, C.ink, 'left', 600); pill(g, 1024, 676, 'Por revisar', '#fdf1e2', C.warn, 26, 46, 'right'); g.globalAlpha = d; }
+        if (lt < 3.3) btn(g, 690, 778, 360, 60, 'Enviar', 'primary', press(lt, 3.05), 32);
         const b = easeOut((lt - 3.3) / 0.35);
-        if (b > 0) { banner(g, 150, 778, 600, 60, '✓ Enviado · queda en Historial'); }
+        if (b > 0) banner(g, 150, 778, 600, 60, '✓ Enviado · queda en Historial');
         const au = easeOut((lt - 3.9) / 0.4);
-        if (au > 0) { g.globalAlpha = d * au; pill(g, 600, 850, '⏰ Envío automático: todos los días, 8:00', '#e6f2eb', C.ok, 24, 42, 'center'); }
+        if (au > 0) { g.globalAlpha = d * au; pill(g, 600, 848, 'Y si quieres, sale solo todos los días a las 8:00', '#e6f2eb', C.ok, 24, 40, 'center'); }
         g.globalAlpha = 1;
+        H.mo.barrido(g, lt, 3.6, 150, 778, 600, 60, { radio: 30 });
       },
-      (g, lt) => {
+      (g, lt) => {   // resultado: 6 de 7 listos solos, 1 por revisar
         base(g, 'Concilia');
         panelBar(g, 'Concilia', TABS, 0);
-        const p = ease((lt - 0.3) / 1.6);
-        const tiles = [[Math.round(lerp(47, 94, p)) + '%', 'conciliación', C.ok], [String(Math.round(lerp(8, 15, p))), 'conciliados', C.ok], [String(Math.round(lerp(0, 3, p))), 'explicados', C.expl], [String(Math.round(lerp(8, 1, p))), 'pendientes', C.warn]];
-        const tw = (1120 - 3*20) / 4;
-        tiles.forEach(([v, l, c], i) => {
+        txt(g, 'Listo: 6 de 7 movimientos resueltos solos', 40, 262, 40, 800, C.ink, 'left', 1120);
+        const p = ease((lt - 0.3) / 1.4);
+        const tw = (1120 - 2*20) / 3;
+        [[5, 'conciliados', C.ok], [1, 'explicado', C.expl], [1, 'por revisar', C.warn]].forEach(([v, l, c], i) => {
           const x = 40 + i*(tw + 20);
-          g.fillStyle = '#f6f8fb'; rr(g, x, 250, tw, 180, 20); g.fill();
-          txt(g, v, x + tw/2, 320, 72, 800, c, 'center'); txt(g, l, x + tw/2, 392, 28, 700, C.muted, 'center');
+          g.fillStyle = '#f6f8fb'; rr(g, x, 300, tw, 190, 20); g.fill();
+          txt(g, String(Math.round(lerp(0, v, p))), x + tw/2, 378, 84, 800, c, 'center'); txt(g, l, x + tw/2, 452, 32, 700, C.muted, 'center');
         });
-        txt(g, 'Montos por grupo', 40, 480, 32, 800, C.ink);
-        [0.9, 0.7, 0.55, 0.4, 0.3, 0.2].forEach((v, k) => {
-          const h = 230 * v * ease((lt - 0.6 - k*0.1) / 0.7);
-          const x = 60 + k*180;
-          g.fillStyle = k < 4 ? C.ok : C.warn; rr(g, x, 750 - h, 110, h, 10); g.fill();
-        });
-        const s = easeOut((lt - 2.6) / 0.4);
-        if (s > 0) { g.globalAlpha = s; pill(g, 1160, 800, 'IA opcional: 1 propuesta en Sugerencias', '#eef2f7', C.brand, 26, 52, 'right'); g.globalAlpha = 1; }
-        H.mo.barrido(g, lt, 2.0, 40, 250, 1120, 180, { radio: 20 });   // los indicadores, ya contados
-        H.foco(g, lt, 0.25, 2.3, [[28, 238, 1144, 204]]);   // los indicadores
+        const s = easeOut((lt - 1.9) / 0.4);
+        if (s > 0) {
+          g.globalAlpha = s;
+          txt(g, 'Solo te queda revisar esto:', 40, 576, 34, 800, C.ink);
+          g.fillStyle = '#fdf1e2'; rr(g, 40, 614, 1120, 104, 18); g.fill();
+          txt(g, 'Intereses · 20/03', 72, 666, 34, 700, C.ink, 'left', 500); txt(g, '$1.250', 760, 666, 34, 800, C.ink, 'right');
+          pill(g, 1128, 642, 'Por revisar', '#fff', C.warn, 28, 50, 'right');
+          g.globalAlpha = 1;
+        }
+        const t = easeOut((lt - 2.8) / 0.4);
+        if (t > 0) { g.globalAlpha = t; txt(g, 'Todo lo demás quedó listo y guardado en el Historial.', 40, 790, 28, 600, C.muted, 'left', 1120); g.globalAlpha = 1; }
+        H.mo.barrido(g, lt, 1.6, 40, 300, 1120, 190, { radio: 20 });   // los indicadores, ya contados
+        H.foco(g, lt, 2.3, 0, [[24, 540, 1152, 196]]);   // lo único pendiente
       }
     ];
   }
@@ -6587,22 +6636,31 @@ AL_DEMOS['v2-accion'] = {
 
 AL_DEMOS['v2-instala'] = {
   steps: [
-    { a:0, b:5.2, short:'Copia', kicker:'Paso 1: haz tu copia', title:'Haz tu copia',
-      body:'Abre el enlace que te enviamos y elige “Hacer una copia”. Tu copia se abre en tu Drive y trae Concilia adentro, con su código ya incluido.' },
-    { a:5.2, b:10.4, short:'Configurar', kicker:'Paso 2: abre el asistente', title:'Abre “Configurar herramienta”',
-      body:'En tu copia, abre el menú “Concilia” de la barra superior. El asistente se abre al costado y te guía paso a paso.' },
-    { a:10.4, b:15.6, short:'Autorizar', kicker:'Paso 3: autoriza los permisos', title:'Autoriza los permisos',
-      body:'Google te pide permiso para leer tus planillas, enviar los correos y ejecutar la conciliación a la hora que programes. Aparece en una pantalla de Google, no dentro de la herramienta.',
+    { a:0, b:5.2, short:'Copia', kicker:'Paso 1 de 5 · 1 clic', title:'Haz tu copia',
+      body:'Abre el enlace que te enviamos y pulsa «Hacer una copia». Concilia queda en tu Google Drive, con todo adentro.' },
+    { a:5.2, b:10.4, short:'Asistente', kicker:'Paso 2 de 5 · 2 clics', title:'Abre el asistente',
+      body:'En tu copia, abre el menú «Concilia» y elige «Configurar aplicativo». Se abre al costado y te guía paso a paso.' },
+    { a:10.4, b:15.6, short:'Permisos', kicker:'Paso 3 de 5 · 1 clic', title:'Da los permisos',
+      body:'Google te pregunta si Concilia puede usar tus planillas y tu correo. Marcas todo y pulsas «Permitir». Se hace una sola vez.',
       tip:'Marca todas las casillas: sin ellas no funcionan los correos ni el envío automático.' },
-    { a:15.6, b:21.8, short:'Publicar', kicker:'Paso 4: publica tu panel', title:'Publica tu panel',
-      body:'Desde el editor de Apps Script, publica el panel como aplicación web con acceso “Solo yo”. Así queda privado en tu cuenta.',
+    { a:15.6, b:21.8, short:'Publicar', kicker:'Paso 4 de 5 · 4 clics', title:'Publica tu panel',
+      body:'Son cuatro clics: «Implementar», «Nueva implementación», «Solo yo» y otra vez «Implementar». Así el panel queda privado, solo para ti.',
       tip:'“Solo yo” significa privado. No elijas “Cualquiera”.' },
-    { a:21.8, b:27.0, short:'Abrir', kicker:'Paso 5: ábrelo y empieza', title:'Ábrelo y conecta tus fuentes',
-      body:'Abre el panel: viene con datos de ejemplo para que lo veas conciliar al instante. Cuando quieras, pegas tus propias planillas en Configuración.' },
+    { a:21.8, b:27.0, short:'Abrir', kicker:'Paso 5 de 5 · 2 clics', title:'Ábrelo',
+      body:'Pulsa «Verificar instalación» y luego «Abrir panel». Trae datos de ejemplo para que lo veas funcionar; después conectas tus planillas.' },
     { a:27.0, b:31.4, short:'Listo', kicker:'Listo', title:'Ya quedó instalado',
       body:'No queda nada por instalar. Todo funciona dentro de tu propia cuenta de Google; la IA es opcional y usa tu propia clave.',
       checks:['Es privado: la herramienta vive en tu cuenta de Google, no en un servidor nuestro.', 'Es tuyo: tus datos quedan en tus planillas.'],
       contact:'Si algo no coincide con lo que ves, escríbeme antes de continuar.' }
+  ],
+  // lo que se pulsa en cada clic (mismo orden que clicks en cursor y cursorV): se marca en la pantalla
+  rotulos: [
+    ['Clic en «Hacer una copia»'],
+    ['Clic en el menú «Concilia»', 'Clic en «Configurar aplicativo»'],
+    ['Clic en «Permitir»'],
+    ['Clic en «Implementar»', 'Clic en «Nueva implementación»', 'Elige «Solo yo»', 'Clic en «Implementar»'],
+    ['Clic en «Verificar instalación»', 'Clic en «Abrir panel»'],
+    null
   ],
   cursor: [
     { keys:[[1.4,1100,900],[2.1,860,664],[2.6,860,664],[3.3,1060,860]], clicks:[2.25] },
@@ -6668,7 +6726,7 @@ AL_DEMOS['v2-instala'] = {
         if (open) {
           dialog(g, 780, 192, 380, 150);
           if (lt > 1.65) { g.fillStyle = '#eef2f7'; g.fillRect(788, 200, 364, 60); }
-          txt(g, 'Configurar herramienta', 806, 230, 30, 700, C.ink, 'left', 336);
+          txt(g, 'Configurar aplicativo', 806, 230, 30, 700, C.ink, 'left', 336);
           txt(g, 'Autorizar permisos', 806, 300, 30, 600, C.muted, 'left', 336);
         }
         const sp = ease((lt - 2.0) / 0.5);
@@ -6678,7 +6736,7 @@ AL_DEMOS['v2-instala'] = {
           g.fillStyle = '#fff'; g.fillRect(px, 196, 460, CH - 196);
           g.fillStyle = C.brand; g.fillRect(px, 196, 5, CH - 196);
           g.restore();
-          txt(g, 'Configurar herramienta', px + 36, 250, 38, 800, C.ink, 'left', 396);
+          txt(g, 'Configurar aplicativo', px + 36, 250, 38, 800, C.ink, 'left', 396);
           txt(g, 'Te guía paso a paso.', px + 36, 290, 29, 600, C.muted);
           ['Autoriza los permisos', 'Publica tu panel', 'Conecta tus fuentes'].forEach((s, k) => {
             const a = easeOut((lt - 2.5 - k*0.2) / 0.3); if (a <= 0) return;
@@ -8203,7 +8261,7 @@ AL_DEMOS['fin-instala'] = {
   v2i.drawV = H => { const { C, CW, rr, txt, wrap, btn, panelBar } = H;
     return [
       I.copia(H, 'Concilia', ['Cartolas marzo', 'Libro mayor 2026', 'Presupuesto', 'Proveedores']),
-      I.menu(H, 'Concilia', 'Concilia', ['Configurar herramienta', 'Autorizar permisos'], ['Autoriza los permisos', 'Publica tu panel', 'Conecta tus fuentes'], false),
+      I.menu(H, 'Concilia', 'Concilia', ['Configurar aplicativo', 'Autorizar permisos'], ['Autoriza los permisos', 'Publica tu panel', 'Conecta tus fuentes'], false, 'Configurar aplicativo'),
       I.permisos(H, 'Concilia quiere acceder a tu cuenta de Google', ['Leer y editar tus planillas', 'Enviar correos en tu nombre', 'Ejecutarse a la hora que programes', 'Conectarse a la IA que elijas (opcional)'], 'Permitir', true),
       I.publicar(H, 'Motor.gs', false),
       I.verificar(H, 'Concilia', ['Copia en tu Drive', 'Permisos autorizados', 'Panel publicado (Solo yo)'], g => {
@@ -8363,195 +8421,160 @@ AL_DEMOS['fin-instala'] = {
   const v2a = AL_DEMOS['v2-accion'];
   v2a.drawV = H => { const { C, CW, CH, clamp, ease, easeOut, lerp, rr, txt, wrap, press, btn, base, overlay, dialog, banner, pill, campo, panelBar } = H;
     const TABS = ['Resumen','Resultados','Sugerencias','Historial','Configuración'];
-    function tabla(g, x, y, w, titulo, filas, marca, a){
-      g.fillStyle = '#f6f8fb'; rr(g, x, y, w, 62, 14); g.fill();
-      txt(g, titulo, x + 22, y + 32, 32, 800, C.ink);
-      filas.forEach((f, k) => {
-        const ap = easeOut((a - k*0.12) / 0.35); if (ap <= 0) return;
-        const yy = y + 96 + k*56;
-        g.globalAlpha = ap;
-        const m = marca ? marca(k) : 0;
-        if (m > 0) { g.fillStyle = 'rgba(224,138,44,' + (0.22*m) + ')'; rr(g, x, yy - 26, w, 52, 12); g.fill(); }
-        txt(g, f[0], x + 20, yy, 28, 600, C.ink, 'left', w - 250);
-        txt(g, f[1], x + w - 20, yy, 30, 800, f[1][0] === '-' ? C.muted : C.ink, 'right');
-        g.strokeStyle = C.line; g.lineWidth = 2; g.beginPath(); g.moveTo(x, yy + 28); g.lineTo(x + w, yy + 28); g.stroke();
-        g.globalAlpha = 1;
-      });
-    }
     const tarjeta = (g, x, y, w, fuente, concepto, monto, a, hl) => {
       g.globalAlpha = a;
       g.fillStyle = hl ? 'rgba(47,138,91,.12)' : '#f6f8fb'; rr(g, x, y, w, 150, 18); g.fill();
       g.strokeStyle = hl ? C.ok : C.line; g.lineWidth = 3; rr(g, x, y, w, 150, 18); g.stroke();
-      txt(g, fuente, x + 24, y + 36, 24, 700, C.soft); txt(g, concepto, x + 24, y + 78, 30, 700, C.ink, 'left', w - 48);
+      txt(g, fuente, x + 24, y + 36, 24, 700, C.soft, 'left', w - 48); txt(g, concepto, x + 24, y + 78, 30, 700, C.ink, 'left', w - 48);
       txt(g, monto, x + 24, y + 120, 36, 800, C.ink);
       g.globalAlpha = 1;
+    };
+    const estado = (g, x, y, t0, lt, on, off, colOn, fondoOn) => {
+      const si = lt > t0, pop = 1 + Math.sin(clamp((lt - t0) / 0.3) * Math.PI) * 0.12;
+      g.save(); g.translate(x, y); g.scale(pop, pop);
+      pill(g, 0, -23, si ? on : off, si ? fondoOn : '#fdf1e2', si ? colOn : C.warn, 27, 46, 'center');
+      g.restore();
     };
     return [
       (g, lt) => {
         base(g, 'Cierre de marzo');
-        const izq = [['03/03 Abono cliente','$2.000.000'],['04/03 Transferencia','-$1.190.000'],['12/03 Comisión mantención','-$12.990'],['15/03 Pago proveedores','-$780.000'],['20/03 Intereses','$1.250'],['22/03 Depósito','$45.000']];
-        const der = [['Factura 1002','$1.200.000'],['Factura 1002 saldo','$800.000'],['Pago fact. 1001','-$1.190.000'],['Pago fact. 1003-1004','-$780.000'],['Depósito cliente','$45.000'],['Pago fact. 1005','-$320.000'],['Nota de crédito 88','$12.000'],['Factura 1006','$96.500']]
-          .filter((f, k) => 516 + 96 + k*56 + 28 < CH - 130);   // en el celular, las filas que caben sobre el aviso
-        const ml = k => (k === 0 || k === 2 || k === 4) ? easeOut((lt - 1.8 - k*0.15) / 0.4) : 0;
-        const mr = k => (k <= 1) ? easeOut((lt - 1.9) / 0.4) : 0;
-        tabla(g, 40, 96, 720, 'Cartola banco', izq, ml, lt - 0.2);
-        tabla(g, 40, 516, 720, 'Libro mayor', der, mr, lt - 0.5);
-        const p = easeOut((lt - 2.8) / 0.4);
-        if (p > 0) { g.globalAlpha = p; pill(g, 400, CH - 108 + (1-p)*14, 'No cuadra: faltan ' + H.cuenta(645390, lt, 2.8, 0.8), C.bad, '#fff', 34, 68, 'center'); g.globalAlpha = 1; }
-        H.mo.barrido(g, lt, 3.0, 100, CH - 108, 600, 68, { radio: 34 });
-        H.foco(g, lt, 2.8, 0, [[70, CH - 124, 660, 100]]);
+        problemaSimple(g, lt, H, true);
       },
-      (g, lt) => {
+      (g, lt) => {   // paso 1: dos planillas conectadas
         base(g, 'Concilia');
         panelBar(g, 'Concilia', TABS, 4);
-        txt(g, '1 · Fuentes de datos', 40, 262, 38, 800, C.ink);
-        const url = 'docs.google.com/spreadsheets/d/1Cartola…';
-        const n = Math.floor(clamp((lt - 0.4) / 0.9) * url.length);
-        campo(g, 40, 340, 720, 64, 'Fuente 1 · enlace del Sheet', url.slice(0, n), lt > 0.4 && lt < 1.4);
-        campo(g, 40, 458, 720, 64, 'Hoja', lt > 1.3 ? 'Movimientos ▾' : '', false);
-        const f2 = easeOut((lt - 1.4) / 0.45);
-        if (f2 > 0) {
-          g.globalAlpha = f2;
-          campo(g, 40, 590, 350, 64, 'Fuente 2 · Sheet', 'el mismo Sheet', false);
-          campo(g, 410, 590, 350, 64, 'Hoja', 'Mayor banco ▾', false);
+        txt(g, 'Conecta tus dos planillas', 40, 262, 38, 800, C.ink, 'left', 720);
+        [['Tu banco', 'Cartola de marzo'], ['Tu contabilidad', 'Libro mayor de marzo']].forEach(([t, s], n) => {
+          const a = easeOut((lt - 0.2 - n*0.5) / 0.45); if (a <= 0) return;
+          const y = 300 + n*226 + (1 - a)*16;
+          g.globalAlpha = a;
+          g.fillStyle = '#f6f8fb'; rr(g, 40, y, 720, 206, 20); g.fill();
+          H.sheetIcon(g, 70, y + 30, 52);
+          txt(g, t, 150, y + 56, 36, 800, C.ink, 'left', 580);
+          txt(g, s + ' · Google Sheets', 150, y + 100, 25, 600, C.muted, 'left', 580);
+          const c = easeOut((lt - 0.9 - n*0.5) / 0.35);
+          if (c > 0) { g.globalAlpha = a*c; pill(g, 70, y + 136, '✓ Conectada', '#e6f2eb', C.ok, 27, 48); }
           g.globalAlpha = 1;
-        }
-        [['Fecha','Glosa','Cargo / Abono'],['Fecha','Descripción','Debe / Haber']].forEach((cs, fi) => {
-          let x = 40;
-          cs.forEach((c, k) => {
-            const a = easeOut((lt - 2.0 - fi*0.35 - k*0.12) / 0.3); if (a <= 0) return;
-            g.globalAlpha = a; x += pill(g, x, 690 + fi*62, '✓ ' + c, '#e6f2eb', C.ok, 27, 50) + 12; g.globalAlpha = 1;
-          });
+        });
+        const r = easeOut((lt - 1.5) / 0.3);
+        if (r > 0) { g.globalAlpha = r; txt(g, 'Reconoce sola sus columnas:', 40, 780, 30, 700, C.ink, 'left', 720); g.globalAlpha = 1; }
+        let x = 40;
+        ['Fecha', 'Detalle', 'Monto'].forEach((c, k) => {
+          const a = easeOut((lt - 1.6 - k*0.2) / 0.3); if (a <= 0) return;
+          g.globalAlpha = a; x += pill(g, x, 808, '✓ ' + c, '#e6f2eb', C.ok, 30, 56) + 14; g.globalAlpha = 1;
         });
         const b = easeOut((lt - 3.3) / 0.35);
-        if (b < 1) btn(g, 40, 870, 720, 72, 'Guardar fuentes', 'primary', press(lt, 3.05), 34);
-        if (b > 0) { g.globalAlpha = b; banner(g, 40, 870, 720, 72, '✓ 2 fuentes listas'); g.globalAlpha = 1; }
-        H.mo.barrido(g, lt, 2.55, 40, 686, 720, 120, { radio: 24 });
-        H.mo.barrido(g, lt, 3.6, 40, 870, 720, 72, { radio: 36 });
-        H.foco(g, lt, 2.0, 0, [[24, 662, 752, 294]]);
-        if (CH > 1060) {   // en el celular, la página sigue: la tarjeta de reglas
-          g.fillStyle = C.line; g.fillRect(40, 984, 720, 2);
-          txt(g, '2 · Reglas', 40, 1036, 34, 800, C.ink);
-          campo(g, 40, 1110, 340, 64, 'Tolerancia de monto ($)', '1', false);
-          campo(g, 410, 1110, 350, 64, 'Ventana de fechas', '30 días', false);
-        }
+        if (b < 1) btn(g, 40, 900, 720, 72, 'Guardar', 'primary', press(lt, 3.05), 34);
+        if (b > 0) { g.globalAlpha = b; banner(g, 40, 900, 720, 72, '✓ Listo: 2 planillas conectadas'); g.globalAlpha = 1; }
+        H.mo.barrido(g, lt, 2.2, 40, 804, 560, 64, { radio: 28 });
+        H.mo.barrido(g, lt, 3.6, 40, 900, 720, 72, { radio: 36 });
+        H.foco(g, lt, 1.6, 0, [[24, 740, 752, 248]]);
+        if (CH > 1080) { const h = easeOut((lt - 2.3) / 0.4); if (h > 0) { g.globalAlpha = h; wrap(g, 'También sirve una sola planilla, con dos hojas.', 40, 1036, 720, 27, 600, C.muted, 1.3); g.globalAlpha = 1; } }
       },
-      (g, lt) => {
+      (g, lt) => {   // paso 2: un pago con sus dos facturas
         base(g, 'Concilia');
         panelBar(g, 'Concilia', TABS, 1);
+        txt(g, 'Encontró la pareja de cada pago', 40, 262, 36, 800, C.ink, 'left', 720);
         const ok = lt > 2.6;
-        const e0 = easeOut(lt / 0.45), e1 = easeOut((lt - 0.4) / 0.45), e2 = easeOut((lt - 0.55) / 0.45);   // entran deslizándose: el abono desde arriba, las facturas desde abajo
-        tarjeta(g, 40, 250 - (1 - e0)*70, 720, 'CARTOLA · 03/03', 'Abono Comercial Sur', '$2.000.000', e0, ok);
-        tarjeta(g, 40, 520 + (1 - e1)*70, 350, 'MAYOR · 02/03', 'Factura 1002', '$1.200.000', e1, ok);
-        tarjeta(g, 410, 520 + (1 - e2)*70, 350, 'MAYOR · 19/03', 'Factura 1002 saldo', '$800.000', e2, ok);
+        const e0 = easeOut(lt / 0.45), e1 = easeOut((lt - 0.4) / 0.45), e2 = easeOut((lt - 0.55) / 0.45);   // el pago desde arriba, las facturas desde abajo
+        tarjeta(g, 40, 300 - (1 - e0)*70, 720, 'TU BANCO · 03/03', 'Pago de un cliente', '$2.000.000', e0, ok);
+        tarjeta(g, 40, 560 + (1 - e1)*70, 350, 'TU CONTABILIDAD', 'Factura 1002', '$1.200.000', e1, ok);
+        tarjeta(g, 410, 560 + (1 - e2)*70, 350, 'TU CONTABILIDAD', 'Factura 1002 (saldo)', '$800.000', e2, ok);
         [[215, 0.9], [585, 1.2]].forEach(([x2, t0]) => {
           const p = ease((lt - t0) / 0.6); if (p <= 0) return;
-          g.strokeStyle = ok ? C.ok : C.brand; g.lineWidth = 5; g.beginPath(); g.moveTo(400, 400);
-          const x = lerp(400, x2, p), y = lerp(400, 520, p), cy = lerp(400, 460, p);
+          g.strokeStyle = ok ? C.ok : C.brand; g.lineWidth = 5; g.beginPath(); g.moveTo(400, 450);
+          const x = lerp(400, x2, p), y = lerp(450, 560, p), cy = lerp(450, 505, p);
           g.bezierCurveTo(400, cy, x, cy, x, y); g.stroke();
         });
         const s = easeOut((lt - 1.9) / 0.4);
-        if (s > 0) { g.globalAlpha = s; txt(g, '$1.200.000 + $800.000 = ' + H.cuenta(2000000, lt, 1.9, 0.6) + (lt > 2.5 ? ' ✓' : ''), 400, 730, 34, 800, C.ink, 'center', 720); g.globalAlpha = 1; }
+        if (s > 0) { g.globalAlpha = s; txt(g, '$1.200.000 + $800.000 = ' + H.cuenta(2000000, lt, 1.9, 0.6) + (lt > 2.5 ? ' ✓' : ''), 400, 770, 32, 800, C.ink, 'center', 720); g.globalAlpha = 1; }
         const b = easeOut((lt - 2.6) / 0.35);
-        if (b > 0) { g.globalAlpha = b; pill(g, 400, 772, 'Grupo 1:2 · Conciliado', C.ok, '#fff', 32, 62, 'center'); g.globalAlpha = 1; }
+        if (b > 0) { g.globalAlpha = b; pill(g, 400, 810, 'Conciliado: 1 pago = 2 facturas', C.ok, '#fff', 30, 62, 'center'); g.globalAlpha = 1; }
         const m = easeOut((lt - 3.1) / 0.4);
-        if (m > 0) { g.globalAlpha = m; wrap(g, 'Motivo: suman lo mismo · 17 días de diferencia · «1002» en ambos conceptos', 60, 890, 680, 28, 600, C.muted, 1.3); g.globalAlpha = 1; }
-        H.mo.escaneo(g, lt, 0.7, 0.9, 30, 236, 740, 450);
-        [[40, 250, 720, 150], [40, 520, 350, 150], [410, 520, 350, 150]].forEach(r => H.mo.barrido(g, lt, 2.65, r[0], r[1], r[2], r[3], { radio: 18, color: '47,138,91' }));
-        // en el celular, la lista de Resultados sigue con los demás grupos
-        [['Grupo 2 · 1:1', 'Pago fact. 1001', '-$1.190.000'], ['Grupo 3 · 2:1', 'Pago fact. 1003-1004', '-$780.000'], ['Grupo 4 · 1:1', 'Depósito cliente', '$45.000']].forEach((r, k) => {
-          const y = 1000 + k*72; if (y + 30 > CH) return;
-          g.fillStyle = C.line; g.fillRect(40, y - 36, 720, 2);
-          pill(g, 40, y - 21, r[0], '#e6f2eb', C.ok, 23, 42); txt(g, r[1], 250, y, 27, 600, C.ink, 'left', 300); txt(g, r[2], 760, y, 28, 800, C.ink, 'right');
-        });
+        if (m > 0) { g.globalAlpha = m; wrap(g, 'Por qué: suman lo mismo y las dos dicen «1002».', 40, 926, 720, 28, 600, C.muted, 1.3); g.globalAlpha = 1; }
+        H.mo.escaneo(g, lt, 0.7, 0.9, 30, 286, 740, 440);
+        [[40, 300, 720, 150], [40, 560, 350, 150], [410, 560, 350, 150]].forEach(r => H.mo.barrido(g, lt, 2.65, r[0], r[1], r[2], r[3], { radio: 18, color: '47,138,91' }));
+        if (CH > 1080) {   // en el celular, la lista sigue con la otra pareja
+          const o = easeOut((lt - 3.6) / 0.4);
+          if (o > 0) { g.globalAlpha = o; g.fillStyle = C.line; g.fillRect(40, 990, 720, 2);
+            txt(g, 'Pago a proveedores', 40, 1040, 29, 700, C.ink, 'left', 420); pill(g, 760, 1017, 'Conciliado', '#e6f2eb', C.ok, 26, 46, 'right'); g.globalAlpha = 1; }
+        }
       },
-      (g, lt) => {
+      (g, lt) => {   // paso 3: una regla explica la comisión
         base(g, 'Concilia');
         panelBar(g, 'Concilia', TABS, 4);
-        txt(g, '3 · Reglas para explicar pendientes', 40, 262, 34, 800, C.ink, 'left', 720);
-        g.strokeStyle = C.line; g.lineWidth = 3; rr(g, 40, 296, 720, 376, 18); g.stroke();
-        campo(g, 70, 350, 660, 56, 'Nombre', 'Comisiones del banco', false);
-        campo(g, 70, 452, 660, 56, 'Queda explicado como', lt > 0.5 ? 'Gasto bancario' : '', lt > 0.3 && lt < 0.9);
-        [['si','Concepto','contiene','comisión'],['y','Tipo','es cargo',''],['y','Monto','hasta','$20.000']].forEach((c, k) => {
-          const a = easeOut((lt - 0.7 - k*0.3) / 0.3); if (a <= 0) return;
-          const y = 550 + k*46;
-          g.globalAlpha = a;
-          txt(g, c[0], 80, y, 27, 700, C.muted);
-          txt(g, c[1], 124, y, 30, 700, C.ink); txt(g, c[2], 300, y, 30, 600, C.muted);
-          if (c[3]) pill(g, 490, y - 21, c[3], '#eef2f7', C.ink, 27, 42);
-          g.globalAlpha = 1;
+        txt(g, 'Una regla para lo que no tiene pareja', 40, 262, 34, 800, C.ink, 'left', 720);
+        g.fillStyle = '#f6f8fb'; rr(g, 40, 296, 720, 300, 20); g.fill();
+        const a1 = easeOut((lt - 0.3) / 0.35), a2 = easeOut((lt - 0.9) / 0.35);
+        if (a1 > 0) { g.globalAlpha = a1; txt(g, 'Si el detalle dice', 76, 356, 34, 700, C.ink); pill(g, 76, 386, '«comisión»', '#eef2f7', C.ink, 32, 58); g.globalAlpha = 1; }
+        if (a2 > 0) { g.globalAlpha = a2; txt(g, 'queda explicado como', 76, 494, 34, 700, C.ink); pill(g, 76, 522, 'Gasto bancario', '#ece9fb', C.expl, 32, 58); g.globalAlpha = 1; }
+        btn(g, 40, 620, 720, 66, 'Guardar regla', 'primary', press(lt, 2.15), 32);
+        [['Comisión del banco', '-$12.990', 'Explicado', C.expl, '#ece9fb', 2.5], ['Intereses', '$1.250', 'Por revisar', C.warn, '#fdf1e2', 2.9]].forEach(([n, m, e, col, fondo, t0], k) => {
+          const y = 760 + k*100;
+          g.fillStyle = C.line; g.fillRect(40, y + 46, 720, 2);
+          txt(g, n, 40, y - 16, 30, 700, C.ink, 'left', 440); txt(g, m, 40, y + 22, 30, 800, C.ink, 'left');
+          estado(g, 660, y, t0, lt, e, 'Sin pareja', col, fondo);
         });
-        btn(g, 40, 690, 720, 66, 'Guardar estas reglas', 'primary', press(lt, 2.15), 32);
-        [['12/03','Comisión mantención','-$12.990'],['14/03','Comisión transferencia','-$490'],['28/03','Comisión por giro','-$1.200'],['29/03','Comisión cheque','-$2.100'],['30/03','Comisión transferencia','-$490'],['31/03','Comisión mantención','-$12.990']].forEach((r, k) => {
-          const y = 808 + k*64, t0 = 2.5 + k*0.25, on = lt > t0; if (y + 24 > CH) return;   // en el celular, la lista sigue hasta abajo
-          txt(g, r[0], 50, y, 26, 600, C.muted); txt(g, r[1], 130, y, 29, 600, C.ink, 'left', 330); txt(g, r[2], 590, y, 29, 800, C.ink, 'right');
-          const pop = 1 + Math.sin(clamp((lt - t0) / 0.3) * Math.PI) * 0.12;
-          g.save(); g.translate(690, y); g.scale(pop, pop);
-          pill(g, 0, -21, on ? 'Explicado' : 'Pendiente', on ? '#ece9fb' : '#fdf1e2', on ? C.expl : C.warn, 24, 42, 'center');
-          g.restore();
-        });
-        { const fin = Math.min(CH - 20, 808 + 6*64); H.mo.escaneo(g, lt, 2.375, (fin - 776) / 256, 40, 776, 720, fin - 776); }   // pasa por cada fila (808 + 64k) cuando cambia (2,5 + 0,25k)
-        H.foco(g, lt, 2.4, 0, [[28, 772, 744, Math.min(CH - 790, 394)]]);
+        H.mo.escaneo(g, lt, 2.2, 0.9, 40, 712, 720, 210);
+        H.foco(g, lt, 2.4, 0, [[24, 706, 752, 230]]);
+        if (CH > 1080) { const f = easeOut((lt - 3.3) / 0.4); if (f > 0) { g.globalAlpha = f; wrap(g, 'La regla queda guardada: sirve este mes y los siguientes.', 40, 1000, 720, 27, 600, C.muted, 1.3); g.globalAlpha = 1; } }
       },
-      (g, lt) => {
+      (g, lt) => {   // paso 4: lo pendiente, por correo
         base(g, 'Concilia');
         panelBar(g, 'Concilia', TABS, 1);
         for (let r = 0; 240 + r*80 < CH; r++) { g.fillStyle = r % 2 ? '#f6f8fb' : '#fff'; g.fillRect(40, 240 + r*80, 720, 80); g.fillStyle = '#dde5ee'; rr(g, 70, 272 + r*80, 280, 14, 7); g.fill(); rr(g, 560, 272 + r*80, 170, 14, 7); g.fill(); }
         const d = easeOut((lt - 0.25) / 0.35);
         overlay(g, d); g.globalAlpha = d;
         dialog(g, 40, 236, 720, 730);
-        txt(g, 'Enviar por correo', 80, 292, 40, 800, C.ink);
-        pill(g, 80, 326, 'Movimientos de esta vista', C.brand, '#fff', 24, 44);
-        const para = 'contabilidad@empresa.cl' + (lt > 1.45 ? ', ana@empresa.cl' : '');
-        campo(g, 80, 430, 640, 60, 'Para', para, lt < 1.6);
-        if (lt < 1.5) pill(g, 80, 502, '+ ana@empresa.cl', '#eef2f7', C.brand, 24, 40);
-        campo(g, 80, 600, 640, 60, 'Asunto', 'Pendientes de marzo · 8 movimientos', false);
-        g.fillStyle = '#f6f8fb'; rr(g, 80, 680, 640, 100, 14); g.fill();
-        txt(g, 'Vista previa', 104, 706, 22, 700, C.soft);
-        for (let k = 0; k < 3; k++) { g.fillStyle = '#dde5ee'; rr(g, 104, 730 + k*16, [480, 400, 540][k], 9, 4); g.fill(); }
-        if (lt < 3.3) btn(g, 80, 800, 640, 70, 'Enviar a 2 destinatarios', 'primary', press(lt, 3.05), 32);
+        txt(g, 'Enviar lo pendiente', 80, 296, 38, 800, C.ink, 'left', 640);
+        const para = 'contabilidad@empresa.cl', n = Math.floor(clamp((lt - 0.7) / 0.8) * para.length);
+        campo(g, 80, 400, 640, 62, 'Para', para.slice(0, n), lt > 0.6 && lt < 1.6);
+        campo(g, 80, 520, 640, 62, 'Asunto', lt > 1.6 ? 'Pendientes de marzo · 1 movimiento' : '', false);
+        g.fillStyle = '#f6f8fb'; rr(g, 80, 606, 640, 170, 14); g.fill();
+        txt(g, 'Lo que va en el correo', 104, 638, 24, 700, C.soft);
+        const v = easeOut((lt - 1.9) / 0.4);
+        if (v > 0) { g.globalAlpha = d * v; txt(g, 'Intereses · 20/03 · $1.250', 104, 690, 30, 700, C.ink, 'left', 590); pill(g, 104, 718, 'Por revisar', '#fdf1e2', C.warn, 26, 44); g.globalAlpha = d; }
+        if (lt < 3.3) btn(g, 80, 800, 640, 70, 'Enviar', 'primary', press(lt, 3.05), 32);
         const b = easeOut((lt - 3.3) / 0.35);
         if (b > 0) banner(g, 80, 800, 640, 70, '✓ Enviado · queda en Historial');
         const au = easeOut((lt - 3.9) / 0.4);
-        if (au > 0) { g.globalAlpha = d * au; pill(g, 400, 892, '⏰ Envío automático: todos los días, 8:00', '#e6f2eb', C.ok, 24, 44, 'center'); }
+        if (au > 0) { g.globalAlpha = d * au; wrap(g, 'Y si quieres, sale solo todos los días a las 8:00', 80, 904, 640, 26, 700, C.ok, 1.25); }
         g.globalAlpha = 1;
+        H.mo.barrido(g, lt, 3.6, 80, 800, 640, 70, { radio: 35 });
       },
-      (g, lt) => {
+      (g, lt) => {   // resultado: 6 de 7 listos solos
         base(g, 'Concilia');
         panelBar(g, 'Concilia', TABS, 0);
-        const p = ease((lt - 0.3) / 1.6);
-        const tiles = [[Math.round(lerp(47, 94, p)) + '%', 'conciliación', C.ok], [String(Math.round(lerp(8, 15, p))), 'conciliados', C.ok], [String(Math.round(lerp(0, 3, p))), 'explicados', C.expl], [String(Math.round(lerp(8, 1, p))), 'pendientes', C.warn]];
-        tiles.forEach(([v, l, c], i) => {
-          const x = 40 + (i % 2)*370, y = 244 + (i >> 1)*176;
-          g.fillStyle = '#f6f8fb'; rr(g, x, y, 350, 160, 20); g.fill();
-          txt(g, v, x + 175, y + 64, 64, 800, c, 'center'); txt(g, l, x + 175, y + 124, 28, 700, C.muted, 'center');
+        wrap(g, 'Listo: 6 de 7 movimientos resueltos solos', 40, 258, 720, 36, 800, C.ink, 1.2);
+        const p = ease((lt - 0.3) / 1.4);
+        const tw = (720 - 2*20) / 3;
+        [[5, 'conciliados', C.ok], [1, 'explicado', C.expl], [1, 'por revisar', C.warn]].forEach(([v, l, c], i) => {
+          const x = 40 + i*(tw + 20);
+          g.fillStyle = '#f6f8fb'; rr(g, x, 330, tw, 180, 20); g.fill();
+          txt(g, String(Math.round(lerp(0, v, p))), x + tw/2, 404, 76, 800, c, 'center'); txt(g, l, x + tw/2, 474, 27, 700, C.muted, 'center', tw - 16);
         });
-        txt(g, 'Montos por grupo', 40, 630, 30, 800, C.ink);
-        [0.9, 0.7, 0.55, 0.4, 0.3, 0.2].forEach((v, k) => {
-          const h = 190 * v * ease((lt - 0.6 - k*0.1) / 0.7);
-          g.fillStyle = k < 4 ? C.ok : C.warn; rr(g, 56 + k*118, 866 - h, 84, h, 10); g.fill();
-        });
-        const s = easeOut((lt - 2.6) / 0.4);
-        if (s > 0) { g.globalAlpha = s; pill(g, 400, 900, 'IA opcional: 1 propuesta en Sugerencias', '#eef2f7', C.brand, 26, 56, 'center'); g.globalAlpha = 1; }
-        H.mo.barrido(g, lt, 2.0, 40, 244, 720, 336, { radio: 20 });
-        H.foco(g, lt, 0.25, 2.3, [[28, 232, 744, 360]]);
-        if (CH > 1060) {   // en el celular, el Resumen sigue: las últimas ejecuciones
-          txt(g, 'Últimas ejecuciones', 40, 1000, 30, 800, C.ink);
-          [['Hoy 09:14', '5.000 movimientos', '94 %'], ['Ayer 18:02', '4.870 movimientos', '91 %'], ['05/03 08:40', '4.512 movimientos', '88 %']].forEach((r, k) => {
-            const y = 1060 + k*58; if (y + 24 > CH) return;
-            txt(g, r[0], 40, y, 26, 700, C.ink); txt(g, r[1], 300, y, 25, 600, C.muted); txt(g, r[2], 760, y, 27, 800, C.ok, 'right');
-            g.fillStyle = C.line; g.fillRect(40, y + 28, 720, 2);
-          });
+        const s = easeOut((lt - 1.9) / 0.4);
+        if (s > 0) {
+          g.globalAlpha = s;
+          txt(g, 'Solo te queda revisar esto:', 40, 590, 32, 800, C.ink, 'left', 720);
+          g.fillStyle = '#fdf1e2'; rr(g, 40, 626, 720, 150, 18); g.fill();
+          txt(g, 'Intereses · 20/03', 70, 676, 32, 700, C.ink, 'left', 400); txt(g, '$1.250', 70, 730, 34, 800, C.ink);
+          pill(g, 730, 706, 'Por revisar', '#fff', C.warn, 27, 48, 'right');
+          g.globalAlpha = 1;
         }
+        const t = easeOut((lt - 2.8) / 0.4);
+        if (t > 0) { g.globalAlpha = t; wrap(g, 'Todo lo demás quedó listo y guardado en el Historial.', 40, 850, 720, 28, 600, C.muted, 1.3); g.globalAlpha = 1; }
+        H.mo.barrido(g, lt, 1.6, 40, 330, 720, 180, { radio: 20 });
+        H.foco(g, lt, 2.3, 0, [[24, 552, 752, 240]]);
       }
     ];
   };
   v2a.cursorV = [
     null,
-    { keys:[[0.3,700,960],[2.9,400,906],[3.2,400,906],[3.9,650,980]], clicks:[3.05] },
+    { keys:[[0.3,700,980],[2.9,400,936],[3.2,400,936],[3.9,650,1000]], clicks:[3.05] },
     null,
-    { keys:[[0.3,650,960],[2.0,400,723],[2.25,400,723],[2.9,650,980]], clicks:[2.15] },
-    { keys:[[0.3,650,960],[1.25,190,522],[1.5,190,522],[2.9,400,835],[3.2,400,835],[3.9,650,980]], clicks:[1.4,3.05] },
+    { keys:[[0.3,650,960],[2.0,400,653],[2.25,400,653],[2.9,650,980]], clicks:[2.15] },
+    { keys:[[0.3,650,960],[2.9,400,835],[3.2,400,835],[3.9,650,980]], clicks:[3.05] },
     null
   ];
 
