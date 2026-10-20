@@ -2570,6 +2570,15 @@ window.alFoto = (function(){
       var r = c.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 2); r.addColorStop(0, 'rgba(0,6,16,.55)'); r.addColorStop(0.6, 'rgba(0,6,16,.18)'); r.addColorStop(1, 'rgba(0,6,16,0)');
       c.setTransform(1, 0, 0, h / w, 0, 0); c.fillStyle = r; c.fillRect(0, 0, w, w); }) }));
     piso.position.set(u.caja.x, b[1] + u.caja.h * 0.01, -0.03); piso.renderOrder = -2; g.add(piso);
+    // 2026-10-20: ambiente de estudio, sin mover nada: un halo de luz azul de la marca detrás del equipo y su reflejo
+    // en la mesa, que se desvanece hacia abajo (como una foto de producto)
+    var halo = new T.Mesh(new T.PlaneGeometry(u.caja.w * 1.7, u.caja.h * 1.5), new MB({ transparent: true, depthWrite: false, toneMapped: false, blending: T.AdditiveBlending, opacity: 0.55, map: lienzo(T, 256, 256, function(c, w, h){
+      var r = c.createRadialGradient(w / 2, h * 0.46, 0, w / 2, h * 0.46, w / 2); r.addColorStop(0, 'rgba(61,127,214,.55)'); r.addColorStop(0.45, 'rgba(31,92,153,.22)'); r.addColorStop(1, 'rgba(31,92,153,0)');
+      c.fillStyle = r; c.fillRect(0, 0, w, h); }) }));
+    halo.position.set(u.caja.x, u.caja.y + u.caja.h * 0.06, -0.06); halo.renderOrder = -4; g.add(halo);
+    var desvanece = lienzo(T, 4, 128, function(c, w, h){ var l = c.createLinearGradient(0, 0, 0, h); l.addColorStop(0, '#000'); l.addColorStop(0.72, '#000'); l.addColorStop(1, '#fff'); c.fillStyle = l; c.fillRect(0, 0, w, h); });
+    var reflejo = new T.Mesh(foto.geometry, new MB({ map: tex, alphaMap: desvanece, transparent: true, opacity: 0.16, depthWrite: false, toneMapped: false }));
+    reflejo.scale.y = -1; reflejo.position.set(foto.position.x, 2 * b[1] - foto.position.y, -0.025); reflejo.renderOrder = -3; g.add(reflejo);
     g.userData = u; g.visible = false; return g;
   }
   // Cámara estilo grabación de pantalla (Screen Studio), de frente a la foto. Tres encuadres, con resortes suaves:
@@ -6387,6 +6396,42 @@ window.alDemoTarjetas = function(root, cfg){
    partir del panel real de Concilia: Resumen · Resultados · Sugerencias ·
    Historial · Configuración. */
 window.AL_DEMOS = window.AL_DEMOS || {};
+// 2026-10-20: el problema de Concilia contado en simple, con cifras que cuadran: lo que dice el banco y lo que dice tu
+// contabilidad, cada uno con su total, y la diferencia ($11.740 = la comisión menos los intereses, que nadie anotó)
+function problemaSimple(g, lt, H, vert){
+  const { C, CW, CH, easeOut, rr, txt, pill } = H;
+  const lados = [
+    ['Lo que dice tu banco', [['Pago de un cliente', 2000000], ['Pago a proveedores', -780000], ['Comisión del banco', -12990], ['Intereses', 1250]], 1208260],
+    ['Lo que dice tu contabilidad', [['Factura 1002', 1200000], ['Factura 1002 (saldo)', 800000], ['Pago a proveedores', -780000]], 1220000]
+  ];
+  const fila = vert ? 54 : 70, tam = 30, cab = vert ? 84 : 100;
+  const alto = filas => vert ? cab + filas * fila + 58 : 470;
+  lados.forEach(([titulo, filas, total], n) => {
+    const x = vert ? 40 : 40 + n * 580, y = vert ? (n ? 100 + alto(4) + 16 : 100) : 112, w = vert ? 720 : 540, h = alto(filas.length);
+    const a = easeOut((lt - 0.15 - n * 0.25) / 0.4); if (a <= 0) return;
+    g.globalAlpha = a;
+    g.fillStyle = '#f6f8fb'; rr(g, x, y, w, h, 20); g.fill();
+    txt(g, titulo, x + 28, y + (vert ? 40 : 44), 30, 800, C.ink, 'left', w - 56);
+    filas.forEach(([nom, m], k) => {
+      const b = easeOut((lt - 0.4 - n * 0.25 - k * 0.12) / 0.3); if (b <= 0) return;
+      const yy = y + cab + k * fila + (1 - b) * 10;
+      g.globalAlpha = a * b;
+      txt(g, nom, x + 28, yy, tam, 600, C.ink, 'left', w - 260); txt(g, H.clp(m), x + w - 28, yy, tam, 800, m < 0 ? C.muted : C.ink, 'right');
+      g.fillStyle = C.line; g.fillRect(x + 28, yy + fila / 2 - 2, w - 56, 2);
+    });
+    const t = easeOut((lt - 1.3 - n * 0.2) / 0.4);
+    if (t > 0) { g.globalAlpha = a * t; const yt = y + h - (vert ? 32 : 50); txt(g, 'Total', x + 28, yt, 32, 800, C.ink); txt(g, H.cuenta(total, lt, 1.3 + n * 0.2, 0.6), x + w - 28, yt, 36, 800, C.ink, 'right'); }
+    g.globalAlpha = 1;
+  });
+  const p = easeOut((lt - 2.3) / 0.4);
+  if (p > 0) {
+    const y = vert ? Math.max(100 + alto(4) + 16 + alto(3) + 40, CH - 250) : 640;
+    g.globalAlpha = p; pill(g, CW / 2, y + (1 - p) * 12, 'No cuadran: hay $11.740 de diferencia', C.bad, '#fff', 34, 70, 'center');
+    const q = easeOut((lt - 2.8) / 0.4); if (q > 0) { g.globalAlpha = q; txt(g, '¿Qué movimiento falta? Buscarlo a mano toma horas.', CW / 2, y + 120, 30, 600, C.muted, 'center', CW - 80); }
+    g.globalAlpha = 1;
+    H.mo.barrido(g, lt, 2.6, CW / 2 - 330, y, 660, 70, { radio: 35 });
+  }
+}
 AL_DEMOS['v2-accion'] = {
   steps: [
     { a:0, b:4.2, short:'El problema', kicker:'El problema que resuelve',
@@ -6439,20 +6484,9 @@ AL_DEMOS['v2-accion'] = {
       });
     }
     return [
-      (g, lt) => {
+      (g, lt) => {   // 2026-10-20: el problema en lenguaje simple (para quien no es contador): dos totales que no cuadran
         base(g, 'Cierre de marzo');
-        const izq = [['03/03 Abono cliente','$2.000.000'],['04/03 Transferencia','-$1.190.000'],['12/03 Comisión mantención','-$12.990'],['15/03 Pago proveedores','-$780.000'],['20/03 Intereses','$1.250'],['22/03 Depósito','$45.000']];
-        const der = [['Factura 1002','$1.200.000'],['Factura 1002 saldo','$800.000'],['Pago fact. 1001','-$1.190.000'],['Pago fact. 1003-1004','-$780.000'],['Depósito cliente','$45.000']];
-        const ml = k => (k === 0 || k === 2 || k === 4) ? easeOut((lt - 1.8 - k*0.15) / 0.4) : 0;
-        const mr = k => (k <= 1) ? easeOut((lt - 1.9) / 0.4) : 0;
-        tablaMini(g, 36, 110, 548, 'Cartola banco', izq, ml, lt - 0.2);
-        tablaMini(g, 616, 110, 548, 'Libro mayor', der, mr, lt - 0.5);
-        const p = easeOut((lt - 2.8) / 0.4);
-        if (p > 0) { g.globalAlpha = p; pill(g, 600, 740 + (1-p)*14, 'No cuadra: faltan ' + H.cuenta(645390, lt, 2.8, 0.8), C.bad, '#fff', 34, 66, 'center'); g.globalAlpha = 1; }
-        const q = easeOut((lt - 3.2) / 0.4);
-        if (q > 0) { g.globalAlpha = q; txt(g, '¿Qué abono pagó qué facturas? ¿Y la comisión?', 600, 860, 32, 600, C.muted, 'center'); g.globalAlpha = 1; }
-        H.mo.barrido(g, lt, 3.0, 330, 740, 540, 66, { radio: 33 });   // la luz cruza «No cuadra»
-        H.foco(g, lt, 2.8, 0, [[220, 718, 760, 186]]);
+        problemaSimple(g, lt, H, false);
       },
       (g, lt) => {
         base(g, 'Concilia');
@@ -8395,17 +8429,7 @@ AL_DEMOS['fin-instala'] = {
     return [
       (g, lt) => {
         base(g, 'Cierre de marzo');
-        const izq = [['03/03 Abono cliente','$2.000.000'],['04/03 Transferencia','-$1.190.000'],['12/03 Comisión mantención','-$12.990'],['15/03 Pago proveedores','-$780.000'],['20/03 Intereses','$1.250'],['22/03 Depósito','$45.000']];
-        const der = [['Factura 1002','$1.200.000'],['Factura 1002 saldo','$800.000'],['Pago fact. 1001','-$1.190.000'],['Pago fact. 1003-1004','-$780.000'],['Depósito cliente','$45.000'],['Pago fact. 1005','-$320.000'],['Nota de crédito 88','$12.000'],['Factura 1006','$96.500']]
-          .filter((f, k) => 516 + 96 + k*56 + 28 < CH - 130);   // en el celular, las filas que caben sobre el aviso
-        const ml = k => (k === 0 || k === 2 || k === 4) ? easeOut((lt - 1.8 - k*0.15) / 0.4) : 0;
-        const mr = k => (k <= 1) ? easeOut((lt - 1.9) / 0.4) : 0;
-        tabla(g, 40, 96, 720, 'Cartola banco', izq, ml, lt - 0.2);
-        tabla(g, 40, 516, 720, 'Libro mayor', der, mr, lt - 0.5);
-        const p = easeOut((lt - 2.8) / 0.4);
-        if (p > 0) { g.globalAlpha = p; pill(g, 400, CH - 108 + (1-p)*14, 'No cuadra: faltan ' + H.cuenta(645390, lt, 2.8, 0.8), C.bad, '#fff', 34, 68, 'center'); g.globalAlpha = 1; }
-        H.mo.barrido(g, lt, 3.0, 100, CH - 108, 600, 68, { radio: 34 });
-        H.foco(g, lt, 2.8, 0, [[70, CH - 124, 660, 100]]);
+        problemaSimple(g, lt, H, true);
       },
       (g, lt) => {
         base(g, 'Concilia');
