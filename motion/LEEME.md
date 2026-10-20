@@ -46,58 +46,9 @@ Además, del motor: `H.foco(g, lt, t0, t1, zonas)` (atenúa el resto de la panta
 
 Un efecto nuevo para todas las demos se agrega en `al-motion.js` (función pura, se exporta en `window.AL_MOTION`) y se suma a `MO` en el motor (`index.html`, junto a `H.foco`), con su versión vacía.
 
-## Cine: secuencias audiovisuales (prototipo de Concilia, 2026-10-20)
-
-Además de los efectos sobre las escenas, el sistema tiene **secuencias cinematográficas**: una composición 3D propia (no la pantalla del demo) con cámara, profundidad, luz y montaje por planos. Primer prototipo: `motion/cine/concilia.js`, visible en `prototipo/concilia-cine.html` (página interna, `noindex`, sin enlace en el menú).
-
-| Plano | Tiempo | Qué pasa |
-|---|---|---|
-| 1 · Establecimiento | 0,0 – 2,4 s | Espacio de datos en azul marino: capas de cristal en profundidad, piso de luz, haces azules; la cámara entra en arco |
-| 2 · Entrada | 2,4 – 4,8 s | La cartola y el libro mayor llegan desde el fondo; sus registros caen en dos columnas y la escena se ilumina al blanco de la marca |
-| 3 · Transformación | 4,8 – 7,6 s | Un plano de escaneo recorre los registros; las parejas se unen con líneas de relación (verdes al cuadrar), el abono se agrupa con sus dos facturas y lo que no tiene contraparte queda marcado en naranja |
-| 4 · Enfoque | 7,6 – 9,6 s | La cámara se acerca a la comisión sin contraparte; el resto se atenúa y una nota explica que queda por revisar (no se da por conciliada) |
-| 5 · Resolución | 9,6 – 11,4 s | Cada registro vuela a su fila en la pantalla real de Resultados de Concilia |
-| 6 · Cierre | 11,4 – 13,0 s | «Concilia.», la frase y el resultado de este ejemplo (4 grupos conciliados, 2 por revisar), rotulado «Datos de ejemplo» |
-
-**En el sitio** (desde el 2026-10-20) la pieza de 13 s quedó como referencia: el demo «Ver en acción» de Concilia pasó **completo** al mismo lenguaje (ver la sección siguiente).
-
-Cómo está hecho: three.js (el de `vendor/`), sin dependencias nuevas. Todo sale de `render(t)`: el controlador (`play`, `pause`, `seek`, `destroy`) y el render a video usan el mismo tiempo, sin estado oculto. Curvas propias (salida firme, anticipación, rebote leve), cámara por fotogramas clave y una respiración de cámara en mano muy leve. Los controles y el subtítulo de cada plano son HTML (`aria-live`); con «reducir movimiento» se muestra el cierre quieto; sin 3D, el video (con su póster) y la explicación en texto.
-
-**¿Y Blender?** Este entorno no lo tiene y sin GPU renderizaría lento; además, en el navegador la composición se ve nítida a cualquier tamaño y pesa ~25 KB de código frente a ~2 MB de video. Blender queda para tomas de detalle hechas aparte (por ejemplo, un notebook físico en una mesa) que luego se montan en Kdenlive y se insertan con el componente de video.
-
-### Renderizar el video de una secuencia
-
-```sh
-python3 -m http.server 8765 &
-node motion/cine/renderizar.js prototipo/concilia-cine.html /tmp/cuadros 1280 720 30
-ffmpeg -framerate 30 -i /tmp/cuadros/c%04d.png -c:v libx264 -profile:v high -crf 24 -preset slow -pix_fmt yuv420p -movflags +faststart -an motion/media/concilia-cine.mp4
-ffmpeg -framerate 30 -i /tmp/cuadros/c%04d.png -c:v libvpx-vp9 -b:v 850k -minrate 300k -maxrate 1300k -pass 1 -row-mt 1 -an -f null /dev/null
-ffmpeg -framerate 30 -i /tmp/cuadros/c%04d.png -c:v libvpx-vp9 -b:v 850k -minrate 300k -maxrate 1300k -pass 2 -row-mt 1 -an motion/media/concilia-cine.webm
-ffmpeg -i /tmp/cuadros/c0380.png -c:v libwebp -quality 82 motion/media/concilia-cine.webp
-```
-
-Archivos actuales (13 s, 1280 × 720, 30 fps, sin audio): `concilia-cine.mp4` 2,2 MB, `concilia-cine.webm` 1,4 MB, póster `concilia-cine.webp` 22 KB. Sin ffmpeg instalado, `pip install imageio-ffmpeg` trae uno.
-
-## Demo cinematográfico de Concilia (2026-10-20)
-
-«Ver en acción» de Concilia es una sola pieza 3D (`motion/cine/concilia-demo.js`), no el notebook con tarjetas. El motor de demos la maneja como a cualquier demo: en `AL_DEMOS['v2-accion']`, `cine: 'conciliaDemo'` hace que `alDemoTarjetas` dibuje `AlCine.conciliaDemo(...).render(T)` con el tiempo de su línea (`alDemoLinea`). Por eso conserva todo: anterior, pausa, siguiente, reiniciar, deslizar, teclado, la guía de pasos, la frase de cada paso (`AL_NOTAS`), el resumen final con «Avísame», «reducir movimiento» (cada capítulo completo, quieto) y la versión en texto sin 3D.
-
-| Capítulo | Tiempo | Qué pasa |
-|---|---|---|
-| 1 · El problema | 0,0 – 4,2 s | A oscuras llegan la cartola y el libro mayor; no cuadran por $11.740 (la comisión menos los intereses) |
-| 2 · Fuentes | 4,2 – 9,0 s | La escena se ilumina; el panel de Concilia lee las dos fuentes y reconoce sus columnas |
-| 3 · Grupos | 9,0 – 13,6 s | Escaneo, líneas de relación y 4 grupos (el abono con sus dos facturas); la comisión y los intereses quedan sin contraparte |
-| 4 · Reglas | 13,6 – 18,6 s | La cámara va a lo que no tiene contraparte; una regla deja la comisión «Explicado · Gasto bancario»; los intereses, por revisar |
-| 5 · Avisos | 18,6 – 23,8 s | Los intereses salen por correo a contabilidad; envío automático diario |
-| 6 · Resultado | 23,8 – 29,6 s | Los registros convergen en la pantalla de Resultados y cierra la marca: 4 grupos conciliados, 1 explicado, 1 por revisar |
-
-Disposición: apaisada (dos columnas) o vertical (una columna sobre otra, en celular), elegida por la forma del recuadro. Vista previa sin controles: `prototipo/concilia-demo.html` (también para renderizarla a video con `renderizar.js`).
-
-Para otra herramienta: un archivo `motion/cine/<nombre>.js` que exporte `AlCine.<nombre>({ canvas, cont })` con `render(T)`, `medir()` y `duracion`, y `cine: '<nombre>'` en su `AL_DEMOS`, con capítulos en los mismos tiempos que sus `steps`.
-
 ## Videos (escenas renderizadas)
 
-El único video hasta ahora es el de la secuencia de Concilia (ver «Cine»), usado como alternativa en su prototipo.
+Todavía **no hay videos** en el sitio: el componente está listo para recibirlos. No se suben videos de prueba ni archivos que no existan.
 
 Para agregar uno:
 
