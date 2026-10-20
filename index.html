@@ -2597,7 +2597,7 @@ window.alFoto = (function(){
     var kb = 0.3 * ease(cl((o.lt - 0.5) / 3.6, 0, 1));   // avance lento dentro del paso
     var meta = Math.max(o.quiere, o.foco ? 0 : kb);
     st.z += (meta - st.z) * (1 - Math.exp(-dt * 2.6));
-    if (o.foco) { var kp = 1 - Math.exp(-dt * 3.2), lx = u.SW * 0.22, ly = u.SH * 0.2;
+    if (o.foco) { var kp = 1 - Math.exp(-dt * 3.2), lx = u.SW * 0.16, ly = u.SH * 0.16;
       st.x += (cl(o.foco.x, -lx, lx) - st.x) * kp; st.y += (cl(o.foco.y, -ly, ly) - st.y) * kp; }
     else { var kc = 1 - Math.exp(-dt * 1.2); st.x += (0 - st.x) * kc; st.y += (u.SH * 0.04 - st.y) * kc; }
     var ver = o.T < 1.4 ? 1 : (o.ip > 0 && o.lt < 0.55 ? 0.4 : 0);
@@ -2605,7 +2605,7 @@ window.alFoto = (function(){
     var cj = u.caja, tg = Math.tan(cam.fov * Math.PI / 360), as = cam.aspect, v = o.vert;
     var aparatoD = Math.max(cj.h * (v ? 1.2 : 1.38) / 2 / tg, cj.w * (v ? 1.06 : 1.22) / 2 / (tg * as));
     var fh = u.plano ? 1.04 : (v ? 1.1 : 1.24), fw = u.plano ? 1.03 : (v ? 1.06 : 1.1);   // sin aparato: la app de borde a borde
-    var ventanaD = Math.max(o.vent.h * fh / 2 / tg, o.vent.w * fw / 2 / (tg * as)), cerca = ventanaD * 0.64;   // acercamiento al detalle: la acción se lee grande, sin perder el hilo
+    var ventanaD = Math.max(o.vent.h * fh / 2 / tg, o.vent.w * fw / 2 / (tg * as)), cerca = ventanaD * 0.74;   // acercamiento al detalle: la acción se lee grande y se ve la zona completa
     var z = ease(cl(st.z, 0, 1)), a = ease(st.a), px = o.px || { x: 0, y: 0 };
     var llega = 1 + 0.32 * (1 - ease(cl(o.T / 1.7, 0, 1)));   // entrada: el notebook llega desde más lejos
     var mx = lerp(lerp(0, st.x, z), cj.x, a) + px.x * 0.12, my = lerp(lerp(-o.vent.h * (v || u.plano ? 0 : 0.06), st.y, z), cj.y - cj.h * 0.07, a) + px.y * 0.08;
