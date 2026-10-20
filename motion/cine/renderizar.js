@@ -13,6 +13,7 @@ if (!pagina || !salida) { console.log('uso: node motion/cine/renderizar.js <pág
   p.on('pageerror', e => console.log('ERROR', e.message));
   await p.goto('http://127.0.0.1:8765/' + pagina); await p.waitForTimeout(1500);
   await p.addStyleTag({ content: `main{max-width:none;padding:0;margin:0}.cab,.ctrl,.nota,.al-cine__sub{display:none!important}.al-cine{border-radius:0;box-shadow:none;width:${W}px;height:${H}px;aspect-ratio:auto}` });
+  await p.evaluate(() => dispatchEvent(new Event('resize')));
   await p.evaluate(() => __cine.pause()); await p.waitForTimeout(500);
   const n = Math.round(await p.evaluate(() => __cine.duracion) * FPS) + 1;
   for (let i = 0; i < n; i++) {

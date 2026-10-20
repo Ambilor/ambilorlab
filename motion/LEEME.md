@@ -59,7 +59,7 @@ Además de los efectos sobre las escenas, el sistema tiene **secuencias cinemato
 | 5 · Resolución | 9,6 – 11,4 s | Cada registro vuela a su fila en la pantalla real de Resultados de Concilia |
 | 6 · Cierre | 11,4 – 13,0 s | «Concilia.», la frase y el resultado de este ejemplo (4 grupos conciliados, 2 por revisar), rotulado «Datos de ejemplo» |
 
-**En el sitio** (desde el 2026-10-20) es la **apertura del demo «Ver en acción» de Concilia**: corre sobre el recuadro del demo la primera vez por visita que el demo queda a la vista (sesión del navegador), con «Saltar apertura» siempre visible; al terminar se desvanece y parten los 6 pasos interactivos, que mientras tanto quedan en pausa. La barra del demo sigue funcionando (pausa/reproducir controla la apertura; anterior, siguiente o un paso la terminan; reiniciar la repite) y el resumen final suma «Ver la apertura». El contexto 3D se crea al verla y se suelta al terminar. No se muestra con «reducir movimiento», sin 3D o si el navegador quita el contexto. Medición: `apertura_concilia` con `fin` (`completa`, `saltada`, `perdida`). Integración: bloque «Apertura cinematográfica de Concilia» en `index.html`; estilos `.al-apertura*` en el bloque «HERRAMIENTAS: CUATRO FORMATOS».
+**En el sitio** (desde el 2026-10-20) la pieza de 13 s quedó como referencia: el demo «Ver en acción» de Concilia pasó **completo** al mismo lenguaje (ver la sección siguiente).
 
 Cómo está hecho: three.js (el de `vendor/`), sin dependencias nuevas. Todo sale de `render(t)`: el controlador (`play`, `pause`, `seek`, `destroy`) y el render a video usan el mismo tiempo, sin estado oculto. Curvas propias (salida firme, anticipación, rebote leve), cámara por fotogramas clave y una respiración de cámara en mano muy leve. Los controles y el subtítulo de cada plano son HTML (`aria-live`); con «reducir movimiento» se muestra el cierre quieto; sin 3D, el video (con su póster) y la explicación en texto.
 
@@ -77,6 +77,23 @@ ffmpeg -i /tmp/cuadros/c0380.png -c:v libwebp -quality 82 motion/media/concilia-
 ```
 
 Archivos actuales (13 s, 1280 × 720, 30 fps, sin audio): `concilia-cine.mp4` 2,2 MB, `concilia-cine.webm` 1,4 MB, póster `concilia-cine.webp` 22 KB. Sin ffmpeg instalado, `pip install imageio-ffmpeg` trae uno.
+
+## Demo cinematográfico de Concilia (2026-10-20)
+
+«Ver en acción» de Concilia es una sola pieza 3D (`motion/cine/concilia-demo.js`), no el notebook con tarjetas. El motor de demos la maneja como a cualquier demo: en `AL_DEMOS['v2-accion']`, `cine: 'conciliaDemo'` hace que `alDemoTarjetas` dibuje `AlCine.conciliaDemo(...).render(T)` con el tiempo de su línea (`alDemoLinea`). Por eso conserva todo: anterior, pausa, siguiente, reiniciar, deslizar, teclado, la guía de pasos, la frase de cada paso (`AL_NOTAS`), el resumen final con «Avísame», «reducir movimiento» (cada capítulo completo, quieto) y la versión en texto sin 3D.
+
+| Capítulo | Tiempo | Qué pasa |
+|---|---|---|
+| 1 · El problema | 0,0 – 4,2 s | A oscuras llegan la cartola y el libro mayor; no cuadran por $11.740 (la comisión menos los intereses) |
+| 2 · Fuentes | 4,2 – 9,0 s | La escena se ilumina; el panel de Concilia lee las dos fuentes y reconoce sus columnas |
+| 3 · Grupos | 9,0 – 13,6 s | Escaneo, líneas de relación y 4 grupos (el abono con sus dos facturas); la comisión y los intereses quedan sin contraparte |
+| 4 · Reglas | 13,6 – 18,6 s | La cámara va a lo que no tiene contraparte; una regla deja la comisión «Explicado · Gasto bancario»; los intereses, por revisar |
+| 5 · Avisos | 18,6 – 23,8 s | Los intereses salen por correo a contabilidad; envío automático diario |
+| 6 · Resultado | 23,8 – 29,6 s | Los registros convergen en la pantalla de Resultados y cierra la marca: 4 grupos conciliados, 1 explicado, 1 por revisar |
+
+Disposición: apaisada (dos columnas) o vertical (una columna sobre otra, en celular), elegida por la forma del recuadro. Vista previa sin controles: `prototipo/concilia-demo.html` (también para renderizarla a video con `renderizar.js`).
+
+Para otra herramienta: un archivo `motion/cine/<nombre>.js` que exporte `AlCine.<nombre>({ canvas, cont })` con `render(T)`, `medir()` y `duracion`, y `cine: '<nombre>'` en su `AL_DEMOS`, con capítulos en los mismos tiempos que sus `steps`.
 
 ## Videos (escenas renderizadas)
 
