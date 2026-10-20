@@ -2591,25 +2591,18 @@ window.alFoto = (function(){
       cam.position.set(lerp(0, st.x, z0), lerp(cy0, st.y, z0), lerp(lejos0, cerca0, z0));
       cam.lookAt(cam.position.x, cam.position.y, 0); return;
     }
-    // 2026-10-20: cámara de video de producto en computador (antes quieta). En cada paso se acerca a donde pasa la
-    // acción (el cursor) y, si el paso no tiene clic, avanza lento hacia la pantalla; entre pasos retrocede para mostrar
-    // el equipo completo, y al empezar el notebook llega desde más lejos. Sin giros: la foto del notebook es plana.
-    var kb = 0.3 * ease(cl((o.lt - 0.5) / 3.6, 0, 1));   // avance lento dentro del paso
-    var meta = Math.max(o.quiere, o.foco ? 0 : kb);
-    st.z += (meta - st.z) * (1 - Math.exp(-dt * 2.6));
-    if (o.foco) { var kp = 1 - Math.exp(-dt * 3.2), lx = u.SW * 0.22, ly = u.SH * 0.2;
+    st.z += (o.quiere - st.z) * (1 - Math.exp(-dt * 3.2));
+    if (o.foco) { var kp = 1 - Math.exp(-dt * 4.5), lx = u.SW * 0.2, ly = u.SH * 0.2;
       st.x += (cl(o.foco.x, -lx, lx) - st.x) * kp; st.y += (cl(o.foco.y, -ly, ly) - st.y) * kp; }
-    else { var kc = 1 - Math.exp(-dt * 1.2); st.x += (0 - st.x) * kc; st.y += (u.SH * 0.04 - st.y) * kc; }
     var ver = o.T < 1.4 ? 1 : (o.ip > 0 && o.lt < 0.55 ? 0.4 : 0);
     st.a += (ver - st.a) * (1 - Math.exp(-dt * (ver > st.a ? 5 : 2.4)));
     var cj = u.caja, tg = Math.tan(cam.fov * Math.PI / 360), as = cam.aspect, v = o.vert;
     var aparatoD = Math.max(cj.h * (v ? 1.2 : 1.38) / 2 / tg, cj.w * (v ? 1.06 : 1.22) / 2 / (tg * as));
     var fh = u.plano ? 1.04 : (v ? 1.1 : 1.24), fw = u.plano ? 1.03 : (v ? 1.06 : 1.1);   // sin aparato: la app de borde a borde
-    var ventanaD = Math.max(o.vent.h * fh / 2 / tg, o.vent.w * fw / 2 / (tg * as)), cerca = ventanaD * 0.64;   // acercamiento al detalle: la acción se lee grande, sin perder el hilo
-    var z = ease(cl(st.z, 0, 1)), a = ease(st.a), px = o.px || { x: 0, y: 0 };
-    var llega = 1 + 0.32 * (1 - ease(cl(o.T / 1.7, 0, 1)));   // entrada: el notebook llega desde más lejos
+    var ventanaD = Math.max(o.vent.h * fh / 2 / tg, o.vent.w * fw / 2 / (tg * as)), cerca = ventanaD * 0.84;   // acercamiento suave: el foco acompaña sin hacer perder el hilo
+    var z = 0, a = ease(st.a), px = o.px || { x: 0, y: 0 };   // 2026-10-08: quieta en computador (acercarse y seguir al cursor cortaba la app y el notebook); el puntero y el círculo ya muestran dónde mirar
     var mx = lerp(lerp(0, st.x, z), cj.x, a) + px.x * 0.12, my = lerp(lerp(-o.vent.h * (v || u.plano ? 0 : 0.06), st.y, z), cj.y - cj.h * 0.07, a) + px.y * 0.08;
-    cam.position.set(mx, my + (llega - 1) * cj.h * 0.25, lerp(lerp(ventanaD, cerca, z), aparatoD, a) * llega * (1 - Math.sin(o.T * 0.3) * 0.008));
+    cam.position.set(mx, my, lerp(lerp(ventanaD, cerca, z), aparatoD, a) * (1 - Math.sin(o.T * 0.3) * 0.008));
     cam.lookAt(mx, my, 0);
   }
   // indicador de toque (en táctil, en vez de la flecha del mouse)
@@ -6189,7 +6182,6 @@ window.alDemoTarjetas = function(root, cfg){
       const cortina = !sigue && !!window.AL_MOTION && (dist === 0 ? i : cur) > 0;
       J.DRAW[i](c.g, LT(t - s.a)); if (dist === 0) notaPaso(c.g, i, LT(t - s.a));
       if (dist === 0 && cortina && ein < 1) AL_MOTION.cortina(c.g, J.CW, J.CH, ein);
-      if (dist === 0 && window.AL_MOTION && !reduce) AL_MOTION.barrido(c.g, LT(t - s.a), 0.25, 0, 0, J.CW, J.CH, { radio: 0, color: '255,255,255', dur: 1.2, fuerza: 0.4 });   // 2026-10-20: brillo que cruza el vidrio al empezar el paso
       c.tx.needsUpdate = true;
       const e = ease(ein), sx = (sigue || cortina) ? 0 : dist === 0 ? (1 - e) * 0.35 : -ease(sale) * 0.35;
       c.m.position.set(sx * (J.disp.userData.marco ? 0 : J.disp.userData.pleno ? 0.25 : 1) + (J.disp.userData.ventanaX || 0), J.disp.userData.ventanaY || 0, dist === 0 ? 0.004 : 0.002);
@@ -6253,9 +6245,7 @@ window.alDemoTarjetas = function(root, cfg){
 
   let last = performance.now();
   function frame(now){
-    let dt = Math.min(0.12, (now - last) / 1000); last = now;
-    // grabación a video (solo pruebas, motion/LEEME.md): con window.__alGrabar = { n }, el demo avanza 1/30 s por cuadro pedido
-    if (window.__alGrabar) { if (!__alGrabar.n) { requestAnimationFrame(frame); return; } __alGrabar.n--; dt = 1 / 30; }
+    const dt = Math.min(0.12, (now - last) / 1000); last = now;
     if (PX.update(dt)) needsRender = true;
     const mueve = L.tick(dt, visible);
     if (visible && (mueve || needsRender) && !renderer.getContext().isContextLost()) {   // sin contexto 3D no se dibuja
