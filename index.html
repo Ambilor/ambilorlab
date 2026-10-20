@@ -14,8 +14,8 @@
 window.__errores=[];window.addEventListener("error",function(e){window.__errores.push(String(e.message||e))});
 try{if("scrollRestoration" in history)history.scrollRestoration="manual";if(location.hash)history.replaceState(null,"",location.pathname+location.search);}catch(e){}</script>
 <meta name="theme-color" content="#06080C" />
-<title>Ambilor Lab (Ambilor.Lab) · Automatización contable y financiera</title>
-<meta name="description" content="Ambilor Lab: herramientas de automatización contable y financiera para contadores, equipos financieros y PyMEs, dentro de Google Sheets. Concilia (conciliación bancaria), Pedidos (pedidos por WhatsApp) y Mis Finanzas (finanzas personales)." />
+<title>Ambilor Lab (Ambilor.Lab) · Herramientas que ordenan tus números</title>
+<meta name="description" content="Ambilor Lab: herramientas listas para usar que hacen el trabajo repetitivo por ti. Concilia cuadra el banco con tu contabilidad, Pedidos ordena los pedidos de tu negocio y Mis Finanzas te muestra en qué se va tu plata." />
 <link rel="canonical" href="https://ambilor.github.io/ambilorlab/" />
 
 <!-- Preconnect -->
@@ -32,14 +32,14 @@ try{if("scrollRestoration" in history)history.scrollRestoration="manual";if(loca
 <!-- Open Graph -->
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Ambilor.Lab" />
-<meta property="og:title" content="Ambilor Lab (Ambilor.Lab) · Automatización contable y financiera" />
+<meta property="og:title" content="Ambilor Lab (Ambilor.Lab) · Herramientas que ordenan tus números" />
 <meta property="og:locale" content="es_CL" />
-<meta property="og:description" content="Ambilor Lab: herramientas de automatización contable y financiera para contadores, equipos financieros y PyMEs, dentro de Google Sheets. Concilia (conciliación bancaria), Pedidos (pedidos por WhatsApp) y Mis Finanzas (finanzas personales)." />
+<meta property="og:description" content="Ambilor Lab: herramientas listas para usar que hacen el trabajo repetitivo por ti. Concilia cuadra el banco con tu contabilidad, Pedidos ordena los pedidos de tu negocio y Mis Finanzas te muestra en qué se va tu plata." />
 <meta property="og:url" content="https://ambilor.github.io/ambilorlab/" />
 <meta property="og:image" content="https://ambilor.github.io/ambilorlab/og-image.png" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Ambilor Lab (Ambilor.Lab) · Automatización contable y financiera" />
-<meta name="twitter:description" content="Ambilor Lab: herramientas de automatización contable y financiera para contadores, equipos financieros y PyMEs, dentro de Google Sheets. Concilia (conciliación bancaria), Pedidos (pedidos por WhatsApp) y Mis Finanzas (finanzas personales)." />
+<meta name="twitter:title" content="Ambilor Lab (Ambilor.Lab) · Herramientas que ordenan tus números" />
+<meta name="twitter:description" content="Ambilor Lab: herramientas listas para usar que hacen el trabajo repetitivo por ti. Concilia cuadra el banco con tu contabilidad, Pedidos ordena los pedidos de tu negocio y Mis Finanzas te muestra en qué se va tu plata." />
 
 <!-- JSON-LD (2026-09-30): el sitio, la marca y su autor. "alternateName"
      cubre cómo se busca la marca ("Ambilor Lab", sin punto) y "sameAs" une el
@@ -64,7 +64,7 @@ try{if("scrollRestoration" in history)history.scrollRestoration="manual";if(loca
       "alternateName": ["Ambilor Lab", "AmbilorLab", "Ambilor"],
       "url": "https://ambilor.github.io/ambilorlab/",
       "logo": "https://ambilor.github.io/ambilorlab/og-image.png",
-      "description": "Herramientas de automatización contable y financiera para contadores, equipos financieros y PyMEs, dentro de Google Sheets.",
+      "description": "Herramientas listas para usar que hacen el trabajo repetitivo por ti: Concilia cuadra el banco con tu contabilidad, Pedidos ordena los pedidos de tu negocio y Mis Finanzas te muestra en qué se va tu plata.",
       "areaServed": "CL",
       "sameAs": [
         "https://www.instagram.com/ambilor.lab/",
@@ -2621,7 +2621,7 @@ window.alFoto = (function(){
 /* Demos: notas de cada paso (2026-10-07): una frase corta por paso, en una burbuja junto a lo que se toca
    (o arriba, si el paso no tiene toque). Las dibuja el motor de tarjetas sobre la pantalla del demo. */
 window.AL_NOTAS = {
-  'v2-accion': ['Un abono paga dos facturas: ¿cuáles?', 'Pega el enlace de cada Google Sheet', 'El grupo 1:2 se arma solo',
+  'v2-accion': ['Un abono paga dos facturas: ¿cuáles?', 'Elige el banco y tu contabilidad', 'El grupo 1:2 se arma solo',
                 'Una regla y las comisiones quedan explicadas', 'Envía la vista a quien la necesita', 'Indicadores que llevan al detalle'],
   'v2-instala': ['Haz una copia en tu Drive', 'Abre «Configurar herramienta» en el menú', 'Autoriza los permisos una sola vez',
                  'Publica tu panel con «Implementar»', 'Ábrelo y conecta tus fuentes', 'Listo: tu panel quedó instalado'],
@@ -2751,16 +2751,16 @@ window.AL_NOTAS = {
 <section id="home" class="visible">
 <ol class="i3-ruta" aria-label="Avance">
   <li><button type="button" data-i="0"><span>Inicio</span><i></i></button></li>
-  <li><button type="button" data-i="1"><span>Qué automatizo</span><i></i></button></li>
+  <li><button type="button" data-i="1"><span>Qué resuelvo</span><i></i></button></li>
   <li><button type="button" data-i="2"><span>Para quién</span><i></i></button></li>
   <li><button type="button" data-i="3"><span>Siguiente paso</span><i></i></button></li>
 </ol>
 
 <div class="i3-escenario">
   <div class="i3-estacion i3-centro" aria-label="Inicio">
-    <div class="i3-eyebrow">Ambilor.Lab / Automatización contable</div>
-    <h1 class="i3-titulo">Procesos financieros<br>automatizados<span class="i3-p">.</span></h1>
-    <p class="i3-lead">Soluciones simples y de bajo costo que automatizan el trabajo repetitivo de tu equipo, dentro de Google Sheets, Excel y las herramientas que ya usan. Se instalan en minutos: sin software caro ni proyectos eternos.</p>
+    <div class="i3-eyebrow">Ambilor.Lab / Herramientas listas para usar</div>
+    <h1 class="i3-titulo">Tus números,<br>en orden<span class="i3-p">.</span></h1>
+    <p class="i3-lead">Herramientas simples que hacen por ti el trabajo repetitivo: cuadrar el banco, recibir los pedidos de tu negocio o llevar tus gastos. Las usas desde el computador o el celular, sin programar y sin sistemas caros.</p>
     <div class="i3-ctas">
       <a class="i3-btn i3-btn--pri" href="#" onclick="return show('product')">Ver herramientas <span aria-hidden="true">→</span></a>
       <a class="i3-btn i3-btn--sec" href="#" onclick="return show('contact')">Conversemos</a>
@@ -2769,17 +2769,30 @@ window.AL_NOTAS = {
     <button type="button" class="i3-giro" hidden><i class="ti ti-device-mobile-rotated" aria-hidden="true"></i> Activar 3D con movimiento</button>
   </div>
 
-  <div class="i3-estacion" aria-label="Qué automatizo">
-    <div class="i3-eyebrow">Qué automatizo</div>
-    <h2 class="i3-h2">Tres tareas que tu equipo repite cada mes. <span>Resueltas.</span></h2>
+  <div class="i3-estacion" aria-label="Qué resuelvo">
+    <div class="i3-eyebrow">Qué resuelvo</div>
+    <h2 class="i3-h2">Tres herramientas. <span>Un problema resuelto cada una.</span></h2>
     <div class="i3-tres">
-      <article class="i3-tarjeta"><div class="i3-top"><span>Conciliación</span><span>01 / 03</span></div><svg class="i3-arte" viewBox="0 0 320 170" aria-hidden="true"><g class="hx-art-rows"><g><rect x="18" y="12" width="196" height="20" rx="4"/><text x="28" y="26">Factura 1001</text><text x="206" y="26" text-anchor="end">+500.000</text></g><g><rect x="18" y="38" width="196" height="20" rx="4"/><text x="28" y="52">Pago fact. 1001</text><text x="206" y="52" text-anchor="end">−500.000</text></g><g><rect x="18" y="64" width="196" height="20" rx="4"/><text x="28" y="78">Factura 1002</text><text x="206" y="78" text-anchor="end">+250.000</text></g><g class="off"><rect x="18" y="90" width="196" height="20" rx="4"/><text x="28" y="104">Depósito s/ref.</text><text x="206" y="104" text-anchor="end">+80.000</text></g><g><rect x="18" y="116" width="196" height="20" rx="4"/><text x="28" y="130">Pago fact. 1002</text><text x="206" y="130" text-anchor="end">−250.000</text></g></g><g class="hx-art-links"><path d="M214 22 C244 22 244 48 214 48"/><path d="M214 74 C262 74 262 126 214 126"/><path class="off" d="M214 100 L236 100"/></g><text class="hx-art-sinpar" x="242" y="104">sin par</text><text class="hx-art-cap" x="160" y="158">2 pares · 1 pendiente</text></svg>
-        <h3 class="i3-tt">Cada movimiento encuentra su par</h3><p class="i3-td">Pegas tu listado de movimientos. El sistema empareja cada uno con su contraparte y te muestra lo que quedó sin par.</p></article>
-      <article class="i3-tarjeta"><div class="i3-top"><span>Reportes autogestionados</span><span>02 / 03</span></div><svg class="i3-arte" viewBox="0 0 320 170" aria-hidden="true">
+      <article class="i3-tarjeta"><div class="i3-top"><span>Concilia.</span><span>01 / 03</span></div><svg class="i3-arte" viewBox="0 0 320 170" aria-hidden="true"><g class="hx-art-rows"><g><rect x="18" y="12" width="196" height="20" rx="4"/><text x="28" y="26">Factura 1001</text><text x="206" y="26" text-anchor="end">+500.000</text></g><g><rect x="18" y="38" width="196" height="20" rx="4"/><text x="28" y="52">Pago fact. 1001</text><text x="206" y="52" text-anchor="end">−500.000</text></g><g><rect x="18" y="64" width="196" height="20" rx="4"/><text x="28" y="78">Factura 1002</text><text x="206" y="78" text-anchor="end">+250.000</text></g><g class="off"><rect x="18" y="90" width="196" height="20" rx="4"/><text x="28" y="104">Depósito s/ref.</text><text x="206" y="104" text-anchor="end">+80.000</text></g><g><rect x="18" y="116" width="196" height="20" rx="4"/><text x="28" y="130">Pago fact. 1002</text><text x="206" y="130" text-anchor="end">−250.000</text></g></g><g class="hx-art-links"><path d="M214 22 C244 22 244 48 214 48"/><path d="M214 74 C262 74 262 126 214 126"/><path class="off" d="M214 100 L236 100"/></g><text class="hx-art-sinpar" x="242" y="104">sin par</text><text class="hx-art-cap" x="160" y="158">2 pares · 1 pendiente</text></svg>
+        <h3 class="i3-tt">Concilia · cuadra tu banco sin revisar fila por fila</h3><p class="i3-td">Compara los movimientos del banco con tus registros, encuentra el par de cada uno y te deja a la vista solo lo que no cuadra. Para contadores y empresas.</p></article>
+      <article class="i3-tarjeta"><div class="i3-top"><span>Pedidos.</span><span>02 / 03</span></div><svg class="i3-arte" viewBox="0 0 320 170" aria-hidden="true">
+          <g class="hx-art-manual">
+            <text x="18" y="34">“¿2 kg de pan?”</text>
+            <text x="18" y="62" style="--o:.55">“¿y el despacho?”</text>
+            <text x="18" y="90" style="--o:.28">“ya transferí”</text>
+          </g>
+          <path class="hx-art-arrow" d="M150 64 L182 64 M174 57 L182 64 L174 71"/>
+          <rect class="hx-art-btn" x="200" y="22" width="102" height="34" rx="17"/>
+          <text class="hx-art-btnt" x="251" y="44">#341</text>
+          <g class="hx-art-ok"><text x="212" y="84">Pedido ✓</text><text x="212" y="106">Pagado ✓</text><text x="212" y="128">En camino ✓</text></g>
+          <text class="hx-art-cap" x="160" y="158">todo en un lugar</text>
+        </svg>
+        <h3 class="i3-tt">Pedidos · pedidos ordenados, no chats sueltos</h3><p class="i3-td">Tus clientes eligen y piden desde un enlace en su celular. A ti te llegan completos, con el total y el pago, listos para confirmar. Para negocios que venden por WhatsApp.</p></article>
+      <article class="i3-tarjeta"><div class="i3-top"><span>Mis Finanzas.</span><span>03 / 03</span></div><svg class="i3-arte" viewBox="0 0 320 170" aria-hidden="true">
           <g class="hx-art-grid">
-            <text x="18" y="30">450K</text><text x="72" y="30">320K</text>
-            <text x="18" y="56">610K</text><text x="72" y="56">280K</text>
-            <text x="18" y="82">190K</text><text x="72" y="82">540K</text>
+            <text x="18" y="30">$13K</text><text x="72" y="30">$45K</text>
+            <text x="18" y="56">$26K</text><text x="72" y="56">$6K</text>
+            <text x="18" y="82">$11K</text><text x="72" y="82">$19K</text>
           </g>
           <path class="hx-art-arrow" d="M128 64 L168 64 M160 57 L168 64 L160 71"/>
           <g class="hx-art-bars">
@@ -2787,39 +2800,26 @@ window.AL_NOTAS = {
             <rect x="240" y="82" width="18" height="54" rx="3"/><rect x="266" y="46" width="18" height="90" rx="3"/>
           </g>
           <path class="hx-art-trend" pathLength="1" d="M197 92 L223 66 L249 78 L275 40"/>
-          <text class="hx-art-cap" x="160" y="158">actualizado solo</text>
+          <text class="hx-art-cap" x="160" y="158">en qué se va</text>
         </svg>
-        <h3 class="i3-tt">Números que se vuelven gráficos solos</h3><p class="i3-td">Tus datos pasan a un panel visual que se actualiza solo. Sin armar tablas de cero cada mes.</p></article>
-      <article class="i3-tarjeta"><div class="i3-top"><span>Automatización</span><span>03 / 03</span></div><svg class="i3-arte" viewBox="0 0 320 170" aria-hidden="true">
-          <g class="hx-art-manual">
-            <text x="18" y="34">Mes 1 · revisar…</text>
-            <text x="18" y="62" style="--o:.55">Mes 2 · lo mismo</text>
-            <text x="18" y="90" style="--o:.28">Mes 3 · lo mismo</text>
-          </g>
-          <path class="hx-art-arrow" d="M150 64 L182 64 M174 57 L182 64 L174 71"/>
-          <rect class="hx-art-btn" x="200" y="22" width="102" height="34" rx="17"/>
-          <text class="hx-art-btnt" x="251" y="44">1 clic</text>
-          <g class="hx-art-ok"><text x="212" y="84">Mes 1 ✓</text><text x="212" y="106">Mes 2 ✓</text><text x="212" y="128">Mes 3 ✓</text></g>
-          <text class="hx-art-cap" x="160" y="158">siempre igual</text>
-        </svg>
-        <h3 class="i3-tt">Lo que repites cada mes, que pase solo</h3><p class="i3-td">Reportes, alertas, limpiezas de datos: cualquier tarea repetida puede ocurrir sola, siempre igual.</p></article>
+        <h3 class="i3-tt">Mis Finanzas · sabes en qué se va tu plata</h3><p class="i3-td">Anotas un gasto en dos toques desde el celular y ves cuánto te queda para el mes, tus tarjetas y tus metas de ahorro. Para personas y familias.</p></article>
     </div>
   </div>
 
   <div class="i3-estacion" aria-label="Para quién">
     <div class="i3-eyebrow">Para quién</div>
-    <h2 class="i3-h2">Menos copiar y pegar. <span>Más tiempo para decidir.</span></h2>
+    <h2 class="i3-h2">Menos trabajo a mano. <span>Más tiempo para lo importante.</span></h2>
     <div class="i3-cuatro">
-      <div class="i3-tarjeta"><div class="i3-quien">Para contadores</div><p class="i3-ab i3-a"><span>Antes</span><s>Revisar la cartola fila por fila, buscando el pago de cada factura, cada cierre.</s></p><p class="i3-ab i3-b"><span>Ahora</span>El sistema empareja cada movimiento en minutos: tú solo validas lo que no cuadra.</p></div>
-      <div class="i3-tarjeta"><div class="i3-quien">Para PyMEs</div><p class="i3-ab i3-a"><span>Antes</span><s>Pagar software especializado que no siempre necesitas ni entiendes.</s></p><p class="i3-ab i3-b"><span>Ahora</span>Lo mismo con Google Sheets o Excel, que ya usas y ya pagas.</p></div>
-      <div class="i3-tarjeta"><div class="i3-quien">Para equipos financieros</div><p class="i3-ab i3-a"><span>Antes</span><s>Armar el informe de cierre copiando y pegando, todos los meses.</s></p><p class="i3-ab i3-b"><span>Ahora</span>El informe se actualiza solo cuando cambian los datos base.</p></div>
-      <div class="i3-tarjeta"><div class="i3-quien">Productos listos para usar</div><p class="i3-ab i3-a"><span>Antes</span><s>Esperar semanas a que alguien desarrolle lo que necesitas.</s></p><p class="i3-ab i3-b"><span>Pronto</span>Herramientas listas que instalas en 5 minutos, sin esperar desarrollos.</p></div>
+      <div class="i3-tarjeta"><div class="i3-quien">Contadores y empresas</div><p class="i3-ab i3-a"><span>Antes</span><s>Revisar la cartola fila por fila, buscando el pago de cada factura, en cada cierre.</s></p><p class="i3-ab i3-b"><span>Ahora</span>Concilia empareja cada movimiento en minutos: tú solo revisas lo que no cuadra.</p></div>
+      <div class="i3-tarjeta"><div class="i3-quien">Negocios que venden por WhatsApp</div><p class="i3-ab i3-a"><span>Antes</span><s>Pedidos repartidos entre chats y notas, y transferencias que llegan sin aviso.</s></p><p class="i3-ab i3-b"><span>Ahora</span>Con Pedidos, cada pedido llega completo a un solo lugar, sin pagar comisión por venta.</p></div>
+      <div class="i3-tarjeta"><div class="i3-quien">Personas y familias</div><p class="i3-ab i3-a"><span>Antes</span><s>Llegar a fin de mes sin saber en qué se fue la plata.</s></p><p class="i3-ab i3-b"><span>Ahora</span>Con Mis Finanzas sabes cada día cuánto puedes gastar y cómo vas con tus metas.</p></div>
+      <div class="i3-tarjeta"><div class="i3-quien">Sin conocimientos técnicos</div><p class="i3-ab i3-a"><span>Antes</span><s>Creer que ordenar esto exige programar o contratar un sistema caro.</s></p><p class="i3-ab i3-b"><span>Ahora</span>Recibes la herramienta lista y la dejas funcionando en minutos con una guía paso a paso.</p></div>
     </div>
   </div>
 
   <div class="i3-estacion i3-centro" aria-label="Siguiente paso">
     <div class="i3-eyebrow">Siguiente paso</div>
-    <h2 class="i3-cierre">Deja de revisar<br>planillas a mano<span style="color:var(--glow)">.</span></h2>
+    <h2 class="i3-cierre">Menos trabajo<br>repetitivo<span style="color:var(--glow)">.</span></h2>
     <div class="i3-ctas">
       <a class="i3-btn i3-btn--pri" href="#" onclick="return show('product')">Ver herramientas <span aria-hidden="true">→</span></a>
       <a class="i3-btn i3-btn--sec" href="#" onclick="return show('contact')">Conversemos</a>
@@ -2913,7 +2913,7 @@ window.AL_NOTAS = {
       <div class="prod-cab-txt">
         <div class="prod-eyebrow"><span class="prox-badge">Próximamente</span></div>
         <h2 class="prod-h1">Concilia.</h2>
-        <p class="prod-tagline">Tu conciliación en segundos, dentro de tu propio Google Sheets: una hoja sola o el banco contra tu contabilidad, en pares o en grupos.</p>
+        <p class="prod-tagline">Cuadra el banco con tu contabilidad en minutos: encuentra el par de cada movimiento, aunque un pago cubra varias facturas, y te deja a la vista solo lo que no calza.</p>
       </div>
       <div class="alert-box"><b>Preciso por diseño:</b> empareja solo lo que no deja dudas. Si una pareja podría ser otra, no adivina: te la deja como sugerencia para que decidas tú.</div>
     </div>
@@ -2938,7 +2938,7 @@ window.AL_NOTAS = {
           <ol class="al-demo__steps"></ol>
           <span class="al-demo__count">1 de 6</span>
         </div>
-        <p class="al-demo__note">Demostración ilustrativa con datos de ejemplo. La herramienta funciona dentro de tu Google Sheets.</p>
+        <p class="al-demo__note">Demostración ilustrativa con datos de ejemplo. Funciona con tu cuenta de Google y tus datos quedan en ella.</p>
         <div class="al-demo__fallback">
           <p class="al-demo__fbh">La demostración en 6 pasos</p>
           <ol class="al-demo__fblist"></ol>
@@ -2974,7 +2974,7 @@ window.AL_NOTAS = {
     </div>
 
     <div class="prod-cel">
-      <p class="prod-tagline">Tu conciliación en segundos, dentro de tu propio Google Sheets: una hoja sola o el banco contra tu contabilidad, en pares o en grupos.</p>
+      <p class="prod-tagline">Cuadra el banco con tu contabilidad en minutos: encuentra el par de cada movimiento, aunque un pago cubra varias facturas, y te deja a la vista solo lo que no calza.</p>
       <div class="alert-box"><b>Preciso por diseño:</b> empareja solo lo que no deja dudas. Si una pareja podría ser otra, no adivina: te la deja como sugerencia para que decidas tú.</div>
     </div>
 
@@ -2986,14 +2986,14 @@ window.AL_NOTAS = {
     <div class="pi-bloque">
       <div class="pi-eyebrow" id="incluye-v2">Qué incluye</div>
       <div class="pi-grid4">
-        <div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 3v18"/></svg></span><span class="pi-t">La planilla</span><span class="pi-s">con datos de ejemplo, lista para usar</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 16v-4M11 16V9M15 16v-6M19 8H3"/></svg></span><span class="pi-t">Panel de control</span><span class="pi-s">resultados, sugerencias, historial y reporte</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><span class="pi-t">Correos automáticos</span><span class="pi-s">resumen y alertas por responsable</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M9 7h6M9 11h6"/></svg></span><span class="pi-t">Guía y manual</span><span class="pi-s">paso a paso, en lenguaje simple · PDF</span></div>
+        <div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 3v18"/></svg></span><span class="pi-t">La herramienta lista</span><span class="pi-s">con datos de ejemplo para probarla</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 16v-4M11 16V9M15 16v-6M19 8H3"/></svg></span><span class="pi-t">Panel de control</span><span class="pi-s">resultados, sugerencias, historial y reporte</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><span class="pi-t">Correos automáticos</span><span class="pi-s">resumen y alertas por responsable</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M9 7h6M9 11h6"/></svg></span><span class="pi-t">Guía y manual</span><span class="pi-s">paso a paso, en lenguaje simple · PDF</span></div>
       </div>
     </div>
 
     <div class="pi-bloque">
       <div class="pi-eyebrow">Lo que necesitas saber</div>
       <div class="pi-nums">
-        <div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="8" height="16" rx="1.5"/><rect x="13" y="4" width="8" height="16" rx="1.5"/><path d="M11 12h2"/></svg></span><b>1 o 2<small></small></b><span>hojas: una sola, o cartola contra libro mayor</span></div><div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.3 11l7.4-3.8M8.3 13l7.4 3.8"/></svg></span><b>8<small></small></b><span>partidas por lado en cada grupo</span></div><div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><b>10.000<small></small></b><span>movimientos por ejecución</span></div><div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c1-3.5 3.5-5 6-5s5 1.5 6 5"/><circle cx="17" cy="9" r="2.6"/><path d="M16 14.2c2.3.2 4 1.8 5 4.8"/></svg></span><b>1 a 3<small></small></b><span>personas usando el panel</span></div>
+        <div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="8" height="16" rx="1.5"/><rect x="13" y="4" width="8" height="16" rx="1.5"/><path d="M11 12h2"/></svg></span><b>1 o 2<small></small></b><span>fuentes: solo el banco, o el banco contra tu contabilidad</span></div><div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.3 11l7.4-3.8M8.3 13l7.4 3.8"/></svg></span><b>8<small></small></b><span>movimientos por lado al agrupar</span></div><div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><b>10.000<small></small></b><span>movimientos en cada revisión</span></div><div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c1-3.5 3.5-5 6-5s5 1.5 6 5"/><circle cx="17" cy="9" r="2.6"/><path d="M16 14.2c2.3.2 4 1.8 5 4.8"/></svg></span><b>1 a 3<small></small></b><span>personas usando el panel</span></div>
       </div>
       <ul class="pi-caps">
         <li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.3 11l7.4-3.8M8.3 13l7.4 3.8"/></svg></span><span><b>Pares o grupos</b> (un pago contra varias facturas), cada uno con su explicación</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7"/><path d="M16 15l2 2 4-4"/></svg></span><span><b>Reglas para explicar</b> comisiones, impuestos e intereses</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v3M12 18v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M3 12h3M18 12h3"/><circle cx="12" cy="12" r="3.5"/></svg></span><span><b>Sugerencias</b> cuando hay más de una forma de conciliar</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span><b>Envío automático</b> cada día o cada lunes, sin abrir el panel</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg></span><span><b>IA opcional</b> con tu propia clave: solo sugiere, nunca concilia sola</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg></span><span><b>Reporte imprimible o en PDF,</b> CSV y envío por correo con vista previa</span></li>
@@ -3003,8 +3003,8 @@ window.AL_NOTAS = {
     <div class="pi-bloque">
       <div class="pi-eyebrow">Preguntas frecuentes</div>
       <div class="pi-faqs">
-        <details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></span><span class="pi-q">¿Cómo sé que no concilia mal?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Antes de cada versión se prueba con planillas cuya respuesta correcta ya se conoce (montos repetidos, fechas juntas, errores de tipeo, dos hojas, grupos): no puede conciliar sola ni una pareja equivocada. Lo que los datos no permiten decidir queda como sugerencia, y cada pareja trae su explicación.</p></details>
-        <details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><span class="pi-q">¿Sirve si solo concilio una hoja, sin grupos?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Sí. Con una sola hoja y los grupos apagados, empareja cada movimiento con su contraparte dentro de tu planilla. Cuando lo necesites, agregas una segunda hoja (por ejemplo, el libro mayor) o activas los grupos.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg></span><span class="pi-q">¿Necesito usar la IA?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>No. Es opcional y usa tu propia clave de Claude o Gemini. Antes de enviar, oculta RUT, correos y números de cuenta, y te muestra el texto exacto. Sus propuestas llegan a Sugerencias: tú decides.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><span class="pi-q">¿Desde dónde salen los correos?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Desde tu propia cuenta de Google, dentro de su cuota diaria de Gmail. Antes de enviar ves la vista previa, el asunto y los destinatarios.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><span class="pi-q">¿Mis datos quedan en algún servidor?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>No. Todo corre dentro de tu cuenta de Google: tus planillas no salen de tu Drive.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c1-3.5 3.5-5 6-5s5 1.5 6 5"/><circle cx="17" cy="9" r="2.6"/><path d="M16 14.2c2.3.2 4 1.8 5 4.8"/></svg></span><span class="pi-q">¿Pueden usarlo varias personas?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Sí. Desde el panel defines hasta 10 correos con acceso; el rango declarado es de 1 a 3 personas usándolo a la vez.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><span class="pi-q">¿Y si tengo más de 10.000 movimientos?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Concilia por período, por ejemplo mes a mes. Google limita cada ejecución a 6 minutos.</p></details>
+        <details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 0 1 4.9.7c0 1.7-2.4 2.1-2.4 3.8M12 17h.01"/></svg></span><span class="pi-q">¿Qué necesito para usarlo?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Una cuenta de Google (si usas Gmail, ya la tienes) y tus movimientos en una planilla: la cartola del banco, lo que exporta tu sistema o un Excel. Lo dejas funcionando en unos minutos con la guía paso a paso, sin programar.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></span><span class="pi-q">¿Cómo sé que no concilia mal?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Antes de cada versión se prueba con planillas cuya respuesta correcta ya se conoce (montos repetidos, fechas juntas, errores de tipeo, dos hojas, grupos): no puede conciliar sola ni una pareja equivocada. Lo que los datos no permiten decidir queda como sugerencia, y cada pareja trae su explicación.</p></details>
+        <details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><span class="pi-q">¿Sirve si solo concilio una hoja, sin grupos?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Sí. Con una sola hoja y los grupos apagados, empareja cada movimiento con su contraparte dentro de tu planilla. Cuando lo necesites, agregas una segunda hoja (por ejemplo, el libro mayor) o activas los grupos.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg></span><span class="pi-q">¿Necesito usar la IA?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>No. Es opcional y usa tu propia clave de Claude o Gemini. Antes de enviar, oculta RUT, correos y números de cuenta, y te muestra el texto exacto. Sus propuestas llegan a Sugerencias: tú decides.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><span class="pi-q">¿Desde dónde salen los correos?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Desde tu propia cuenta de Google, dentro de su cuota diaria de Gmail. Antes de enviar ves la vista previa, el asunto y los destinatarios.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><span class="pi-q">¿Mis datos quedan en algún servidor?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>No. Todo funciona dentro de tu propia cuenta de Google: tus datos no pasan por servidores de Ambilor.Lab ni de terceros.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c1-3.5 3.5-5 6-5s5 1.5 6 5"/><circle cx="17" cy="9" r="2.6"/><path d="M16 14.2c2.3.2 4 1.8 5 4.8"/></svg></span><span class="pi-q">¿Pueden usarlo varias personas?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Sí. Desde el panel defines hasta 10 correos con acceso; el rango declarado es de 1 a 3 personas usándolo a la vez.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><span class="pi-q">¿Y si tengo más de 10.000 movimientos?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Concilia por período, por ejemplo mes a mes. Google limita cada ejecución a 6 minutos.</p></details>
       </div>
     </div>
 
@@ -3042,7 +3042,7 @@ window.AL_NOTAS = {
           <ol class="al-demo__steps"></ol>
           <span class="al-demo__count">1 de 6</span>
         </div>
-        <p class="al-demo__note">Demostración ilustrativa con datos de ejemplo. La app funciona con tu Google Sheets y tu WhatsApp.</p>
+        <p class="al-demo__note">Demostración ilustrativa con datos de ejemplo. Funciona con tu cuenta de Google y tu WhatsApp.</p>
         <div class="al-demo__fallback">
           <p class="al-demo__fbh">La demostración en 6 pasos</p>
           <ol class="al-demo__fblist"></ol>
@@ -3090,7 +3090,7 @@ window.AL_NOTAS = {
     <div class="pi-bloque">
       <div class="pi-eyebrow" id="incluye-ped">Qué incluye</div>
       <div class="pi-grid4">
-        <div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg></span><span class="pi-t">Formulario para tus clientes</span><span class="pi-s">catálogo, carrito y seguimiento</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 16v-4M11 16V9M15 16v-6M19 8H3"/></svg></span><span class="pi-t">Panel del negocio</span><span class="pi-s">pedidos en vivo, catálogo y reportes</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 3v18"/></svg></span><span class="pi-t">Tu planilla</span><span class="pi-s">pedidos, clientes y stock: todo tuyo</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M9 7h6M9 11h6"/></svg></span><span class="pi-t">Guía de instalación</span><span class="pi-s">paso a paso con imágenes · PDF</span></div>
+        <div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg></span><span class="pi-t">Formulario para tus clientes</span><span class="pi-s">catálogo, carrito y seguimiento</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 16v-4M11 16V9M15 16v-6M19 8H3"/></svg></span><span class="pi-t">Panel del negocio</span><span class="pi-s">pedidos en vivo, catálogo y reportes</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 3v18"/></svg></span><span class="pi-t">Tus datos</span><span class="pi-s">pedidos, clientes y stock, siempre tuyos</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M9 7h6M9 11h6"/></svg></span><span class="pi-t">Guía de instalación</span><span class="pi-s">paso a paso con imágenes · PDF</span></div>
       </div>
     </div>
 
@@ -3107,7 +3107,7 @@ window.AL_NOTAS = {
     <div class="pi-bloque">
       <div class="pi-eyebrow">Preguntas frecuentes</div>
       <div class="pi-faqs">
-        <details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg></span><span class="pi-q">¿Mis clientes tienen que instalar algo?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>No. Abren un enlace desde el celular o el computador y piden. Tú lo compartes por WhatsApp, redes sociales o donde quieras.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 9v.01M18 15v.01"/></svg></span><span class="pi-q">¿Cobra comisión por venta?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>No. La app vive en tu propia cuenta de Google: no hay intermediarios ni cobros por pedido.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 9v.01M18 15v.01"/></svg></span><span class="pi-q">¿Cómo me pagan?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Con los medios que tú configures: transferencia, link de pago o efectivo. La app muestra tus datos de pago; no procesa pagos.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg></span><span class="pi-q">¿Los pedidos llegan a mi WhatsApp?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Llegan a tu panel, en vivo, y si quieres también por correo. Desde el panel avisas al cliente por WhatsApp con el mensaje listo.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6v18h12V7z"/><path d="M14 3v4h4M9 13l6 4M15 13l-6 4"/></svg></span><span class="pi-q">¿Puedo cargar mi catálogo desde Excel?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Sí. Copias tus filas desde Excel o Google Sheets y las pegas en Catálogo → Importar.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><span class="pi-q">¿Cuántos pedidos soporta?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Está pensada para decenas de pedidos por hora y hasta unos 12.000 pedidos activos. Un medidor te avisa a tiempo para archivar los antiguos.</p></details>
+        <details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 0 1 4.9.7c0 1.7-2.4 2.1-2.4 3.8M12 17h.01"/></svg></span><span class="pi-q">¿Qué necesito para usarla?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Solo una cuenta de Google (si usas Gmail, ya la tienes) y un celular o computador para ver tus pedidos. Tus clientes no necesitan nada: piden desde un enlace. La instalación toma unos minutos con la guía paso a paso.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg></span><span class="pi-q">¿Mis clientes tienen que instalar algo?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>No. Abren un enlace desde el celular o el computador y piden. Tú lo compartes por WhatsApp, redes sociales o donde quieras.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 9v.01M18 15v.01"/></svg></span><span class="pi-q">¿Cobra comisión por venta?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>No. La app vive en tu propia cuenta de Google: no hay intermediarios ni cobros por pedido.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 9v.01M18 15v.01"/></svg></span><span class="pi-q">¿Cómo me pagan?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Con los medios que tú configures: transferencia, link de pago o efectivo. La app muestra tus datos de pago; no procesa pagos.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg></span><span class="pi-q">¿Los pedidos llegan a mi WhatsApp?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Llegan a tu panel, en vivo, y si quieres también por correo. Desde el panel avisas al cliente por WhatsApp con el mensaje listo.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6v18h12V7z"/><path d="M14 3v4h4M9 13l6 4M15 13l-6 4"/></svg></span><span class="pi-q">¿Puedo cargar mi catálogo desde Excel?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Sí. Copias tus filas desde Excel o Google Sheets y las pegas en Catálogo → Importar.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><span class="pi-q">¿Cuántos pedidos soporta?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Está pensada para decenas de pedidos por hora y hasta unos 12.000 pedidos activos. Un medidor te avisa a tiempo para archivar los antiguos.</p></details>
       </div>
     </div>
 
@@ -3119,7 +3119,7 @@ window.AL_NOTAS = {
       <div class="prod-cab-txt">
         <div class="prod-eyebrow"><span class="prox-badge">Próximamente</span></div>
         <h2 class="prod-h1">Mis Finanzas.</h2>
-        <p class="prod-tagline">Tus finanzas personales ordenadas desde el celular: anotas un gasto en dos toques y sabes cuánto te queda para el mes, dentro de tu propio Google Sheets.</p>
+        <p class="prod-tagline">Tus finanzas personales ordenadas desde el celular: anotas un gasto en dos toques y sabes cuánto te queda para el mes. Sin conectar tu banco.</p>
       </div>
       <div class="alert-box"><b>¿Para quién?</b> Personas y familias que quieren saber en qué se va la plata, tener al día sus tarjetas y deudas y ahorrar para sus metas.</div>
     </div>
@@ -3144,7 +3144,7 @@ window.AL_NOTAS = {
           <ol class="al-demo__steps"></ol>
           <span class="al-demo__count">1 de 6</span>
         </div>
-        <p class="al-demo__note">Demostración ilustrativa con datos de ejemplo. La app funciona con tu Google Sheets y tu cuenta de Google.</p>
+        <p class="al-demo__note">Demostración ilustrativa con datos de ejemplo. Funciona con tu cuenta de Google y tus datos quedan en ella.</p>
         <div class="al-demo__fallback">
           <p class="al-demo__fbh">La demostración en 6 pasos</p>
           <ol class="al-demo__fblist"></ol>
@@ -3180,7 +3180,7 @@ window.AL_NOTAS = {
     </div>
 
     <div class="prod-cel">
-      <p class="prod-tagline">Tus finanzas personales ordenadas desde el celular: anotas un gasto en dos toques y sabes cuánto te queda para el mes, dentro de tu propio Google Sheets.</p>
+      <p class="prod-tagline">Tus finanzas personales ordenadas desde el celular: anotas un gasto en dos toques y sabes cuánto te queda para el mes. Sin conectar tu banco.</p>
       <div class="alert-box"><b>¿Para quién?</b> Personas y familias que quieren saber en qué se va la plata, tener al día sus tarjetas y deudas y ahorrar para sus metas.</div>
     </div>
 
@@ -3188,11 +3188,11 @@ window.AL_NOTAS = {
 
     <span class="buy-btn buy-btn--prox" aria-disabled="true">Próximamente</span>
     <span class="guarantee-note">Muy pronto disponible. <a href="#" onclick="return show('contact')">Escríbeme</a> y te aviso cuando esté listo.</span>
-    <div class="alert-box">Pensado para quien hoy anota sus gastos en una libreta, en las notas del celular o no los anota: sin suscripciones, sin conectar tu banco y con tus datos en tu propio Drive.</div>
+    <div class="alert-box">Pensado para quien hoy anota sus gastos en una libreta, en las notas del celular o no los anota: sin suscripciones, sin conectar tu banco y con tus datos guardados en tu propia cuenta.</div>
     <div class="pi-bloque">
       <div class="pi-eyebrow" id="incluye-fin">Qué incluye</div>
       <div class="pi-grid4">
-        <div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg></span><span class="pi-t">Panel en tu celular</span><span class="pi-s">registro rápido, inicio, metas y más</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 3v18"/></svg></span><span class="pi-t">Tu planilla</span><span class="pi-s">movimientos, presupuesto y deudas: todo tuyo</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><span class="pi-t">Resumen del mes</span><span class="pi-s">por correo, con PDF y recordatorio diario</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M9 7h6M9 11h6"/></svg></span><span class="pi-t">Guía de instalación</span><span class="pi-s">paso a paso con imágenes · PDF</span></div>
+        <div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg></span><span class="pi-t">Panel en tu celular</span><span class="pi-s">registro rápido, inicio, metas y más</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 3v18"/></svg></span><span class="pi-t">Tus datos</span><span class="pi-s">movimientos, presupuesto y deudas, siempre tuyos</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><span class="pi-t">Resumen del mes</span><span class="pi-s">por correo, con PDF y recordatorio diario</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M9 7h6M9 11h6"/></svg></span><span class="pi-t">Guía de instalación</span><span class="pi-s">paso a paso con imágenes · PDF</span></div>
       </div>
     </div>
 
@@ -3209,7 +3209,7 @@ window.AL_NOTAS = {
     <div class="pi-bloque">
       <div class="pi-eyebrow">Preguntas frecuentes</div>
       <div class="pi-faqs">
-        <details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V10l7-5 7 5v11M10 21v-6h4v6"/></svg></span><span class="pi-q">¿Tengo que conectar mi banco?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>No. Tú anotas cada movimiento, y toma unos segundos. Así no compartes tus claves con nadie.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span><span class="pi-q">¿Dónde quedan mis datos?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>En una planilla de Google en tu propio Drive. El panel se publica como «Solo yo»: nadie más puede abrirlo, ni siquiera Ambilor.Lab.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8.5a15 15 0 0 1 20 0M5 12a10 10 0 0 1 14 0M8.5 15.5a5 5 0 0 1 7 0"/><path d="M12 19h.01"/></svg></span><span class="pi-q">¿Funciona sin internet?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Sí, con el panel ya abierto: lo que anotas sin señal espera en el teléfono y se sube solo al volver la conexión. Abrir el panel desde cero sí necesita internet.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg></span><span class="pi-q">¿Es una app de la tienda?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>No hace falta descargar nada: se abre desde un enlace con un código QR y la agregas a la pantalla de inicio de tu iPhone o Android, como una app más.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c1-3.5 3.5-5.5 6.5-5.5s5.5 2 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 14.5c1.5.8 2.6 2.6 3 5.5"/></svg></span><span class="pi-q">¿La podemos usar en pareja?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Está pensada para una persona, o para un hogar que comparte una misma cuenta de Google. El panel solo lo abre la cuenta dueña.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><span class="pi-q">¿Cuántos movimientos soporta?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Hasta unos 10.000, cerca de cuatro años registrando unos 200 al mes. Después puedes pasar los años antiguos a otra planilla.</p></details>
+        <details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 0 1 4.9.7c0 1.7-2.4 2.1-2.4 3.8M12 17h.01"/></svg></span><span class="pi-q">¿Qué necesito para usarla?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Una cuenta de Google (si usas Gmail, ya la tienes) y tu celular. La instalación se hace una sola vez, desde un computador, con una guía paso a paso; después la usas desde el celular como cualquier app.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V10l7-5 7 5v11M10 21v-6h4v6"/></svg></span><span class="pi-q">¿Tengo que conectar mi banco?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>No. Tú anotas cada movimiento, y toma unos segundos. Así no compartes tus claves con nadie.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span><span class="pi-q">¿Dónde quedan mis datos?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>En tu propia cuenta de Google (la de tu Gmail), en un archivo que solo tú puedes abrir. Nadie más los ve, ni siquiera Ambilor.Lab.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8.5a15 15 0 0 1 20 0M5 12a10 10 0 0 1 14 0M8.5 15.5a5 5 0 0 1 7 0"/><path d="M12 19h.01"/></svg></span><span class="pi-q">¿Funciona sin internet?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Sí, con el panel ya abierto: lo que anotas sin señal espera en el teléfono y se sube solo al volver la conexión. Abrir el panel desde cero sí necesita internet.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg></span><span class="pi-q">¿Es una app de la tienda?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>No hace falta descargar nada: se abre desde un enlace con un código QR y la agregas a la pantalla de inicio de tu iPhone o Android, como una app más.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c1-3.5 3.5-5.5 6.5-5.5s5.5 2 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 14.5c1.5.8 2.6 2.6 3 5.5"/></svg></span><span class="pi-q">¿La podemos usar en pareja?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Está pensada para una persona, o para un hogar que comparte una misma cuenta de Google. El panel solo lo abre la cuenta dueña.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><span class="pi-q">¿Cuántos movimientos soporta?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Hasta unos 10.000, cerca de cuatro años registrando unos 200 al mes. Después puedes pasar los años antiguos a otra planilla.</p></details>
       </div>
     </div>
 
@@ -4541,9 +4541,9 @@ var RC_GUIAS=[
   {r:'guia-looker-studio',gp:'ds',min:5,t:'Google Sheets con Looker Studio: reportes que se actualizan solos',d:'Conecta tu planilla y crea un informe gratis que tu equipo puede ver cuando quiera.'}
 ];
 var RC_APPS={
-  finanzapp:{tab:'hpt-fin',ico:'ti-receipt',t:'¿Quieres saber en qué se te va la plata?',d:'La app Mis Finanzas ordena tus gastos, tarjetas y deudas desde el celular: anotas en dos toques y ves cuánto te queda para el mes, todo dentro de tu Google Sheets.',b:'Ver Mis Finanzas en acción'},
-  pedidoapp:{tab:'hpt-ped',ico:'ti-shopping-bag',t:'¿Quieres que tus pedidos se ordenen solos?',d:'La app Pedidos recibe los pedidos de tus clientes en un formulario, con seguimiento, cupones y avisos por WhatsApp, todo dentro de Google Sheets.',b:'Ver Pedidos en acción'},
-  conciliador:{tab:'hpt-v2',ico:'ti-arrows-exchange',t:'¿Quieres que la cuadratura se haga sola?',d:'Concilia cruza tu banco con tus registros en Google Sheets y te deja solo los pendientes que de verdad hay que mirar.',b:'Ver Concilia en acción'}
+  finanzapp:{tab:'hpt-fin',ico:'ti-receipt',t:'¿Quieres saber en qué se te va la plata?',d:'La app Mis Finanzas ordena tus gastos, tarjetas y deudas desde el celular: anotas en dos toques y ves cuánto te queda para el mes.',b:'Ver Mis Finanzas en acción'},
+  pedidoapp:{tab:'hpt-ped',ico:'ti-shopping-bag',t:'¿Quieres que tus pedidos se ordenen solos?',d:'La app Pedidos recibe los pedidos de tus clientes en un formulario, con seguimiento, cupones y avisos por WhatsApp, sin comisión por venta.',b:'Ver Pedidos en acción'},
+  conciliador:{tab:'hpt-v2',ico:'ti-arrows-exchange',t:'¿Quieres que la cuadratura se haga sola?',d:'Concilia cruza tu banco con tus registros y te deja solo los pendientes que de verdad hay que mirar.',b:'Ver Concilia en acción'}
 };
 var RC_ABRIENDO=false;
 var RC_BASE={titulo:document.title,desc:(document.querySelector('meta[name="description"]')||{}).content||'',canon:(document.querySelector('link[rel="canonical"]')||{}).href||''};
@@ -5181,7 +5181,7 @@ window.AL3D = (function(){
     });
   }
   // cifras flotantes (reporteria)
-  var CIFRAS = [['10.000','por ejecución'],['1 clic','para conciliar'],['82 %','conciliado'],['~5 min','instalación'],['0','errores de copia']];
+  var CIFRAS = [['3','herramientas'],['1 clic','para conciliar'],['$0','comisión por venta'],['~5 min','instalación'],['2 toques','por gasto']];
   function textoCifra(c){
     return lienzo(200, 90, function(g, w, h){
       g.font = '600 38px "JetBrains Mono", ui-monospace, monospace'; g.fillStyle = '#E8EDF5'; g.textBaseline = 'alphabetic';
@@ -5282,7 +5282,7 @@ window.AL3D = (function(){
       return lienzo(240, 170, function(g, w, h){
         rr(g, 1, 1, w-2, h-2, 10); g.fillStyle = 'rgba(14,19,27,.94)'; g.fill(); g.strokeStyle = 'rgba(143,193,255,.4)'; g.lineWidth = 1.2; g.stroke();
         g.fillStyle = '#1a7a4a'; rr(g, 1, 1, w-2, 24, 10); g.fill(); g.fillRect(1, 14, w-2, 11);
-        g.font = '600 12px Inter, system-ui, sans-serif'; g.fillStyle = '#fff'; g.fillText('Conciliación.gsheet', 12, 17);
+        g.font = '600 12px Inter, system-ui, sans-serif'; g.fillStyle = '#fff'; g.fillText('Concilia.', 12, 17);
         for (var r = 0; r < 6; r++) for (var c = 0; c < 4; c++) {
           var x = 10 + c * 56, y = 34 + r * 21;
           g.fillStyle = marcas[r] === c ? (r === 3 ? 'rgba(240,166,58,.35)' : 'rgba(52,194,122,.3)') : 'rgba(255,255,255,.05)';
@@ -5292,8 +5292,8 @@ window.AL3D = (function(){
     }
     poner(gr, plano(hoja([1, 2, 0, 3, 1, 2]), 2.4, 1.7), -lx - 0.3, 0.9, z0 - 5.5);
     poner(gr, plano(hoja([2, 0, 3, 1, 0, 2]), 2.4, 1.7), lx + 0.4, -0.7, z0 - 8);
-    [['=CONCILIAR(A2:A500)', 'una fórmula, un clic', '#4C8DDB'], ['✓ 498 pares', 'emparejados solos', '#34C27A'], ['⚠ 2 pendientes', 'para revisar', '#F0A63A'],
-     ['10.000', 'movimientos por ejecución', '#8FC1FF'], ['Google Sheets', 'tu propia planilla', '#34C27A']].forEach(function(f, i){
+    [['Concilia.', 'cuadra tu banco', '#4C8DDB'], ['✓ 498 pares', 'emparejados solos', '#34C27A'], ['Pedidos.', 'pedidos en orden', '#F0A63A'],
+     ['Mis Finanzas.', 'en qué se va tu plata', '#8FC1FF'], ['2 toques', 'para anotar un gasto', '#34C27A']].forEach(function(f, i){
       var s = i % 2 ? -1 : 1; poner(gr, plano(fichaTex(f[0], f[1], f[2]), 2.4, 0.51), s * (lx + 0.2 + (i % 2) * 0.4), -1.7 + i * 0.85, z0 - 4 - i * 1.3);
     });
   })();
@@ -6307,10 +6307,10 @@ AL_DEMOS['v2-accion'] = {
       stats:[['2','planillas por cruzar'],['1:n','pagos que cubren varias facturas']] },
     { a:4.2, b:9.0, short:'Fuentes', kicker:'Paso 1: conecta tus dos fuentes',
       title:'Cartola y libro mayor, en una sola tarjeta',
-      body:'Pegas el enlace de cada Google Sheet. El sistema detecta las columnas (también Cargo y Abono, o Debe y Haber) y deja las dos fuentes listas para cruzarse.' },
+      body:'Eliges tus dos fuentes: la cartola del banco y tu libro mayor. Concilia reconoce sola cada columna (también Cargo y Abono, o Debe y Haber) y las deja listas para cruzarse.' },
     { a:9.0, b:13.6, short:'Grupos', kicker:'Paso 2: concilia en grupos',
       title:'Un abono contra varias facturas',
-      body:'El motor busca combinaciones de hasta 8 partidas por lado que suman lo mismo y explica cada grupo: montos, fechas y conceptos en común.' },
+      body:'Busca qué facturas suman lo mismo que un pago (hasta 8 por lado) y explica cada grupo: montos, fechas y conceptos en común.' },
     { a:13.6, b:18.6, short:'Reglas', kicker:'Paso 3: explica lo que no tendrá contraparte',
       title:'Comisiones e intereses, explicados solos',
       body:'Con reglas simples ("el concepto contiene comisión, es cargo y hasta $20.000"), esos movimientos quedan como Explicados con su categoría. Puedes crear la regla desde el mismo movimiento.' },
@@ -6320,7 +6320,7 @@ AL_DEMOS['v2-accion'] = {
     { a:23.8, b:29.6, short:'Resultado', kicker:'Resultado final',
       title:'Revisas solo lo que importa',
       body:'Indicadores que llevan al detalle, sugerencias para decidir los casos dudosos, IA opcional con tu propia clave y el historial de cada ejecución.',
-      stats:[['10.000','movimientos por ejecución'],['1 a 3','personas en el panel']],
+      stats:[['10.000','movimientos en cada revisión'],['1 a 3','personas en el panel']],
       cta:['Ver qué incluye', 'incluye-v2'] }
   ],
   cursor: [
@@ -8821,7 +8821,7 @@ window.addEventListener('load', function(){ var h = new URLSearchParams(location
   // B6 · Inicio: cinta de palabras clave, efecto "descifrar" y botones magnéticos
   (function(){
     var est = document.querySelector('#home .i3-centro'); if (!est) return;
-    var pal = ['Conciliación bancaria', 'Google Sheets', 'Excel', 'Apps Script', 'Looker Studio', 'Reportes automáticos', 'Cierre mensual', 'Sin software caro'];
+    var pal = ['Banco cuadrado', 'Pedidos en orden', 'Gastos claros', 'Sin programar', 'Lista en minutos', 'Tus datos son tuyos', 'Sin comisión por venta', 'Sin sistemas caros'];
     var c = document.createElement('div'); c.className = 'mv-cinta'; c.setAttribute('aria-hidden', 'true');
     var fila = pal.concat(pal).map(function(t){ return '<span>' + t + '</span>'; }).join('');
     c.innerHTML = '<div>' + fila + '</div>';
