@@ -6253,7 +6253,9 @@ window.alDemoTarjetas = function(root, cfg){
 
   let last = performance.now();
   function frame(now){
-    const dt = Math.min(0.12, (now - last) / 1000); last = now;
+    let dt = Math.min(0.12, (now - last) / 1000); last = now;
+    // grabación a video (solo pruebas, motion/LEEME.md): con window.__alGrabar = { n }, el demo avanza 1/30 s por cuadro pedido
+    if (window.__alGrabar) { if (!__alGrabar.n) { requestAnimationFrame(frame); return; } __alGrabar.n--; dt = 1 / 30; }
     if (PX.update(dt)) needsRender = true;
     const mueve = L.tick(dt, visible);
     if (visible && (mueve || needsRender) && !renderer.getContext().isContextLost()) {   // sin contexto 3D no se dibuja
