@@ -31,14 +31,14 @@
   function caja(g, x, y, w, h, r){ g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
 
   // Barrido de luz: una banda diagonal clara cruza el rectángulo una vez (al completarse algo: un resultado,
-  // una tarjeta que coincide). o.color: tinte de la banda (por defecto la luz azul).
+  // una tarjeta que coincide). o.color: tinte de la banda (por defecto la luz azul); o.fuerza: intensidad (0 a 1).
   function barrido(g, lt, t0, x, y, w, h, o){
     o = o || {};
     var dur = o.dur || T.dur.barrido, p = tramo(lt, t0, dur); if (p <= 0 || p >= 1) return;
     var banda = Math.max(60, Math.min(w, h) * 0.9), cx = x - banda + (w + banda * 2) * easeInOut(p);
     g.save(); caja(g, x, y, w, h, o.radio == null ? 16 : o.radio); g.clip();
     g.translate(cx, y + h / 2); g.transform(1, 0, -0.45, 1, 0, 0);
-    var gr = g.createLinearGradient(-banda / 2, 0, banda / 2, 0), c = o.color || T.luz, a = Math.sin(p * Math.PI);
+    var gr = g.createLinearGradient(-banda / 2, 0, banda / 2, 0), c = o.color || T.luz, a = Math.sin(p * Math.PI) * (o.fuerza || 1);   // fuerza: 0 a 1 (un reflejo en el vidrio va suave)
     gr.addColorStop(0, rgba(c, 0)); gr.addColorStop(0.42, rgba(T.blanco, 0.5 * a)); gr.addColorStop(0.5, rgba(c, 0.22 * a)); gr.addColorStop(0.58, rgba(T.blanco, 0.5 * a)); gr.addColorStop(1, rgba(c, 0));
     g.fillStyle = gr; g.fillRect(-banda / 2, -h, banda, h * 2);
     g.restore();
