@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mis-finanzas-v1';
+﻿const CACHE_NAME = 'mis-finanzas-v2';
 const ASSETS = [
   './',
   './index.html',
@@ -40,3 +40,4 @@ self.addEventListener('fetch', (event) => {
     })
   );
 });
+
