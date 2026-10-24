@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="theme-color" content="#0f1026">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Mis Finanzas">
+  <title>AÃ±adir rÃ¡pido - Mis Finanzas</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/icon.svg">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/app.css">
+  <script src="https://unpkg.com/dexie@3.2.4/dist/dexie.js"></script>
+</head>
+<body class="rapido-body">
+  <header class="rapido-header">
+    <a class="back-btn" href="index.html">â† Volver</a>
+    <h1>AÃ±adir rÃ¡pido</h1>
+  </header>
+
+  <main class="rapido-main">
+    <div class="tipo-toggle">
+      <button class="tipo-btn active" data-tipo="gasto">Gasto</button>
+      <button class="tipo-btn" data-tipo="ingreso">Ingreso</button>
+    </div>
+
+    <div class="monto-group">
+      <label class="monto-label">$</label>
+      <input type="number" inputmode="decimal" id="monto" class="monto-input" placeholder="0" autocomplete="off">
+    </div>
+
+    <div class="form-group">
+      <label>Fecha</label>
+      <input type="date" id="fecha" class="form-input">
+    </div>
+
+    <div class="form-group">
+      <label>CategorÃ­a</label>
+      <select id="categoria" class="form-input"></select>
+      <button class="link-btn" id="addCategoria">+ AÃ±adir categorÃ­a</button>
+    </div>
+
+    <div class="form-group">
+      <label>Cuenta</label>
+      <select id="cuenta" class="form-input"></select>
+      <button class="link-btn" id="addCuenta">+ AÃ±adir cuenta</button>
+    </div>
+
+    <div class="form-group">
+      <label>Nota (opcional)</label>
+      <input type="text" id="nota" class="form-input" placeholder="Ej. Almuerzo">
+    </div>
+
+    <div class="rapido-actions">
+      <button class="btn-primary" id="btnGuardar">Guardar</button>
+      <button class="btn-secondary" id="btnGuardarOtro">Guardar y aÃ±adir otro</button>
+    </div>
+  </main>
+
+  <script src="js/db.js"></script>
+  <script src="js/rapido.js"></script>
+  <script>
+    if('serviceWorker' in navigator){
+      window.addEventListener('load', ()=>{
+        navigator.serviceWorker.register('./sw.js').catch(()=>{});
+      });
+    }
+  </script>
+</body>
+</html>
+
+
+
+
+
