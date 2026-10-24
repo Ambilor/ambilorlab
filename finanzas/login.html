@@ -1,89 +1,107 @@
-﻿<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <meta name="theme-color" content="#0f1026">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Mis Finanzas">
-  <title>Acceso | Mis Finanzas</title>
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="apple-touch-icon" href="icons/icon.svg">
-  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="css/app.css">
-  <style>
-    body { display:flex; align-items:center; justify-content:center; min-height:100dvh; padding:16px; }
-    .login-wrapper { width:min(360px,100%); display:flex; flex-direction:column; gap:16px; text-align:center; }
-    .login-card { background:var(--card); border:1px solid var(--border); border-radius:18px; box-shadow:var(--shadow); padding:28px 24px; display:flex; flex-direction:column; gap:16px; }
-    .login-logo { display:flex; flex-direction:column; align-items:center; gap:10px; }
-    .login-logo-icon { width:56px; height:56px; border-radius:16px; background:radial-gradient(circle at top, rgba(79,155,255,.9), rgba(79,155,255,.4)); display:flex; align-items:center; justify-content:center; box-shadow:0 30px 60px -40px rgba(79,155,255,.9); }
-    .login-logo-icon svg { width:28px; height:28px; }
-    .login-title { font-size:22px; font-weight:700; }
-    .login-subtitle { color:var(--text-secondary); font-size:14px; }
-    .login-form { display:flex; flex-direction:column; gap:12px; }
-    .login-input { width:100%; border-radius:999px; border:1px solid transparent; background:rgba(255,255,255,.02); color:var(--text-primary); padding:12px 18px; font-size:16px; text-align:center; }
-    .login-input:focus { outline:none; border-color:rgba(79,155,255,.8); box-shadow:0 0 0 4px rgba(79,155,255,.12); }
-    .login-remember { display:flex; align-items:center; justify-content:center; gap:10px; color:var(--text-secondary); font-size:14px; }
-    .login-remember input { width:18px; height:18px; accent-color:var(--accent); }
-    .login-button { border:none; border-radius:999px; background:linear-gradient(135deg, rgba(79,155,255,1) 0%, rgba(59,130,246,1) 100%); color:#fff; font-weight:600; padding:12px 18px; font-size:15px; }
-    .login-button:active { transform:scale(.99); }
-    .login-error { color:var(--danger); font-size:14px; display:none; }
-    .login-error.visible { display:block; }
-  </style>
+﻿<!doctype html>
+<html lang="es"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B1220">
+<meta name="robots" content="noindex, nofollow">
+<title>Acceso · Mis Finanzas</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon.svg">
+<style>
+:root{--bg:#EEF2F7;--s:#FFFFFF;--s2:#F5F8FB;--b:#DCE4EE;--t:#12304D;--t2:#3E546D;--t3:#566A80;--a:#1F5C99;--a2:#4C8DDB;--a-suave:#EBF2FA;--glow-2:#8FC1FF;--bad:#B3261E;--bad-s:#FCE8E6;--sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;--sh:0 1px 2px rgba(16,24,40,.05),0 6px 20px -8px rgba(16,24,40,.12);--r:18px;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#06080C;--s:#0E131B;--s2:#131A25;--b:#1B2330;--t:#E8EDF5;--t2:#B4BFD2;--t3:#98A2B3;--a:#8FC1FF;--a2:#8FC1FF;--a-suave:#0B1624;--bad:#F2786F;--bad-s:#3A1A1A;--sh:0 1px 2px rgba(0,0,0,.3),0 8px 24px -10px rgba(0,0,0,.6);color-scheme:dark}}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--t);font-family:var(--sans);-webkit-font-smoothing:antialiased;display:flex;align-items:center;justify-content:center;padding:20px;min-height:100dvh}
+.caja{width:min(380px,100%);display:flex;flex-direction:column;gap:18px}
+.tarjeta{background:var(--s);border:1px solid var(--b);border-radius:var(--r);box-shadow:var(--sh);padding:30px 24px;display:flex;flex-direction:column;gap:20px}
+.marca{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.logo{width:56px;height:56px;border-radius:16px;background:var(--a);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:26px;font-weight:700;letter-spacing:-.02em;box-shadow:0 10px 24px -12px var(--a)}
+.logo span{color:var(--glow-2)}
+h1{font-size:20px;font-weight:700;letter-spacing:-.01em}
+.sub{color:var(--t3);font-size:13.5px;line-height:1.45}
+form{display:flex;flex-direction:column;gap:14px}
+label.campo{display:flex;flex-direction:column;gap:6px}
+label.campo span{font-size:12px;font-weight:600;color:var(--t2);letter-spacing:.02em}
+input[type=password]{width:100%;border:1px solid var(--b);background:var(--s2);color:var(--t);border-radius:12px;padding:13px 14px;font-size:16px;font-family:var(--sans);transition:border-color .15s,box-shadow .15s}
+input[type=password]:focus{outline:none;border-color:var(--a);box-shadow:0 0 0 3px var(--a-suave)}
+.recordar{display:flex;align-items:center;gap:9px;color:var(--t2);font-size:13px;cursor:pointer;user-select:none}
+.recordar input{width:17px;height:17px;accent-color:var(--a);cursor:pointer}
+button{width:100%;border:none;border-radius:12px;background:var(--a);color:#fff;font-family:var(--sans);font-size:15px;font-weight:600;padding:13px 16px;cursor:pointer;transition:filter .15s,transform .1s}
+button:hover{filter:brightness(1.08)}
+button:active{transform:scale(.99)}
+button:disabled{opacity:.6;cursor:default}
+.error{display:none;background:var(--bad-s);color:var(--bad);border-radius:10px;padding:10px 12px;font-size:13px;line-height:1.4}
+.error.on{display:block}
+.pie{text-align:center;font-family:var(--mono);font-size:11px;color:var(--t3);letter-spacing:.04em}
+</style>
 </head>
 <body>
-  <div class="login-wrapper">
-    <div class="login-card">
-      <div class="login-logo">
-        <div class="login-logo-icon">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 3v18M5 7h14M5 17h14" stroke="white" stroke-width="1.6" stroke-linecap="round" />
-          </svg>
-        </div>
-        <div>
-          <div class="login-title">Mis Finanzas</div>
-          <div class="login-subtitle">Acceso protegido</div>
-        </div>
+<div class="caja">
+  <div class="tarjeta">
+    <div class="marca">
+      <div class="logo">F<span>.</span></div>
+      <div>
+        <h1>Mis Finanzas</h1>
+        <div class="sub">Acceso protegido</div>
       </div>
-      <form class="login-form" id="loginForm" novalidate autocomplete="off">
-        <input class="login-input" id="passwordInput" type="text" placeholder="Contraseña" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required>
-        <label class="login-remember">
-          <input type="checkbox" id="rememberCheck" checked>
-          <span>Recordar sesión en este navegador</span>
-        </label>
-        <button class="login-button" type="submit">Entrar</button>
-        <div class="login-error" id="loginError">Contraseña incorrecta</div>
-      </form>
     </div>
+    <form id="f" novalidate autocomplete="off">
+      <label class="campo">
+        <span>Contraseña</span>
+        <input id="clave" type="password" inputmode="text" autocomplete="current-password" autocorrect="off" autocapitalize="off" spellcheck="false" required>
+      </label>
+      <label class="recordar">
+        <input type="checkbox" id="recordar" checked>
+        <span>Recordar sesión en este navegador</span>
+      </label>
+      <div class="error" id="error">Contraseña incorrecta</div>
+      <button type="submit" id="entrar">Entrar</button>
+    </form>
   </div>
-  <script>
-    const ACCESS_PASSWORD = "finanzas123";
-    const form = document.getElementById("loginForm");
-    const input = document.getElementById("passwordInput");
-    const remember = document.getElementById("rememberCheck");
-    const error = document.getElementById("loginError");
+  <div class="pie">Ambilor.Lab</div>
+</div>
+<script>
+(function(){
+  "use strict";
+  var CLAVE = "finanzas123";
+  var f = document.getElementById("f");
+  var clave = document.getElementById("clave");
+  var recordar = document.getElementById("recordar");
+  var error = document.getElementById("error");
+  var entrar = document.getElementById("entrar");
+
+  try {
     if (localStorage.getItem("mf_auth") === "ok" || sessionStorage.getItem("mf_auth") === "ok") {
-      window.location.replace("index.html");
+      location.replace("index.html");
+      return;
     }
-    form.addEventListener("submit", (event) => {
-      event.preventDefault();
-      error.classList.remove("visible");
-      if (input.value.trim() === ACCESS_PASSWORD) {
-        if (remember.checked) {
+  } catch (e) {}
+
+  f.addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    error.classList.remove("on");
+    if (clave.value.trim() === CLAVE) {
+      try {
+        if (recordar.checked) {
           localStorage.setItem("mf_auth", "ok");
           sessionStorage.removeItem("mf_auth");
         } else {
           sessionStorage.setItem("mf_auth", "ok");
           localStorage.removeItem("mf_auth");
         }
-        window.location.replace("index.html");
-        return;
-      }
-      error.classList.add("visible");
-      input.value = "";
-      input.focus();
-    });
-  </script>
-</body>
-</html>
+      } catch (e) {}
+      entrar.disabled = true;
+      location.replace("index.html");
+      return;
+    }
+    error.classList.add("on");
+    clave.value = "";
+    clave.focus();
+  });
+
+  clave.focus();
+})();
+</script>
+</body></html>

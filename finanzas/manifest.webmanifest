@@ -1,11 +1,14 @@
 {
   "name": "Mis Finanzas",
   "short_name": "Finanzas",
+  "description": "Control de gastos, deudas y metas. Ambilor.Lab",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#0f1026",
-  "theme_color": "#0f1026",
+  "background_color": "#0B1220",
+  "theme_color": "#0B1220",
   "orientation": "portrait",
+  "lang": "es",
   "icons": [
     {
       "src": "icons/icon.svg",
