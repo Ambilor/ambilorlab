@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta name="theme-color" content="#0f1026">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta nametag="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Mis Finanzas">
   <title>Acceso | Mis Finanzas</title>
   <link rel="manifest" href="manifest.webmanifest">
@@ -13,24 +13,23 @@
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/app.css">
   <style>
-    body { display: flex; align-items: center; justify-content: center; min-height: 100dvh; padding: 16px; }
-    .login-wrapper { width: min(360px, 100%); display: flex; flex-direction: column; gap: 16px; text-align: center; }
-    .login-card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; box-shadow: var(--shadow); padding: 28px 24px; display: flex; flex-direction: column; gap: 16px; }
-    .login-logo { display: flex; flex-direction: column; align-items: center; gap: 10px; }
-    .login-logo-icon { width: 56px; height: 56px; border-radius: 16px; background: radial-gradient(circle at top, rgba(79, 155, 255, 0.9), rgba(79, 155, 255, 0.4)); display: flex; align-items: center; justify-content: center; box-shadow: 0 30px 60px -40px rgba(79, 155, 255, 0.9); }
-    .login-logo-icon svg { width: 28px; height: 28px; }
-    .login-title { font-size: 22px; font-weight: 700; }
-    .login-subtitle { color: var(--text-secondary); font-size: 14px; }
-    .login-form { display: flex; flex-direction: column; gap: 12px; }
-    .login-input { width: 100%; border-radius: 999px; border: 1px solid transparent; background: rgba(255, 255, 255, 0.02); color: var(--text-primary); padding: 12px 18px; font-size: 16px; text-align: center; letter-spacing: 6px; }
-    .login-input::placeholder { letter-spacing: normal; }
-    .login-input:focus { outline: none; border-color: rgba(79, 155, 255, 0.8); box-shadow: 0 0 0 4px rgba(79, 155, 255, 0.12); }
-    .login-remember { display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--text-secondary); font-size: 14px; }
-    .login-remember input { width: 18px; height: 18px; accent-color: var(--accent); }
-    .login-button { border: none; border-radius: 999px; background: linear-gradient(135deg, rgba(79, 155, 255, 1) 0%, rgba(59, 130, 246, 1) 100%); color: #fff; font-weight: 600; padding: 12px 18px; font-size: 15px; }
-    .login-button:active { transform: scale(0.99); }
-    .login-error { color: var(--danger); font-size: 14px; display: none; }
-    .login-error.visible { display: block; }
+    body { display:flex; align-items:center; justify-content:center; min-height:100dvh; padding:16px; }
+    .login-wrapper { width:min(360px,100%); display:flex; flex-direction:column; gap:16px; text-align:center; }
+    .login-card { background:var(--card); border:1px solid var(--border); border-radius:18px; box-shadow:var(--shadow); padding:28px 24px; display:flex; flex-direction:column; gap:16px; }
+    .login-logo { display:flex; flex-direction:column; align-items:center; gap:10px; }
+    .login-logo-icon { width:56px; height:56px; border-radius:16px; background:radial-gradient(circle at top, rgba(79,155,255,.9), rgba(79,155,255,.4)); display:flex; align-items:center; justify-content:center; box-shadow:0 30px 60px -40px rgba(79,155,255,.9); }
+    .login-logo-icon svg { width:28px; height:28px; }
+    .login-title { font-size:22px; font-weight:700; }
+    .login-subtitle { color:var(--text-secondary); font-size:14px; }
+    .login-form { display:flex; flex-direction:column; gap:12px; }
+    .login-input { width:100%; border-radius:999px; border:1px solid transparent; background:rgba(255,255,255,.02); color:var(--text-primary); padding:12px 18px; font-size:16px; text-align:center; }
+    .login-input:focus { outline:none; border-color:rgba(79,155,255,.8); box-shadow:0 0 0 4px rgba(79,155,255,.12); }
+    .login-remember { display:flex; align-items:center; justify-content:center; gap:10px; color:var(--text-secondary); font-size:14px; }
+    .login-remember input { width:18px; height:18px; accent-color:var(--accent); }
+    .login-button { border:none; border-radius:999px; background:linear-gradient(135deg, rgba(79,155,255,1) 0%, rgba(59,130,246,1) 100%); color:#fff; font-weight:600; padding:12px 18px; font-size:15px; }
+    .login-button:active { transform:scale(.99); }
+    .login-error { color:var(--danger); font-size:14px; display:none; }
+    .login-error.visible { display:block; }
   </style>
 </head>
 <body>
@@ -47,8 +46,8 @@
           <div class="login-subtitle">Acceso protegido</div>
         </div>
       </div>
-      <form class="login-form" id="loginForm">
-        <input class="login-input" id="passwordInput" type="password"  placeholder="Contraseña" autocomplete="current-password" required>
+      <form class="login-form" id="loginForm" novalidate autocomplete="off">
+        <input class="login-input" id="passwordInput" type="text" placeholder="Contraseña" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required>
         <label class="login-remember">
           <input type="checkbox" id="rememberCheck" checked>
           <span>Recordar sesión en este navegador</span>
@@ -88,4 +87,3 @@
   </script>
 </body>
 </html>
-
