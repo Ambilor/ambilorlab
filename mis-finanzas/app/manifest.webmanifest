@@ -1,0 +1,22 @@
+{
+  "id": "./",
+  "name": "Mis Finanzas",
+  "short_name": "Mis Finanzas",
+  "description": "Anota gastos e ingresos sin internet; se suben a tu planilla de Mis Finanzas cuando vuelve la señal.",
+  "lang": "es-CL",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#EEF2F7",
+  "theme_color": "#1F5C99",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Anotar gasto", "short_name": "Gasto", "url": "./?nuevo=Gasto", "icons": [{ "src": "icons/atajo-gasto.png", "sizes": "96x96", "type": "image/png" }] },
+    { "name": "Anotar ingreso", "short_name": "Ingreso", "url": "./?nuevo=Ingreso", "icons": [{ "src": "icons/atajo-ingreso.png", "sizes": "96x96", "type": "image/png" }] },
+    { "name": "Subir pendientes", "short_name": "Subir", "url": "./?sync=1", "icons": [{ "src": "icons/atajo-subir.png", "sizes": "96x96", "type": "image/png" }] }
+  ]
+}
