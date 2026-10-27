@@ -406,5 +406,13 @@
     });
   });
 
-  if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
+  if ("serviceWorker" in navigator) {
+    // Cuando llega una versión nueva de la app, se recarga sola una vez (sin esperar a la próxima apertura).
+    // En la primera instalación no hay versión anterior, así que no recarga.
+    if (navigator.serviceWorker.controller) {
+      let recargada = false;
+      navigator.serviceWorker.addEventListener("controllerchange", () => { if (!recargada) { recargada = true; location.reload(); } });
+    }
+    window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").then(r => r.update()).catch(() => {}));
+  }
 })();
