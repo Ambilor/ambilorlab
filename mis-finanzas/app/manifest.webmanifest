@@ -2,7 +2,7 @@
   "id": "./",
   "name": "Mis Finanzas",
   "short_name": "Mis Finanzas",
-  "description": "Anota gastos e ingresos sin internet; se suben a tu planilla de Mis Finanzas cuando vuelve la señal.",
+  "description": "Tus finanzas en el celular: gastos, ingresos, presupuesto, metas, tarjetas y deudas. Funciona sin internet y sin cuentas.",
   "lang": "es-CL",
   "start_url": "./",
   "scope": "./",
@@ -15,8 +15,7 @@
     { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
   "shortcuts": [
-    { "name": "Anotar gasto", "short_name": "Gasto", "url": "./?nuevo=Gasto", "icons": [{ "src": "icons/atajo-gasto.png", "sizes": "96x96", "type": "image/png" }] },
-    { "name": "Anotar ingreso", "short_name": "Ingreso", "url": "./?nuevo=Ingreso", "icons": [{ "src": "icons/atajo-ingreso.png", "sizes": "96x96", "type": "image/png" }] },
-    { "name": "Subir pendientes", "short_name": "Subir", "url": "./?sync=1", "icons": [{ "src": "icons/atajo-subir.png", "sizes": "96x96", "type": "image/png" }] }
+    { "name": "Anotar gasto", "short_name": "Gasto", "url": "./?a=registrar&tipo=Gasto", "icons": [{ "src": "icons/atajo-gasto.png", "sizes": "96x96", "type": "image/png" }] },
+    { "name": "Anotar ingreso", "short_name": "Ingreso", "url": "./?a=registrar&tipo=Ingreso", "icons": [{ "src": "icons/atajo-ingreso.png", "sizes": "96x96", "type": "image/png" }] }
   ]
 }
