@@ -2298,8 +2298,14 @@ window.alFoto = (function(){
     return new T.ShapeGeometry(s, 10);
   }
   // geometría en pt del equipo según la orientación: pantalla, franjas de sistema y bisel
-  function especie(m, vert){
+  function especie(m, vert, app){
     var e = { W: vert ? m.w : m.h, H: vert ? m.h : m.w, r: m.r, top: 0, bot: 0, side: 0 };
+    if (app) {   // app nativa (Mis Finanzas): sin Safari ni Chrome, la app llena la pantalla
+      if (m.tipo === 'iphone') { e.bisel = 4.5; e.canto = 2.2; if (vert) { e.top = m.muesca ? 47 : 54; e.bot = 34; } else { e.side = 62; e.bot = 21; } }
+      else if (m.tipo === 'ipad') { e.bisel = 26; e.canto = 2.5; e.top = 24; e.bot = 20; }
+      else { e.bisel = m.tipo === 'android' ? 5 : 22; e.canto = 2; e.top = 32; e.bot = 24; }
+      return e;
+    }
     if (m.tipo === 'iphone') {
       e.bisel = 4.5; e.canto = 2.2;
       if (vert) { e.top = m.muesca ? 47 : 54; e.bot = 96; }        // Safari compacto abajo (dirección + botones) e indicador
@@ -2309,14 +2315,14 @@ window.alFoto = (function(){
     return e;
   }
   // medidas en unidades del demo: la app llena el ancho útil (o el alto, si así cabe mejor)
-  function medidas(vert, PW, PH, pestanas){
-    var m = modelo(), e = especie(m, vert), tel = m.tipo === 'iphone' || m.tipo === 'android', tab = vert && tel && pestanas ? 56 : 0;
+  function medidas(vert, PW, PH, pestanas, app){
+    var m = modelo(), e = especie(m, vert, app), tel = m.tipo === 'iphone' || m.tipo === 'android', tab = vert && tel && pestanas ? 56 : 0;
     var cw = e.W - 2 * e.side, chh = e.H - e.top - e.bot - tab;
     // la app completa de borde a borde, con su propio margen a los lados (antes se recortaba y el texto tocaba el borde)
     var ancho = 1;
     var u = Math.max(PW / (cw * ancho), PH / chh);   // unidades por pt
     // tablet horizontal: la pantalla es más ancha que la app; como en Safari de iPad, la barra lateral llena el resto
-    var lado = !vert && !tel ? Math.max(0, cw - PW / u) : 0;
+    var lado = !vert && !tel && !app ? Math.max(0, cw - PW / u) : 0;
     var r = { m: m, e: e, u: u, top: e.top * u, bot: e.bot * u, side: e.side * u, radio: e.r * u, bisel: (e.bisel + e.canto) * u, canto: e.canto * u, tab: tab, lado: lado };
     r.SW = e.W * u; r.SH = e.H * u; r.OW = r.SW + 2 * r.bisel; r.OH = r.SH + 2 * r.bisel;
     r.appY = r.SH / 2 - r.top - PH / 2;   // la app, arriba de la página (bajo las barras)
@@ -2346,7 +2352,7 @@ window.alFoto = (function(){
   }
   function fuenteSF(px, peso){ return (peso || 600) + ' ' + Math.round(px) + 'px -apple-system, "SF Pro Text", "Helvetica Neue", Inter, sans-serif'; }
   function marco(T, g, pantalla, o){
-    var vert = o.vert, PW = o.ventana.w, PH = o.ventana.h, d = medidas(vert, PW, PH, o.menu), m = d.m, e = d.e;
+    var vert = o.vert, PW = o.ventana.w, PH = o.ventana.h, d = medidas(vert, PW, PH, o.menu, o.app), m = d.m, e = d.e;
     var pad = 0.012 * Math.max(d.OW, d.OH), FW = d.OW + 2 * pad, FH = d.OH + 2 * pad;
     var k = (equipo() === 'cel' ? 1536 : 2048) / Math.max(FW, FH), cw = Math.round(FW * k), ch = Math.round(FH * k);
     var X = function(v){ return v * k; }, P = function(pt){ return pt * d.u * k; };   // unidades → px · pt → px
@@ -2405,30 +2411,33 @@ window.alFoto = (function(){
         c.fillStyle = col; c.font = fuenteSF(P(17), 600); c.textAlign = 'center'; c.textBaseline = 'middle';
         c.fillText('9:41', px(e.W * 0.165), yc + P(0.5));
         estadoDer(px(e.W - 26), yc, col, true);
-        // Safari compacto: dirección y botones, sobre una barra translúcida
+        // Safari compacto: dirección y botones, sobre una barra translúcida (no en una app nativa)
         var by = e.H - e.bot;
+        if (!o.app) {
         c.fillStyle = gris; c.fillRect(sx, py(by), SW, SH - P(by)); c.fillStyle = 'rgba(60,60,67,.18)'; c.fillRect(sx, py(by), SW, Math.max(1, P(0.5)));
         direccion(px(12), py(by + 6), P(e.W - 24), P(36), 15);
         var fy = py(by + 6 + 36 + 17), xs = [0.1, 0.3, 0.5, 0.7, 0.9].map(function(f){ return px(e.W * f); });
         flecha(xs[0], fy, 1, azul); flecha(xs[1], fy, -1, 'rgba(10,132,255,.35)'); compartir(xs[2], fy, azul); libro(xs[3], fy, azul); pestanas(xs[4], fy, azul);
+        }
         inicio(140, '#000');
       } else if (m.tipo === 'iphone') {
         c.fillStyle = '#000';
         if (m.muesca) { rr(c, sx - P(10), py(e.H / 2 - 81), P(42), P(162), P(20)); c.fill(); }
         else { rr(c, px(11), py(e.H / 2 - 62.5), P(37), P(125), P(18.5)); c.fill(); }
-        c.fillStyle = gris; c.fillRect(sx, sy, SW, P(e.top)); c.fillStyle = 'rgba(60,60,67,.18)'; c.fillRect(sx, py(e.top), SW, Math.max(1, P(0.5)));
-        direccion(px(e.W / 2 - 150), py(5), P(300), P(30), 14);
+        if (!o.app) { c.fillStyle = gris; c.fillRect(sx, sy, SW, P(e.top)); c.fillStyle = 'rgba(60,60,67,.18)'; c.fillRect(sx, py(e.top), SW, Math.max(1, P(0.5)));
+        direccion(px(e.W / 2 - 150), py(5), P(300), P(30), 14); }
         inicio(210, '#000');
       } else {
         // tablet o Android: barra de estado y barra del navegador arriba
         var ipad = m.tipo === 'ipad', sb = ipad ? 24 : 32;
-        c.fillStyle = gris; c.fillRect(sx, sy, SW, P(e.top)); c.fillStyle = 'rgba(60,60,67,.18)'; c.fillRect(sx, py(e.top), SW, Math.max(1, P(0.5)));
+        c.fillStyle = o.app ? '#eef3f8' : gris; c.fillRect(sx, sy, SW, P(e.top)); if (!o.app) { c.fillStyle = 'rgba(60,60,67,.18)'; c.fillRect(sx, py(e.top), SW, Math.max(1, P(0.5))); }
         var ys = py(sb / 2 + (ipad ? 1 : 2));
         c.fillStyle = tinta; c.textAlign = 'left'; c.textBaseline = 'middle';
         if (ipad) { c.font = fuenteSF(P(14), 600); c.fillText('9:41', px(20), ys); var tw = c.measureText('9:41').width; c.font = fuenteSF(P(14), 500); c.fillText('lun 7 oct', px(20) + tw + P(6), ys); estadoDer(px(e.W - 20), ys, tinta, false); }
         else { c.font = fuenteSF(P(14), 500); c.fillText('9:41', px(18), ys); estadoDer(px(e.W - 16), ys, tinta, true); c.fillStyle = '#000'; c.beginPath(); c.arc(px(e.W / 2), ys, P(6), 0, 7); c.fill(); }
         var ty = sb + (e.top - sb) / 2;
-        if (ipad) {
+        if (o.app) { /* app nativa: solo la barra de estado */ }
+        else if (ipad) {
           direccion(px(e.W / 2 - Math.min(170, e.W * 0.22)), py(ty - 17), P(Math.min(340, e.W * 0.44)), P(34), 14);
           flecha(px(26), py(ty), 1, azul); flecha(px(58), py(ty), -1, 'rgba(10,132,255,.35)');
           compartir(px(e.W - 92), py(ty), azul); c.strokeStyle = azul; c.lineWidth = P(2); c.beginPath(); c.moveTo(px(e.W - 60), py(ty - 8)); c.lineTo(px(e.W - 60), py(ty + 8)); c.moveTo(px(e.W - 68), py(ty)); c.lineTo(px(e.W - 52), py(ty)); c.stroke(); pestanas(px(e.W - 28), py(ty), azul);
@@ -2625,16 +2634,16 @@ window.alFoto = (function(){
   // Celular vertical: cuánto más alta se dibuja la app (diseñada en 800 × 1000) para llenar la pantalla del
   // teléfono hasta la barra de abajo. Se reparte en alto (filas, campos, botones y espacios) y la letra y los
   // círculos conservan su forma (ver el motor).
-  function estirar(vert, pestanas, todo){
+  function estirar(vert, pestanas, todo, app){
     var m = modelo(); if (!vert || equipo() === 'pc' || !(m.tipo === 'iphone' || m.tipo === 'android')) return 1;
-    var e = especie(m, true), chh = e.H - e.top - e.bot - (pestanas ? 56 : 0), cw = e.W;
+    var e = especie(m, true, app), chh = e.H - e.top - e.bot - (pestanas ? 56 : 0), cw = e.W;
     // solo una parte del alto que sobra: las filas quedan compactas, como en la app (todo: el alto completo de la pantalla)
     return Math.max(1, 1 + ((800 / 1000) * chh / cw - 1) * (todo ? 1 : 0.3));
   }
   // 2026-10-08: lo que falta para llegar a la barra de abajo, en unidades del dibujo (bajo los 1000 del diseño);
   // cada pantalla lo llena con más contenido de la app (más filas, el resto de la vista), en vez de dejarlo en blanco
-  function extra(vert, pestanas){
-    var k = estirar(vert, pestanas), t = estirar(vert, pestanas, true);
+  function extra(vert, pestanas, app){
+    var k = estirar(vert, pestanas, false, app), t = estirar(vert, pestanas, true, app);
     return k > 1 ? Math.floor(1000 * (t / k - 1)) : 0;
   }
   // simular: solo en computador; 'tablet' (iPad horizontal), 'cel' (iPhone vertical) o null (el notebook).
@@ -2661,8 +2670,8 @@ window.AL_NOTAS = {
                   'Entra a tu panel con tu clave', 'Tu negocio y tus productos', 'Comparte tu tienda por WhatsApp'],
   'fin-accion': ['Compras sueltas que nadie anota', 'Monto y categoría: dos toques', 'Cuánto te queda para el mes',
                  'Te avisa cuando te pasas', 'Tarjetas, cuotas y deudas al día', 'Cómo terminarás el mes'],
-  'fin-instala': ['Haz una copia en tu Drive', 'Abre «Instalar o abrir el panel»', 'Da los permisos una sola vez',
-                  'Publica tu panel con «Implementar»', 'Escanea el código con tu celular', 'Listo: en tu celular y tu computador']
+  'fin-instala': ['Descárgala en tu teléfono', 'Crea tu clave (y Face ID)', 'La app te guía con consejos',
+                  'Que se anote solo', 'Tu primer gasto, en dos toques', 'Listo: en tu celular o tu tablet']
 };
 </script>
 <script>/* la portada se presenta una vez por visita: hasta que arranca, su título y texto esperan ocultos */
@@ -2792,7 +2801,7 @@ window.AL_NOTAS = {
   <div class="i3-estacion i3-centro" aria-label="Inicio">
     <div class="i3-eyebrow">Ambilor.Lab / Herramientas listas para usar</div>
     <h1 class="i3-titulo">Tus números,<br>en orden<span class="i3-p">.</span></h1>
-    <p class="i3-lead">Herramientas simples que hacen por ti el trabajo repetitivo: cuadrar el banco, recibir los pedidos de tu negocio o llevar tus gastos. Las usas desde el computador o el celular, sin programar y sin sistemas caros.</p>
+    <p class="i3-lead">Herramientas simples que hacen por ti el trabajo repetitivo: cuadrar el banco, recibir los pedidos de tu negocio o llevar tus gastos. Las usas desde el computador o el celular, sin programar: soluciones de bajo costo.</p>
     <div class="i3-ctas">
       <a class="i3-btn i3-btn--pri" href="#" onclick="return show('product')">Ver herramientas <span aria-hidden="true">→</span></a>
       <a class="i3-btn i3-btn--sec" href="#" onclick="return show('contact')">Conversemos</a>
@@ -2834,7 +2843,7 @@ window.AL_NOTAS = {
           <path class="hx-art-trend" pathLength="1" d="M197 92 L223 66 L249 78 L275 40"/>
           <text class="hx-art-cap" x="160" y="158">en qué se va</text>
         </svg>
-        <h3 class="i3-tt"><a class="i3-ir" href="?p=product&amp;h=fin" data-ir-herramienta="fin">Mis Finanzas · sabes en qué se va tu plata</a></h3><p class="i3-td">Anotas un gasto en dos toques, desde el celular o el computador, y ves cuánto te queda para el mes, tus tarjetas y tus metas de ahorro. Para personas y familias.</p></article>
+        <h3 class="i3-tt"><a class="i3-ir" href="?p=product&amp;h=fin" data-ir-herramienta="fin">Mis Finanzas · sabes en qué se va tu plata</a></h3><p class="i3-td">App para tu celular o tablet: anotas un gasto en dos toques (o se anota solo al pagar) y ves cuánto te queda para el mes, tus tarjetas y tus metas. Para personas y familias.</p></article>
     </div>
   </div>
 
@@ -2845,7 +2854,7 @@ window.AL_NOTAS = {
       <div class="i3-tarjeta"><div class="i3-quien">Contadores y empresas</div><p class="i3-ab i3-a"><span>Antes</span><s>Revisar la cartola fila por fila, buscando el pago de cada factura, en cada cierre.</s></p><p class="i3-ab i3-b"><span>Ahora</span>Concilia empareja cada movimiento: tú solo revisas lo que no cuadra.</p></div>
       <div class="i3-tarjeta"><div class="i3-quien">Negocios que venden por WhatsApp</div><p class="i3-ab i3-a"><span>Antes</span><s>Pedidos repartidos entre chats y notas, y transferencias que llegan sin aviso.</s></p><p class="i3-ab i3-b"><span>Ahora</span>Con Pedidos, cada pedido llega completo a un solo lugar.</p></div>
       <div class="i3-tarjeta"><div class="i3-quien">Personas y familias</div><p class="i3-ab i3-a"><span>Antes</span><s>Llegar a fin de mes sin saber en qué se fue la plata.</s></p><p class="i3-ab i3-b"><span>Ahora</span>Con Mis Finanzas sabes cada día cuánto puedes gastar.</p></div>
-      <div class="i3-tarjeta"><div class="i3-quien">Sin saber de tecnología</div><p class="i3-ab i3-a"><span>Antes</span><s>Creer que ordenar esto exige programar o contratar un sistema caro.</s></p><p class="i3-ab i3-b"><span>Ahora</span>Recibes la herramienta lista, con una guía paso a paso.</p></div>
+      <div class="i3-tarjeta"><div class="i3-quien">Sin saber de tecnología</div><p class="i3-ab i3-a"><span>Antes</span><s>Creer que ordenar esto exige programar o contratar un sistema caro.</s></p><p class="i3-ab i3-b"><span>Ahora</span>Soluciones de bajo costo, listas para usar y con una guía paso a paso.</p></div>
     </div>
   </div>
 
@@ -3151,7 +3160,7 @@ window.AL_NOTAS = {
       <div class="prod-cab-txt">
         <div class="prod-eyebrow"><span class="prox-badge">Próximamente</span></div>
         <h2 class="prod-h1">Mis Finanzas.</h2>
-        <p class="prod-tagline">Tus finanzas personales en orden, desde el celular o el computador: anotas un gasto en dos toques y sabes cuánto te queda para el mes. Sin conectar tu banco.</p>
+        <p class="prod-tagline">Tus finanzas personales en orden, en tu celular o tu tablet: anotas un gasto en dos toques (o se anota solo al pagar) y sabes cuánto te queda para el mes. Sin conectar tu banco.</p>
       </div>
       <div class="alert-box"><b>¿Para quién?</b> Personas y familias que quieren saber en qué se va la plata, tener al día sus tarjetas y deudas y ahorrar para sus metas.</div>
     </div>
@@ -3176,7 +3185,7 @@ window.AL_NOTAS = {
           <ol class="al-demo__steps"></ol>
           <span class="al-demo__count">1 de 6</span>
         </div>
-        <p class="al-demo__note">Demostración ilustrativa con datos de ejemplo. Funciona con tu cuenta de Google y tus datos quedan en ella.</p>
+        <p class="al-demo__note">Demostración ilustrativa con datos de ejemplo. Tus datos quedan cifrados en tu teléfono.</p>
         <div class="al-demo__fallback">
           <p class="al-demo__fbh">La demostración en 6 pasos</p>
           <ol class="al-demo__fblist"></ol>
@@ -3202,7 +3211,7 @@ window.AL_NOTAS = {
           <ol class="al-demo__steps"></ol>
           <span class="al-demo__count">1 de 6</span>
         </div>
-        <p class="al-demo__note">Demostración ilustrativa. Los textos y botones pueden variar levemente según tu navegador e idioma de Google.</p>
+        <p class="al-demo__note">Demostración ilustrativa: la app estará en App Store y Google Play; los textos pueden variar levemente según tu teléfono.</p>
         <div class="al-demo__fallback">
           <p class="al-demo__fbh">La instalación en 6 pasos</p>
           <ol class="al-demo__fblist"></ol>
@@ -3212,7 +3221,7 @@ window.AL_NOTAS = {
     </div>
 
     <div class="prod-cel">
-      <p class="prod-tagline">Tus finanzas personales en orden, desde el celular o el computador: anotas un gasto en dos toques y sabes cuánto te queda para el mes. Sin conectar tu banco.</p>
+      <p class="prod-tagline">Tus finanzas personales en orden, en tu celular o tu tablet: anotas un gasto en dos toques (o se anota solo al pagar) y sabes cuánto te queda para el mes. Sin conectar tu banco.</p>
       <div class="alert-box"><b>¿Para quién?</b> Personas y familias que quieren saber en qué se va la plata, tener al día sus tarjetas y deudas y ahorrar para sus metas.</div>
     </div>
 
@@ -3220,28 +3229,28 @@ window.AL_NOTAS = {
 
     <a class="buy-btn" href="?p=contact" data-avisame="Mis Finanzas">Avísame cuando esté listo</a>
     <span class="guarantee-note">Muy pronto disponible: déjame tu correo y te aviso el día que salga.</span>
-    <div class="alert-box">Pensado para quien hoy anota sus gastos en una libreta, en las notas del celular o no los anota: sin suscripciones, sin conectar tu banco y con tus datos guardados en tu propia cuenta.</div>
+    <div class="alert-box">Pensado para quien hoy anota sus gastos en una libreta, en las notas del celular o no los anota: sin conectar tu banco y con tus datos cifrados en tu propio teléfono.</div>
     <div class="pi-bloque">
       <div class="pi-eyebrow" id="incluye-fin">Qué incluye</div>
       <div class="pi-grid4">
-        <div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg></span><span class="pi-t">Panel en celular y computador</span><span class="pi-s">registro rápido, inicio, metas y más</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 3v18"/></svg></span><span class="pi-t">Tus datos</span><span class="pi-s">movimientos, presupuesto y deudas, siempre tuyos</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><span class="pi-t">Resumen del mes</span><span class="pi-s">por correo, con PDF y recordatorio diario</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M9 7h6M9 11h6"/></svg></span><span class="pi-t">Guía de instalación</span><span class="pi-s">paso a paso con imágenes · PDF</span></div>
+        <div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg></span><span class="pi-t">App para celular y tablet</span><span class="pi-s">iPhone, iPad y Android</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></span><span class="pi-t">Se anota sola</span><span class="pi-s">Apple Pay, Google Wallet y avisos de tu banco</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span><span class="pi-t">Tus datos, cifrados</span><span class="pi-s">en tu teléfono, con respaldo automático</span></div><div class="pi-card"><span class="pi-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></span><span class="pi-t">Análisis de tu mes</span><span class="pi-s">compara meses y te da conclusiones</span></div>
       </div>
     </div>
 
     <div class="pi-bloque">
       <div class="pi-eyebrow">Lo que necesitas saber</div>
       <div class="pi-nums">
-        <div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V5a2 2 0 0 1 4 0v6"/><path d="M13 9a2 2 0 0 1 4 0v4a7 7 0 0 1-7 7h-.5A5.5 5.5 0 0 1 5 14.5V12a2 2 0 0 1 4 0"/></svg></span><b>2<small></small></b><span>toques para anotar un gasto</span></div><div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><b>10.000<small></small></b><span>movimientos registrados</span></div><div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 16v-4M11 16V9M15 16v-6M19 8H3"/></svg></span><b>6<small></small></b><span>meses en el gráfico</span></div><div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></span><b>1<small></small></b><span>cuenta de Google y nada más</span></div>
+        <div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V5a2 2 0 0 1 4 0v6"/><path d="M13 9a2 2 0 0 1 4 0v4a7 7 0 0 1-7 7h-.5A5.5 5.5 0 0 1 5 14.5V12a2 2 0 0 1 4 0"/></svg></span><b>2<small></small></b><span>toques para anotar un gasto</span></div><div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V10l7-5 7 5v11M10 21v-6h4v6"/></svg></span><b>0<small></small></b><span>claves de banco que entregas</span></div><div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 16v-4M11 16V9M15 16v-6M19 8H3"/></svg></span><b>6<small></small></b><span>meses en el gráfico</span></div><div class="pi-num"><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span><b>AES-256<small></small></b><span>cifrado de tus datos</span></div>
       </div>
       <ul class="pi-caps">
-        <li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span><b>Presupuesto por categoría,</b> con aviso y cuánto puedes gastar por día</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg></span><span><b>Metas de ahorro</b> con su avance</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/></svg></span><span><b>Tarjetas de crédito</b> con cuotas y fecha de pago</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V10l7-5 7 5v11M10 21v-6h4v6"/></svg></span><span><b>Deudas en pesos o en UF,</b> con el valor del día</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4v6h6"/><path d="M20 20v-6h-6"/><path d="M5.5 15a7 7 0 0 0 12.4 2M18.5 9A7 7 0 0 0 6.1 7"/></svg></span><span><b>Gastos e ingresos fijos</b> que se anotan con un toque</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></span><span><b>Proyección del mes</b> y gráfico de los últimos 6 meses</span></li>
+        <li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4V2M15 16v-2M8 9h2M20 9h2M17.8 11.8l1.4 1.4M17.8 6.2l1.4-1.4M12.2 6.2l-1.4-1.4M3 21l9-9"/></svg></span><span><b>Se clasifica solo:</b> escribes «McDonald’s» o «botillería» y va a Comida fuera</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span><b>Presupuesto por categoría,</b> con aviso y cuánto puedes gastar por día</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></span><span><b>Compara meses a la fecha,</b> con conclusiones de qué subió y qué bajó</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/></svg></span><span><b>Tarjetas, cuotas y deudas en pesos o UF,</b> con su fecha de pago</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg></span><span><b>Metas, patrimonio y fondo de emergencia,</b> con su avance</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c1-3.5 3.5-5.5 6.5-5.5s5.5 2 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 14.5c1.5.8 2.6 2.6 3 5.5"/></svg></span><span><b>Dividir cuentas,</b> gastos por rendir y lo que te deben</span></li><li><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></svg></span><span><b>Importa la cartola del banco</b> en Excel o CSV, sin duplicar</span></li>
       </ul>
     </div>
 
     <div class="pi-bloque">
       <div class="pi-eyebrow">Preguntas frecuentes</div>
       <div class="pi-faqs">
-        <details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 0 1 4.9.7c0 1.7-2.4 2.1-2.4 3.8M12 17h.01"/></svg></span><span class="pi-q">¿Qué necesito para usarla?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Una cuenta de Google (si usas Gmail, ya la tienes) y un celular o un computador. La instalación se hace una sola vez, desde un computador, con una guía paso a paso; después la usas donde te acomode: en el celular, como cualquier app, o en el navegador del computador.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V10l7-5 7 5v11M10 21v-6h4v6"/></svg></span><span class="pi-q">¿Tengo que conectar mi banco?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>No. Tú anotas cada movimiento, y toma unos segundos. Así no compartes tus claves con nadie.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span><span class="pi-q">¿Dónde quedan mis datos?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>En tu propia cuenta de Google (la de tu Gmail), en un archivo que solo tú puedes abrir. Nadie más los ve, ni siquiera Ambilor.Lab.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8.5a15 15 0 0 1 20 0M5 12a10 10 0 0 1 14 0M8.5 15.5a5 5 0 0 1 7 0"/><path d="M12 19h.01"/></svg></span><span class="pi-q">¿Funciona sin internet?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Sí, con el panel ya abierto: lo que anotas sin señal queda guardado en tu equipo y se sube solo al volver la conexión. Abrir el panel desde cero sí necesita internet.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg></span><span class="pi-q">¿Es una app de la tienda?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>No hace falta descargar nada. En el computador la abres con un enlace, en el navegador; en el celular la agregas a la pantalla de inicio de tu iPhone o Android con un código QR, como una app más.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c1-3.5 3.5-5.5 6.5-5.5s5.5 2 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 14.5c1.5.8 2.6 2.6 3 5.5"/></svg></span><span class="pi-q">¿La podemos usar en pareja?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Está pensada para una persona, o para un hogar que comparte una misma cuenta de Google. El panel solo lo abre la cuenta dueña.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><span class="pi-q">¿Cuántos movimientos soporta?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Hasta unos 10.000, cerca de cuatro años registrando unos 200 al mes. Después puedes pasar los años antiguos a otra planilla.</p></details>
+        <details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 0 1 4.9.7c0 1.7-2.4 2.1-2.4 3.8M12 17h.01"/></svg></span><span class="pi-q">¿Qué necesito para usarla?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Un celular o una tablet: iPhone, iPad o Android. La descargas, creas tu clave y empiezas. No necesitas computador ni cuenta de Google.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V10l7-5 7 5v11M10 21v-6h4v6"/></svg></span><span class="pi-q">¿Tengo que conectar mi banco?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>No. Tú anotas en dos toques o, si quieres, se anota solo: al pagar con Apple Pay, con los avisos de tu banco o de Google Wallet en Android, o importando la cartola. Nunca entregas tus claves.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span><span class="pi-q">¿Dónde quedan mis datos?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>En tu teléfono, cifrados con tu clave: sin ella nadie los puede leer, ni siquiera Ambilor.Lab. La app hace un respaldo automático cada día y puedes guardar uno con contraseña donde quieras.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8.5a15 15 0 0 1 20 0M5 12a10 10 0 0 1 14 0M8.5 15.5a5 5 0 0 1 7 0"/><path d="M12 19h.01"/></svg></span><span class="pi-q">¿Funciona sin internet?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Sí, todo. Tus datos viven en el teléfono, así que anotas y revisas tu mes sin señal.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2l-2 4v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6l-2-4z"/><path d="M4 6h16M16 10a4 4 0 0 1-8 0"/></svg></span><span class="pi-q">¿Es una app de la tienda?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Sí: estará en App Store (iPhone y iPad) y Google Play (Android). Déjame tu correo y te aviso el día que salga.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c1-3.5 3.5-5.5 6.5-5.5s5.5 2 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 14.5c1.5.8 2.6 2.6 3 5.5"/></svg></span><span class="pi-q">¿La podemos usar en pareja?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Cada persona la usa en su teléfono. Para los gastos compartidos está «Dividir cuenta»: reparte una compra y lleva lo que te deben y lo que debes.</p></details><details class="pi-faq"><summary><span class="pi-ico pi-ico--s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4V2M15 16v-2M8 9h2M20 9h2M17.8 11.8l1.4 1.4M17.8 6.2l1.4-1.4M12.2 6.2l-1.4-1.4M3 21l9-9"/></svg></span><span class="pi-q">¿Cómo sabe la categoría?</span><span class="pi-mas" aria-hidden="true"></span></summary><p>Por lo que escribes o por el comercio: «Lider» va a Supermercado y «Uber» a Transporte. Aprende de lo que corriges y puedes enseñarle tus propias reglas.</p></details>
       </div>
     </div>
 
@@ -4587,7 +4596,7 @@ var RC_GUIAS=[
   {r:'guia-looker-studio',gp:'ds',min:5,t:'Google Sheets con Looker Studio: reportes que se actualizan solos',d:'Conecta tu planilla y crea un informe gratis que tu equipo puede ver cuando quiera.'}
 ];
 var RC_APPS={
-  finanzapp:{tab:'hpt-fin',ico:'ti-receipt',t:'¿Quieres saber en qué se te va la plata?',d:'La app Mis Finanzas ordena tus gastos, tarjetas y deudas, desde el celular o el computador: anotas en dos toques y ves cuánto te queda para el mes.',b:'Ver Mis Finanzas en acción'},
+  finanzapp:{tab:'hpt-fin',ico:'ti-receipt',t:'¿Quieres saber en qué se te va la plata?',d:'La app Mis Finanzas, para tu celular o tablet, ordena tus gastos, tarjetas y deudas: anotas en dos toques (o se anota solo al pagar) y ves cuánto te queda para el mes.',b:'Ver Mis Finanzas en acción'},
   pedidoapp:{tab:'hpt-ped',ico:'ti-shopping-bag',t:'¿Quieres que tus pedidos se ordenen solos?',d:'La app Pedidos recibe los pedidos de tus clientes en un formulario, con seguimiento, cupones y avisos por WhatsApp, sin comisión por venta.',b:'Ver Pedidos en acción'},
   conciliador:{tab:'hpt-v2',ico:'ti-arrows-exchange',t:'¿Quieres que la cuadratura se haga sola?',d:'Concilia cruza tu banco con tus registros y te deja solo los pendientes que de verdad hay que mirar.',b:'Ver Concilia en acción'}
 };
@@ -5957,7 +5966,8 @@ window.alDemoTarjetas = function(root, cfg){
   // barra de pestañas abajo en el celular: solo la tiene el panel real de Pedidos (en ese orden); Concilia y Mis Finanzas
   // llevan sus pestañas arriba, y en los de instalación se ven Drive y Apps Script
   const MENU = /^ped-accion/.test(root.id) ? ['Pedidos','Catálogo','Clientes','Reportes','Ajustes'] : null;
-  function aparato(vert, PW, PH){ return alFoto.crear(THREE, scene, { vert, ventana: { w: PW, h: PH }, menu: MENU, anis: ANISO, listo: () => { needsRender = true; } }); }
+  const APP = /^fin-/.test(root.id);   // Mis Finanzas (2026-10-29): app nativa de celular y tablet, sin barras del navegador
+  function aparato(vert, PW, PH){ return alFoto.crear(THREE, scene, { vert, ventana: { w: PW, h: PH }, menu: MENU, app: APP, anis: ANISO, listo: () => { needsRender = true; } }); }
   // pantalla completa: la tarjeta cubre toda la pantalla del aparato; fuera de su dibujo la textura repite el
   // borde (ClampToEdge), así la barra superior y el fondo de la app llegan de lado a lado sin deformar la letra
   function pantallaCompleta(m, u, PW, PH){
@@ -6112,7 +6122,7 @@ window.alDemoTarjetas = function(root, cfg){
 
   // Un juego de tarjetas por diseño; el vertical se arma recién cuando se usa
   function juego(vert){
-    const CW = vert ? 800 : 1200, CH = vert ? 1000 + alFoto.extra(vert, !!MENU) : 950, PW = vert ? 3.84 : 4.8, K = alFoto.estirar(vert, !!MENU), PH = PW * CH / CW * K;
+    const CW = vert ? 800 : 1200, CH = vert ? 1000 + alFoto.extra(vert, !!MENU, APP) : 950, PW = vert ? 3.84 : 4.8, K = alFoto.estirar(vert, !!MENU, false, APP), PH = PW * CH / CW * K;
     const DRAW = (vert ? cfg.drawV : cfg.draw)(mkH(CW, CH)), CURSOR = (vert ? cfg.cursorV : cfg.cursor) || [];
     // 2026-09-30: cada tarjeta dibuja su lienzo solo mientras está en pantalla
     // (a lo más 2 a la vez) y lo libera al salir. Antes las 6 de cada demo
@@ -6377,7 +6387,7 @@ window.alDemoTarjetas = function(root, cfg){
     var bar = d.querySelector('.al-player') || d.querySelector('.al-demo__controls');
     if (window.alFoto && alFoto.real && alFoto.real() === 'pc' && bar) {
       var eq = document.createElement('div'); eq.className = 'al-equipo'; eq.setAttribute('role', 'group'); eq.setAttribute('aria-label', 'Ver la app en');
-      [['', 'Computador'], ['tablet', 'Tablet'], ['cel', 'Celular']].forEach(function(o){
+      [['', 'Computador'], ['tablet', 'Tablet'], ['cel', 'Celular']].filter(function(o){ return o[0] || !/^fin-/.test(d.id); }).forEach(function(o){   // Mis Finanzas: solo tablet y celular
         var b = document.createElement('button'); b.type = 'button'; b.setAttribute('data-eq', o[0]); b.textContent = o[1]; eq.appendChild(b);
         b.addEventListener('click', function(){ alFoto.simular(o[0] || null); });
       });
@@ -7378,9 +7388,9 @@ AL_DEMOS['ped-instala'] = {
 };
 </script>
 <script>
-/* Demos de Mis Finanzas (2026-10-19). Pantallas dibujadas a partir de la app real (panel del celular:
-   Inicio, Registrar, Más → Presupuesto y Tarjetas). "Ver en acción" usa un solo dibujo para los dos
-   formatos: en el apaisado (computador, iPad horizontal) la app va en dos columnas, como en la web;
+/* Demos de Mis Finanzas (2026-10-19; 2026-10-29: solo celular y tablet). Pantallas dibujadas a partir de la app real
+   (Inicio, Registrar, Más → Presupuesto y Tarjetas). "Ver en acción" usa un solo dibujo para los dos
+   formatos: en el apaisado (iPad horizontal) la app va en dos columnas, como en la tablet;
    en el vertical, en una columna, como en el celular. Las medidas salen de CW y CH. */
 window.AL_DEMOS = window.AL_DEMOS || {};
 (function(){
@@ -7749,7 +7759,7 @@ window.AL_DEMOS = window.AL_DEMOS || {};
         stats:[['30+','compras al mes'],['0','idea de cuánto queda']] },
       { a:4.2, b:9.6, short:'Anota', kicker:'Paso 1: anota en dos toques',
         title:'Un gasto, en dos toques',
-        body:'Escribes el monto y tocas la categoría: queda guardado. Desde el celular o el computador, incluso sin señal.' },
+        body:'Escribes el monto y tocas la categoría (o escribes en qué fue y se elige sola): queda guardado. Incluso sin señal.' },
       { a:9.6, b:14.4, short:'Tu mes', kicker:'Paso 2: tu mes de un vistazo',
         title:'Cuánto te queda, al abrir la app',
         body:'Ves lo que te queda del mes y cuánto puedes gastar por día: $13.413 durante los 26 días que faltan.' },
@@ -7762,7 +7772,7 @@ window.AL_DEMOS = window.AL_DEMOS || {};
       { a:24.4, b:30.0, short:'Resultado', kicker:'Resultado',
         title:'Sabes cómo terminarás el mes',
         body:'Si sigues a este ritmo, terminas octubre con $142.300 disponibles. Lo sabes hoy, no el 31.',
-        stats:[['2 toques','para anotar un gasto'],['10.000','movimientos']],
+        stats:[['2 toques','para anotar un gasto'],['0','claves de banco que entregas']],
         cta:['Ver qué incluye', 'incluye-fin'] }
     ],
     cursor: [null, cursorRegistro(1200, 950, [900, 880]), null, null, cursorPagar(1200, 950, [900, 880]), null],
@@ -7774,267 +7784,220 @@ window.AL_DEMOS = window.AL_DEMOS || {};
   AL_DEMOS['fin-accion'].app = app;
 })();
 
+/* Mis Finanzas · Cómo se instala (2026-10-29): la app del teléfono y la tablet (ya no la planilla de Google).
+   Un solo dibujo para los dos formatos: en el apaisado (iPad horizontal) la pantalla va en una columna centrada.
+   Las posiciones de lo que se toca salen de finCapa(CW, CH): las usan el dibujo y el cursor. */
+function finCapa(CW, CH){
+  const ancho = CW > 1000, L = ancho ? { x: 290, w: 620 } : { x: 40, w: CW - 80 }, bajo = Math.min(CH - 110, 860);
+  return { ancho, L, bajo,
+    obtener: [L.x + 180, 252, 230, 70],
+    faceId: [L.x + L.w - 100, 624, 100, 58], crear: [L.x, 716, L.w, 84],
+    consejo: ancho ? [40, 396, 540, 206] : [40, 420, CW - 80, 206], guardarP: [ancho ? 320 : 60, 0, ancho ? 560 : CW - 120, 80],
+    filas: [L.x, 186, L.w, 106], guardarS: [L.x, 392, L.w, 84] };
+}
+function finCursor(CW, CH){
+  const P = finCapa(CW, CH), afuera = [CW * 0.86, CH * 0.92], centro = r => [r[0] + r[2]/2, r[1] + r[3]/2];
+  const mk = toques => {
+    const keys = [[0.2, afuera[0], afuera[1]]];
+    toques.forEach(([t, x, y]) => { keys.push([t - 0.45, x, y], [t + 0.15, x, y]); });
+    keys.push([toques[toques.length - 1][0] + 0.75, afuera[0], afuera[1]]);
+    return { keys, clicks: toques.map(x => x[0]) };
+  };
+  const yG = Math.min(CH, 1000) - 118, c = P.consejo, sw = n => [P.filas[0] + P.filas[2] - 64, P.filas[1] + n * P.filas[3] + P.filas[3]/2];
+  return [
+    mk([[1.2].concat(centro(P.obtener))]),
+    mk([[2.0].concat(centro(P.faceId)), [2.8].concat(centro(P.crear))]),
+    mk([[1.5, c[0] + c[2]/2, c[1] + 168], [3.6, CW/2, yG + 40]]),
+    mk([[1.0].concat(sw(0)), [1.6].concat(sw(1))]),
+    mk([[3.0].concat(centro(P.guardarS))]),
+    null
+  ];
+}
 AL_DEMOS['fin-instala'] = {
   steps: [
-    { a:0, b:5.2, short:'Copia', kicker:'Paso 1 de 5 · 1 clic', title:'Haz tu copia',
-      body:'Abre el enlace que recibiste con tu compra y pulsa «Hacer una copia». Queda en tu Google Drive, con la app adentro.' },
-    { a:5.2, b:10.4, short:'Instalador', kicker:'Paso 2 de 5 · 2 clics', title:'Abre el instalador',
-      body:'En tu copia, abre el menú «Mis Finanzas» y elige «Instalar o abrir el panel». Prepara las hojas solo y te muestra los pasos.' },
-    { a:10.4, b:15.6, short:'Permisos', kicker:'Paso 3 de 5 · 1 clic', title:'Da los permisos',
-      body:'Google pregunta si la app puede usar tu planilla, mandarte el resumen del mes y traer el valor de la UF. Pulsas «Permitir». Se hace una sola vez.',
-      tip:'Si dice “Google no verificó esta app”, elige Configuración avanzada → Ir a Mis Finanzas: es tu propia copia.' },
-    { a:15.6, b:21.8, short:'Publicar', kicker:'Paso 4 de 5 · 4 clics', title:'Publica tu panel',
-      body:'Son cuatro clics: «Implementar», «Nueva implementación», «Solo yo» y otra vez «Implementar». Así nadie más puede abrirlo, aunque tenga el enlace.',
-      tip:'“Solo yo” significa privado. No elijas “Cualquiera”.' },
-    { a:21.8, b:27.0, short:'Celular', kicker:'Paso 5 de 5 · 1 clic', title:'Llévalo a tu celular',
-      body:'Pulsas «Ya lo publiqué, revisar» y aparece un código QR. Lo escaneas con la cámara del celular y queda en tu pantalla de inicio, como una app más.' },
-    { a:27.0, b:31.4, short:'Listo', kicker:'Listo', title:'Ya quedó instalado',
-      body:'Ábrela desde tu pantalla de inicio (o con el enlace, en el computador) y anota tu primer gasto. Todo funciona dentro de tu propia cuenta de Google.',
-      checks:['Es privado: tus datos quedan en tu Google Drive y el panel es “Solo yo”.', 'No se conecta a tu banco: no compartes tus claves con nadie.'],
-      contact:'Si algo no coincide con lo que ves, escríbeme antes de continuar.' }
+    { a:0, b:5.2, short:'Descarga', kicker:'Paso 1 de 5 · 1 toque', title:'Descárgala en tu teléfono',
+      body:'La buscas en App Store (iPhone y iPad) o en Google Play (Android) y tocas «Obtener», como cualquier app.' },
+    { a:5.2, b:10.4, short:'Clave', kicker:'Paso 2 de 5 · 2 toques', title:'Crea tu clave',
+      body:'Tus datos se guardan cifrados en tu teléfono: sin tu clave nadie los puede leer. Si quieres, entras con Face ID o tu huella.',
+      tip:'Usa letras y números: es mucho más difícil de adivinar.' },
+    { a:10.4, b:16.0, short:'Consejos', kicker:'Paso 3 de 5 · 2 toques', title:'La app te guía',
+      body:'En Inicio aparece un consejo a la vez: tu presupuesto, el respaldo, Face ID. Tocas «Configurar» y lo dejas listo ahí mismo.' },
+    { a:16.0, b:21.2, short:'Anota solo', kicker:'Paso 4 de 5 · 2 toques', title:'Que se anote solo',
+      body:'Activa lo que te acomode: Apple Pay en el iPhone, los avisos de tu banco o Google Wallet en Android, el widget o Siri. Lo que pagas queda anotado en su categoría.' },
+    { a:21.2, b:26.4, short:'Primer gasto', kicker:'Paso 5 de 5 · 1 toque', title:'Anota tu primer gasto',
+      body:'Escribes el monto y en qué fue («Botillería»): la categoría se elige sola. Un toque y listo.' },
+    { a:26.4, b:30.8, short:'Listo', kicker:'Listo', title:'Ya quedó instalada',
+      body:'Desde ahora sabes cuánto te queda del mes. Todo vive en tu teléfono, con respaldo automático.',
+      checks:['Es privado: tus datos quedan cifrados en tu teléfono y nadie más los ve, ni siquiera Ambilor.Lab.', 'No se conecta a tu banco: no compartes tus claves con nadie.'],
+      contact:'Si algo no coincide con lo que ves, escríbeme.' }
   ],
-  // lo que se pulsa en cada clic (mismo orden que clicks en cursor y cursorV): se marca en la pantalla
+  // lo que se toca en cada paso (mismo orden que los toques del cursor): se marca en la pantalla
   rotulos: [
-    ['Clic en «Hacer una copia»'],
-    ['Clic en el menú «Mis Finanzas»', 'Clic en «Instalar o abrir el panel»'],
-    ['Clic en «Permitir»'],
-    ['Clic en «Implementar»', 'Clic en «Nueva implementación»', 'Elige «Solo yo»', 'Clic en «Implementar»'],
-    ['Clic en «Ya lo publiqué, revisar»'],
+    ['Toca «Obtener»'],
+    ['Activa Face ID', 'Toca «Crear clave»'],
+    ['Toca «Configurar»', 'Toca «Guardar»'],
+    ['Activa Apple Pay', 'Activa los avisos del banco'],
+    ['Toca «Guardar en Comida fuera»'],
     null
   ],
-  cursor: [
-    { keys:[[1.4,1100,900],[2.1,860,664],[2.6,860,664],[3.3,1060,860]], clicks:[2.25] },
-    { keys:[[0.2,1100,820],[0.85,850,168],[1.2,850,168],[1.65,920,230],[1.95,920,230],[2.6,640,620]], clicks:[1.05,1.85] },
-    { keys:[[0.3,300,880],[1.8,970,752],[2.1,970,752],[2.8,1080,900]], clicks:[1.95] },
-    { keys:[[0.2,700,700],[0.8,1050,38],[1.05,1050,38],[1.4,1030,107],[1.7,1030,107],[2.7,256,472],[3.05,256,472],[3.7,866,792],[4.15,866,792],[4.8,1100,900]], clicks:[0.95,1.55,2.9,3.9] },
-    { keys:[[0.2,1000,880],[0.65,970,552],[0.95,970,552],[1.6,700,880]], clicks:[0.8] },
-    null
-  ],
-  draw: H => { const { C, CW, CH, FONT, clamp, ease, easeOut, rr, txt, wrap, press, btn, base, overlay, dialog, banner, checkDot, sheetIcon, pill, celular } = H;
-    const hoja = (g, menuOn) => {
-      base(g, 'Google Sheets');
-      sheetIcon(g, 30, 98, 30); txt(g, 'Mis Finanzas (copia)', 76, 118, 38, 700, C.ink);
-      let x = 32;
-      ['Archivo','Editar','Ver','Insertar','Datos','Extensiones','Ayuda'].forEach(m => { txt(g, m, x, 168, 26, 600, C.muted); x += g.measureText(m).width + 22; });
-      g.font = '800 26px ' + FONT; const mw = g.measureText('Mis Finanzas').width;
-      if (menuOn) { g.fillStyle = 'rgba(31,92,153,.12)'; rr(g, x - 10, 148, mw + 20, 40, 10); g.fill(); }
-      txt(g, 'Mis Finanzas', x, 168, 26, 800, C.brand);
-      g.fillStyle = '#f6f8fb'; g.fillRect(0, 196, CW, 38);
-      g.strokeStyle = C.line; g.lineWidth = 1.5;
-      for (let c = 0; c <= 8; c++) { const cx = 60 + c*150; g.beginPath(); g.moveTo(cx, 196); g.lineTo(cx, CH - 20); g.stroke(); if (c < 8) txt(g, 'ABCDEFGH'[c], cx + 75, 215, 26, 700, C.soft, 'center'); }
-      for (let r = 0; r < 18; r++) { const ry = 234 + r*40; g.beginPath(); g.moveTo(0, ry); g.lineTo(CW, ry); g.stroke(); txt(g, String(r + 1), 30, ry + 20, 23, 600, C.soft, 'center'); }
-      [[0, 'Fecha'], [1, 'Tipo'], [2, 'Categoría'], [3, 'Monto']].forEach(([c, s]) => txt(g, s, 72 + c*150, 254, 24, 800, C.ink, 'left', 136));
-      return x;
-    };
-    const F = AL_DEMOS['fin-accion'].app(H), qr = F.qr;
-    const lado = (g, px, titulo) => {
-      g.save(); rr(g, 0, 0, CW, CH, 34); g.clip();
-      g.fillStyle = '#fff'; g.fillRect(px, 196, CW - px, CH - 196);
-      g.fillStyle = C.brand; g.fillRect(px, 196, 5, CH - 196);
-      g.restore();
-      txt(g, titulo, px + 36, 250, 38, 800, C.ink, 'left', CW - px - 60);
-    };
-    return [
-      (g, lt) => {
-        base(g, 'Google Drive');
-        txt(g, 'Mi Drive', 36, 130, 35, 800, C.ink); txt(g, 'Recientes', 36, 178, 32, 600, C.muted); txt(g, 'Compartidos', 36, 222, 32, 600, C.muted);
-        g.fillStyle = C.line; g.fillRect(230, 96, 2, CH - 130);
-        txt(g, 'Nombre', 270, 128, 29, 700, C.soft);
-        const files = ['Cuentas 2025', 'Presupuesto casa', 'Viaje al sur', 'Recetas'];
-        const nIn = easeOut((lt - 2.7) / 0.4), rowY = k => 190 + k*70;
-        if (nIn > 0) {
-          g.globalAlpha = nIn;
-          const hl = 1 - ease((lt - 3.6) / 1.0);
-          g.fillStyle = 'rgba(245,200,76,' + (0.55*hl) + ')'; g.fillRect(250, rowY(0) - 32, CW - 280, 64);
-          sheetIcon(g, 272, rowY(0) - 22, 36); txt(g, 'Mis Finanzas (copia)', 330, rowY(0), 35, 800, C.ink);
-          txt(g, 'ahora', CW - 60, rowY(0), 29, 600, C.soft, 'right');
-          g.globalAlpha = 1;
-        }
-        files.forEach((f, k) => {
-          const y = rowY(k + nIn);
-          g.strokeStyle = C.line; g.lineWidth = 2; g.beginPath(); g.moveTo(250, y + 35); g.lineTo(CW - 30, y + 35); g.stroke();
-          sheetIcon(g, 272, y - 22, 36, C.soft); txt(g, f, 330, y, 35, 600, C.ink);
-        });
-        const d = 1 - ease((lt - 2.4) / 0.35);
-        if (d > 0) {
-          overlay(g, d); g.globalAlpha = d;
-          dialog(g, 200, 190, 800, 540);
-          txt(g, 'Copiar “Mis Finanzas” en Mi Drive', 240, 260, 44, 800, C.ink, 'left', 720);
-          txt(g, 'Nombre', 240, 330, 32, 700, C.muted);
-          g.strokeStyle = C.brand; g.lineWidth = 3; rr(g, 240, 352, 720, 64, 12); g.stroke();
-          txt(g, 'Mis Finanzas (copia)', 262, 385, 35, 600, C.ink);
-          txt(g, 'Carpeta', 240, 450, 32, 700, C.muted);
-          g.strokeStyle = C.line; rr(g, 240, 472, 720, 64, 12); g.stroke();
-          txt(g, 'Mi Drive ▾', 262, 505, 35, 600, C.ink);
-          btn(g, 520, 632, 180, 62, 'Cancelar', 'ghost', 0, 35);
-          btn(g, 716, 632, 244, 62, 'Hacer una copia', 'primary', press(lt, 2.25), 35);
-          g.globalAlpha = 1;
-        }
-        const ts = easeOut((lt - 3.0) / 0.35);
-        if (ts > 0) { g.globalAlpha = ts; g.fillStyle = C.ink; rr(g, 330, 850 + (1-ts)*20, 540, 64, 32); g.fill(); txt(g, '✓ Copia creada en Mi Drive', 600, 883 + (1-ts)*20, 35, 700, '#fff', 'center'); g.globalAlpha = 1; }
-      },
-      (g, lt) => {
-        const open = lt > 1.05 && lt < 1.95;
-        const mx = hoja(g, open || (lt > 0.85 && lt < 1.05));
-        if (open) {
-          dialog(g, mx - 10, 192, 400, 80);
-          if (lt > 1.65) { g.fillStyle = '#eef2f7'; g.fillRect(mx - 2, 200, 384, 64); }
-          txt(g, 'Instalar o abrir el panel', mx + 16, 232, 30, 700, C.ink, 'left', 356);
-        }
-        const sp = ease((lt - 2.0) / 0.5);
-        if (sp > 0) {
-          const px = CW - 460*sp;
-          lado(g, px, 'Instalar Mis Finanzas');
-          txt(g, 'Las hojas ya quedaron listas.', px + 36, 290, 29, 600, C.muted, 'left', 396);
-          ['Autoriza los permisos', 'Publica tu panel', 'Llévalo a tu celular'].forEach((s, k) => {
-            const a = easeOut((lt - 2.5 - k*0.2) / 0.3); if (a <= 0) return;
-            g.globalAlpha = a;
-            const y = 340 + k*96;
-            g.strokeStyle = k === 0 ? C.brand : C.line; g.lineWidth = 3; rr(g, px + 30, y, 400, 76, 16); g.stroke();
-            g.beginPath(); g.arc(px + 72, y + 38, 20, 0, Math.PI*2); g.fillStyle = k === 0 ? C.brand : '#eef2f7'; g.fill();
-            txt(g, String(k + 1), px + 72, y + 39, 20, 800, k === 0 ? '#fff' : C.muted, 'center');
-            txt(g, s, px + 108, y + 38, 30, 700, C.ink, 'left', 300);
-            g.globalAlpha = 1;
-          });
-        }
-      },
-      (g, lt) => {
-        base(g, 'Google');
-        wrap(g, 'Mis Finanzas quiere acceder a tu cuenta de Google', 100, 150, 1000, 50, 800, C.ink, 1.2);
-        ['Ver y editar tus hojas de cálculo', 'Enviar correo en tu nombre (el resumen del mes)', 'Conectarse a un servicio externo (el valor de la UF)', 'Ejecutarse cuando no estés presente'].forEach((s, k) => {
-          const y = 300 + k*92, on = lt > 0.6 + k*0.3;
-          g.strokeStyle = C.line; g.lineWidth = 2; g.beginPath(); g.moveTo(100, y + 46); g.lineTo(1100, y + 46); g.stroke();
-          g.strokeStyle = on ? C.brand : C.soft; g.lineWidth = 3; rr(g, 100, y - 20, 40, 40, 8); g.stroke();
-          if (on) { g.fillStyle = C.brand; rr(g, 100, y - 20, 40, 40, 8); g.fill(); txt(g, '✓', 120, y + 1, 30, 800, '#fff', 'center'); }
-          txt(g, s, 166, y, 34, 600, C.ink, 'left', 900);
-        });
-        g.globalAlpha = lt > 2.1 ? 0.35 : 1;
-        btn(g, 640, 720, 200, 64, 'Cancelar', 'ghost', 0, 35);
-        btn(g, 860, 720, 220, 64, 'Permitir', 'primary', press(lt, 1.95), 35);
-        g.globalAlpha = 1;
-        const b = easeOut((lt - 2.1) / 0.35);
-        if (b > 0) { g.globalAlpha = b; banner(g, 100, 820 + (1-b)*16, 480, 64, '✓ Permisos autorizados'); g.globalAlpha = 1; }
-      },
-      (g, lt) => {
-        base(g, 'Google Apps Script');
-        btn(g, 900, 12, 270, 52, 'Implementar ▾', 'primary', press(lt, 0.95), 32);
-        txt(g, 'Archivos', 34, 124, 29, 700, C.soft);
-        ['Mis Finanzas.gs', 'Panel.html'].forEach((f, k) => { if (!k) { g.fillStyle = 'rgba(31,92,153,.1)'; rr(g, 20, 150, 200, 50, 10); g.fill(); } txt(g, f, 38, 175 + k*56, 30, k ? 600 : 700, C.ink, 'left', 180); });
-        g.fillStyle = C.line; g.fillRect(236, 78, 2, CH - 110);
-        [320, 520, 410, 280, 600, 460, 350, 540, 300, 480, 390, 260, 440, 330].forEach((w, k) => {
-          const y = 130 + k*52;
-          txt(g, String(k + 1), 280, y, 26, 600, C.soft, 'right');
-          g.fillStyle = k % 4 === 0 ? '#c9dcef' : '#e3e9f0'; rr(g, 310 + (k % 3 ? 30 : 0), y - 8, w, 16, 8); g.fill();
-        });
-        if (lt > 0.95 && lt < 1.65) {
-          dialog(g, 800, 72, 340, 70);
-          if (lt > 1.4) { g.fillStyle = '#eef2f7'; g.fillRect(808, 80, 324, 54); }
-          txt(g, 'Nueva implementación', 826, 107, 32, 700, C.ink, 'left', 296);
-        }
-        const d = ease((lt - 1.6) / 0.3);
-        if (d > 0) {
-          overlay(g, d); g.globalAlpha = d;
-          dialog(g, 180, 140, 840, 740);
-          txt(g, 'Nueva implementación', 224, 205, 46, 800, C.ink);
-          txt(g, 'Tipo', 224, 275, 30, 700, C.muted);
-          g.strokeStyle = C.line; g.lineWidth = 3; rr(g, 224, 296, 752, 64, 12); g.stroke();
-          if (lt > 2.1) txt(g, '✓ Aplicación web', 246, 329, 35, 700, C.ok); else txt(g, 'Seleccionar tipo ▾', 246, 329, 35, 600, C.soft);
-          txt(g, 'Quién tiene acceso', 224, 410, 30, 700, C.muted);
-          const sel = lt > 2.9;
-          [['Solo yo', 470], ['Cualquiera', 540]].forEach(([s, y], k) => {
-            g.beginPath(); g.arc(250, y, 15, 0, Math.PI*2); g.strokeStyle = (sel && !k) ? C.brand : C.soft; g.lineWidth = 3; g.stroke();
-            if (sel && !k) { g.beginPath(); g.arc(250, y, 8, 0, Math.PI*2); g.fillStyle = C.brand; g.fill(); }
-            txt(g, s, 280, y, 35, (sel && !k) ? 800 : 600, C.ink);
-          });
-          const w = easeOut((lt - 3.0) / 0.3);
-          if (w > 0) {
-            g.globalAlpha = d * w; g.fillStyle = '#fff5e6'; rr(g, 224, 596, 752, 76, 14); g.fill();
-            g.fillStyle = C.warn; g.fillRect(224, 596, 6, 76);
-            txt(g, '“Solo yo” significa privado. No elijas “Cualquiera”.', 250, 634, 32, 700, C.ink, 'left', 700);
-            g.globalAlpha = d;
-          }
-          if (lt < 4.1) btn(g, 756, 760, 220, 64, 'Implementar', 'primary', press(lt, 3.9), 35);
-          const b = easeOut((lt - 4.1) / 0.35);
-          if (b > 0) { g.globalAlpha = d * b; banner(g, 224, 760, 520, 64, '✓ Panel publicado: solo tú lo ves'); }
-          g.globalAlpha = 1;
-        }
-      },
-      (g, lt) => {
-        hoja(g, false);
-        const px = 740;
-        lado(g, px, 'Instalar Mis Finanzas');
-        ['Planilla preparada', 'Permisos autorizados', 'Panel publicado'].forEach((s, k) => {
-          const on = k < 2 || lt > 1.0, y = 320 + k*64;
-          checkDot(g, px + 56, y, on, k === 2 ? 1 + Math.sin(clamp((lt - 1.0)/0.25)*Math.PI)*0.25 : 1);
-          txt(g, s, px + 92, y, 30, on ? 700 : 600, on ? C.ink : C.soft, 'left', 330);
-        });
-        if (lt < 1.2) btn(g, px + 30, 520, 400, 64, 'Ya lo publiqué, revisar', 'ghost', press(lt, 0.8), 28);
-        const q = easeOut((lt - 1.2) / 0.4);
-        if (q > 0) {
-          g.globalAlpha = q;
-          txt(g, 'Escanéalo con tu celular', px + 230, 528, 28, 800, C.ink, 'center', 400);
-          qr(g, px + 130, 570, 200, 1);
-          g.globalAlpha = 1;
-        }
-        // el celular sube, lee el código y abre la app
-        const ph = easeOut((lt - 1.9) / 0.5);
-        if (ph > 0) {
-          g.save(); g.translate(0, (1 - ph) * 700);
-          const a = celular(g, 200, 110, 400, 800);
-          if (lt < 3.0) {
-            g.fillStyle = '#1b2633'; rr(g, a.x - 16, a.y - 50, a.w + 32, a.h + 64, 30); g.fill();
-            const s = 200, cx = a.x + a.w/2 - s/2, cy = a.y + 200;
-            qr(g, cx, cy, s, 1);
-            g.strokeStyle = '#f5c84c'; g.lineWidth = 5; const e = 24 + Math.sin(lt*8)*4;
-            [[cx - e, cy - e, 1, 1], [cx + s + e, cy - e, -1, 1], [cx - e, cy + s + e, 1, -1], [cx + s + e, cy + s + e, -1, -1]].forEach(([x, y, dx, dy]) => { g.beginPath(); g.moveTo(x, y + 30*dy); g.lineTo(x, y); g.lineTo(x + 30*dx, y); g.stroke(); });
-            if (lt > 2.5) pill(g, a.x + a.w/2, cy + s + 70, 'Abrir Mis Finanzas', '#fff', C.brand, 22, 48, 'center');
-          } else {
-            const o = easeOut((lt - 3.0) / 0.4);
-            g.globalAlpha = o;
-            g.fillStyle = '#eef3f8'; rr(g, a.x - 16, a.y - 50, a.w + 32, a.h + 64, 30); g.fill();
-            g.fillStyle = C.brand; rr(g, a.x, a.y, 44, 44, 12); g.fill(); txt(g, 'F.', a.x + 22, a.y + 23, 20, 800, '#fff', 'center');
-            txt(g, 'Hola, Camila', a.x + 56, a.y + 12, 15, 600, C.muted); txt(g, 'Inicio', a.x + 56, a.y + 34, 21, 800, C.ink);
-            const gr = g.createLinearGradient(a.x, a.y + 66, a.x + a.w, a.y + 236); gr.addColorStop(0, '#2a669f'); gr.addColorStop(1, '#163c66');
-            g.fillStyle = gr; rr(g, a.x, a.y + 66, a.w, 170, 18); g.fill();
-            txt(g, 'Disponible · Octubre', a.x + 18, a.y + 94, 15, 600, 'rgba(255,255,255,.85)'); txt(g, '$239.845', a.x + 18, a.y + 138, 40, 800, '#fff');
-            [['Ingresos','$1,45 M'],['Gastos','$660 mil'],['Ahorro','$550 mil']].forEach(([l, v], i) => { const bw = (a.w - 36 - 16) / 3, bx = a.x + 18 + i*(bw + 8); g.fillStyle = 'rgba(255,255,255,.14)'; rr(g, bx, a.y + 172, bw, 50, 10); g.fill(); txt(g, l, bx + 8, a.y + 187, 12, 600, 'rgba(255,255,255,.85)'); txt(g, v, bx + 8, a.y + 207, 15, 800, '#fff', 'left', bw - 12); });
-            g.fillStyle = '#fff'; rr(g, a.x, a.y + 252, a.w, 104, 16); g.fill();
-            txt(g, 'Presupuesto del mes', a.x + 16, a.y + 276, 15, 600, C.muted);
-            g.fillStyle = '#e6edf5'; rr(g, a.x + 16, a.y + 298, a.w - 32, 10, 5); g.fill(); g.fillStyle = '#27a05a'; rr(g, a.x + 16, a.y + 298, (a.w - 32)*0.65, 10, 5); g.fill();
-            txt(g, 'Puedes gastar $13.413 por día', a.x + 16, a.y + 332, 15, 600, C.ink);
-            g.fillStyle = '#fff'; rr(g, a.x, a.y + 372, a.w, 76, 16); g.fill();
-            g.fillStyle = '#e8731a'; rr(g, a.x + 14, a.y + 386, 46, 46, 12); g.fill(); txt(g, 'Visa Banco Estado', a.x + 72, a.y + 400, 16, 800, C.ink); txt(g, 'En 4 días · 10/10', a.x + 72, a.y + 422, 13, 600, C.muted);
-            g.beginPath(); g.arc(a.x + a.w/2, a.y + a.h - 50, 32, 0, 7); g.fillStyle = C.brandDark; g.fill(); txt(g, '+', a.x + a.w/2, a.y + a.h - 48, 36, 600, '#fff', 'center');
-            g.globalAlpha = 1;
-          }
-          g.restore();
-        }
-        const b = easeOut((lt - 3.6) / 0.35);
-        if (b > 0) { g.globalAlpha = b; banner(g, px + 20, 840, 420, 64, '✓ En tu celular'); g.globalAlpha = 1; }
-      },
-      (g, lt) => {
-        g.clearRect(0, 0, CW, CH);
-        g.fillStyle = '#ffffff'; rr(g, 0, 0, CW, CH, 34); g.fill();
-        const p = easeOut((lt - 0.1) / 0.4), pop = 1 + Math.sin(clamp((lt - 0.1)/0.4)*Math.PI)*0.18;
-        if (p > 0) { g.beginPath(); g.arc(600, 150, 64*p*pop, 0, Math.PI*2); g.fillStyle = C.ok; g.fill(); txt(g, '✓', 600, 154, 70*p, 800, '#fff', 'center'); }
-        txt(g, 'Listo. Ya quedó instalado.', 600, 272, 58, 800, C.ink, 'center');
-        const c = easeOut((lt - 0.6) / 0.4);
-        if (c > 0) { g.globalAlpha = c; g.setLineDash([14, 10]); g.strokeStyle = C.brand; g.lineWidth = 3; rr(g, 120, 340, 960, 360, 28); g.stroke(); g.setLineDash([]); txt(g, 'Tu cuenta de Google', 150, 384, 26, 800, C.brand); g.globalAlpha = 1; }
-        [['Planilla', 'tus movimientos', C.ok], ['Panel', 'solo tú lo ves', C.brand], ['Correo', 'resumen del mes', C.ink]].forEach(([s, sub, color], k) => {
-          const a = easeOut((lt - 0.9 - k*0.2) / 0.35); if (a <= 0) return;
-          const x = 170 + k*300, y = 440 + (1 - a)*20;
-          g.globalAlpha = a;
-          g.fillStyle = '#f6f8fb'; rr(g, x, y, 260, 210, 20); g.fill();
-          sheetIcon(g, x + 26, y + 30, 48, color);
-          txt(g, s, x + 26, y + 125, 40, 800, C.ink); txt(g, sub, x + 26, y + 168, 30, 600, C.muted, 'left', 220);
-          g.globalAlpha = 1;
-        });
-        const l = easeOut((lt - 1.7) / 0.4);
-        if (l > 0) { g.globalAlpha = l; txt(g, '✓ Privado: tus datos quedan en tu Drive.', 150, 780, 36, 700, C.ink); txt(g, '✓ Sin conectar tu banco ni compartir claves.', 150, 836, 36, 700, C.ink); g.globalAlpha = 1; }
-      }
-    ];
-  }
+  cursor: finCursor(1200, 950),
+  cursorV: finCursor(800, 1000),
+  draw: H => finInstalaDibujo(H), drawV: H => finInstalaDibujo(H)
 };
+function finInstalaDibujo(H){
+  const { C, CW, CH, clamp, ease, easeOut, rr, txt, wrap, press, btn, banner, checkDot, overlay, dialog } = H;
+  const F = AL_DEMOS['fin-accion'].app(H), P = finCapa(CW, CH), L = P.L;
+  const logo = (g, x, y, s) => { g.fillStyle = C.brand; rr(g, x, y, s, s, s * 0.24); g.fill(); txt(g, 'F.', x + s/2, y + s/2 + 2, s * 0.44, 800, '#fff', 'center'); };
+  const blanco = g => { g.clearRect(0, 0, CW, CH); g.fillStyle = '#ffffff'; rr(g, 0, 0, CW, CH, 34); g.fill(); };
+  // interruptor del teléfono (0 = apagado, 1 = encendido)
+  const interruptor = (g, x, y, w, h, on) => {
+    g.fillStyle = on > 0.5 ? '#2EAA67' : '#d5dde8'; rr(g, x, y, w, h, h/2); g.fill();
+    const k = x + 4 + (w - h) * on; g.save(); g.shadowColor = 'rgba(0,0,0,.25)'; g.shadowBlur = 6; g.fillStyle = '#fff';
+    g.beginPath(); g.arc(k + (h - 8)/2, y + h/2, (h - 8)/2, 0, Math.PI*2); g.fill(); g.restore();
+  };
+  const encender = (lt, t) => ease(clamp((lt - t) / 0.25));
+  return [
+    // 1. la tienda: Obtener → Instalando → Abrir
+    (g, lt) => {
+      blanco(g);
+      txt(g, 'Tienda de apps', L.x, 90, 26, 700, C.muted);
+      logo(g, L.x, 140, 150);
+      txt(g, 'Mis Finanzas', L.x + 180, 176, 44, 800, C.ink, 'left', L.w - 190);
+      txt(g, 'Ambilor.Lab · Finanzas', L.x + 180, 222, 26, 600, C.muted, 'left', L.w - 190);
+      const b = P.obtener, instalando = lt > 1.35 && lt < 2.3;
+      if (instalando) {
+        const p = clamp((lt - 1.35) / 0.95);
+        g.strokeStyle = '#d5dde8'; g.lineWidth = 7; g.beginPath(); g.arc(b[0] + 35, b[1] + 35, 26, 0, Math.PI*2); g.stroke();
+        g.strokeStyle = C.brand; g.beginPath(); g.arc(b[0] + 35, b[1] + 35, 26, -Math.PI/2, -Math.PI/2 + p * Math.PI*2); g.stroke();
+      } else btn(g, b[0], b[1], b[2], b[3], lt < 1.35 ? 'Obtener' : 'Abrir', 'primary', press(lt, 1.2), 30);
+      const tw = (L.w - 40) / 3;
+      [['Inicio', 0.62], ['Registrar', 0.4], ['Tarjetas', 0.75]].forEach(([s, v], k) => {
+        const x = L.x + k * (tw + 20), y = 360;
+        g.fillStyle = '#eef3f8'; rr(g, x, y, tw, 400, 26); g.fill();
+        g.fillStyle = C.brand; rr(g, x + 18, y + 26, tw - 36, 110, 18); g.fill();
+        g.fillStyle = 'rgba(255,255,255,.55)'; rr(g, x + 34, y + 96, (tw - 68) * v, 14, 7); g.fill();
+        for (let r = 0; r < 4; r++) { g.fillStyle = '#ffffff'; rr(g, x + 18, y + 156 + r * 56, tw - 36, 44, 12); g.fill(); g.fillStyle = Object.values({ a:'#2e9a5a', b:'#d4613a', c:'#1f5c99', d:'#6b5bd2' })[r]; rr(g, x + 28, y + 166 + r * 56, 24, 24, 7); g.fill(); }
+        txt(g, s, x + tw/2, y + 376, 24, 700, C.muted, 'center', tw - 20);
+      });
+      const a = easeOut((lt - 2.5) / 0.35);
+      if (a > 0) { g.globalAlpha = a; banner(g, L.x, P.bajo, L.w, 72, '✓ Instalada en tu teléfono'); g.globalAlpha = 1; }
+    },
+    // 2. la clave (y Face ID)
+    (g, lt) => {
+      g.clearRect(0, 0, CW, CH); g.fillStyle = '#0b1220'; rr(g, 0, 0, CW, CH, 34); g.fill();
+      logo(g, CW/2 - 50, 110, 100);
+      txt(g, 'Crea tu clave', CW/2, 282, 44, 800, '#ffffff', 'center');
+      txt(g, 'Tus datos quedan cifrados en este teléfono.', CW/2, 336, 26, 600, '#b4bfd2', 'center', L.w);
+      [[400, 'Clave', 0.3], [504, 'Repite la clave', 0.95]].forEach(([y, ph, t0]) => {
+        g.fillStyle = '#131a25'; rr(g, L.x, y, L.w, 84, 18); g.fill(); g.strokeStyle = '#2a3445'; g.lineWidth = 2; rr(g, L.x, y, L.w, 84, 18); g.stroke();
+        const n = Math.floor(clamp((lt - t0) / 0.6) * 10);
+        if (!n) txt(g, ph, L.x + 26, y + 43, 28, 600, '#6b778a');
+        for (let k = 0; k < n; k++) { g.fillStyle = '#e8edf5'; g.beginPath(); g.arc(L.x + 34 + k * 30, y + 42, 8, 0, Math.PI*2); g.fill(); }
+      });
+      const f = P.faceId;
+      txt(g, 'Entrar con Face ID', L.x, f[1] + f[3]/2, 30, 700, '#ffffff', 'left', L.w - 130);
+      interruptor(g, f[0], f[1], f[2], f[3], encender(lt, 2.0));
+      const c = P.crear; btn(g, c[0], c[1], c[2], c[3], 'Crear clave', 'primary', press(lt, 2.8), 32);
+      const a = easeOut((lt - 3.1) / 0.35);
+      if (a > 0) { g.globalAlpha = a; banner(g, L.x, Math.min(CH - 110, 830), L.w, 72, '✓ Tus datos quedan cifrados'); g.globalAlpha = 1; }
+    },
+    // 3. un consejo en Inicio → «Configurar» abre el presupuesto
+    (g, lt) => {
+      F.inicio(g, 1);
+      const c = P.consejo, e = easeOut((lt - 0.2) / 0.45);
+      if (e > 0) {
+        g.globalAlpha = e; const y = c[1] + (1 - e) * 24;
+        F.tarjeta(g, c[0], y, c[2], c[3]);
+        txt(g, 'CONSEJO', c[0] + 26, y + 34, 20, 800, C.brand);
+        txt(g, 'Define cuánto gastar al mes', c[0] + 26, y + 72, 30, 800, C.ink, 'left', c[2] - 52);
+        txt(g, 'Te aviso antes de pasarte.', c[0] + 26, y + 110, 24, 600, C.muted, 'left', c[2] - 52);
+        btn(g, c[0] + 26, y + 138, c[2] - 52, 60, 'Configurar', 'primary', press(lt, 1.5), 26);
+        g.globalAlpha = 1;
+      }
+      const s = easeOut((lt - 1.8) / 0.4);
+      if (s > 0) {
+        overlay(g, s);
+        const alto = Math.min(CH, 1000), top = alto * 0.36 + (1 - s) * 200, x = P.ancho ? 300 : 0, w = P.ancho ? 600 : CW;
+        g.save(); g.shadowColor = 'rgba(18,48,77,.25)'; g.shadowBlur = 30; g.fillStyle = '#fff'; rr(g, x, top, w, CH - top + 40, 34); g.fill(); g.restore();
+        txt(g, 'Presupuesto del mes', x + 40, top + 56, 34, 800, C.ink, 'left', w - 80);
+        [['super', 'Supermercado', '$320.000', 2.2], ['comida', 'Comida fuera', '$80.000', 2.6], ['auto', 'Transporte', '$90.000', 3.0]].forEach(([k, n, m, t], i) => {
+          const y = top + 100 + i * 92; F.ico(g, k, x + 40, y + 10, 56);
+          txt(g, n, x + 116, y + 38, 28, 700, C.ink, 'left', w - 330);
+          g.fillStyle = '#f5f8fb'; rr(g, x + w - 230, y + 6, 190, 64, 14); g.fill();
+          if (lt > t) txt(g, m, x + w - 56, y + 39, 28, 800, C.ink, 'right'); else txt(g, 'Sin límite', x + w - 56, y + 39, 24, 600, C.soft, 'right');
+        });
+        const yG = alto - 118; btn(g, x + 40, yG, w - 80, 80, 'Guardar', 'primary', press(lt, 3.6), 30);
+        const a = easeOut((lt - 3.9) / 0.35);
+        if (a > 0) { g.globalAlpha = a; banner(g, x + 40, yG - 96, w - 80, 72, '✓ Presupuesto guardado'); g.globalAlpha = 1; }
+        g.globalAlpha = 1;
+      }
+    },
+    // 4. «Anotar rápido»: Apple Pay y avisos del banco; llega un pago y se anota solo
+    (g, lt) => {
+      F.fondo(g);
+      txt(g, 'Ajustes', L.x, 100, 40, 800, C.ink);
+      txt(g, 'ANOTAR RÁPIDO', L.x + 6, 160, 22, 800, C.muted);
+      const R = P.filas; F.tarjeta(g, R[0], R[1], R[2], R[3] * 4);
+      [['tarjeta', 'Apple Pay', 'Anota al pagar con el iPhone', 1.0], ['correo', 'Avisos del banco', 'También Google Wallet (Android)', 1.6], ['serv', 'Widget', 'Anota desde la pantalla de inicio', 99], ['otros', 'Siri', '«Anotar gasto en Mis Finanzas»', 99]].forEach(([k, t, s, tOn], i) => {
+        const y = R[1] + i * R[3];
+        if (i) { g.fillStyle = C.line; g.fillRect(R[0] + 20, y, R[2] - 40, 2); }
+        F.ico(g, k, R[0] + 22, y + 25, 56);
+        txt(g, t, R[0] + 96, y + 40, 28, 800, C.ink, 'left', R[2] - 240); txt(g, s, R[0] + 96, y + 74, 22, 600, C.muted, 'left', R[2] - 240);
+        interruptor(g, R[0] + R[2] - 112, y + 26, 96, 56, encender(lt, tOn));
+      });
+      const n = easeOut((lt - 2.3) / 0.45);
+      if (n > 0) {
+        const y = 16 + (1 - n) * -140, w = L.w, x = L.x, ok = lt > 3.2;
+        g.save(); g.shadowColor = 'rgba(0,0,0,.3)'; g.shadowBlur = 24; g.fillStyle = 'rgba(27,36,48,.96)'; rr(g, x, y, w, 132, 30); g.fill(); g.restore();
+        logo(g, x + 22, y + 26, 54);
+        txt(g, ok ? 'Mis Finanzas' : 'Apple Pay', x + 94, y + 44, 24, 700, '#b4bfd2', 'left', w - 120);
+        txt(g, ok ? '✓ $12.990 anotado en Supermercado' : 'LIDER EXPRESS · $12.990', x + 94, y + 88, 28, 800, ok ? '#7fe3a8' : '#ffffff', 'left', w - 120);
+      }
+    },
+    // 5. el primer gasto: monto, «¿En qué?» y la categoría sola
+    (g, lt) => {
+      F.fondo(g);
+      txt(g, 'Nuevo gasto', L.x, 96, 36, 800, C.ink);
+      const dig = ['', '4', '49', '499', '4990'][Math.min(4, Math.max(0, Math.floor((lt - 0.2) / 0.2) + 1))] || '';
+      txt(g, dig ? F.money(Number(dig)) : '$0', CW/2, 214, 92, 800, dig ? C.ink : C.soft, 'center');
+      const d = 'Botillería', n = Math.floor(clamp((lt - 1.3) / 0.8) * d.length), y0 = 280;
+      g.fillStyle = '#ffffff'; rr(g, L.x, y0, L.w, 84, 20); g.fill(); g.strokeStyle = n ? C.brand : C.line; g.lineWidth = 2.5; rr(g, L.x, y0, L.w, 84, 20); g.stroke();
+      txt(g, n ? d.slice(0, n) : '¿En qué? Ej: McDonald’s', CW/2, y0 + 43, 30, n ? 700 : 600, n ? C.ink : C.soft, 'center', L.w - 40);
+      const s = easeOut((lt - 2.2) / 0.35), B = P.guardarS;
+      if (s > 0) { g.globalAlpha = s; btn(g, B[0], B[1], B[2], B[3], 'Guardar en Comida fuera', 'primary', press(lt, 3.0), 30); g.globalAlpha = 1; }
+      const cats = [['comida', 'Comida fuera'], ['super', 'Supermercado'], ['casa', 'Casa'], ['auto', 'Transporte'], ['salud', 'Salud'], ['tv', 'Entretención']];
+      const cols = 3, cw = (L.w - 2 * 16) / cols;
+      cats.forEach(([k, nombre], i) => {
+        const x = L.x + (i % cols) * (cw + 16), y = 500 + Math.floor(i / cols) * 150;
+        g.fillStyle = '#ffffff'; rr(g, x, y, cw, 134, 20); g.fill();
+        if (i === 0 && s > 0) { g.globalAlpha = s; g.strokeStyle = '#4C8DDB'; g.lineWidth = 4; rr(g, x, y, cw, 134, 20); g.stroke(); g.globalAlpha = 1; }
+        F.ico(g, k, x + cw/2 - 28, y + 18, 56); txt(g, nombre, x + cw/2, y + 106, 22, 700, C.ink, 'center', cw - 16);
+      });
+      const a = easeOut((lt - 3.3) / 0.35);
+      if (a > 0) { g.globalAlpha = a; banner(g, L.x, P.bajo, L.w, 72, '✓ Listo, registrado'); g.globalAlpha = 1; }
+    },
+    // 6. listo
+    (g, lt) => {
+      blanco(g);
+      g.save(); g.translate(0, Math.max(0, CH - 1000) / 2);
+      const p = easeOut((lt - 0.1) / 0.4), pop = 1 + Math.sin(clamp((lt - 0.1)/0.4)*Math.PI)*0.18;
+      if (p > 0) { g.beginPath(); g.arc(CW/2, 130, 62*p*pop, 0, Math.PI*2); g.fillStyle = C.ok; g.fill(); txt(g, '✓', CW/2, 134, 68*p, 800, '#fff', 'center'); }
+      txt(g, 'Listo.', CW/2, 248, 58, 800, C.ink, 'center');
+      txt(g, 'Ya quedó instalada.', CW/2, 312, 46, 800, C.ink, 'center');
+      const cajas = [['meta', 'Tu teléfono', 'tus datos, cifrados'], ['correo', 'Respaldo', 'automático cada día'], ['tarjeta', 'Sin banco', 'no das tus claves']];
+      cajas.forEach(([k, s, sub], i) => {
+        const a = easeOut((lt - 0.7 - i*0.2) / 0.35); if (a <= 0) return;
+        g.globalAlpha = a;
+        if (P.ancho) { const x = 150 + i * 310, y = 400 + (1 - a)*20; g.fillStyle = '#f6f8fb'; rr(g, x, y, 280, 200, 22); g.fill(); F.ico(g, k, x + 26, y + 26, 56); txt(g, s, x + 26, y + 124, 34, 800, C.ink, 'left', 230); txt(g, sub, x + 26, y + 164, 26, 600, C.muted, 'left', 230); }
+        else { const y = 380 + i*118 + (1 - a)*20; g.fillStyle = '#f6f8fb'; rr(g, 50, y, CW - 100, 100, 18); g.fill(); F.ico(g, k, 74, y + 22, 56); txt(g, s, 152, y + 36, 34, 800, C.ink, 'left', CW - 230); txt(g, sub, 152, y + 72, 26, 600, C.muted, 'left', CW - 230); }
+        g.globalAlpha = 1;
+      });
+      const l = easeOut((lt - 1.5) / 0.4);
+      if (l > 0) { g.globalAlpha = l; const y = P.ancho ? 690 : 780; txt(g, '✓ Privado: tus datos quedan cifrados en tu teléfono.', P.ancho ? 150 : 60, y, 32, 700, C.ink, 'left', P.ancho ? 900 : CW - 110); txt(g, '✓ Sin conectar tu banco ni compartir claves.', P.ancho ? 150 : 60, y + 56, 32, 700, C.ink, 'left', P.ancho ? 900 : CW - 110); g.globalAlpha = 1; }
+      g.restore();
+    }
+  ];
+}
 </script>
 <script>
 /* Diseños verticales de las demos por tarjetas (2026-09-30). En un recuadro
@@ -8393,45 +8356,7 @@ AL_DEMOS['fin-instala'] = {
     { keys:[[0.3,650,960],[1.0,570,263],[1.2,570,263],[2.6,400,882],[2.85,400,882],[3.5,650,960]], clicks:[1.1,2.75] }
   ];
 
-  // ── Mis Finanzas · Cómo se instala ──
-  const fi = AL_DEMOS['fin-instala'];
-  fi.drawV = H => { const { C, CW, CH, clamp, easeOut, rr, txt, wrap, press, btn, base, banner, checkDot } = H;
-    const F = AL_DEMOS['fin-accion'].app(H);
-    return [
-      I.copia(H, 'Mis Finanzas', ['Cuentas 2025', 'Presupuesto casa', 'Viaje al sur', 'Recetas']),
-      I.menu(H, 'Mis Finanzas', 'Mis Finanzas', ['Instalar o abrir el panel'], ['Autoriza los permisos', 'Publica tu panel', 'Llévalo a tu celular'], false, 'Instalar Mis Finanzas', 'Las hojas ya quedaron listas.'),
-      I.permisos(H, 'Mis Finanzas quiere acceder a tu cuenta de Google', ['Ver y editar tus hojas de cálculo', 'Enviar correo en tu nombre', 'Conectarse a un servicio externo (UF)', 'Ejecutarse cuando no estés presente'], 'Permitir', true),
-      I.publicar(H, 'Mis Finanzas.gs', false),
-      (g, lt) => {
-        if (lt < 2.7) {   // el instalador revisa y muestra el código QR
-          base(g, 'Google Sheets');
-          txt(g, 'Instalar Mis Finanzas', 40, 140, 40, 800, C.ink, 'left', 720);
-          ['Planilla preparada', 'Permisos autorizados', 'Panel publicado'].forEach((s, k) => {
-            const on = k < 2 || lt > 1.0, y = 240 + k*84;
-            checkDot(g, 64, y, on, k === 2 ? 1 + Math.sin(clamp((lt - 1.0)/0.25)*Math.PI)*0.25 : 1);
-            txt(g, s, 104, y, 34, on ? 700 : 600, on ? C.ink : C.soft, 'left', 640);
-          });
-          if (lt < 1.2) btn(g, 40, 500, 720, 80, 'Ya lo publiqué, revisar', 'ghost', press(lt, 0.8), 32);
-          const q = easeOut((lt - 1.2) / 0.4);
-          if (q > 0) {
-            g.globalAlpha = q;
-            txt(g, 'Escanéalo con tu celular', 400, 530, 34, 800, C.ink, 'center', 720);
-            F.qr(g, 280, 590, 240, 1);
-            wrap(g, 'Ábrelo y agrégalo a tu pantalla de inicio.', 70, 880, 660, 30, 600, C.muted);
-            g.globalAlpha = 1;
-          }
-          return;
-        }
-        F.inicio(g, 1);   // la app ya abierta en el celular
-        const ap = easeOut((lt - 2.7) / 0.4);
-        if (ap < 1) { g.fillStyle = 'rgba(255,255,255,' + (1 - ap) + ')'; rr(g, 0, 0, CW, CH, 34); g.fill(); }
-        const b = easeOut((lt - 3.3) / 0.35);
-        if (b > 0) { g.globalAlpha = b; banner(g, 60, F.navY - 100, CW - 120, 72, '✓ En tu pantalla de inicio'); g.globalAlpha = 1; }
-      },
-      I.listo(H, [['Planilla', 'tus movimientos', C.ok], ['Panel', 'solo tú lo ves', C.brand], ['Correo', 'resumen del mes', C.ink]], ['✓ Privado: tus datos quedan en tu Drive.', '✓ Sin conectar tu banco ni compartir claves.'])
-    ];
-  };
-  fi.cursorV = [K.copia, K.menu(450), K.permisos(true), K.publicar(462), { keys:[[0.2,650,-120],[0.65,400,540],[0.95,400,540],[1.6,650,-120]], clicks:[0.8] }, null];
+  // Mis Finanzas · Cómo se instala: su dibujo (vertical y apaisado) vive con su demo (finInstalaDibujo)
 
   // ── Concilia · Ver en acción ──
   const v2a = AL_DEMOS['v2-accion'];
@@ -8794,6 +8719,12 @@ function showHP(id){
   var panel = document.getElementById('hp-' + id); if (!panel) return;
   document.querySelectorAll('#product .hp-panel').forEach(function(p){ var on = p === panel; p.classList.toggle('on', on); if (on) p.removeAttribute('hidden'); else p.setAttribute('hidden', ''); });
   document.querySelectorAll('#product .hp-tabs .gp-tab').forEach(function(b){ var on = b.getAttribute('data-hp') === id; b.classList.toggle('on', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
+  // Mis Finanzas es una app de celular y tablet (2026-10-29): en computador sus demos se ven en el iPhone (o la
+  // tablet, con su selector); al volver a otra herramienta, el notebook de nuevo
+  if (window.alFoto && alFoto.real && alFoto.real() === 'pc') {
+    if (id === 'fin') { if (!alFoto.simulado()) { alFoto.simular('cel'); window.AL_FIN_SIM = true; } }
+    else if (window.AL_FIN_SIM) { window.AL_FIN_SIM = false; alFoto.simular(null); }
+  }
   panel.querySelectorAll('.al-demo[id]').forEach(function(d){ if (window.AL_DEMOS && AL_DEMOS[d.id] && window.alDemoTarjetas) alDemoTarjetas(d, AL_DEMOS[d.id]); });
   panel.querySelectorAll('.rv:not(.in)').forEach(function(el){ el.classList.add('in'); });
 }
@@ -9099,7 +9030,7 @@ window.addEventListener('load', function(){ var h = new URLSearchParams(location
   // B6 · Inicio: cinta de palabras clave, efecto "descifrar" y botones magnéticos
   (function(){
     var est = document.querySelector('#home .i3-centro'); if (!est) return;
-    var pal = ['Banco cuadrado', 'Pedidos en orden', 'Gastos claros', 'Sin programar', 'Lista en minutos', 'Tus datos son tuyos', 'Desde el celular', 'Sin sistemas caros'];
+    var pal = ['Banco cuadrado', 'Pedidos en orden', 'Gastos claros', 'Sin programar', 'Lista en minutos', 'Tus datos son tuyos', 'Desde el celular', 'Bajo costo'];
     var c = document.createElement('div'); c.className = 'mv-cinta'; c.setAttribute('aria-hidden', 'true');
     var fila = pal.concat(pal).map(function(t){ return '<span>' + t + '</span>'; }).join('');
     c.innerHTML = '<div>' + fila + '</div>';
